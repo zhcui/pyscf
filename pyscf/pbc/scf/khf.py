@@ -418,7 +418,7 @@ class KSCF(pbchf.SCF):
         self.conv_tol = cell.precision * 10
 
         self.exx_built = False
-        self._keys = self._keys.union(['cell', 'exx_built', 'exxdiv', 'with_df'])
+        self._keys = self._keys.union(['cell', 'exx_built', 'exxdiv', 'with_df','wtk','kpts_descriptor'])
 
     @property
     def kpts(self):
@@ -429,6 +429,7 @@ class KSCF(pbchf.SCF):
     @kpts.setter
     def kpts(self, x):
         self.with_df.kpts = np.reshape(x, (-1,3))
+        self.wtk = np.asarray([1./len(self.kpts)] * len(self.kpts))
 
     @property
     def mo_energy_kpts(self):
@@ -556,12 +557,6 @@ class KSCF(pbchf.SCF):
         cpu0 = (time.clock(), time.time())
 
         if self.kpts_descriptor is not None:
-            dm_kpts = self.kpts_descriptor.dm_ibz2bz(dm_kpts)
-            kpts = self.kpts_descriptor.bz_k
-            if kpts_band is None:
-                kpts_band = self.kpts
-
-        if self.kpts_descriptor is not None:
             vj = self.with_df.get_jk_ibz(dm_kpts, hermi, self.kpts_descriptor, kpts_band, with_k=False)[0]
         else:
             vj = self.with_df.get_jk(dm_kpts, hermi, kpts, kpts_band, with_k=False)[0]
@@ -592,7 +587,6 @@ class KSCF(pbchf.SCF):
         See :func:`scf.hf.get_veff` and :func:`scf.hf.RHF.get_veff`
         '''
         vj, vk = self.get_jk(cell, dm_kpts, hermi, kpts, kpts_band)
-
         return vj - vk * .5
 
     def analyze(self, verbose=None, with_meta_lowdin=WITH_META_LOWDIN,

@@ -873,7 +873,6 @@ def make_kpts(cell, nks, wrap_around=WRAP_AROUND, with_gamma_point=WITH_GAMMA,
     scaled_kpts = lib.cartesian_prod(ks_each_axis)
     scaled_kpts += np.array(scaled_center)
     kpts = cell.get_abs_kpts(scaled_kpts)
-    cell.kpts = kpts
     return kpts
 
 def get_uniform_grids(cell, mesh=None, **kwargs):

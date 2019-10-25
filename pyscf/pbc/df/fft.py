@@ -176,7 +176,7 @@ class FFTDF(lib.StreamObject):
         # self.exxdiv has no effects. It was set in the get_k_kpts function to
         # mimic the KRHF/KUHF object in the call to tools.get_coulG.
         self.exxdiv = None
-        self._numint = numint.KNumInt(kpts=self.kpts)
+        self._numint = numint.KNumInt()
         self._keys = set(self.__dict__.keys())
 
     @property
