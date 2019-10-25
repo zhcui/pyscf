@@ -108,6 +108,68 @@ def get_j_kpts(mydf, dm_kpts, hermi=1, kpts=np.zeros((1,3)), kpts_band=None):
 
     return _format_jks(vj_kpts, dm_kpts, input_band, kpts)
 
+
+def get_j_kpts_ibz(mydf, dm_kpts, kd, hermi=1, kpts_band=None):
+
+    kpts = kd.ibz_k
+
+    cell = mydf.cell
+    mesh = mydf.mesh
+
+    ni = mydf._numint
+    #make_rho, nset, nao = ni._gen_rho_evaluator(cell, dm_kpts, hermi)
+    dm_kpts = lib.asarray(dm_kpts, order='C')
+    dms = _format_dms(dm_kpts, kpts)
+    nset, nkpts, nao = dms.shape[:3]
+
+    coulG = tools.get_coulG(cell, mesh=mesh)
+    ngrids = len(coulG)
+
+    if hermi == 1 or gamma_point(kpts):
+        vR = rhoR = np.zeros((nset,ngrids))
+        for k in range(nkpts):
+            rhoR_k = np.zeros((nset,ngrids))
+            kpt = kpts[k]
+            for ao_ks_etc, p0, p1 in mydf.aoR_loop(mydf.grids, kpt):
+                ao_ks, mask = ao_ks_etc[0], ao_ks_etc[2]
+                for i in range(nset):
+                    rhoR_k[i,p0:p1] += numint.eval_rho(cell, ao_ks[0], dm_kpts[k], mask, xctype='LDA', hermi=hermi)
+
+            for i in range(nset):
+                rhoR[i] += kd.symmetrize_density(rhoR_k[i], k, mesh)
+
+        rhoR *= 1./kd.nbzk
+       
+
+        for i in range(nset):
+            rhoG = tools.fft(rhoR[i], mesh)
+            vG = coulG * rhoG
+            vR[i] = tools.ifft(vG, mesh).real
+
+    else:
+        raise NotImplementedError()
+
+
+    kpts_band, input_band = _format_kpts_band(kpts_band, kpts), kpts_band
+    nband = len(kpts_band)
+    weight = cell.vol / ngrids
+    vR *= weight
+    if gamma_point(kpts_band):
+        vj_kpts = np.zeros((nset,nband,nao,nao))
+    else:
+        vj_kpts = np.zeros((nset,nband,nao,nao), dtype=np.complex128)
+    rho = None
+    for ao_ks_etc, p0, p1 in mydf.aoR_loop(mydf.grids, kpts_band):
+        ao_ks, mask = ao_ks_etc[0], ao_ks_etc[2]
+        for i in range(nset):
+            for k, ao in enumerate(ao_ks):
+                aow = np.einsum('xi,x->xi', ao, vR[i,p0:p1])
+                vj_kpts[i,k] += lib.dot(ao.conj().T, aow)
+
+    return _format_jks(vj_kpts, dm_kpts, input_band, kpts)
+
+
+
 def get_k_kpts(mydf, dm_kpts, hermi=1, kpts=np.zeros((1,3)), kpts_band=None,
                exxdiv=None):
     '''Get the Coulomb (J) and exchange (K) AO matrices at sampled k-points.
@@ -235,6 +297,122 @@ def get_k_kpts(mydf, dm_kpts, hermi=1, kpts=np.zeros((1,3)), kpts_band=None,
         _ewald_exxdiv_for_G0(cell, kpts, dms, vk_kpts, kpts_band=kpts_band)
 
     return _format_jks(vk_kpts, dm_kpts, input_band, kpts)
+
+
+def get_k_kpts_ibz(mydf, dm_kpts, kd, hermi=1, kpts_band=None, exxdiv=None):
+
+    cell = mydf.cell
+    mesh = mydf.mesh
+    coords = cell.gen_uniform_grids(mesh)
+    ngrids = coords.shape[0]
+
+    if getattr(dm_kpts, 'mo_coeff', None) is not None:
+        mo_coeff = dm_kpts.mo_coeff
+        mo_occ   = dm_kpts.mo_occ
+    else:
+        mo_coeff = None
+
+    kpts = kd.ibz_k
+    dm_kpts = lib.asarray(dm_kpts, order='C')
+    dms = _format_dms(dm_kpts, kpts)
+    nset, nkpts, nao = dms.shape[:3]
+    dms_all = []
+    for i in range(nset):
+        dms_all.append(kd.transform_dm(dms[i]))
+    dms = np.asarray(dms_all).reshape(nset,kd.nbzk,nao,nao)
+
+    weight = 1./kd.nbzk * (cell.vol/ngrids)
+
+    kpts_band, input_band = _format_kpts_band(kpts_band, kpts), kpts_band
+    nband = len(kpts_band)
+
+    if gamma_point(kpts_band) and gamma_point(kpts):
+        vk_kpts = np.zeros((nset,nband,nao,nao), dtype=dms.dtype)
+    else:
+        vk_kpts = np.zeros((nset,nband,nao,nao), dtype=np.complex128)
+
+    coords = mydf.grids.coords
+    ao2_kpts = [np.asarray(ao.T, order='C')
+                for ao in mydf._numint.eval_ao(cell, coords, kpts=kd.bz_k)]
+    if input_band is None:
+        ao1_kpts = [np.asarray(ao.T, order='C')
+                    for ao in mydf._numint.eval_ao(cell, coords, kpts=kpts)]
+    else:
+        ao1_kpts = [np.asarray(ao.T, order='C')
+                    for ao in mydf._numint.eval_ao(cell, coords, kpts=kpts_band)]
+    if mo_coeff is not None and nset == 1:
+        mo_coeff = [mo_coeff[k][:,occ>0] * np.sqrt(occ[occ>0])
+                    for k, occ in enumerate(mo_occ)]
+        mo_all = kd.transform_mo_coeff(mo_coeff)
+        ao2_kpts = [np.dot(mo_all[k].T, ao) for k, ao in enumerate(ao2_kpts)]
+
+    mem_now = lib.current_memory()[0]
+    max_memory = mydf.max_memory - mem_now
+    blksize = int(min(nao, max(1, (max_memory-mem_now)*1e6/16/4/ngrids/nao)))
+    lib.logger.debug1(mydf, 'fft_jk: get_k_kpts max_memory %s  blksize %d',
+                      max_memory, blksize)
+    ao1_dtype = np.result_type(*ao1_kpts)
+    ao2_dtype = np.result_type(*ao2_kpts)
+    vR_dm = np.empty((nset,nao,ngrids), dtype=vk_kpts.dtype)
+
+    t1 = (time.clock(), time.time())
+    for k2, ao2T in enumerate(ao2_kpts):
+        if ao2T.size == 0:
+            continue
+
+        kpt2 = kd.bz_k[k2]
+        naoj = ao2T.shape[0]
+        if mo_coeff is None or nset > 1:
+            ao_dms = [lib.dot(dms[i,k2], ao2T.conj()) for i in range(nset)]
+        else:
+            ao_dms = [ao2T.conj()]
+
+        for k1, ao1T in enumerate(ao1_kpts):
+            kpt1 = kpts_band[k1]
+
+            # If we have an ewald exxdiv, we add the G=0 correction near the
+            # end of the function to bypass any discretization errors
+            # that arise from the FFT.
+            mydf.exxdiv = exxdiv
+            if exxdiv == 'ewald' or exxdiv is None:
+                coulG = tools.get_coulG(cell, kpt2-kpt1, False, mydf, mesh)
+            else:
+                coulG = tools.get_coulG(cell, kpt2-kpt1, True, mydf, mesh)
+            if is_zero(kpt1-kpt2):
+                expmikr = np.array(1.)
+            else:
+                expmikr = np.exp(-1j * np.dot(coords, kpt2-kpt1))
+
+            for p0, p1 in lib.prange(0, nao, blksize):
+                rho1 = np.einsum('ig,jg->ijg', ao1T[p0:p1].conj()*expmikr, ao2T)
+                vG = tools.fft(rho1.reshape(-1,ngrids), mesh)
+                rho1 = None
+                vG *= coulG
+                vR = tools.ifft(vG, mesh).reshape(p1-p0,naoj,ngrids)
+                vG = None
+                if vR_dm.dtype == np.double:
+                    vR = vR.real
+                for i in range(nset):
+                    np.einsum('ijg,jg->ig', vR, ao_dms[i], out=vR_dm[i,p0:p1])
+                vR = None
+            vR_dm *= expmikr.conj()
+
+            for i in range(nset):
+                vk_kpts[i,k1] += weight * lib.dot(vR_dm[i], ao1T.T)
+        t1 = lib.logger.timer_debug1(mydf, 'get_k_kpts: make_kpt (%d,*)'%k2, *t1)
+
+    # Function _ewald_exxdiv_for_G0 to add back in the G=0 component to vk_kpts
+    # Note in the _ewald_exxdiv_for_G0 implementation, the G=0 treatments are
+    # different for 1D/2D and 3D systems.  The special treatments for 1D and 2D
+    # can only be used with AFTDF/GDF/MDF method.  In the FFTDF method, 1D, 2D
+    # and 3D should use the ewald probe charge correction.
+    if exxdiv == 'ewald':
+        _ewald_exxdiv_for_G0(cell, kd.bz_k, dms, vk_kpts, kpts_band=kpts_band)
+
+    return _format_jks(vk_kpts, dm_kpts, input_band, kpts)
+
+
+
 
 
 def get_jk(mydf, dm, hermi=1, kpt=np.zeros(3), kpts_band=None,

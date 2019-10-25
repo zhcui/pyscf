@@ -250,15 +250,16 @@ def energy_elec(mf, dm_kpts=None, h1e_kpts=None, vhf_kpts=None):
     if dm_kpts is None: dm_kpts = mf.make_rdm1()
     if h1e_kpts is None: h1e_kpts = mf.get_hcore()
     if vhf_kpts is None: vhf_kpts = mf.get_veff(mf.cell, dm_kpts)
+    wtk = mf.wtk
 
-    nkpts = len(dm_kpts)
-    e1 = 1./nkpts * np.einsum('kij,kji', dm_kpts, h1e_kpts)
-    e_coul = 1./nkpts * np.einsum('kij,kji', dm_kpts, vhf_kpts) * 0.5
+    e1 = np.einsum('k,kij,kji', wtk, dm_kpts, h1e_kpts)
+    e_coul = np.einsum('k,kij,kji', wtk, dm_kpts, vhf_kpts) * 0.5
     logger.debug(mf, 'E1 = %s  E_coul = %s', e1, e_coul)
     if CHECK_COULOMB_IMAG and abs(e_coul.imag > mf.cell.precision*10):
         logger.warn(mf, "Coulomb energy has imaginary part %s. "
                     "Coulomb integrals (e-e, e-N) may not converge !",
                     e_coul.imag)
+
     return (e1+e_coul).real, e_coul.real
 
 
@@ -390,12 +391,15 @@ class KSCF(pbchf.SCF):
     Attributes:
         kpts : (nks,3) ndarray
             The sampling k-points in Cartesian coordinates, in units of 1/Bohr.
+        wtk  : (nks,) ndarray
+            The weight of each k point.
     '''
     conv_tol_grad = getattr(__config__, 'pbc_scf_KSCF_conv_tol_grad', None)
     direct_scf = getattr(__config__, 'pbc_scf_SCF_direct_scf', False)
 
     def __init__(self, cell, kpts=np.zeros((1,3)),
-                 exxdiv=getattr(__config__, 'pbc_scf_SCF_exxdiv', 'ewald')):
+                 exxdiv=getattr(__config__, 'pbc_scf_SCF_exxdiv', 'ewald'), 
+                 kpts_descriptor = None):
         if not cell._built:
             sys.stderr.write('Warning: cell.build() is not called in input\n')
             cell.build()
@@ -405,6 +409,12 @@ class KSCF(pbchf.SCF):
         self.with_df = df.FFTDF(cell)
         self.exxdiv = exxdiv
         self.kpts = kpts
+        self.wtk = np.asarray([1./len(self.kpts)] * len(self.kpts))
+        self.kpts_descriptor = kpts_descriptor
+        if self.kpts_descriptor is not None:
+            self.kpts = self.kpts_descriptor.ibz_k
+            self.wtk  = self.kpts_descriptor.ibz_weight
+
         self.conv_tol = cell.precision * 10
 
         self.exx_built = False
@@ -446,7 +456,10 @@ class KSCF(pbchf.SCF):
         cell = self.cell
         if ((cell.dimension >= 2 and cell.low_dim_ft_type != 'inf_vacuum') and
             isinstance(self.exxdiv, str) and self.exxdiv.lower() == 'ewald'):
-            madelung = tools.pbc.madelung(cell, [self.kpts])
+            kpts = self.kpts
+            if self.kpts_descriptor is not None:
+                kpts = self.kpts_descriptor.bz_k
+            madelung = tools.pbc.madelung(cell, [kpts])
             logger.info(self, '    madelung (= occupied orbital energy shift) = %s', madelung)
             nkpts = len(self.kpts)
             # FIXME: consider the fractional num_electron or not? This maybe
@@ -503,13 +516,14 @@ class KSCF(pbchf.SCF):
         else:
             dm = self.init_guess_by_minao(cell)
 
+        nkpts = len(self.kpts)
         if dm_kpts is None:
-            dm_kpts = lib.asarray([dm]*len(self.kpts))
-
-        ne = np.einsum('kij,kji->', dm_kpts, self.get_ovlp(cell)).real
+            dm_kpts = lib.asarray([dm]*nkpts)
+        
+        ne = np.einsum('k,kij,kji', self.wtk, dm_kpts, self.get_ovlp(cell)).real
         # FIXME: consider the fractional num_electron or not? This maybe
         # relate to the charged system.
-        nkpts = len(self.kpts)
+        ne *= nkpts
         nelectron = float(self.cell.tot_electrons(nkpts))
         if abs(ne - nelectron) > 1e-7*nkpts:
             logger.debug(self, 'Big error detected in the electron number '
@@ -540,7 +554,17 @@ class KSCF(pbchf.SCF):
         if kpts is None: kpts = self.kpts
         if dm_kpts is None: dm_kpts = self.make_rdm1()
         cpu0 = (time.clock(), time.time())
-        vj = self.with_df.get_jk(dm_kpts, hermi, kpts, kpts_band, with_k=False)[0]
+
+        if self.kpts_descriptor is not None:
+            dm_kpts = self.kpts_descriptor.dm_ibz2bz(dm_kpts)
+            kpts = self.kpts_descriptor.bz_k
+            if kpts_band is None:
+                kpts_band = self.kpts
+
+        if self.kpts_descriptor is not None:
+            vj = self.with_df.get_jk_ibz(dm_kpts, hermi, self.kpts_descriptor, kpts_band, with_k=False)[0]
+        else:
+            vj = self.with_df.get_jk(dm_kpts, hermi, kpts, kpts_band, with_k=False)[0]
         logger.timer(self, 'vj', *cpu0)
         return vj
 
@@ -552,8 +576,13 @@ class KSCF(pbchf.SCF):
         if kpts is None: kpts = self.kpts
         if dm_kpts is None: dm_kpts = self.make_rdm1()
         cpu0 = (time.clock(), time.time())
-        vj, vk = self.with_df.get_jk(dm_kpts, hermi, kpts, kpts_band,
-                                     exxdiv=self.exxdiv)
+
+        if self.kpts_descriptor is not None:
+            vj, vk = self.with_df.get_jk_ibz(dm_kpts, hermi, self.kpts_descriptor, kpts_band, exxdiv=self.exxdiv)
+        else:
+            vj, vk = self.with_df.get_jk(dm_kpts, hermi, kpts, kpts_band,
+                                         exxdiv=self.exxdiv)
+
         logger.timer(self, 'vj and vk', *cpu0)
         return vj, vk
 
@@ -563,6 +592,7 @@ class KSCF(pbchf.SCF):
         See :func:`scf.hf.get_veff` and :func:`scf.hf.RHF.get_veff`
         '''
         vj, vk = self.get_jk(cell, dm_kpts, hermi, kpts, kpts_band)
+
         return vj - vk * .5
 
     def analyze(self, verbose=None, with_meta_lowdin=WITH_META_LOWDIN,

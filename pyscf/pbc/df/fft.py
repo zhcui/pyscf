@@ -176,7 +176,7 @@ class FFTDF(lib.StreamObject):
         # self.exxdiv has no effects. It was set in the get_k_kpts function to
         # mimic the KRHF/KUHF object in the call to tools.get_coulG.
         self.exxdiv = None
-        self._numint = numint.KNumInt()
+        self._numint = numint.KNumInt(kpts=self.kpts)
         self._keys = set(self.__dict__.keys())
 
     @property
@@ -280,6 +280,19 @@ class FFTDF(lib.StreamObject):
                 vk = fft_jk.get_k_kpts(self, dm, hermi, kpts, kpts_band, exxdiv)
             if with_j:
                 vj = fft_jk.get_j_kpts(self, dm, hermi, kpts, kpts_band)
+        return vj, vk
+
+    def get_jk_ibz(self, dm, hermi=1, kd=None, kpts_band=None,
+                   with_j=True, with_k=True, exxdiv=None):
+        from pyscf.pbc.df import fft_jk
+
+        if kd is None:
+            return self.get_jk(dm,hermi,kd,kpts_band,with_j,with_k,exxdiv)
+
+        if with_j:
+            vj = fft_jk.get_j_kpts_ibz(self, dm, kd, hermi, kpts_band)
+        if with_k:
+            vk = fft_jk.get_k_kpts_ibz(self, dm, kd, hermi, kpts_band, exxdiv)
         return vj, vk
 
     get_eri = get_ao_eri = fft_ao2mo.get_eri
