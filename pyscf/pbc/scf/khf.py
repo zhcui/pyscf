@@ -625,7 +625,6 @@ class KSCF(pbchf.SCF):
             # Note: this is actually "self.mo_occ_kpts"
             # which is stored in self.mo_occ of the scf.hf.RHF superclass
             mo_occ_kpts = self.mo_occ
-
         return make_rdm1(mo_coeff_kpts, mo_occ_kpts, **kwargs)
 
     def get_bands(self, kpts_band, cell=None, dm_kpts=None, kpts=None):

@@ -5,26 +5,15 @@ from pyscf.pbc.tools.pyscf_ase import get_space_group
 from pyscf import __config__
 from pyscf.pbc.lib import symmetry as symm
 
-
 KPT_DIFF_TOL = getattr(__config__, 'pbc_lib_kpts_helper_kpt_diff_tol', 1e-6)
-
 libpbc = lib.load_library('libpbc')
 
-def make_ibz_k(kpts, time_reversal=True, point_group = True):
-
+def make_ibz_k(kpts, time_reversal=True):
     '''
-    Constructe IBZ kpoints
+    Constructe k points in IBZ
     '''
-
     nbzkpts = len(kpts.bz_k)
-
-    sg = kpts.space_group
-    op_rot = sg.rotations
-
-    op_trans = sg.translations
-    op_rot = op_rot[np.where((op_trans==0.0).all(1))]
-    if not point_group:
-        op_rot = np.eye(3,dtype =int).reshape(1,3,3)
+    op_rot = kpts.sg_symm.op_rot_notrans
     kpts.op_rot = op_rot
     kpts.nrot = len(kpts.op_rot)
     if time_reversal:
@@ -84,7 +73,6 @@ def map_k_points_fast(bzk_kc, U_scc, time_reversal, tol=1e-7):
     Adopted from GPAW
     bz2bz_ks[k1,s] = k2 if k1*U.T = k2
     '''
-
     nbzkpts = len(bzk_kc)
 
     if time_reversal:
@@ -98,10 +86,10 @@ def map_k_points_fast(bzk_kc, U_scc, time_reversal, tol=1e-7):
 
         # Do some work on the input
         k_kc = np.concatenate([bzk_kc, Ubzk_kc])
-        #k_kc = np.mod(np.mod(k_kc, 1), 1)
+        k_kc = np.mod(np.mod(k_kc, 1), 1)
         aglomerate_points(k_kc, tol)
         k_kc = k_kc.round(-np.log10(tol).astype(int))
-        #k_kc = np.mod(k_kc, 1)
+        k_kc = np.mod(k_kc, 1)
 
         # Find the lexicographical order
         order = np.lexsort(k_kc.T)
@@ -117,18 +105,13 @@ def map_k_points_fast(bzk_kc, U_scc, time_reversal, tol=1e-7):
         assert (orders[0] < nbzkpts).all()
         assert (orders[1] >= nbzkpts).all()
         bz2bz_ks[orders[1] - nbzkpts, s] = orders[0]
-
     return bz2bz_ks
 
-
-
 def aglomerate_points(k_kc, tol):
-
     '''
     remove numerical error
     Adopted from GPAW
     '''
-
     nd = k_kc.shape[1]
     nbzkpts = len(k_kc)
 
@@ -143,9 +126,10 @@ def aglomerate_points(k_kc, tol):
         for i in range(len(pt_K) - 1):
             k_kc[inds_kc[pt_K[i]:pt_K[i + 1], c], c] = k_kc[inds_kc[pt_K[i], c], c]
 
-
 def symmetrize_density(kpts, rhoR_k, ibz_k_idx, mesh):
-
+    '''
+    transform real-space densities from IBZ to full BZ
+    '''
     rhoR_k = np.asarray(rhoR_k, dtype=np.double, order='C')
     rhoR = np.zeros_like(rhoR_k, dtype=np.double, order='C')
 
@@ -165,11 +149,12 @@ def symmetrize_density(kpts, rhoR_k, ibz_k_idx, mesh):
         else:
             c_op = op.ctypes.data_as(ctypes.c_void_p)
             libpbc.symmetrize(c_rhoR, c_rhoR_k, c_op, c_mesh)
-
     return rhoR
 
 def transform_mo_coeff(kpts, mo_coeff_ibz):
-
+    '''
+    transform MO coefficients from IBZ to full BZ
+    '''
     mos = []
     for k in range(kpts.nbzk):
         ibz_k_idx = kpts.bz2ibz[k]
@@ -188,15 +173,18 @@ def transform_mo_coeff(kpts, mo_coeff_ibz):
         elif symm.is_inversion(op):
             mos.append(mo_coeff.conj())
         else:
-            mo = symm.symmetrize_mo_coeff(kpts, mo_coeff, op)
+            if iop >= kpts.nrot:
+                iop -= kpts.nrot
+            mo = symm.symmetrize_mo_coeff(kpts, mo_coeff, iop)
             if time_reversal:
                 mo = mo.conj()
             mos.append(mo)
-
     return mos
 
 def transform_dm(kpts, dm_ibz):
-
+    '''
+    transform density matrices from IBZ to full BZ
+    '''
     dms = []
     for k in range(kpts.nbzk):
         ibz_k_idx = kpts.bz2ibz[k]
@@ -215,23 +203,22 @@ def transform_dm(kpts, dm_ibz):
         elif symm.is_inversion(op):
             dms.append(dm.conj())
         else:
-            dm_p = symm.symmetrize_dm(kpts, dm, op)
+            if iop >= kpts.nrot:
+                iop -= kpts.nrot
+            dm_p = symm.symmetrize_dm(kpts, dm, iop)
             if time_reversal:
                 dm_p = dm_p.conj()
             dms.append(dm_p)
-
     return dms
 
 class KPoints():
-
     '''
     This class handles kpoint symmetries etc.
     '''
-
-    def __init__(self, cell, kpts):
+    def __init__(self, cell, kpts, point_group = True):
 
         self.cell = cell
-        self.space_group = get_space_group(self.cell)
+        self.sg_symm = symm.Symmetry(cell, point_group)
 
         self.bz_k_scaled = cell.get_scaled_kpts(kpts)
         self.bz_k = kpts
