@@ -13,12 +13,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-'''
-Python XC functional implementation, the backup module if neither libxc nor xcfun
-libraries are not available
-'''
-
-def eval_xc(xc_code, rho, spin=0, relativity=0, deriv=1, verbose=None):
-    r'''XC functional, potential and functional derivatives.
-    '''
-    raise NotImplementedError
+from pyscf.prop.esr import uhf, uks
