@@ -4,6 +4,7 @@ from pyscf import lib
 from pyscf.pbc.tools.pyscf_ase import get_space_group
 from pyscf import __config__
 from pyscf.pbc.lib import symmetry as symm
+from pyscf.pbc.lib.kpts_helper import member
 
 KPT_DIFF_TOL = getattr(__config__, 'pbc_lib_kpts_helper_kpt_diff_tol', 1e-6)
 libpbc = lib.load_library('libpbc')
@@ -213,7 +214,7 @@ def transform_dm(kpts, dm_ibz):
 
 class KPoints():
     '''
-    This class handles kpoint symmetries etc.
+    This class handles k-point symmetries etc.
     '''
     def __init__(self, cell, kpts, point_group = True):
 
@@ -254,6 +255,25 @@ class KPoints():
     @nibzk.setter
     def nibzk(self, n):
         self._nibzk = n
+
+    def build_kptij_lst(self):
+        '''
+        Build k-point-pair list for SCF calculations
+        All combinations:
+            k_ibz  k_ibz
+            k_ibz  k_bz
+            k_bz   k_bz
+        '''
+        kptij_lst = [(self.bz_k[i], self.bz_k[i]) for i in range(self.nbzk)]
+        for i in range(self.nibzk):
+            ki = self.ibz_k[i]
+            where = member(ki, self.bz_k)
+            for j in range(self.nbzk): 
+                kj = self.bz_k[j]
+                if not j in where:
+                    kptij_lst.extend([(ki,kj)])
+        kptij_lst = np.asarray(kptij_lst)
+        return kptij_lst
 
     make_ibz_k = make_ibz_k
     symmetrize_density = symmetrize_density

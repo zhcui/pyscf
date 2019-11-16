@@ -300,7 +300,7 @@ class FFTDF(lib.StreamObject):
         from pyscf.pbc.df import fft_jk
 
         if kd is None:
-            return self.get_jk(dm,hermi,kd,kpts_band,with_j,with_k,exxdiv)
+            return self.get_jk(dm,hermi,self.kpts,kpts_band,with_j,with_k,exxdiv)
 
         if with_j:
             vj = fft_jk.get_j_kpts_ibz(self, dm, kd, hermi, kpts_band)

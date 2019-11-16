@@ -517,7 +517,7 @@ class GDF(aft.AFTDF):
     def check_sanity(self):
         return lib.StreamObject.check_sanity(self)
 
-    def build(self, j_only=None, with_j3c=True, kpts_band=None):
+    def build(self, j_only=None, with_j3c=True, kpts_band=None, kptij_lst_input=None):
         if self.kpts_band is not None:
             self.kpts_band = numpy.reshape(self.kpts_band, (-1,3))
         if kpts_band is not None:
@@ -549,6 +549,8 @@ class GDF(aft.AFTDF):
             kptij_lst.extend([(ki, kj) for ki in kband_uniq for kj in kpts])
             kptij_lst.extend([(ki, ki) for ki in kband_uniq])
             kptij_lst = numpy.asarray(kptij_lst)
+        if kptij_lst_input is not None:
+            kptij_lst = numpy.asarray(kptij_lst_input)
 
         if with_j3c:
             if isinstance(self._cderi_to_save, str):
@@ -719,6 +721,24 @@ class GDF(aft.AFTDF):
             vk = df_jk.get_k_kpts(self, dm, hermi, kpts, kpts_band, exxdiv)
         if with_j:
             vj = df_jk.get_j_kpts(self, dm, hermi, kpts, kpts_band)
+        return vj, vk
+
+
+    def get_jk_ibz(self, dm, hermi=1, kd=None, kpts_band=None,
+                   with_j=True, with_k=True, omega=None, exxdiv=None):
+        if omega is not None:  # J/K for RSH functionals
+            return _sub_df_jk_(self, dm, hermi, kpts, kpts_band,
+                               with_j, with_k, omega, exxdiv)
+
+        if kd is None:
+            return self.get_jk(self, dm, hermi, self.kpts, kpts_band, with_j,
+                                with_k, exxdiv)
+        vj = vk = None
+        from pyscf.pbc.df import df_jk_ibz
+        if with_k:
+            vk = df_jk_ibz.get_k_kpts_ibz(self, dm, kd, hermi, kpts_band, exxdiv)
+        if with_j:
+            vj = df_jk_ibz.get_j_kpts_ibz(self, dm, kd, hermi, kpts_band)
         return vj, vk
 
     get_eri = get_ao_eri = df_ao2mo.get_eri
