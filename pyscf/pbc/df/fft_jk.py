@@ -133,21 +133,38 @@ def get_j_kpts_ibz(mydf, dm_kpts, kd, hermi=1, kpts_band=None):
             for ao_ks_etc, p0, p1 in mydf.aoR_loop(mydf.grids, kpt):
                 ao_ks, mask = ao_ks_etc[0], ao_ks_etc[2]
                 for i in range(nset):
-                    rhoR_k[i,p0:p1] += numint.eval_rho(cell, ao_ks[0], dm_kpts[k], mask, xctype='LDA', hermi=hermi)
+                    rhoR_k[i,p0:p1] += numint.eval_rho(cell, ao_ks[0], dms[i,k], mask, xctype='LDA', hermi=hermi)
 
             for i in range(nset):
                 rhoR[i] += kd.symmetrize_density(rhoR_k[i], k, mesh)
 
         rhoR *= 1./kd.nbzk
        
-
         for i in range(nset):
             rhoG = tools.fft(rhoR[i], mesh)
             vG = coulG * rhoG
             vR[i] = tools.ifft(vG, mesh).real
 
     else:
-        raise NotImplementedError()
+        vR = rhoR = np.zeros((nset,ngrids), dtype=np.complex128)
+        for k in range(nkpts):
+            rhoR_k = np.zeros((nset,ngrids), dtype=np.complex128)
+            kpt = kpts[k]
+            for ao_ks_etc, p0, p1 in mydf.aoR_loop(mydf.grids, kpt):
+                ao_ks, mask = ao_ks_etc[0], ao_ks_etc[2]
+                for i in range(nset):
+                    ao_dm = lib.dot(ao_ks, dms[i,k])
+                    rhoR_k[i,p0:p1] += np.einsum('xi,xi->x', ao_dm, ao_ks.conj())
+
+            for i in range(nset):
+                rhoR[i] += kd.symmetrize_density(rhoR_k[i], k, mesh)
+
+        rhoR *= 1./kd.nbzk
+
+        for i in range(nset):
+            rhoG = tools.fft(rhoR[i], mesh)
+            vG = coulG * rhoG
+            vR[i] = tools.ifft(vG, mesh)
 
 
     kpts_band, input_band = _format_kpts_band(kpts_band, kpts), kpts_band
