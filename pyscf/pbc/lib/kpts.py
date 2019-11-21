@@ -157,29 +157,44 @@ def transform_mo_coeff(kpts, mo_coeff_ibz):
     transform MO coefficients from IBZ to full BZ
     '''
     mos = []
+    is_uhf = False
+    if isinstance(mo_coeff_ibz[0][0], np.ndarray) and mo_coeff_ibz[0][0].ndim == 2:
+        is_uhf = True
+        mos = [[],[]]
     for k in range(kpts.nbzk):
         ibz_k_idx = kpts.bz2ibz[k]
-        mo_coeff = mo_coeff_ibz[ibz_k_idx]
         iop = kpts.sym_conn[k]
         op = kpts.op_rot[iop]
-        time_reversal = False
-        if iop >= kpts.nrot:
-            time_reversal = True
-            op = -op
-        if symm.is_eye(op):
-            if time_reversal:
-                mos.append(mo_coeff.conj())
-            else:
-                mos.append(mo_coeff)
-        elif symm.is_inversion(op):
-            mos.append(mo_coeff.conj())
-        else:
+
+        def _transform(mo_ibz, iop, op):
+            mo_bz = None
+            time_reversal = False
             if iop >= kpts.nrot:
-                iop -= kpts.nrot
-            mo = symm.symmetrize_mo_coeff(kpts, mo_coeff, iop)
-            if time_reversal:
-                mo = mo.conj()
-            mos.append(mo)
+                time_reversal = True
+                op = -op
+            if symm.is_eye(op):
+                if time_reversal:
+                    mo_bz = mo_ibz.conj()
+                else:
+                    mo_bz = mo_ibz
+            elif symm.is_inversion(op):
+                mo_bz = mo_ibz.conj()
+            else:
+                if iop >= kpts.nrot:
+                    iop -= kpts.nrot
+                mo_bz = symm.symmetrize_mo_coeff(kpts, mo_ibz, iop)
+                if time_reversal:
+                    mo_bz = mo_bz.conj()
+            return mo_bz
+
+        if is_uhf:
+            mo_coeff_a = mo_coeff_ibz[0][ibz_k_idx]
+            mos[0].append(_transform(mo_coeff_a, iop, op))
+            mo_coeff_b = mo_coeff_ibz[1][ibz_k_idx]
+            mos[1].append(_transform(mo_coeff_b, iop, op))
+        else:
+            mo_coeff = mo_coeff_ibz[ibz_k_idx]
+            mos.append(_transform(mo_coeff, iop, op))
     return mos
 
 def transform_dm(kpts, dm_ibz):
@@ -187,30 +202,87 @@ def transform_dm(kpts, dm_ibz):
     transform density matrices from IBZ to full BZ
     '''
     dms = []
+    is_uhf = False
+    if (isinstance(dm_ibz, np.ndarray) and dm_ibz.ndim == 4) or \
+       (isinstance(dm_ibz[0][0], np.ndarray) and dm_ibz[0][0].ndim == 2):
+        is_uhf = True
+        dms = [[],[]]
     for k in range(kpts.nbzk):
         ibz_k_idx = kpts.bz2ibz[k]
-        dm = dm_ibz[ibz_k_idx]
         iop = kpts.sym_conn[k]
         op = kpts.op_rot[iop]
-        time_reversal = False
-        if iop >= kpts.nrot:
-            time_reversal = True
-            op = -op
-        if symm.is_eye(op):
-            if time_reversal:
-                dms.append(dm.conj())
-            else:
-                dms.append(dm)
-        elif symm.is_inversion(op):
-            dms.append(dm.conj())
-        else:
+
+        def _transform(dm_ibz, iop, op):
+            time_reversal = False
             if iop >= kpts.nrot:
-                iop -= kpts.nrot
-            dm_p = symm.symmetrize_dm(kpts, dm, iop)
-            if time_reversal:
-                dm_p = dm_p.conj()
-            dms.append(dm_p)
-    return dms
+                time_reversal = True
+                op = -op
+            if symm.is_eye(op):
+                if time_reversal:
+                    dm_bz = dm_ibz.conj()
+                else:
+                    dm_bz = dm_ibz
+            elif symm.is_inversion(op):
+                dm_bz = dm_ibz.conj()
+            else:
+                if iop >= kpts.nrot:
+                    iop -= kpts.nrot
+                dm_bz = symm.symmetrize_dm(kpts, dm_ibz, iop)
+                if time_reversal:
+                    dm_bz = dm_bz.conj()
+            return dm_bz
+
+        if is_uhf:
+            dm_a = dm_ibz[0][ibz_k_idx]
+            dms[0].append(_transform(dm_a, iop, op))
+            dm_b = dm_ibz[1][ibz_k_idx]
+            dms[1].append(_transform(dm_b, iop, op))
+        else:
+            dm = dm_ibz[ibz_k_idx]
+            dms.append(_transform(dm, iop, op))
+    if is_uhf:
+        nkpts = len(dms[0])
+        nao = dms[0][0].shape[0]
+        return lib.asarray(dms).reshape(2,nkpts,nao,nao)
+    else:
+        return lib.asarray(dms)
+
+def transform_mo_energy(kpts, mo_energy):
+    '''
+    transform mo_energy from IBZ to full BZ
+    '''
+    is_uhf = False
+    if isinstance(mo_energy[0][0], np.ndarray):
+        is_uhf = True
+    mo_energy_bz = []
+    if is_uhf:
+        mo_energy_bz = [[],[]]
+    for k in range(kpts.nbzk):
+        ibz_k_idx = kpts.bz2ibz[k]
+        if is_uhf:
+            mo_energy_bz[0].append(mo_energy[0][ibz_k_idx])
+            mo_energy_bz[1].append(mo_energy[1][ibz_k_idx])
+        else: 
+            mo_energy_bz.append(mo_energy[ibz_k_idx])
+    return mo_energy_bz
+
+
+def check_mo_occ_symmetry(kpts, mo_occ):
+    '''
+    check if mo_occ has the correct symmetry
+    '''
+    for k in range(kpts.nibzk):
+        bz_k = kpts.bz_k_group[k]
+        nbzk = bz_k.size
+        for i in range(nbzk):
+            for j in range(i+1,nbzk):
+                if not (np.absolute(mo_occ[bz_k[i]] - mo_occ[bz_k[j]]) < KPT_DIFF_TOL).all():
+                    raise RuntimeError("symmetry broken")
+    mo_occ_ibz = []
+    for k in range(kpts.nibzk):
+        mo_occ_ibz.append(mo_occ[kpts.ibz2bz[k]])
+    return mo_occ_ibz
+
 
 class KPoints():
     '''
@@ -279,3 +351,5 @@ class KPoints():
     symmetrize_density = symmetrize_density
     transform_mo_coeff = transform_mo_coeff
     transform_dm = transform_dm
+    transform_mo_energy = transform_mo_energy
+    check_mo_occ_symmetry = check_mo_occ_symmetry

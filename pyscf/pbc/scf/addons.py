@@ -26,6 +26,7 @@ import scipy.special
 import scipy.optimize
 from pyscf import lib
 from pyscf.pbc import gto as pbcgto
+from pyscf.pbc import tools
 from pyscf.lib import logger
 from pyscf import __config__
 
@@ -53,7 +54,7 @@ def project_mo_nr2nr(cell1, mo1, cell2, kpts=None):
                 for k, kpt in enumerate(kpts)]
 
 
-def smearing_(mf, sigma=None, method=SMEARING_METHOD, mu0=None):
+def smearing_(mf, sigma=None, method=SMEARING_METHOD, mu0=None, fix_spin=False):
     '''Fermi-Dirac or Gaussian smearing'''
     from pyscf.scf import uhf
     from pyscf.scf import ghf
@@ -63,6 +64,11 @@ def smearing_(mf, sigma=None, method=SMEARING_METHOD, mu0=None):
     is_ghf = isinstance(mf, ghf.GHF)
     is_rhf = (not is_uhf) and (not is_ghf)
     is_khf = isinstance(mf, khf.KSCF)
+
+    if fix_spin and not is_uhf:
+        raise KeyError("fix_spin only supports UHF.")
+    if fix_spin and mu0 is not None:
+        raise KeyError("fix_spin not support fix mu0")
 
     def fermi_smearing_occ(m, mo_energy_kpts, sigma):
         occ = numpy.zeros_like(mo_energy_kpts)
@@ -86,19 +92,32 @@ def smearing_(mf, sigma=None, method=SMEARING_METHOD, mu0=None):
 
         This is a k-point version of scf.hf.SCF.get_occ
         '''
-        mo_occ_kpts = mf_class.get_occ(mf, mo_energy_kpts, mo_coeff_kpts)
+        if mf.kpts_descriptor is not None:
+            mo_energy_kpts = mf.kpts_descriptor.transform_mo_energy(mo_energy_kpts)
+            #mo_coeff_kpts = mf.kpts_descriptor.transform_mo_coeff(mo_coeff_kpts)
+
+        #mo_occ_kpts = mf_class.get_occ(mf, mo_energy_kpts, mo_coeff_kpts)
         if (mf.sigma == 0) or (not mf.sigma) or (not mf.smearing_method):
+            mo_occ_kpts = mf_class.get_occ(mf, mo_energy_kpts, mo_coeff_kpts)
             return mo_occ_kpts
 
         if is_khf:
             nkpts = len(mf.kpts)
+            if mf.kpts_descriptor is not None:
+                nkpts = mf.kpts_descriptor.nbzk
         else:
             nkpts = 1
         nelectron = mf.cell.tot_electrons(nkpts)
         if is_uhf:
             nocc = nelectron
-            mo_es = numpy.append(numpy.hstack(mo_energy_kpts[0]),
-                                 numpy.hstack(mo_energy_kpts[1]))
+            if fix_spin:
+                nocc = mf.nelec
+                mo_es = []
+                mo_es.append(numpy.hstack(mo_energy_kpts[0]))
+                mo_es.append(numpy.hstack(mo_energy_kpts[1]))
+            else:
+                mo_es = numpy.append(numpy.hstack(mo_energy_kpts[0]),
+                                     numpy.hstack(mo_energy_kpts[1]))
         elif is_ghf:
             nocc = nelectron
             mo_es = numpy.hstack(mo_energy_kpts)
@@ -111,20 +130,42 @@ def smearing_(mf, sigma=None, method=SMEARING_METHOD, mu0=None):
         else:  # Gaussian smearing
             f_occ = gaussian_smearing_occ
 
-        mo_energy = numpy.sort(mo_es.ravel())
+        if fix_spin:
+            mo_energy = []
+            mo_energy.append(numpy.sort(mo_es[0].ravel()))
+            mo_energy.append(numpy.sort(mo_es[1].ravel()))
+        else:
+            mo_energy = numpy.sort(mo_es.ravel())
 
         # If mu0 is given, fix mu instead of electron number. XXX -Chong Sun
         sigma = mf.sigma
-        fermi = mo_energy[nocc-1]
+        if fix_spin:
+            fermi = [mo_energy[0][nocc[0]-1], mo_energy[1][nocc[1]-1]] 
+        else:
+            fermi = mo_energy[nocc-1]
         if mu0 is None:
-            def nelec_cost_fn(m):
-                mo_occ_kpts = f_occ(m, mo_es, sigma)
+            def nelec_cost_fn(m, _mo_es, _nelectron):
+                mo_occ_kpts = f_occ(m, _mo_es, sigma)
                 if is_rhf:
                     mo_occ_kpts *= 2
-                return (mo_occ_kpts.sum() - nelectron)**2
-            res = scipy.optimize.minimize(nelec_cost_fn, fermi, method='Powell')
-            mu = res.x
-            mo_occs = f = f_occ(mu, mo_es, sigma)
+                return (mo_occ_kpts.sum() - _nelectron)**2
+            if fix_spin:
+                mu = []
+                mo_occs = []
+                res = scipy.optimize.minimize(nelec_cost_fn, fermi[0], args=(mo_es[0], nocc[0]), method='Powell',
+                                              options={'xtol': 1e-5, 'ftol': 1e-5, 'maxiter': 10000})
+                mu.append(res.x)
+                mo_occs.append(f_occ(mu[0], mo_es[0], sigma))
+                res = scipy.optimize.minimize(nelec_cost_fn, fermi[1], args=(mo_es[1], nocc[1]), method='Powell',
+                                              options={'xtol': 1e-5, 'ftol': 1e-5, 'maxiter': 10000})
+                mu.append(res.x)
+                mo_occs.append(f_occ(mu[1], mo_es[1], sigma))
+                f = copy.copy(mo_occs)
+            else:
+                res = scipy.optimize.minimize(nelec_cost_fn, fermi, args=(mo_es, nelectron), method='Powell',
+                                              options={'xtol': 1e-5, 'ftol': 1e-5, 'maxiter': 10000})
+                mu = res.x
+                mo_occs = f = f_occ(mu, mo_es, sigma)
         else:
             mu = mu0
             mo_occs = f = f_occ(mu, mo_es, sigma)
@@ -132,11 +173,23 @@ def smearing_(mf, sigma=None, method=SMEARING_METHOD, mu0=None):
 
         # See https://www.vasp.at/vasp-workshop/slides/k-points.pdf
         if mf.smearing_method.lower() == 'fermi':
-            f = f[(f>0) & (f<1)]
-            mf.entropy = -(f*numpy.log(f) + (1-f)*numpy.log(1-f)).sum() / nkpts
+            if fix_spin:
+                f[0] = f[0][(f[0]>0) & (f[0]<1)]
+                mf.entropy = -(f[0]*numpy.log(f[0]) + (1-f[0])*numpy.log(1-f[0])).sum() / nkpts
+                f[1] = f[1][(f[1]>0) & (f[1]<1)]
+                mf.entropy += -(f[1]*numpy.log(f[1]) + (1-f[1])*numpy.log(1-f[1])).sum() / nkpts
+            else:
+                f = f[(f>0) & (f<1)]
+                mf.entropy = -(f*numpy.log(f) + (1-f)*numpy.log(1-f)).sum() / nkpts
         else:
-            mf.entropy = (numpy.exp(-((mo_es-mu)/mf.sigma)**2).sum()
-                          / (2*numpy.sqrt(numpy.pi)) / nkpts)
+            if fix_spin:
+                mf.entropy = (numpy.exp(-((mo_es[0]-mu[0])/mf.sigma)**2).sum()
+                              / (2*numpy.sqrt(numpy.pi)) / nkpts)
+                mf.entropy += (numpy.exp(-((mo_es[1]-mu[1])/mf.sigma)**2).sum()
+                              / (2*numpy.sqrt(numpy.pi)) / nkpts)
+            else:
+                mf.entropy = (numpy.exp(-((mo_es-mu)/mf.sigma)**2).sum()
+                              / (2*numpy.sqrt(numpy.pi)) / nkpts)
         if is_rhf:
             mo_occs *= 2
             mf.entropy *= 2
@@ -145,9 +198,13 @@ def smearing_(mf, sigma=None, method=SMEARING_METHOD, mu0=None):
         # have different dimensions for different k-points
         if is_uhf:
             if is_khf:
-                nao_tot = mo_occs.size//2
-                mo_occ_kpts =(partition_occ(mo_occs[:nao_tot], mo_energy_kpts[0]),
-                              partition_occ(mo_occs[nao_tot:], mo_energy_kpts[1]))
+                if fix_spin:
+                    mo_occ_kpts =(partition_occ(mo_occs[0], mo_energy_kpts[0]),
+                                  partition_occ(mo_occs[1], mo_energy_kpts[1]))
+                else:
+                    nao_tot = mo_occs.size//2
+                    mo_occ_kpts =(partition_occ(mo_occs[:nao_tot], mo_energy_kpts[0]),
+                                  partition_occ(mo_occs[nao_tot:], mo_energy_kpts[1]))
             else:
                 mo_occ_kpts = partition_occ(mo_occs, mo_energy_kpts)
         else: # rhf and ghf
@@ -156,11 +213,29 @@ def smearing_(mf, sigma=None, method=SMEARING_METHOD, mu0=None):
             else:
                 mo_occ_kpts = mo_occs
 
-        logger.debug(mf, '    Fermi level %g  Sum mo_occ_kpts = %s  should equal nelec = %s',
-                     fermi, mo_occs.sum(), nelectron)
-        logger.info(mf, '    sigma = %g  Optimized mu = %.12g  entropy = %.12g',
-                    mf.sigma, mu, mf.entropy)
+        if fix_spin:
+            logger.debug(mf, '    Alpha-spin Fermi level %g  Sum mo_occ_kpts = %s  should equal nelec = %s',
+                         fermi[0], mo_occs[0].sum(), nocc[0])
+            logger.debug(mf, '    Beta-spin  Fermi level %g  Sum mo_occ_kpts = %s  should equal nelec = %s',
+                         fermi[1], mo_occs[1].sum(), nocc[1])
+            logger.info(mf, '    sigma = %g  Optimized mu_alpha = %.12g  entropy = %.12g',
+                        mf.sigma, mu[0], mf.entropy)
+            logger.info(mf, '    sigma = %g  Optimized mu_beta  = %.12g  entropy = %.12g',
+                        mf.sigma, mu[1], mf.entropy)
+        else:
+            logger.debug(mf, '    Fermi level %g  Sum mo_occ_kpts = %s  should equal nelec = %s',
+                         fermi, mo_occs.sum(), nelectron)
+            logger.info(mf, '    sigma = %g  Optimized mu = %.12g  entropy = %.12g',
+                        mf.sigma, mu, mf.entropy)
 
+        if mf.kpts_descriptor is not None:
+            if is_uhf:
+                mo_occ_kpts = (mf.kpts_descriptor.check_mo_occ_symmetry(mo_occ_kpts[0]),
+                               mf.kpts_descriptor.check_mo_occ_symmetry(mo_occ_kpts[1]))
+            else:
+                mo_occ_kpts = mf.kpts_descriptor.check_mo_occ_symmetry(mo_occ_kpts)
+
+        tools.print_mo_energy_occ_kpts(mf,mo_energy_kpts,mo_occ_kpts,is_uhf)
         return mo_occ_kpts
 
     def get_grad_tril(mo_coeff_kpts, mo_occ_kpts, fock):
