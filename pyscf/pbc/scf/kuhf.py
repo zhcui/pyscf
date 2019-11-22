@@ -130,7 +130,7 @@ def get_occ(mf, mo_energy_kpts=None, mo_coeff_kpts=None):
     if mo_energy_kpts is None: mo_energy_kpts = mf.mo_energy
 
     nocc_a, nocc_b = mf.nelec
-    if self.kpts_descriptor is not None:
+    if mf.kpts_descriptor is not None:
         mo_energy_kpts = mf.kpts_descriptor.transform_mo_energy(mo_energy_kpts)
     mo_energy = np.sort(np.hstack(mo_energy_kpts[0]))
     fermi_a = mo_energy[nocc_a-1]
@@ -168,7 +168,7 @@ def get_occ(mf, mo_energy_kpts=None, mo_coeff_kpts=None):
                          mo_energy_kpts[1][k][mo_occ_kpts[1][k]==0])
         np.set_printoptions(threshold=1000)
 
-    if self.kpts_descriptor is not None:
+    if mf.kpts_descriptor is not None:
         mo_occ_kpts[0] = mf.kpts_descriptor.check_mo_occ_symmetry(mo_occ_kpts[0])
         mo_occ_kpts[1] = mf.kpts_descriptor.check_mo_occ_symmetry(mo_occ_kpts[1])
     return mo_occ_kpts
