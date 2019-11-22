@@ -92,7 +92,7 @@ def smearing_(mf, sigma=None, method=SMEARING_METHOD, mu0=None, fix_spin=False):
 
         This is a k-point version of scf.hf.SCF.get_occ
         '''
-        if mf.kpts_descriptor is not None:
+        if getattr(mf, 'kpts_descriptor', None) is not None:
             mo_energy_kpts = mf.kpts_descriptor.transform_mo_energy(mo_energy_kpts)
             #mo_coeff_kpts = mf.kpts_descriptor.transform_mo_coeff(mo_coeff_kpts)
 
@@ -103,7 +103,7 @@ def smearing_(mf, sigma=None, method=SMEARING_METHOD, mu0=None, fix_spin=False):
 
         if is_khf:
             nkpts = len(mf.kpts)
-            if mf.kpts_descriptor is not None:
+            if getattr(mf, 'kpts_descriptor', None) is not None:
                 nkpts = mf.kpts_descriptor.nbzk
         else:
             nkpts = 1
@@ -228,14 +228,17 @@ def smearing_(mf, sigma=None, method=SMEARING_METHOD, mu0=None, fix_spin=False):
             logger.info(mf, '    sigma = %g  Optimized mu = %.12g  entropy = %.12g',
                         mf.sigma, mu, mf.entropy)
 
-        if mf.kpts_descriptor is not None:
+        if getattr(mf, 'kpts_descriptor', None) is not None:
             if is_uhf:
                 mo_occ_kpts = (mf.kpts_descriptor.check_mo_occ_symmetry(mo_occ_kpts[0]),
                                mf.kpts_descriptor.check_mo_occ_symmetry(mo_occ_kpts[1]))
             else:
                 mo_occ_kpts = mf.kpts_descriptor.check_mo_occ_symmetry(mo_occ_kpts)
 
-        tools.print_mo_energy_occ_kpts(mf,mo_energy_kpts,mo_occ_kpts,is_uhf)
+        if is_khf:
+            tools.print_mo_energy_occ_kpts(mf,mo_energy_kpts,mo_occ_kpts,is_uhf)
+        else:
+            tools.print_mo_energy_occ(mf,mo_energy_kpts,mo_occ_kpts,is_uhf)
         return mo_occ_kpts
 
     def get_grad_tril(mo_coeff_kpts, mo_occ_kpts, fock):

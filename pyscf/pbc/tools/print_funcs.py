@@ -26,3 +26,24 @@ def print_mo_energy_occ_kpts(mf,mo_energy_kpts,mo_occ_kpts,is_uhf):
                          k, kpt[0], kpt[1], kpt[2], mo_energy_kpts[k])
             logger.debug(mf, '                              %s', mo_occ_kpts[k])
         numpy.set_printoptions()
+
+def print_mo_energy_occ(mf,mo_energy,mo_occ,is_uhf):
+
+    if is_uhf:
+        nocc = len(mo_energy[0])
+        numpy.set_printoptions(precision=6,threshold=nocc,suppress=True)
+        logger.debug(mf, '  alpha mo_energy/mo_occ')
+        logger.debug(mf, '  %s', mo_energy[0])
+        logger.debug(mf, '  %s', mo_occ[0])
+        logger.debug(mf, '  beta  mo_energy/mo_occ')
+        logger.debug(mf, '  %s', mo_energy[1])
+        logger.debug(mf, '  %s', mo_occ[1])
+        numpy.set_printoptions()
+    else:
+        nocc = len(mo_energy)
+        numpy.set_printoptions(precision=6,threshold=nocc,suppress=True)
+        logger.debug(mf, '  mo_energy/mo_occ')
+        logger.debug(mf, '  %s', mo_energy)
+        logger.debug(mf, '  %s', mo_occ)
+        numpy.set_printoptions()
+
