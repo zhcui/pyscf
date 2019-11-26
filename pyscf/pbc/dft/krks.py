@@ -96,13 +96,14 @@ def get_veff(ks, cell=None, dm=None, dm_last=0, vhf_last=0, hermi=1,
             tmp.append(vxc[ks.kpts_descriptor.ibz2bz[k]])
         vxc = tmp
 
-    #weight = 1./len(kpts)
-    weight = ks.wtk
+    if (len(kpts) != len(ks.wtk)):
+        weight = [1./len(kpts)]*len(kpts)
+    else:
+        weight = ks.wtk
     if not hybrid:
         vj = ks.get_j(cell, dm, hermi, kpts, kpts_band)
         vxc += vj
     else:
-        print("debug1")
         if getattr(ks.with_df, '_j_only', False):  # for GDF and MDF
             ks.with_df._j_only = False
         vj, vk = ks.get_jk(cell, dm, hermi, kpts, kpts_band)
@@ -120,6 +121,9 @@ def get_veff(ks, cell=None, dm=None, dm_last=0, vhf_last=0, hermi=1,
     if ground_state:
         #ecoul = np.einsum('Kij,Kji', dm, vj).real * .5 * weight
         ecoul = np.einsum('K,Kij,Kji', weight, dm, vj).real * .5
+        print(weight)
+        print(vj)
+        print(dm)
     else:
         ecoul = None
 
