@@ -421,7 +421,6 @@ class KSCF(pbchf.SCF):
         if self.kpts_descriptor is not None:
             self.kpts = self.kpts_descriptor.ibz_k
             self.wtk  = self.kpts_descriptor.ibz_weight
-
         self.conv_tol = cell.precision * 10
 
         self.exx_built = False
@@ -528,7 +527,7 @@ class KSCF(pbchf.SCF):
         nkpts = len(self.kpts)
         if dm_kpts is None:
             dm_kpts = lib.asarray([dm]*nkpts)
-        
+       
         ne = np.einsum('k,kij,kji', self.wtk, dm_kpts, self.get_ovlp(cell)).real
         # FIXME: consider the fractional num_electron or not? This maybe
         # relate to the charged system.
@@ -575,7 +574,8 @@ class KSCF(pbchf.SCF):
         if dm_kpts is None: dm_kpts = self.make_rdm1()
         cpu0 = (time.clock(), time.time())
         if self.kpts_descriptor is not None:
-            vj, vk = self.with_df.get_jk_ibz(dm_kpts, hermi, self.kpts_descriptor, kpts_band, exxdiv=self.exxdiv)
+            vj, vk = self.with_df.get_jk_ibz(dm_kpts, hermi, self.kpts_descriptor, kpts_band,
+                                             with_j, with_k, omega, exxdiv=self.exxdiv)
         else:
             vj, vk = self.with_df.get_jk(dm_kpts, hermi, kpts, kpts_band,
                                          with_j, with_k, omega, exxdiv=self.exxdiv)

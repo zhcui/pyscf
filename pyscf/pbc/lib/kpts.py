@@ -197,6 +197,26 @@ def transform_mo_coeff(kpts, mo_coeff_ibz):
             mos.append(_transform(mo_coeff, iop, op))
     return mos
 
+
+def transform_mo_occ(kpts, mo_occ_ibz):
+    '''
+    transform MO occupations from IBZ to full BZ
+    '''
+    occ = []
+    is_uhf = False
+    if isinstance(mo_occ_ibz[0][0], np.ndarray) and mo_occ_ibz[0][0].ndim == 1:
+        is_uhf = True
+        occ = [[],[]]
+    for k in range(kpts.nbzk):
+        ibz_k_idx = kpts.bz2ibz[k]
+        if is_uhf:
+            occ[0].append(mo_occ_ibz[0][ibz_k_idx])
+            occ[1].append(mo_occ_ibz[1][ibz_k_idx])
+        else:
+            occ.append(mo_occ_ibz[ibz_k_idx])
+    return occ
+
+
 def transform_dm(kpts, dm_ibz):
     '''
     transform density matrices from IBZ to full BZ
@@ -352,4 +372,5 @@ class KPoints():
     transform_mo_coeff = transform_mo_coeff
     transform_dm = transform_dm
     transform_mo_energy = transform_mo_energy
+    transform_mo_occ = transform_mo_occ
     check_mo_occ_symmetry = check_mo_occ_symmetry

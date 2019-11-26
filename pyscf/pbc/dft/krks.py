@@ -90,11 +90,19 @@ def get_veff(ks, cell=None, dm=None, dm_last=0, vhf_last=0, hermi=1,
         logger.debug(ks, 'nelec by numeric integration = %s', n)
         t0 = logger.timer(ks, 'vxc', *t0)
 
-    weight = 1./len(kpts)
+    tmp = []
+    if getattr(ks,'kpts_descriptor',None) is not None:
+        for k in range(len(kpts)):
+            tmp.append(vxc[ks.kpts_descriptor.ibz2bz[k]])
+        vxc = tmp
+
+    #weight = 1./len(kpts)
+    weight = ks.wtk
     if not hybrid:
         vj = ks.get_j(cell, dm, hermi, kpts, kpts_band)
         vxc += vj
     else:
+        print("debug1")
         if getattr(ks.with_df, '_j_only', False):  # for GDF and MDF
             ks.with_df._j_only = False
         vj, vk = ks.get_jk(cell, dm, hermi, kpts, kpts_band)
@@ -106,10 +114,12 @@ def get_veff(ks, cell=None, dm=None, dm_last=0, vhf_last=0, hermi=1,
         vxc += vj - vk * .5
 
         if ground_state:
-            exc -= np.einsum('Kij,Kji', dm, vk).real * .5 * .5 * weight
+            #exc -= np.einsum('Kij,Kji', dm, vk).real * .5 * .5 * weight
+            exc -= np.einsum('K,Kij,Kji', weight, dm, vk).real * .5 * .5
 
     if ground_state:
-        ecoul = np.einsum('Kij,Kji', dm, vj).real * .5 * weight
+        #ecoul = np.einsum('Kij,Kji', dm, vj).real * .5 * weight
+        ecoul = np.einsum('K,Kij,Kji', weight, dm, vj).real * .5
     else:
         ecoul = None
 
@@ -131,8 +141,8 @@ def get_rho(mf, dm=None, grids=None, kpts=None):
 class KRKS(khf.KRHF, rks.KohnShamDFT):
     '''RKS class adapted for PBCs with k-point sampling.
     '''
-    def __init__(self, cell, kpts=np.zeros((1,3))):
-        khf.KRHF.__init__(self, cell, kpts)
+    def __init__(self, cell, kpts=np.zeros((1,3)), kpts_descriptor = None):
+        khf.KRHF.__init__(self, cell, kpts, kpts_descriptor=kpts_descriptor)
         rks.KohnShamDFT.__init__(self)
 
     def dump_flags(self, verbose=None):
@@ -148,8 +158,10 @@ class KRKS(khf.KRHF, rks.KohnShamDFT):
         if vhf is None or getattr(vhf, 'ecoul', None) is None:
             vhf = self.get_veff(self.cell, dm_kpts)
 
-        weight = 1./len(h1e_kpts)
-        e1 = weight * np.einsum('kij,kji', h1e_kpts, dm_kpts)
+        #weight = 1./len(h1e_kpts)
+        weight = self.wtk 
+        #e1 = weight * np.einsum('kij,kji', h1e_kpts, dm_kpts)
+        e1 = np.einsum('k,kij,kji', weight, h1e_kpts, dm_kpts)
         tot_e = e1 + vhf.ecoul + vhf.exc
         self.scf_summary['e1'] = e1.real
         self.scf_summary['coul'] = vhf.ecoul.real

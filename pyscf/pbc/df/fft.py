@@ -296,12 +296,15 @@ class FFTDF(lib.StreamObject):
         return vj, vk
 
     def get_jk_ibz(self, dm, hermi=1, kd=None, kpts_band=None,
-                   with_j=True, with_k=True, exxdiv=None):
+                   with_j=True, with_k=True, omega=None, exxdiv=None):
         from pyscf.pbc.df import fft_jk
+        if omega is not None:
+            raise NotImplementedError()
 
         if kd is None:
             return self.get_jk(dm,hermi,self.kpts,kpts_band,with_j,with_k,exxdiv)
 
+        vj = vk = None
         if with_j:
             vj = fft_jk.get_j_kpts_ibz(self, dm, kd, hermi, kpts_band)
         if with_k:

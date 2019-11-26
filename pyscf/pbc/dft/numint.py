@@ -335,6 +335,16 @@ def nr_rks(ni, cell, grids, xc_code, dms, spin=0, relativity=0, hermi=0,
     if kpts is None:
         kpts = numpy.zeros((1,3))
 
+    kd = getattr(ni, 'kpts_descriptor', None)
+    if kd is not None:
+        if getattr(dms, 'mo_coeff', None) is not None:
+            mo_coeff = kd.transform_mo_coeff(dms.mo_coeff)
+            mo_occ = kd.transform_mo_occ(dms.mo_occ)
+            dms = lib.tag_array(kd.transform_dm(dms), mo_coeff=mo_coeff, mo_occ=mo_occ)
+        else:
+            dms = kd.transform_dm(dms)
+        kpts = kd.bz_k
+
     xctype = ni._xc_type(xc_code)
     make_rho, nset, nao = ni._gen_rho_evaluator(cell, dms, hermi)
 
@@ -919,10 +929,20 @@ def cache_xc_kernel(ni, cell, grids, xc_code, mo_coeff, mo_occ, spin=0,
 def get_rho(ni, cell, dm, grids, kpts=numpy.zeros((1,3)), max_memory=2000):
     '''Density in real space
     '''
+    kd = getattr(ni, 'kpts_descriptor', None)
+    if kd is not None:
+        if getattr(dm, 'mo_coeff', None) is not None:
+            mo_coeff = kd.transform_mo_coeff(dm.mo_coeff)
+            mo_occ = kd.transform_mo_occ(dm.mo_occ)
+            dm = lib.tag_array(kd.transform_dm(dm), mo_coeff=mo_coeff, mo_occ=mo_occ)
+        else:
+            dm = kd.transform_dm(dm)
     make_rho, nset, nao = ni._gen_rho_evaluator(cell, dm)
     assert(nset == 1)
     rho = numpy.empty(grids.weights.size)
     p1 = 0
+    if kd is not None:
+        kpts = kd.bz_k
     for ao_k1, ao_k2, mask, weight, coords \
             in ni.block_loop(cell, grids, nao, 0, kpts, None, max_memory):
         p0, p1 = p1, p1 + weight.size
@@ -1066,9 +1086,10 @@ class KNumInt(numint.NumInt):
     '''Generalization of pyscf's NumInt class for k-point sampling and
     periodic images.
     '''
-    def __init__(self, kpts=numpy.zeros((1,3))):
+    def __init__(self, kpts=numpy.zeros((1,3)), kpts_descriptor=None):
         numint.NumInt.__init__(self)
         self.kpts = numpy.reshape(kpts, (-1,3))
+        self.kpts_descriptor = kpts_descriptor
 
     def eval_ao(self, cell, coords, kpts=numpy.zeros((1,3)), deriv=0, relativity=0,
                 shls_slice=None, non0tab=None, out=None, verbose=None, **kwargs):
