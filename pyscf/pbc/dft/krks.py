@@ -121,9 +121,6 @@ def get_veff(ks, cell=None, dm=None, dm_last=0, vhf_last=0, hermi=1,
     if ground_state:
         #ecoul = np.einsum('Kij,Kji', dm, vj).real * .5 * weight
         ecoul = np.einsum('K,Kij,Kji', weight, dm, vj).real * .5
-        print(weight)
-        print(vj)
-        print(dm)
     else:
         ecoul = None
 

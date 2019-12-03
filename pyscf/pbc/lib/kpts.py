@@ -304,14 +304,24 @@ def check_mo_occ_symmetry(kpts, mo_occ):
     return mo_occ_ibz
 
 
+def make_KPoints(kpts=np.zeros((1,3)),cell=None,point_group=False):
+    
+    if isinstance(kpts, KPoints):
+        return kpts
+    else:
+        return KPoints(kpts,cell,point_group)
+
 class KPoints():
     '''
     This class handles k-point symmetries etc.
     '''
-    def __init__(self, cell, kpts, point_group = True):
+    def __init__(self, kpts=np.zeros((1,3)), cell=None, point_group = True):
 
         self.cell = cell
-        self.sg_symm = symm.Symmetry(cell, point_group)
+        if self.cell is None:
+            self.sg_symm = None
+        else:
+            self.sg_symm = symm.Symmetry(cell, point_group)
 
         self.bz_k_scaled = cell.get_scaled_kpts(kpts)
         self.bz_k = kpts
@@ -328,7 +338,12 @@ class KPoints():
         self.sym_conn = np.zeros(len(kpts), dtype = int)
         self.sym_group = []
         self.bz_k_group = []
+        if self.sg_symm is None:
+            for k in range(len(kpts)):
+                self.sym_group.append([0])
+                self.bz_k_group.append(np.asarray([k],dtype=int))
 
+        #private variables
         self._nbzk = len(self.bz_k)
         self._nibzk = len(self.ibz_k)
 
