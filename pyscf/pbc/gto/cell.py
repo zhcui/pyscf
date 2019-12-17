@@ -820,7 +820,7 @@ def ewald(cell, ew_eta=None, ew_cut=None):
 energy_nuc = ewald
 
 def make_kpts(cell, nks, wrap_around=WRAP_AROUND, with_gamma_point=WITH_GAMMA,
-              scaled_center=None):
+              scaled_center=None, point_group=False, time_reversal=False):
     '''Given number of kpoints along x,y,z , generate kpoints
 
     Args:
@@ -836,10 +836,15 @@ def make_kpts(cell, nks, wrap_around=WRAP_AROUND, with_gamma_point=WITH_GAMMA,
             scaled_center, given as the zeroth index of the returned kpts.
             Scaled meaning that the k-points are scaled to a grid from 
             [-1,1] x [-1,1] x [-1,1]
+        point_group : bool
+            Whether to consider point group symmetry
+        time_reversal : bool
+            Whether to consider time reversal symmetry
 
     Returns:
         kpts in absolute value (unit 1/Bohr).  Gamma point is placed at the
-        first place in the k-points list
+        first place in the k-points list;
+        instance of :class:`KPoints` if k-point symmetry is considered
 
     Examples:
 
@@ -859,6 +864,9 @@ def make_kpts(cell, nks, wrap_around=WRAP_AROUND, with_gamma_point=WITH_GAMMA,
     scaled_kpts = lib.cartesian_prod(ks_each_axis)
     scaled_kpts += np.array(scaled_center)
     kpts = cell.get_abs_kpts(scaled_kpts)
+    if point_group or time_reversal:
+        from pyscf.pbc.lib.kpts import make_kpoints
+        kpts = make_kpoints(kpts,cell,point_group,time_reversal)
     return kpts
 
 def get_uniform_grids(cell, mesh=None, **kwargs):

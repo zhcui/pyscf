@@ -41,6 +41,7 @@ from pyscf.pbc.scf import chkfile
 from pyscf.pbc import tools
 from pyscf.pbc import df
 from pyscf import __config__
+from pyscf.pbc.lib.kpts import KPoints
 
 WITH_META_LOWDIN = getattr(__config__, 'pbc_scf_analyze_with_meta_lowdin', True)
 PRE_ORTH_METHOD = getattr(__config__, 'pbc_scf_analyze_pre_orth_method', 'ANO')
@@ -400,13 +401,14 @@ class KSCF(pbchf.SCF):
             The sampling k-points in Cartesian coordinates, in units of 1/Bohr.
         wtk  : (nks,) ndarray
             The weight of each k point.
+        kpts_descriptor : KPoints class
+            Instance of :class:`KPoints` if k-point symmetry considered.
     '''
     conv_tol_grad = getattr(__config__, 'pbc_scf_KSCF_conv_tol_grad', None)
     direct_scf = getattr(__config__, 'pbc_scf_SCF_direct_scf', False)
 
     def __init__(self, cell, kpts=np.zeros((1,3)),
-                 exxdiv=getattr(__config__, 'pbc_scf_SCF_exxdiv', 'ewald'), 
-                 kpts_descriptor = None):
+                 exxdiv=getattr(__config__, 'pbc_scf_SCF_exxdiv', 'ewald')): 
         if not cell._built:
             sys.stderr.write('Warning: cell.build() is not called in input\n')
             cell.build()
@@ -415,12 +417,14 @@ class KSCF(pbchf.SCF):
 
         self.with_df = df.FFTDF(cell)
         self.exxdiv = exxdiv
-        self.kpts = kpts
-        self.wtk = np.asarray([1./len(self.kpts)] * len(self.kpts))
-        self.kpts_descriptor = kpts_descriptor
-        if self.kpts_descriptor is not None:
+        self.kpts_descriptor = None
+        if isinstance(kpts, KPoints):
+            self.kpts_descriptor = kpts
             self.kpts = self.kpts_descriptor.ibz_k
             self.wtk  = self.kpts_descriptor.ibz_weight
+        else:
+            self.kpts = kpts
+            self.wtk = np.asarray([1./len(self.kpts)] * len(self.kpts))
         self.conv_tol = cell.precision * 10
 
         self.exx_built = False

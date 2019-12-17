@@ -1,3 +1,21 @@
+#!/usr/bin/env python
+# Copyright 2014-2019 The PySCF Developers. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# Authors: Xing Zhang
+#
+
 import numpy as np
 import ctypes
 from pyscf import lib
@@ -12,6 +30,12 @@ libpbc = lib.load_library('libpbc')
 def make_ibz_k(kpts, time_reversal=True):
     '''
     Constructe k points in IBZ
+
+    Note: 
+        This function modifies `kpts` object.
+
+    kpts (:obj:`KPoints`): instance of KPoints class
+    time_reversal (bool): whether to consider time reversal symmetry
     '''
     nbzkpts = len(kpts.bz_k)
     op_rot = kpts.sg_symm.op_rot_notrans
@@ -71,7 +95,7 @@ def make_ibz_k(kpts, time_reversal=True):
 def map_k_points_fast(bzk_kc, U_scc, time_reversal, tol=1e-7):
     '''
     Find symmetry relations between k-points.
-    Adopted from GPAW
+    Adapted from GPAW
     bz2bz_ks[k1,s] = k2 if k1*U.T = k2
     '''
     nbzkpts = len(bzk_kc)
@@ -111,7 +135,7 @@ def map_k_points_fast(bzk_kc, U_scc, time_reversal, tol=1e-7):
 def aglomerate_points(k_kc, tol):
     '''
     remove numerical error
-    Adopted from GPAW
+    Adapted from GPAW
     '''
     nd = k_kc.shape[1]
     nbzkpts = len(k_kc)
@@ -304,48 +328,83 @@ def check_mo_occ_symmetry(kpts, mo_occ):
     return mo_occ_ibz
 
 
-def make_KPoints(kpts=np.zeros((1,3)),cell=None,point_group=False):
+def make_kpoints(kpts=np.zeros((1,3)),cell=None,point_group=True,time_reversal=True):
     
     if isinstance(kpts, KPoints):
         return kpts
     else:
-        return KPoints(kpts,cell,point_group)
+        return KPoints(kpts,cell,point_group,time_reversal)
 
 class KPoints():
     '''
     This class handles k-point symmetries etc.
+
+    Attributes:
+        cell : pbc.gto.cell.Cell class
+            unit cell info
+        sg_symm : pbc.lib.symm.Symmetry class
+            space group info of the cell
+        bz_k_scaled : (nbzk,3) ndarray
+            scaled k points in full BZ
+        bz_k : (nbzk,3) ndarray
+            k points in full BZ
+        bz_weight : (nbzk,) ndarray
+            weights of k points in full BZ
+        bz2ibz : (nbzk,) ndarray of int
+            mapping table from full BZ to IBZ
+        ibz_k_scaled : (nibzk,3) ndarray
+            scaled k points in IBZ
+        ibz_k : (nibzk,3) ndarray
+            k points in IBZ
+        ibz_weight : (nibzk,) ndarray
+            weights of k points in IBZ
+        ibz2bz : (nibzk,) ndarray of int
+            mapping table from IBZ to full BZ
+        op_rot : (nop,3,3) ndarray of int
+            symmetry operators (only rotation and time-reversal symmetries for now)
+        nrot : int
+            number of symmetry operators (rotation only)
+        bz_k_group : list of (nk,) ndarrays of int with length=nibzk and nk=No. of symmetry-related k points
+            indices for full BZ k grouped by corresponding IBZ k
+        sym_group : same as bz_k_group 
+            indices of symmetry operators connecting k points in full BZ with corresponding IBZ k
+        sym_conn : (nbzk,) ndarray of int
+            same as sym_group but arranged in the sequence of full BZ k
     '''
-    def __init__(self, kpts=np.zeros((1,3)), cell=None, point_group = True):
+    def __init__(self, bz_k=np.zeros((1,3)), cell=None, point_group = True, time_reversal=True):
 
         self.cell = cell
-        if self.cell is None:
-            self.sg_symm = None
-        else:
-            self.sg_symm = symm.Symmetry(cell, point_group)
+        self.sg_symm = symm.Symmetry(cell, point_group)
 
-        self.bz_k_scaled = cell.get_scaled_kpts(kpts)
-        self.bz_k = kpts
-        self.bz_weight = np.asarray([1./len(kpts)]*len(kpts))
-        self.bz2ibz = np.arange(len(kpts), dtype=int)
+        self.bz_k = bz_k
+        self.bz_k_scaled = cell.get_scaled_kpts(bz_k)
+        self.bz_weight = np.asarray([1./len(bz_k)]*len(bz_k))
+        self.bz2ibz = np.arange(len(bz_k), dtype=int)
 
         self.ibz_k_scaled = self.bz_k_scaled
-        self.ibz_k = kpts
-        self.ibz_weight = np.asarray([1./len(kpts)]*len(kpts))
-        self.ibz2bz = np.arange(len(kpts), dtype=int)
+        self.ibz_k = bz_k
+        self.ibz_weight = np.asarray([1./len(bz_k)]*len(bz_k))
+        self.ibz2bz = np.arange(len(bz_k), dtype=int)
 
         self.op_rot = np.eye(3,dtype =int).reshape(1,3,3)
-        self.nrot = 1
-        self.sym_conn = np.zeros(len(kpts), dtype = int)
+        self.sym_conn = np.zeros(len(bz_k), dtype = int)
         self.sym_group = []
         self.bz_k_group = []
+        '''
         if self.sg_symm is None:
-            for k in range(len(kpts)):
+            for k in range(len(bz_k)):
                 self.sym_group.append([0])
                 self.bz_k_group.append(np.asarray([k],dtype=int))
+        '''
 
         #private variables
         self._nbzk = len(self.bz_k)
         self._nibzk = len(self.ibz_k)
+        self._nrot = 1
+
+        #let's make IBZ k at instantiation
+        self.make_ibz_k(time_reversal=time_reversal)
+
 
     @property
     def nbzk(self):
@@ -363,9 +422,17 @@ class KPoints():
     def nibzk(self, n):
         self._nibzk = n
 
+    @property
+    def nrot(self):
+        return self._nrot
+
+    @nrot.setter
+    def nrot(self,n):
+        self._nrot = n
+
     def build_kptij_lst(self):
         '''
-        Build k-point-pair list for SCF calculations
+        Build k-point-pair list used for GDF
         All combinations:
             k_ibz  k_ibz
             k_ibz  k_bz

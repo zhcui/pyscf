@@ -1,3 +1,21 @@
+#!/usr/bin/env python
+# Copyright 2014-2019 The PySCF Developers. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# Authors: Xing Zhang
+#
+
 import numpy as np
 from pyscf.symm.Dmatrix import *
 from pyscf.pbc.tools.pyscf_ase import get_space_group
@@ -65,6 +83,11 @@ class Symmetry():
     def __init__(self, cell, point_group = True):
 
         self.cell = cell
+        if self.cell is None: #no cell info
+            self.space_group = None
+            self.op_rot_notrans = np.eye(3,dtype =int).reshape(1,3,3)
+            self.Dmats = None #this may give errors
+            return
         if self.cell.cart == True:
             raise NotImplementedError("No symmetry support for cartesian basis yet")
         self.space_group = get_space_group(self.cell)
