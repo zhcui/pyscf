@@ -368,9 +368,8 @@ class KUHF(pbcuhf.UHF, khf.KSCF):
     direct_scf = getattr(__config__, 'pbc_scf_SCF_direct_scf', False)
 
     def __init__(self, cell, kpts=np.zeros((1,3)),
-                 exxdiv=getattr(__config__, 'pbc_scf_SCF_exxdiv', 'ewald'),
-                 kpts_descriptor = None):
-        khf.KSCF.__init__(self, cell, kpts, exxdiv, kpts_descriptor)
+                 exxdiv=getattr(__config__, 'pbc_scf_SCF_exxdiv', 'ewald')):
+        khf.KSCF.__init__(self, cell, kpts, exxdiv)
         self.nelec = None
 
     @property
