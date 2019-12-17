@@ -14,7 +14,8 @@
 # limitations under the License.
 #
 # Author: Garnet Chan <gkc1000@gmail.com>
-#         Xing
+#         Xing Zhang
+#
 
 '''
 ASE package interface

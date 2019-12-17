@@ -41,7 +41,7 @@ from pyscf.pbc.scf import chkfile
 from pyscf.pbc import tools
 from pyscf.pbc import df
 from pyscf import __config__
-from pyscf.pbc.lib.kpts import KPoints
+from pyscf.pbc.lib import kpts as mod_kpts
 
 WITH_META_LOWDIN = getattr(__config__, 'pbc_scf_analyze_with_meta_lowdin', True)
 PRE_ORTH_METHOD = getattr(__config__, 'pbc_scf_analyze_pre_orth_method', 'ANO')
@@ -418,7 +418,7 @@ class KSCF(pbchf.SCF):
         self.with_df = df.FFTDF(cell)
         self.exxdiv = exxdiv
         self.kpts_descriptor = None
-        if isinstance(kpts, KPoints):
+        if isinstance(kpts, mod_kpts.KPoints):
             self.kpts_descriptor = kpts
             self.kpts = self.kpts_descriptor.ibz_k
             self.wtk  = self.kpts_descriptor.ibz_weight
