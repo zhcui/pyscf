@@ -90,14 +90,6 @@ def get_veff(ks, cell=None, dm=None, dm_last=0, vhf_last=0, hermi=1,
         logger.debug(ks, 'nelec by numeric integration = %s', n)
         t0 = logger.timer(ks, 'vxc', *t0)
 
-    tmp = []
-    '''
-    if getattr(ks,'kpts_descriptor',None) is not None:
-        for k in range(len(kpts)):
-            tmp.append(vxc[ks.kpts_descriptor.ibz2bz[k]])
-        vxc = tmp
-    '''
-
     if (len(kpts) != len(ks.wtk)):
         weight = [1./len(kpts)]*len(kpts)
     else:

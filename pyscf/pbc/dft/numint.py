@@ -445,6 +445,16 @@ def nr_uks(ni, cell, grids, xc_code, dms, spin=1, relativity=0, hermi=0,
     if kpts is None:
         kpts = numpy.zeros((1,3))
 
+    kd = getattr(ni, 'kpts_descriptor', None)
+    if kd is not None:
+        if getattr(dms, 'mo_coeff', None) is not None:
+            mo_coeff = kd.transform_mo_coeff(dms.mo_coeff)
+            mo_occ = kd.transform_mo_occ(dms.mo_occ)
+            dms = lib.tag_array(kd.transform_dm(dms), mo_coeff=mo_coeff, mo_occ=mo_occ)
+        else:
+            dms = kd.transform_dm(dms)
+        kpts = kd.bz_k
+
     xctype = ni._xc_type(xc_code)
     dma, dmb = _format_uks_dm(dms)
     nao = dma.shape[-1]

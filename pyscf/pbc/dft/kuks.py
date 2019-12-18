@@ -73,8 +73,10 @@ def get_veff(ks, cell=None, dm=None, dm_last=0, vhf_last=0, hermi=1,
         logger.debug(ks, 'nelec by numeric integration = %s', n)
         t0 = logger.timer(ks, 'vxc', *t0)
 
-    weight = 1./len(kpts)
-
+    if (len(kpts) != len(ks.wtk)):
+        weight = [1./len(kpts)]*len(kpts)
+    else:
+        weight = ks.wtk
     if not hybrid:
         vj = ks.get_j(cell, dm[0]+dm[1], hermi, kpts, kpts_band)
         vxc += vj
@@ -91,11 +93,11 @@ def get_veff(ks, cell=None, dm=None, dm_last=0, vhf_last=0, hermi=1,
         vxc += vj - vk
 
         if ground_state:
-            exc -= (np.einsum('Kij,Kji', dm[0], vk[0]) +
-                    np.einsum('Kij,Kji', dm[1], vk[1])).real * .5 * weight
+            exc -= (np.einsum('K,Kij,Kji', weight, dm[0], vk[0]) +
+                    np.einsum('K,Kij,Kji', weight, dm[1], vk[1])).real * .5
 
     if ground_state:
-        ecoul = np.einsum('Kij,Kji', dm[0]+dm[1], vj).real * .5 * weight
+        ecoul = np.einsum('K,Kij,Kji', weight, dm[0]+dm[1], vj).real * .5
     else:
         ecoul = None
 
@@ -108,9 +110,12 @@ def energy_elec(mf, dm_kpts=None, h1e_kpts=None, vhf=None):
     if vhf is None or getattr(vhf, 'ecoul', None) is None:
         vhf = mf.get_veff(mf.cell, dm_kpts)
 
-    weight = 1./len(h1e_kpts)
-    e1 = weight *(np.einsum('kij,kji', h1e_kpts, dm_kpts[0]) +
-                  np.einsum('kij,kji', h1e_kpts, dm_kpts[1]))
+    weight = mf.wtk
+    if (len(h1e_kpts) != len(mf.wtk)):
+        weight = [1./len(h1e_kpts)]*len(h1e_kpts)
+
+    e1 = (np.einsum('k,kij,kji', weight, h1e_kpts, dm_kpts[0]) +
+          np.einsum('k,kij,kji', weight, h1e_kpts, dm_kpts[1]))
     tot_e = e1 + vhf.ecoul + vhf.exc
     mf.scf_summary['e1'] = e1.real
     mf.scf_summary['coul'] = vhf.ecoul.real
