@@ -1229,6 +1229,10 @@ class KNumInt(numint.NumInt):
             ao_k1 = ao_k2 = self.eval_ao(cell, coords, kpts, deriv=deriv, non0tab=non0)
             if kpts_band is not None:
                 ao_k1 = self.eval_ao(cell, coords, kpts_band, deriv=deriv, non0tab=non0)
+            if self.kpts_descriptor is not None and kpts_band is None:
+                ao_k1 = []
+                for k in range(self.kpts_descriptor.nibzk):
+                    ao_k1.append(ao_k2[self.kpts_descriptor.ibz2bz[k]])
             yield ao_k1, ao_k2, non0, weight, coords
             ao_k1 = ao_k2 = None
 

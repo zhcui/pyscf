@@ -384,7 +384,7 @@ def get_rho(mf, dm=None, grids=None, kpts=None):
         grids = gen_grid.UniformGrids(mf.cell)
     if kpts is None:
         kpts = mf.kpts
-    ni = numint.KNumInt()
+    ni = numint.KNumInt(kpts_descriptor=mf.kpts_descriptor)
     return ni.get_rho(mf.cell, dm, grids, kpts, mf.max_memory)
 
 

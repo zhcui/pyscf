@@ -91,10 +91,12 @@ def get_veff(ks, cell=None, dm=None, dm_last=0, vhf_last=0, hermi=1,
         t0 = logger.timer(ks, 'vxc', *t0)
 
     tmp = []
+    '''
     if getattr(ks,'kpts_descriptor',None) is not None:
         for k in range(len(kpts)):
             tmp.append(vxc[ks.kpts_descriptor.ibz2bz[k]])
         vxc = tmp
+    '''
 
     if (len(kpts) != len(ks.wtk)):
         weight = [1./len(kpts)]*len(kpts)
@@ -142,8 +144,8 @@ def get_rho(mf, dm=None, grids=None, kpts=None):
 class KRKS(khf.KRHF, rks.KohnShamDFT):
     '''RKS class adapted for PBCs with k-point sampling.
     '''
-    def __init__(self, cell, kpts=np.zeros((1,3)), kpts_descriptor = None):
-        khf.KRHF.__init__(self, cell, kpts, kpts_descriptor=kpts_descriptor)
+    def __init__(self, cell, kpts=np.zeros((1,3))):
+        khf.KRHF.__init__(self, cell, kpts)
         rks.KohnShamDFT.__init__(self)
 
     def dump_flags(self, verbose=None):
