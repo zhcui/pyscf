@@ -5,6 +5,7 @@
 Python-based Simulations of Chemistry Framework
 ===============================================
 [![Build Status](https://travis-ci.org/pyscf/pyscf.svg?branch=master)](https://travis-ci.org/pyscf/pyscf)
+[![Build Status](https://codecov.io/gh/pyscf/pyscf/branch/misc/graph/badge.svg)](https://codecov.io/gh/pyscf/pyscf/branch/misc)
 
 2019-12-1
 
