@@ -605,7 +605,7 @@ O    SP
 
     def test_with_MoleContext(self):
         mol1 = mol0.copy()
-        with mol1.with_rinv_as_nucleus(1):
+        with mol1.with_rinv_at_nucleus(1):
             self.assertTrue(mol1._env[gto.PTR_RINV_ZETA] != 0)
             self.assertAlmostEqual(abs(mol1._env[gto.PTR_RINV_ORIG+2]), 0, 9)
         self.assertAlmostEqual(mol1._env[gto.PTR_RINV_ZETA], 0, 9)
