@@ -134,12 +134,11 @@ def get_j_kpts_ibz(mydf, dm_kpts, kd, hermi=1, kpts_band=None):
                 ao_ks, mask = ao_ks_etc[0], ao_ks_etc[2]
                 for i in range(nset):
                     rhoR_k[i,p0:p1] += numint.eval_rho(cell, ao_ks[0], dms[i,k], mask, xctype='LDA', hermi=hermi)
-
             for i in range(nset):
                 rhoR[i] += kd.symmetrize_density(rhoR_k[i], k, mesh)
 
         rhoR *= 1./kd.nbzk
-       
+      
         for i in range(nset):
             rhoG = tools.fft(rhoR[i], mesh)
             vG = coulG * rhoG
@@ -175,7 +174,6 @@ def get_j_kpts_ibz(mydf, dm_kpts, kd, hermi=1, kpts_band=None):
         vj_kpts = np.zeros((nset,nband,nao,nao))
     else:
         vj_kpts = np.zeros((nset,nband,nao,nao), dtype=np.complex128)
-    rho = None
     for ao_ks_etc, p0, p1 in mydf.aoR_loop(mydf.grids, kpts_band):
         ao_ks, mask = ao_ks_etc[0], ao_ks_etc[2]
         for i in range(nset):

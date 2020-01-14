@@ -19,6 +19,7 @@
 import numpy as np
 import ctypes
 from pyscf import lib
+from pyscf.lib import logger
 from pyscf.pbc.tools.pyscf_ase import get_space_group
 from pyscf import __config__
 from pyscf.pbc.lib import symmetry as symm
@@ -45,6 +46,8 @@ def make_ibz_k(kpts, time_reversal=True):
         kpts.op_rot = np.concatenate([op_rot, -op_rot])
 
     bz2bz_ks = map_k_points_fast(kpts.bz_k_scaled, op_rot, time_reversal, KPT_DIFF_TOL)
+    if -1 in bz2bz_ks:
+        logger.warn(kpts,'k points have lower symmetry than lattice.')
 
     bz2bz_k = -np.ones(nbzkpts+1, dtype = int)
     ibz2bz_k = []
@@ -72,8 +75,10 @@ def make_ibz_k(kpts, time_reversal=True):
         ibz_idx = kpts.bz2ibz[k]
         ibz_k_scaled = kpts.ibz_k_scaled[ibz_idx]
         for io in range(len(kpts.op_rot)):
+            if -1 in bz2bz_ks[:,io]: continue
             op = kpts.op_rot[io]
             diff = bz_k_scaled - np.dot(ibz_k_scaled, op.T)
+            diff = diff - diff.round()
             if (np.absolute(diff) < KPT_DIFF_TOL).all():
                 kpts.sym_conn[k] = io
                 break
@@ -86,8 +91,10 @@ def make_ibz_k(kpts, time_reversal=True):
         for j in range(idx.size):
             bz_k_scaled = kpts.bz_k_scaled[idx[j]]
             for io in range(len(kpts.op_rot)):
+                if -1 in bz2bz_ks[:,io]: continue
                 op = kpts.op_rot[io]
                 diff = bz_k_scaled - np.dot(ibz_k_scaled, op.T)
+                diff = diff - diff.round()
                 if (np.absolute(diff) < KPT_DIFF_TOL).all():
                     kpts.sym_group[i].append(io)
                     break
@@ -97,6 +104,7 @@ def map_k_points_fast(bzk_kc, U_scc, time_reversal, tol=1e-7):
     Find symmetry relations between k-points.
     Adapted from GPAW
     bz2bz_ks[k1,s] = k2 if k1*U.T = k2
+    Note k1 and k2 are stored as row vectors, which means :math:`U k_1 = k_2`
     '''
     nbzkpts = len(bzk_kc)
 
@@ -112,7 +120,7 @@ def map_k_points_fast(bzk_kc, U_scc, time_reversal, tol=1e-7):
         # Do some work on the input
         k_kc = np.concatenate([bzk_kc, Ubzk_kc])
         k_kc = np.mod(np.mod(k_kc, 1), 1)
-        aglomerate_points(k_kc, tol)
+        k_kc = aglomerate_points(k_kc, tol)
         k_kc = k_kc.round(-np.log10(tol).astype(int))
         k_kc = np.mod(k_kc, 1)
 
@@ -147,9 +155,11 @@ def aglomerate_points(k_kc, tol):
         dk_k = np.diff(sk_k)
 
         pt_K = np.argwhere(dk_k > tol)[:, 0]
-        pt_K = np.append(np.append(0, pt_K + 1), nbzkpts)
+        pt_K = np.append(np.append(0, pt_K + 1), nbzkpts*2)
         for i in range(len(pt_K) - 1):
             k_kc[inds_kc[pt_K[i]:pt_K[i + 1], c], c] = k_kc[inds_kc[pt_K[i], c], c]
+
+    return k_kc
 
 def symmetrize_density(kpts, rhoR_k, ibz_k_idx, mesh):
     '''
@@ -163,8 +173,8 @@ def symmetrize_density(kpts, rhoR_k, ibz_k_idx, mesh):
 
     mesh = np.asarray(mesh, dtype=np.int32, order='C')
     c_mesh = mesh.ctypes.data_as(ctypes.c_void_p)
-    for iop in kpts.sym_group[ibz_k_idx]: 
-        op = np.asarray(kpts.op_rot[iop], dtype=np.int32, order='C')
+    for iop in kpts.sym_group[ibz_k_idx]:
+        op = np.asarray(kpts.op_rot[iop].T, dtype=np.int32, order='C')
         time_reversal = False
         if iop >= kpts.nrot:
             time_reversal = True
@@ -335,7 +345,7 @@ def make_kpoints(kpts=np.zeros((1,3)),cell=None,point_group=True,time_reversal=T
     else:
         return KPoints(kpts,cell,point_group,time_reversal)
 
-class KPoints():
+class KPoints(lib.StreamObject):
     '''
     This class handles k-point symmetries etc.
 
@@ -374,6 +384,10 @@ class KPoints():
     def __init__(self, bz_k=np.zeros((1,3)), cell=None, point_group = True, time_reversal=True):
 
         self.cell = cell
+        if self.cell is not None:
+            self.verbose = cell.verbose
+        else:
+            self.verbose = 5
         self.sg_symm = symm.Symmetry(cell, point_group)
 
         self.bz_k = bz_k
@@ -405,6 +419,7 @@ class KPoints():
         #let's make IBZ k at instantiation
         self.make_ibz_k(time_reversal=time_reversal)
 
+        self.dump_kpts()
 
     @property
     def nbzk(self):
@@ -429,6 +444,13 @@ class KPoints():
     @nrot.setter
     def nrot(self,n):
         self._nrot = n
+
+    def dump_kpts(self):
+        logger.info(self, 'k-points in IBZ                           weights')
+        for k in range(self.nibzk):
+            logger.info(self, '%d:  %11.8f, %11.8f, %11.8f    %d/%d', 
+                        k,*self.ibz_k_scaled[k],np.floor(self.ibz_weight[k]*self.nbzk),self.nbzk)
+
 
     def build_kptij_lst(self):
         '''

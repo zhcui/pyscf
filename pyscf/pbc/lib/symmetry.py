@@ -21,7 +21,7 @@ from pyscf.symm.Dmatrix import *
 from pyscf.pbc.tools.pyscf_ase import get_space_group
 from functools import reduce
 
-XYZ = [[1.,0.,0.],[0.,1.,0.],[0.,0.,1.]]
+XYZ = np.eye(3)
 
 def is_right_hand_screw(c):
     '''
@@ -41,7 +41,7 @@ def get_Dmat(op,l):
     '''
     Get Wigner D matrix
     '''
-    c1 = np.asarray(XYZ,dtype=np.double)
+    c1 = XYZ
     c2 = np.dot(op.astype(np.double), c1.T).T
     right_hand = is_right_hand_screw(c2)
 
@@ -63,7 +63,6 @@ def get_Dmat(op,l):
     return D.round(15)
 
 def make_Dmats(cell, ops):
-
     l_max = np.max(cell._bas[:,1])
     nop = len(ops)
     Dmats = []
@@ -71,7 +70,7 @@ def make_Dmats(cell, ops):
     for i in range(nop):
         Dmats.append([])
         for l in range(l_max+1):
-            Dmats[i].append(get_Dmat(ops[i], l).T) 
+            Dmats[i].append(get_Dmat(ops[i], l).T)
 
     return Dmats
 
@@ -95,6 +94,7 @@ class Symmetry():
         self.op_rot = sg.rotations
         self.op_trans = sg.translations
         self.op_rot_notrans = self.op_rot[np.where((self.op_trans==0.0).all(1))]
+
         if not point_group:
             self.op_rot_notrans = np.eye(3,dtype =int).reshape(1,3,3)
 
