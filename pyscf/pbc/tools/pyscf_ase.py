@@ -54,6 +54,10 @@ def get_space_group(cell):
     '''
 
     from ase.spacegroup import get_spacegroup
+    try:
+        import spglib
+    except:
+        raise RuntimeError("spglib required")
 
     ase_atoms = pyscf_to_ase_atoms(cell)
     sg = get_spacegroup(ase_atoms)

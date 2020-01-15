@@ -13,7 +13,6 @@ void symmetrize(double* rhoR_b, double* rhoR_a, int* op, int* mesh)
             int x_p = ((op[0] * x + op[1] * y + op[2] * z) % nx + nx) % nx;
             int y_p = ((op[3] * x + op[4] * y + op[5] * z) % ny + ny) % ny;
             int z_p = ((op[6] * x + op[7] * y + op[8] * z) % nz + nz) % nz;
-            //rhoR_b[x_p*ny*nz + y_p*nz + z_p] += rhoR_a[x*ny*nz + y*nz + z];
             rhoR_b[x*ny*nz + y*nz + z] += rhoR_a[x_p*ny*nz + y_p*nz + z_p];
         }
 }

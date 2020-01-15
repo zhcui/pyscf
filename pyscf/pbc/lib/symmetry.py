@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Copyright 2014-2019 The PySCF Developers. All Rights Reserved.
+# Copyright 2014-2020 The PySCF Developers. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@
 
 import numpy as np
 from pyscf.symm.Dmatrix import *
-from pyscf.pbc.tools.pyscf_ase import get_space_group
 from functools import reduce
 
 XYZ = np.eye(3)
@@ -74,12 +73,46 @@ def make_Dmats(cell, ops):
 
     return Dmats
 
+
+
+def cell_to_spgcell(cell):
+    a = cell.lattice_vectors()
+    atm_pos = cell.get_scaled_positions()
+    atm_num = []
+    from pyscf.data import elements
+    for symbol in np.asarray(cell._atom)[:,0]:
+        atm_num.append(elements.NUC[symbol])
+    spg_cell = (a,atm_pos,atm_num)
+    return spg_cell
+
+class SpaceGroup():
+
+    def __init__(self, cell, symprec=1e-6):
+        self.cell = cell
+        self.symprec = symprec
+        self.rotations = np.reshape(np.eye(3,dtype=int), (-1,3,3))
+        self.translations = np.zeros((1,3))
+        self.sg_symbol = None
+
+    def get_space_group(self):
+        try:
+            import spglib
+            cell = cell_to_spgcell(self.cell)
+            self.sg_symbol = spglib.get_spacegroup(cell, symprec=self.symprec)
+            symmetry = spglib.get_symmetry(cell, symprec=self.symprec)
+            self.rotations = symmetry['rotations']
+            self.translations = symmetry['translations']
+        except:
+            raise NotImplementedError("use spglib to determine space group for now")
+
+        return self
+
 class Symmetry():
     '''
     contains space symmetry info of a Cell object
     '''
 
-    def __init__(self, cell, point_group = True):
+    def __init__(self, cell, point_group = True, symmorphic = True):
 
         self.cell = cell
         if self.cell is None: #no cell info
@@ -89,11 +122,16 @@ class Symmetry():
             return
         if self.cell.cart == True:
             raise NotImplementedError("No symmetry support for cartesian basis yet")
+        from pyscf.pbc.tools.pyscf_ase import get_space_group
         self.space_group = get_space_group(self.cell)
-        sg = self.space_group
-        self.op_rot = sg.rotations
-        self.op_trans = sg.translations
-        self.op_rot_notrans = self.op_rot[np.where((self.op_trans==0.0).all(1))]
+        #self.space_group = SpaceGroup(cell).get_space_group()
+        self.op_rot = self.space_group.rotations
+        self.op_trans = self.space_group.translations
+        self.symmorphic = symmorphic
+        if self.symmorphic:
+            self.op_rot_notrans = self.op_rot[np.where((np.absolute(self.op_trans)<1.e-10).all(1))]
+        else:
+            raise NotImplementedError('no sub-translational symmetry for now')
 
         if not point_group:
             self.op_rot_notrans = np.eye(3,dtype =int).reshape(1,3,3)

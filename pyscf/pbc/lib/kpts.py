@@ -102,10 +102,10 @@ def make_ibz_k(kpts, time_reversal=True):
 def map_k_points_fast(bzk_kc, U_scc, time_reversal, tol=1e-7):
     '''
     Find symmetry relations between k-points.
-    Adapted from GPAW
     bz2bz_ks[k1,s] = k2 if k1*U.T = k2
     Note k1 and k2 are stored as row vectors, which means :math:`U k_1 = k_2`
     '''
+    #Adapted from GPAW
     nbzkpts = len(bzk_kc)
 
     if time_reversal:
