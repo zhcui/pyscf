@@ -1530,7 +1530,7 @@ class Cell(mole.Mole):
         ''' Get scaled atom positions.
         '''
         a = self.lattice_vectors()
-        atm_pos = np.vstack(np.asarray(self._atom)[:,1])
+        atm_pos = self.atom_coords()
         scaled_atm_pos = np.dot(atm_pos,np.linalg.inv(a))
         return scaled_atm_pos
 
