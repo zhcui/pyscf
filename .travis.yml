@@ -32,7 +32,7 @@ before_install:
   - sudo apt-get -qq install gcc libblas-dev cmake curl
   - pip install numpy scipy h5py nose nose-exclude nose-timer
   - if [ $PYTHON != "2.7" ]; then
-       pip install ase spglib
+       pip install ase spglib;
     fi
 
 install:
@@ -52,16 +52,16 @@ install:
 
 before_script:
   - if [ $PYTHON == "2.7" ]; then
-       rm $TRAVIS_BUILD_DIR/pyscf/pbc/tools/pyscf_ase.py
+       rm $TRAVIS_BUILD_DIR/pyscf/pbc/tools/pyscf_ase.py;
     fi
 
 script:
   - cd $TRAVIS_BUILD_DIR/pyscf &&
     echo 'pbc_tools_pbc_fft_engine = "NUMPY"' > pyscf_config.py
   - if [ $PYTHON == "2.7" ]; then
-       chmod +x test_py27.sh
-       ./test_py27.sh
+       chmod +x test_py27.sh;
+       ./test_py27.sh;
     else
-       chmod +x test_py3.sh
-       ./test_py3.sh
+       chmod +x test_py3.sh;
+       ./test_py3.sh;
     fi
