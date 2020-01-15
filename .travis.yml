@@ -52,7 +52,6 @@ install:
 
 before_script:
   - if [[ $(python --version 2>&1) =~ 2 ]]; then
-       echo "remove /pyscf/pbc/tools/pyscf_ase.py";
        rm $TRAVIS_BUILD_DIR/pyscf/pbc/tools/pyscf_ase.py;
     fi
 

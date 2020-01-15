@@ -34,6 +34,6 @@ nosetests -v --with-timer \
     --exclude-test=pbc/tdscf/test/test_kproxy_ks.DiamondTestSupercell3 \
     --exclude-test=pbc/tdscf/test/test_kproxy_supercell_hf.DiamondTestSupercell3 \
     --exclude-test=pbc/tdscf/test/test_kproxy_supercell_ks.DiamondTestSupercell3 \
-    --exclude-test=pbc/scf/test/test_khf_ksym.py \
-    --exclude-test=pbc/dft/test/test_krks_ksym.py \
+    -I test_khf_ksym.py \
+    -I test_krks_ksym.py \
     -I .*_slow.*py -I .*_kproxy_.*py -I test_proxy.py # tdscf/*_slow.py gw/*_slow.py do not compatible with python3.[456] and old numpy
