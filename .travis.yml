@@ -51,14 +51,14 @@ install:
     cd ../..
 
 before_script:
-  - if [[ $(python --version 2>&1) =~ 2\.7 ]]; then
+  - if [[ $(python --version 2>&1) =~ 2 ]]; then
        rm $TRAVIS_BUILD_DIR/pyscf/pbc/tools/pyscf_ase.py;
     fi
 
 script:
   - cd $TRAVIS_BUILD_DIR/pyscf &&
     echo 'pbc_tools_pbc_fft_engine = "NUMPY"' > pyscf_config.py
-  - if [[ $(python --version 2>&1) =~ 2\.7 ]]; then
+  - if [[ $(python --version 2>&1) =~ 2 ]]; then
        chmod +x test_py27.sh;
        ./test_py27.sh;
     else
