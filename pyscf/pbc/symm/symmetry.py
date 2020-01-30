@@ -106,6 +106,29 @@ def get_Dmat(op,l):
             raise NotImplementedError("l > 3 NYI")
     return D.round(15)
 
+def get_Dmat_cart(op,l_max): #need verification
+    pp = get_Dmat(op, 1)
+    Ds = [np.ones((1,1))]
+    for l in range(1, l_max+1):
+        # All possible x,y,z combinations
+        cidx = np.sort(lib.cartesian_prod([(0, 1, 2)] * l), axis=1)
+
+        addr = 0
+        affine = np.ones((1,1))
+        for i in range(l):
+            nd = affine.shape[0] * 3
+            affine = np.einsum('ik,jl->ijkl', affine, pp).reshape(nd, nd)
+            addr = addr * 3 + cidx[:,i]
+
+        uniq_addr, rev_addr = np.unique(addr, return_inverse=True)
+        ncart = (l + 1) * (l + 2) // 2
+        assert ncart == uniq_addr.size
+        trans = np.zeros((ncart,ncart))
+        for i, k in enumerate(rev_addr):
+            trans[k] += affine[i,uniq_addr]
+        Ds.append(trans)
+    return Ds
+
 def make_Dmats(cell, ops):
     '''
     Computes < m | R | m' >
@@ -116,9 +139,10 @@ def make_Dmats(cell, ops):
 
     for i in range(nop):
         op = transform_rot_a_to_r(cell, ops[i])
-        Dmats.append([])
-        for l in range(l_max+1):
-            Dmats[i].append(get_Dmat(op, l))
+        if not cell.cart:
+            Dmats.append([get_Dmat(op, l) for l in range(l_max+1)])
+        else:
+            Dmats.append(get_Dmat_cart(op, l_max))
     return Dmats
 
 def cell_to_spgcell(cell):
@@ -174,8 +198,8 @@ class Symmetry():
             self.op_trans = np.zeros((1,3))
             self.Dmats = None #this may give errors
             return
-        if self.cell.cart == True:
-            raise NotImplementedError("No symmetry support for cartesian basis yet")
+        #if self.cell.cart == True:
+        #    raise NotImplementedError("No symmetry support for cartesian basis yet")
         #from pyscf.pbc.tools.pyscf_ase import get_space_group
         #self.space_group = get_space_group(self.cell)
         self.space_group = SpaceGroup(cell).get_space_group()
@@ -227,7 +251,10 @@ def symmetrize_mo_coeff(kd, ibz_kpt_scaled, mo_coeff, op_idx):
         phase = _get_phase(cell, i, inv_op, coords, kpt_scaled)
 
         l = cell._bas[i,1]
-        nao = 2*l + 1
+        if not cell.cart:
+            nao = 2*l + 1
+        else:
+            nao = (l+1)*(l+2)//2
         D = sg_symm.Dmats[op_idx][l] * phase
         nz = cell._bas[i,3]
         for j in range(nz):
@@ -253,7 +280,10 @@ def symmetrize_dm(kd, ibz_kpt_scaled, dm, op_idx):
         phase_i = _get_phase(cell, i, inv_op, coords, kpt_scaled)
 
         l_i = cell._bas[i,1]
-        nao_i = 2*l_i + 1
+        if not cell.cart:
+            nao_i = 2*l_i + 1
+        else:
+            nao_i = (l_i+1)*(l_i+2)//2
         nz_i = cell._bas[i,3]
         Di = sg_symm.Dmats[op_idx][l_i] * phase_i
         #Di = phase_i*Di.astype(np.complex128)
@@ -263,7 +293,10 @@ def symmetrize_dm(kd, ibz_kpt_scaled, dm, op_idx):
                 phase_j = _get_phase(cell, j, inv_op, coords, kpt_scaled)
 
                 l_j = cell._bas[j,1]
-                nao_j = 2*l_j + 1
+                if not cell.cart:
+                    nao_j = 2*l_j + 1
+                else:
+                    nao_j = (l_j+1)*(l_j+2)//2
                 nz_j = cell._bas[j,3]
                 Dj = sg_symm.Dmats[op_idx][l_j] * phase_j
                 #Dj = (phase_j*Dj.astype(np.complex128)).conj()
