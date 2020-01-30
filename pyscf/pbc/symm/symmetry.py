@@ -126,7 +126,7 @@ def cell_to_spgcell(cell):
     atm_pos = cell.get_scaled_positions()
     atm_num = []
     from pyscf.data import elements
-    for symbol in np.asarray(cell._atom)[:,0]:
+    for symbol in cell.elements:
         atm_num.append(elements.NUC[symbol])
     spg_cell = (a,atm_pos,atm_num)
     return spg_cell
