@@ -108,7 +108,6 @@ def get_j_kpts(mydf, dm_kpts, hermi=1, kpts=np.zeros((1,3)), kpts_band=None):
 
     return _format_jks(vj_kpts, dm_kpts, input_band, kpts)
 
-
 def get_j_kpts_ibz(mydf, dm_kpts, kd, hermi=1, kpts_band=None):
 
     kpts = kd.ibz_k
@@ -134,6 +133,7 @@ def get_j_kpts_ibz(mydf, dm_kpts, kd, hermi=1, kpts_band=None):
                 ao_ks, mask = ao_ks_etc[0], ao_ks_etc[2]
                 for i in range(nset):
                     rhoR_k[i,p0:p1] += numint.eval_rho(cell, ao_ks[0], dms[i,k], mask, xctype='LDA', hermi=hermi)
+
             for i in range(nset):
                 rhoR[i] += kd.symmetrize_density(rhoR_k[i], k, mesh)
 
@@ -182,8 +182,6 @@ def get_j_kpts_ibz(mydf, dm_kpts, kd, hermi=1, kpts_band=None):
                 vj_kpts[i,k] += lib.dot(ao.conj().T, aow)
 
     return _format_jks(vj_kpts, dm_kpts, input_band, kpts)
-
-
 
 def get_k_kpts(mydf, dm_kpts, hermi=1, kpts=np.zeros((1,3)), kpts_band=None,
                exxdiv=None):
@@ -313,7 +311,6 @@ def get_k_kpts(mydf, dm_kpts, hermi=1, kpts=np.zeros((1,3)), kpts_band=None,
 
     return _format_jks(vk_kpts, dm_kpts, input_band, kpts)
 
-
 def get_k_kpts_ibz(mydf, dm_kpts, kd, hermi=1, kpts_band=None, exxdiv=None):
 
     cell = mydf.cell
@@ -426,10 +423,6 @@ def get_k_kpts_ibz(mydf, dm_kpts, kd, hermi=1, kpts_band=None, exxdiv=None):
 
     return _format_jks(vk_kpts, dm_kpts, input_band, kpts)
 
-
-
-
-
 def get_jk(mydf, dm, hermi=1, kpt=np.zeros(3), kpts_band=None,
            with_j=True, with_k=True, exxdiv=None):
     '''Get the Coulomb (J) and exchange (K) AO matrices for the given density matrix.
@@ -495,7 +488,6 @@ def get_j(mydf, dm, hermi=1, kpt=np.zeros(3), kpts_band=None):
         vj = vj[0]
     return vj
 
-
 def get_k(mydf, dm, hermi=1, kpt=np.zeros(3), kpts_band=None, exxdiv=None):
     '''Get the Coulomb (J) and exchange (K) AO matrices for the given density matrix.
 
@@ -528,4 +520,3 @@ def get_k(mydf, dm, hermi=1, kpt=np.zeros(3), kpts_band=None, exxdiv=None):
     if dm.ndim == 2:
         vk = vk[0]
     return vk
-

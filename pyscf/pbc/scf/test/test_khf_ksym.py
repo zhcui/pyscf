@@ -41,26 +41,33 @@ def make_primitive_cell(mesh):
     return cell
 
 cell = make_primitive_cell([9]*3)
-kpts = cell.make_kpts([3,3,3], with_gamma_point=True,point_group=True,time_reversal=True)
-kmf = khf.KRHF(cell, kpts=kpts).run(conv_tol=1e-9)
-kpts = cell.make_kpts([3,3,3], with_gamma_point=False,point_group=True,time_reversal=True)
-kmf_not_gamma_center = khf.KRHF(cell, kpts=kpts).run(conv_tol=1e-9)
-
-cell.spin = 0
-kpts = cell.make_kpts([3,3,3], with_gamma_point=True,point_group=True,time_reversal=True)
-kumf = kuhf.KUHF(cell, kpts=kpts)
-kumf = pscf.addons.smearing_(kumf, sigma=0.001, method='fermi',fix_spin=True)
-kumf.kernel()
 
 class KnownValues(unittest.TestCase):
-    def test_krhf(self):
-        self.assertAlmostEqual(kmf.e_tot, -7.56739354036056, 8)
-        self.assertAlmostEqual(kmf_not_gamma_center.e_tot, -7.56893294770225, 8)
-        #following is true when mesh is converged
-        #self.assertAlmostEqual(kmf.e_tot-kmf_not_gamma_center.e_tot, 0.0, 8)
+    def test_krhf_gamma_center(self):
+        kpts = cell.make_kpts([3,3,3], with_gamma_point=True,point_group=True,time_reversal=True)
+        kmf = khf.KRHF(cell, kpts=kpts).run(conv_tol=1e-9)
+        self.assertAlmostEqual(kmf.e_tot, -7.56744279355879, 8)
 
-    def test_kuhf(self):
-        self.assertAlmostEqual(kumf.e_tot, -7.56739354036056, 8)
+    def test_krhf_monkhorst(self):
+        kpts = cell.make_kpts([3,3,3], with_gamma_point=False,point_group=True,time_reversal=True)
+        kmf = khf.KRHF(cell, kpts=kpts).run(conv_tol=1e-9)
+        self.assertAlmostEqual(kmf.e_tot, -7.569565546524837, 8)
+
+    def test_kuhf_gamma_center(self):
+        cell.spin = 0
+        kpts = cell.make_kpts([3,3,3], with_gamma_point=True,point_group=True,time_reversal=True)
+        kumf = kuhf.KUHF(cell, kpts=kpts)
+        kumf = pscf.addons.smearing_(kumf, sigma=0.001, method='fermi',fix_spin=True)
+        kumf.kernel()
+        self.assertAlmostEqual(kumf.e_tot, -7.567442786326062, 8)
+
+    def test_kuhf_monkhorst(self):
+        cell.spin = 0
+        kpts = cell.make_kpts([3,3,3], with_gamma_point=False,point_group=True,time_reversal=True)
+        kumf = kuhf.KUHF(cell, kpts=kpts)
+        kumf = pscf.addons.smearing_(kumf, sigma=0.001, method='fermi',fix_spin=True)
+        kumf.kernel()
+        self.assertAlmostEqual(kumf.e_tot, -7.569565536758012, 8)
 
 if __name__ == '__main__':
     print("Full Tests for pbc.scf.khf with k-point symmetry")

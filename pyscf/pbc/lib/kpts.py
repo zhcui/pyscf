@@ -22,8 +22,9 @@ from pyscf import lib
 from pyscf.lib import logger
 from pyscf.pbc.tools.pyscf_ase import get_space_group
 from pyscf import __config__
-from pyscf.pbc.lib import symmetry as symm
+from pyscf.pbc.symm import symmetry as symm
 from pyscf.pbc.lib.kpts_helper import member
+from numpy.linalg import inv
 
 KPT_DIFF_TOL = getattr(__config__, 'pbc_lib_kpts_helper_kpt_diff_tol', 1e-6)
 libpbc = lib.load_library('libpbc')
@@ -39,13 +40,25 @@ def make_ibz_k(kpts, time_reversal=True):
     time_reversal (bool): whether to consider time reversal symmetry
     '''
     nbzkpts = len(kpts.bz_k)
-    op_rot = kpts.sg_symm.op_rot_notrans
+
+    op_rot = []
+    for op in kpts.sg_symm.op_rot:
+        op_rot.append(symm.transform_rot_a_to_b(kpts.cell,op))
+    op_rot = np.asarray(op_rot)
+
+    inv_op_rot = []
+    for op in op_rot:
+        inv_op_rot.append(inv(op))
+    inv_op_rot = np.asarray(inv_op_rot)
+
     kpts.op_rot = op_rot
+    kpts.inv_op_rot = inv_op_rot
     kpts.nrot = len(kpts.op_rot)
     if time_reversal:
         kpts.op_rot = np.concatenate([op_rot, -op_rot])
+        kpts.inv_op_rot = np.concatenate([inv_op_rot, -inv_op_rot])
 
-    bz2bz_ks = map_k_points_fast(kpts.bz_k_scaled, op_rot, time_reversal, KPT_DIFF_TOL)
+    bz2bz_ks = map_k_points_fast(kpts.bz_k_scaled, kpts.inv_op_rot, time_reversal, KPT_DIFF_TOL)
     if -1 in bz2bz_ks:
         logger.warn(kpts,'k points have lower symmetry than lattice.')
 
@@ -74,9 +87,9 @@ def make_ibz_k(kpts, time_reversal=True):
         bz_k_scaled = kpts.bz_k_scaled[k]
         ibz_idx = kpts.bz2ibz[k]
         ibz_k_scaled = kpts.ibz_k_scaled[ibz_idx]
-        for io in range(len(kpts.op_rot)):
+        for io in range(len(kpts.inv_op_rot)):
             if -1 in bz2bz_ks[:,io]: continue
-            op = kpts.op_rot[io]
+            op = kpts.inv_op_rot[io]
             diff = bz_k_scaled - np.dot(ibz_k_scaled, op.T)
             diff = diff - diff.round()
             if (np.absolute(diff) < KPT_DIFF_TOL).all():
@@ -90,9 +103,9 @@ def make_ibz_k(kpts, time_reversal=True):
         kpts.bz_k_group.append(idx)
         for j in range(idx.size):
             bz_k_scaled = kpts.bz_k_scaled[idx[j]]
-            for io in range(len(kpts.op_rot)):
+            for io in range(len(kpts.inv_op_rot)):
                 if -1 in bz2bz_ks[:,io]: continue
-                op = kpts.op_rot[io]
+                op = kpts.inv_op_rot[io]
                 diff = bz_k_scaled - np.dot(ibz_k_scaled, op.T)
                 diff = diff - diff.round()
                 if (np.absolute(diff) < KPT_DIFF_TOL).all():
@@ -174,7 +187,8 @@ def symmetrize_density(kpts, rhoR_k, ibz_k_idx, mesh):
     mesh = np.asarray(mesh, dtype=np.int32, order='C')
     c_mesh = mesh.ctypes.data_as(ctypes.c_void_p)
     for iop in kpts.sym_group[ibz_k_idx]:
-        op = np.asarray(kpts.op_rot[iop].T, dtype=np.int32, order='C')
+        op = symm.transform_rot_b_to_a(kpts.cell, kpts.op_rot[iop])
+        op = np.asarray(op, dtype=np.int32, order='C')
         time_reversal = False
         if iop >= kpts.nrot:
             time_reversal = True
@@ -197,6 +211,7 @@ def transform_mo_coeff(kpts, mo_coeff_ibz):
         mos = [[],[]]
     for k in range(kpts.nbzk):
         ibz_k_idx = kpts.bz2ibz[k]
+        ibz_k_scaled = kpts.ibz_k_scaled[ibz_k_idx]
         iop = kpts.sym_conn[k]
         op = kpts.op_rot[iop]
 
@@ -216,7 +231,7 @@ def transform_mo_coeff(kpts, mo_coeff_ibz):
             else:
                 if iop >= kpts.nrot:
                     iop -= kpts.nrot
-                mo_bz = symm.symmetrize_mo_coeff(kpts, mo_ibz, iop)
+                mo_bz = symm.symmetrize_mo_coeff(kpts, ibz_k_scaled, mo_ibz, iop)
                 if time_reversal:
                     mo_bz = mo_bz.conj()
             return mo_bz
@@ -263,6 +278,7 @@ def transform_dm(kpts, dm_ibz):
         dms = [[],[]]
     for k in range(kpts.nbzk):
         ibz_k_idx = kpts.bz2ibz[k]
+        ibz_kpt_scaled = kpts.ibz_k_scaled[ibz_k_idx]
         iop = kpts.sym_conn[k]
         op = kpts.op_rot[iop]
 
@@ -281,7 +297,7 @@ def transform_dm(kpts, dm_ibz):
             else:
                 if iop >= kpts.nrot:
                     iop -= kpts.nrot
-                dm_bz = symm.symmetrize_dm(kpts, dm_ibz, iop)
+                dm_bz = symm.symmetrize_dm(kpts, ibz_kpt_scaled, dm_ibz, iop)
                 if time_reversal:
                     dm_bz = dm_bz.conj()
             return dm_bz
@@ -352,7 +368,7 @@ class KPoints(lib.StreamObject):
     Attributes:
         cell : pbc.gto.cell.Cell class
             unit cell info
-        sg_symm : pbc.lib.symm.Symmetry class
+        sg_symm : pbc.symm.Symmetry class
             space group info of the cell
         bz_k_scaled : (nbzk,3) ndarray
             scaled k points in full BZ
@@ -401,6 +417,7 @@ class KPoints(lib.StreamObject):
         self.ibz2bz = np.arange(len(bz_k), dtype=int)
 
         self.op_rot = np.eye(3,dtype =int).reshape(1,3,3)
+        self.inv_op_rot = np.eye(3,dtype =int).reshape(1,3,3)
         self.sym_conn = np.zeros(len(bz_k), dtype = int)
         self.sym_group = []
         self.bz_k_group = []

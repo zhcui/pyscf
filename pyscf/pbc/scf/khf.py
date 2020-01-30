@@ -252,8 +252,8 @@ def energy_elec(mf, dm_kpts=None, h1e_kpts=None, vhf_kpts=None):
     if dm_kpts is None: dm_kpts = mf.make_rdm1()
     if h1e_kpts is None: h1e_kpts = mf.get_hcore()
     if vhf_kpts is None: vhf_kpts = mf.get_veff(mf.cell, dm_kpts)
-    wtk = mf.wtk
 
+    wtk = mf.wtk
     e1 = np.einsum('k,kij,kji', wtk, dm_kpts, h1e_kpts)
     e_coul = np.einsum('k,kij,kji', wtk, dm_kpts, vhf_kpts) * 0.5
     mf.scf_summary['e1'] = e1.real
@@ -530,7 +530,7 @@ class KSCF(pbchf.SCF):
         nkpts = len(self.kpts)
         if dm_kpts is None:
             dm_kpts = lib.asarray([dm]*nkpts)
-       
+
         ne = np.einsum('k,kij,kji', self.wtk, dm_kpts, self.get_ovlp(cell)).real
         # FIXME: consider the fractional num_electron or not? This maybe
         # relate to the charged system.
