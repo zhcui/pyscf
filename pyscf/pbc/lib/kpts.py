@@ -200,6 +200,41 @@ def symmetrize_density(kpts, rhoR_k, ibz_k_idx, mesh):
             libpbc.symmetrize(c_rhoR, c_rhoR_k, c_op, c_mesh)
     return rhoR
 
+def symmetrize_wavefunction(kpts, psiR_k, mesh): #need verification
+    '''
+    transform real-space wavefunctions from IBZ to full BZ
+    '''
+    psiR_k = np.asarray(psiR_k, order='C')
+    is_complex = psiR_k.dtype == np.complex128
+    nao = psiR_k.shape[1]
+    nG = psiR_k.shape[2]
+    psiR = np.zeros([kpts.nbzk,nao,nG], dtype = psiR_k.dtype, order='C')
+
+    mesh = np.asarray(mesh, dtype=np.int32, order='C')
+    c_mesh = mesh.ctypes.data_as(ctypes.c_void_p)
+
+    for ibz_k_idx in range(kpts.nibzk):
+        for idx, iop in enumerate(kpts.sym_group[ibz_k_idx]):
+            bz_k_idx = kpts.bz_k_group[ibz_k_idx][idx]
+            op = symm.transform_rot_b_to_a(kpts.cell, kpts.op_rot[iop])
+            op = np.asarray(op, dtype=np.int32, order='C')
+            time_reversal = False
+            if iop >= kpts.nrot:
+                time_reversal = True
+                op = -op
+            if symm.is_eye(op) or symm.is_inversion(op):
+                psiR[bz_k_idx] = psiR_k[ibz_k_idx]
+            else:
+                c_psiR = psiR[bz_k_idx].ctypes.data_as(ctypes.c_void_p)
+                c_psiR_k = psiR_k[ibz_k_idx].ctypes.data_as(ctypes.c_void_p)
+                c_op = op.ctypes.data_as(ctypes.c_void_p)
+                if is_complex: 
+                    libpbc.symmetrize_complex(c_psiR, c_psiR_k, c_op, c_mesh)
+                else:
+                    libpbc.symmetrize(c_psiR, c_psiR_k, c_op, c_mesh)
+    return psiR
+
+
 def transform_mo_coeff(kpts, mo_coeff_ibz):
     '''
     transform MO coefficients from IBZ to full BZ
@@ -490,6 +525,7 @@ class KPoints(lib.StreamObject):
 
     make_ibz_k = make_ibz_k
     symmetrize_density = symmetrize_density
+    symmetrize_wavefunction = symmetrize_wavefunction
     transform_mo_coeff = transform_mo_coeff
     transform_dm = transform_dm
     transform_mo_energy = transform_mo_energy

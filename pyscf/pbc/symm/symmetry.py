@@ -37,13 +37,17 @@ def is_right_hand_screw(c):
     else:
         return False
 
-def transform_rot_a_to_r(cell, op):
+def transform_rot_a_to_r(cell, ops):
     '''
     transform rotation operator from (a1,a2,a3) system to (x,y,z) system
     '''
     a = cell.lattice_vectors().T
     b = XYZ
-    return transform_rot(op,a,b)
+    if ops.ndim == 2:
+        return transform_rot(ops,a,b)
+    else:
+        ops_r = [transform_rot(op,a,b) for op in ops]
+        return np.asarray(ops_r)
 
 def transform_rot_b_to_r(cell, op):
     '''
@@ -77,7 +81,7 @@ def transform_rot(op, a, b):
     R = reduce(np.dot,(P, op, inv(P))).round(15)
     if(np.amax(np.absolute(R-R.round())) > 1e-6):
         raise RuntimeError("rotation matrix is wrong!")
-    return R.astype(int)
+    return R.round().astype(int)
 
 def get_Dmat(op,l):
     '''
@@ -286,7 +290,6 @@ def symmetrize_dm(kd, ibz_kpt_scaled, dm, op_idx):
             nao_i = (l_i+1)*(l_i+2)//2
         nz_i = cell._bas[i,3]
         Di = sg_symm.Dmats[op_idx][l_i] * phase_i
-        #Di = phase_i*Di.astype(np.complex128)
         for iz in range(nz_i):
             joff = 0
             for j in range(nshell):
@@ -299,7 +302,6 @@ def symmetrize_dm(kd, ibz_kpt_scaled, dm, op_idx):
                     nao_j = (l_j+1)*(l_j+2)//2
                 nz_j = cell._bas[j,3]
                 Dj = sg_symm.Dmats[op_idx][l_j] * phase_j
-                #Dj = (phase_j*Dj.astype(np.complex128)).conj()
                 for jz in range(nz_j):
                     dm_k = reduce(np.dot,(Di.T.conj(), dm[ioff:ioff+nao_i,joff:joff+nao_j], Dj))
                     if res.dtype == np.double:

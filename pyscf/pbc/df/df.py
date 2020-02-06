@@ -182,6 +182,8 @@ def _make_j3c(mydf, cell, auxcell, kptij_lst, cderi_file):
     # j2c ~ (-kpt_ji | kpt_ji)
     j2c = fused_cell.pbc_intor('int2c2e', hermi=1, kpts=uniq_kpts)
 
+    t1 = log.timer_debug1('2c2e', *t1)
+
     max_memory = max(2000, mydf.max_memory - lib.current_memory()[0])
     blksize = max(2048, int(max_memory*.5e6/16/fused_cell.nao_nr()))
     log.debug2('max_memory %s (MB)  blocksize %s', max_memory, blksize)
@@ -205,6 +207,8 @@ def _make_j3c(mydf, cell, auxcell, kptij_lst, cderi_file):
             LkR = LkI = None
         fswap['j2c/%d'%k] = fuse(fuse(j2c[k]).T).T
     j2c = coulG = None
+
+    t1 = log.timer_debug1('2c2e_PW', *t1)
 
     def cholesky_decomposed_metric(uniq_kptji_id):
         j2c = numpy.asarray(fswap['j2c/%d'%uniq_kptji_id])
@@ -238,6 +242,7 @@ def _make_j3c(mydf, cell, auxcell, kptij_lst, cderi_file):
     feri['j3c-kptij'] = kptij_lst
     nsegs = len(fswap['j3c-junk/0'])
     def make_kpt(uniq_kptji_id, cholesky_j2c):
+        t1 = (time.clock(), time.time())
         kpt = uniq_kpts[uniq_kptji_id]  # kpt = kptj - kpti
         log.debug1('kpt = %s', kpt)
         adapted_ji_idx = numpy.where(uniq_inverse == uniq_kptji_id)[0]
@@ -285,6 +290,7 @@ def _make_j3c(mydf, cell, auxcell, kptij_lst, cderi_file):
         # buf for ft_aopair
         buf = numpy.empty(nkptj*buflen*Gblksize, dtype=numpy.complex128)
         def pw_contract(istep, sh_range, j3cR, j3cI):
+            t1 = (time.clock(), time.time())
             bstart, bend, ncol = sh_range
             if aosym == 's2':
                 shls_slice = (bstart, bend, 0, bend)
@@ -309,6 +315,8 @@ def _make_j3c(mydf, cell, auxcell, kptij_lst, cderi_file):
                         lib.dot(kLR[p0:p1].T, pqkI.T, -1, j3cI[k][naux:], 1)
                         lib.dot(kLI[p0:p1].T, pqkR.T,  1, j3cI[k][naux:], 1)
 
+            t1 = log.timer_debug1('pw_con_j3c', *t1)
+
             for k, ji in enumerate(adapted_ji_idx):
                 if is_zero(kpt) and gamma_point(adapted_kptjs[k]):
                     v = fuse(j3cR[k])
@@ -323,6 +331,7 @@ def _make_j3c(mydf, cell, auxcell, kptij_lst, cderi_file):
                 # low-dimension systems
                 if j2c_negative is not None:
                     feri['j3c-/%d/%d'%(ji,istep)] = lib.dot(j2c_negative, v)
+            t1 = log.timer_debug1('pw_con_j3c_j2c', *t1)
 
         with lib.call_in_background(pw_contract) as compute:
             col1 = 0
@@ -350,6 +359,8 @@ def _make_j3c(mydf, cell, auxcell, kptij_lst, cderi_file):
                 compute(istep, sh_range, j3cR, j3cI)
         for ji in adapted_ji_idx:
             del(fswap['j3c-junk/%d'%ji])
+
+        t1 = log.timer_debug1('make_kpt', *t1)
 
     # Wrapped around boundary and symmetry between k and -k can be used
     # explicitly for the metric integrals.  We consider this symmetry

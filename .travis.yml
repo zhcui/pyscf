@@ -30,7 +30,7 @@ python:
 
 before_install:
   - sudo apt-get -qq install gcc libblas-dev cmake curl
-  - pip install numpy scipy h5py nose nose-exclude nose-timer
+  - pip install numpy scipy h5py nose nose-exclude nose-timer joblib
   - if [[ $(python --version 2>&1) =~ 3 ]]; then
        pip install ase spglib;
     fi

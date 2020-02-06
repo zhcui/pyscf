@@ -110,6 +110,7 @@ def get_j_kpts(mydf, dm_kpts, hermi=1, kpts=np.zeros((1,3)), kpts_band=None):
 
 def get_j_kpts_ibz(mydf, dm_kpts, kd, hermi=1, kpts_band=None):
 
+    t1 = (time.clock(), time.time())
     kpts = kd.ibz_k
 
     cell = mydf.cell
@@ -117,6 +118,15 @@ def get_j_kpts_ibz(mydf, dm_kpts, kd, hermi=1, kpts_band=None):
 
     ni = mydf._numint
     #make_rho, nset, nao = ni._gen_rho_evaluator(cell, dm_kpts, hermi)
+    '''
+    mo_coeff = None
+    if getattr(dm_kpts, 'mo_coeff', None) is not None:
+        mo_coeff = dm_kpts.mo_coeff
+        mo_occ = dm_kpts.mo_occ
+        if isinstance(dm_kpts[0], np.ndarray) and dm_kpts[0].ndim == 2:
+            mo_coeff = np.asarray([mo_coeff])
+            mo_occ = np.asarray([mo_occ])
+    '''
     dm_kpts = lib.asarray(dm_kpts, order='C')
     dms = _format_dms(dm_kpts, kpts)
     nset, nkpts, nao = dms.shape[:3]
@@ -132,8 +142,11 @@ def get_j_kpts_ibz(mydf, dm_kpts, kd, hermi=1, kpts_band=None):
             for ao_ks_etc, p0, p1 in mydf.aoR_loop(mydf.grids, kpt):
                 ao_ks, mask = ao_ks_etc[0], ao_ks_etc[2]
                 for i in range(nset):
+                    #if mo_coeff is None:
                     rhoR_k[i,p0:p1] += numint.eval_rho(cell, ao_ks[0], dms[i,k], mask, xctype='LDA', hermi=hermi)
-
+                    #else:
+                    #    rhoR_k[i,p0:p1] += numint.eval_rho2(cell, ao_ks[0], mo_coeff[i,k], mo_occ[i,k], mask, xctype='LDA')
+            t1 = lib.logger.timer_debug1(mydf, 'eval_rho:', *t1)
             for i in range(nset):
                 rhoR[i] += kd.symmetrize_density(rhoR_k[i], k, mesh)
 
@@ -143,6 +156,7 @@ def get_j_kpts_ibz(mydf, dm_kpts, kd, hermi=1, kpts_band=None):
             rhoG = tools.fft(rhoR[i], mesh)
             vG = coulG * rhoG
             vR[i] = tools.ifft(vG, mesh).real
+        t1 = lib.logger.timer_debug1(mydf, 'ifft:', *t1)
 
     else:
         vR = rhoR = np.zeros((nset,ngrids), dtype=np.complex128)
@@ -181,6 +195,7 @@ def get_j_kpts_ibz(mydf, dm_kpts, kd, hermi=1, kpts_band=None):
                 aow = np.einsum('xi,x->xi', ao, vR[i,p0:p1])
                 vj_kpts[i,k] += lib.dot(ao.conj().T, aow)
 
+    t1 = lib.logger.timer_debug1(mydf, 'dot ao:', *t1)
     return _format_jks(vj_kpts, dm_kpts, input_band, kpts)
 
 def get_k_kpts(mydf, dm_kpts, hermi=1, kpts=np.zeros((1,3)), kpts_band=None,
@@ -344,11 +359,13 @@ def get_k_kpts_ibz(mydf, dm_kpts, kd, hermi=1, kpts_band=None, exxdiv=None):
         vk_kpts = np.zeros((nset,nband,nao,nao), dtype=np.complex128)
 
     coords = mydf.grids.coords
+
+    t1 = (time.clock(), time.time())
     ao2_kpts = [np.asarray(ao.T, order='C')
                 for ao in mydf._numint.eval_ao(cell, coords, kpts=kd.bz_k)]
     if input_band is None:
-        ao1_kpts = [np.asarray(ao.T, order='C')
-                    for ao in mydf._numint.eval_ao(cell, coords, kpts=kpts)]
+        idx = [k[-1] for k in kd.bz_k_group]
+        ao1_kpts = [ao2_kpts[k] for k in idx]
     else:
         ao1_kpts = [np.asarray(ao.T, order='C')
                     for ao in mydf._numint.eval_ao(cell, coords, kpts=kpts_band)]
@@ -367,10 +384,13 @@ def get_k_kpts_ibz(mydf, dm_kpts, kd, hermi=1, kpts_band=None, exxdiv=None):
     ao2_dtype = np.result_type(*ao2_kpts)
     vR_dm = np.empty((nset,nao,ngrids), dtype=vk_kpts.dtype)
 
-    t1 = (time.clock(), time.time())
-    for k2, ao2T in enumerate(ao2_kpts):
+    t1 = lib.logger.timer_debug1(mydf, 'eval_ao:', *t1)
+    #for k2, ao2T in enumerate(ao2_kpts):
+    def _get_vk_loc(k2):
+        ao2T = ao2_kpts[k2]
         if ao2T.size == 0:
-            continue
+            #continue
+            return 0.
 
         kpt2 = kd.bz_k[k2]
         naoj = ao2T.shape[0]
@@ -379,6 +399,8 @@ def get_k_kpts_ibz(mydf, dm_kpts, kd, hermi=1, kpts_band=None, exxdiv=None):
         else:
             ao_dms = [ao2T.conj()]
 
+        vk_kpts_loc = np.zeros_like(vk_kpts)
+        vR_dm_loc = np.empty((nset,nao,ngrids), dtype=vk_kpts_loc.dtype)
         for k1, ao1T in enumerate(ao1_kpts):
             kpt1 = kpts_band[k1]
 
@@ -402,16 +424,29 @@ def get_k_kpts_ibz(mydf, dm_kpts, kd, hermi=1, kpts_band=None, exxdiv=None):
                 vG *= coulG
                 vR = tools.ifft(vG, mesh).reshape(p1-p0,naoj,ngrids)
                 vG = None
-                if vR_dm.dtype == np.double:
+                if vR_dm_loc.dtype == np.double:
                     vR = vR.real
                 for i in range(nset):
-                    np.einsum('ijg,jg->ig', vR, ao_dms[i], out=vR_dm[i,p0:p1])
+                    np.einsum('ijg,jg->ig', vR, ao_dms[i], out=vR_dm_loc[i,p0:p1], optimize=True)
                 vR = None
-            vR_dm *= expmikr.conj()
+            vR_dm_loc *= expmikr.conj()
 
             for i in range(nset):
-                vk_kpts[i,k1] += weight * lib.dot(vR_dm[i], ao1T.T)
-        t1 = lib.logger.timer_debug1(mydf, 'get_k_kpts: make_kpt (%d,*)'%k2, *t1)
+                vk_kpts_loc[i,k1] += weight * lib.dot(vR_dm_loc[i], ao1T.T)
+        #t1 = lib.logger.timer_debug1(mydf, 'get_k_kpts: make_kpt (%d,*)'%k2, *t1)
+        return vk_kpts_loc
+
+    try:
+        from joblib import Parallel, delayed
+        import os
+        nproc = int(os.getenv('JOBLIB_N_PROC', 1))
+        n_jobs = min(kd.nbzk, nproc)
+        res = Parallel(n_jobs=n_jobs)(delayed(_get_vk_loc)(k) for k in range(kd.nbzk))
+    except:
+        res = [_get_vk_loc(k) for k in range(kd.nbzk)]
+    for item in res:
+        vk_kpts += item
+    t1 = lib.logger.timer_debug1(mydf, 'get_k_kpts: make_kpt ', *t1)
 
     # Function _ewald_exxdiv_for_G0 to add back in the G=0 component to vk_kpts
     # Note in the _ewald_exxdiv_for_G0 implementation, the G=0 treatments are
