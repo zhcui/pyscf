@@ -297,7 +297,7 @@ class FFTDF(lib.StreamObject):
 
     def get_jk_ibz(self, dm, hermi=1, kd=None, kpts_band=None,
                    with_j=True, with_k=True, omega=None, exxdiv=None):
-        from pyscf.pbc.df import fft_jk
+        from pyscf.pbc.df import fft_jk_ibz
         if omega is not None:
             raise NotImplementedError()
 
@@ -306,9 +306,9 @@ class FFTDF(lib.StreamObject):
 
         vj = vk = None
         if with_j:
-            vj = fft_jk.get_j_kpts_ibz(self, dm, kd, hermi, kpts_band)
+            vj = fft_jk_ibz.get_j_kpts_ibz(self, dm, kd, hermi, kpts_band)
         if with_k:
-            vk = fft_jk.get_k_kpts_ibz(self, dm, kd, hermi, kpts_band, exxdiv)
+            vk = fft_jk_ibz.get_k_kpts_ibz(self, dm, kd, hermi, kpts_band, exxdiv)
         return vj, vk
 
     get_eri = get_ao_eri = fft_ao2mo.get_eri
