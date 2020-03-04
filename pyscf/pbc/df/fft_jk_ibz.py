@@ -178,7 +178,8 @@ def get_k_kpts_ibz(mydf, dm_kpts, kd, hermi=1, kpts_band=None, exxdiv=None):
 
     t1 = lib.logger.timer_debug1(mydf, 'eval_ao:', *t1)
     #for k2, ao2T in enumerate(ao2_kpts):
-    def _get_vk_loc(k2):
+    def _get_vk_loc(k2, nthreads):
+        lib.num_threads(nthreads)
         ao2T = ao2_kpts[k2]
         if ao2T.size == 0:
             #continue
@@ -230,10 +231,8 @@ def get_k_kpts_ibz(mydf, dm_kpts, kd, hermi=1, kpts_band=None, exxdiv=None):
 
     try:
         from joblib import Parallel, delayed
-        import os
-        nproc = int(os.getenv('JOBLIB_N_PROC', 1))
-        n_jobs = min(kd.nbzk, nproc)
-        res = Parallel(n_jobs=n_jobs)(delayed(_get_vk_loc)(k) for k in range(kd.nbzk))
+        with lib.with_multiproc_nproc(kd.nbzk) as mpi:
+            res = Parallel(n_jobs = mpi.nproc)(delayed(_get_vk_loc)(k, lib.num_threads()) for k in range(kd.nbzk))
     except:
         res = [_get_vk_loc(k) for k in range(kd.nbzk)]
     for item in res:

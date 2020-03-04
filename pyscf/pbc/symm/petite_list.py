@@ -44,13 +44,14 @@ def get_equivalent_pairs(g):
     eq_pairs = np.array((diff_g == 0).all(1), dtype=bool)
     return eq_pairs,order
 
-def map_Ls_2c(cell, g, ops, shl_cen1, shl_cen2, tol=LS_DIFF_TOL):
+def map_Ls_2c(cell, g, ops, shl_cen1, shl_cen2, tol=LS_DIFF_TOL, nthreads=lib.num_threads()):
     '''
     Find symmetry relations between g and gv.
     '''
+    lib.num_threads(nthreads)
     b = cell.reciprocal_vectors()
     nL = len(g)
-    L2L = -np.ones([nL, len(ops)], dtype=int)
+    L2L = -np.ones([nL, len(ops)], dtype=np.int32)
 
     for iop, op in enumerate(ops):
         gv = get_Ls_2c(g, op, shl_cen1, shl_cen2)
@@ -88,7 +89,7 @@ def get_t2(petite, cell=None, ops=None, Ls=None, L2L_Ls=None, tol=LS_DIFF_TOL):
     t1 = (time.clock(), time.time())
     for i, shlpr in enumerate(shlpr_cen):
         _L2L = L2L_Ls[i]
-        L2L = -np.ones(nL+1, dtype = int)
+        L2L = -np.ones(nL+1, dtype = np.int32)
         iL2L = []
         L_group = []
         sym_group = []
@@ -109,7 +110,7 @@ def get_t2(petite, cell=None, ops=None, Ls=None, L2L_Ls=None, tol=LS_DIFF_TOL):
         t2_sym_group.append(sym_group[::-1])
         
         L2L = L2L[:-1].copy()
-        L2iL = np.empty(nL, dtype = int)
+        L2iL = np.empty(nL, dtype = np.int32)
         L2iL[iL2L] = np.arange(len(iL2L))
         L2iL = L2iL[L2L]
         t2_L2iL.append(L2iL)
@@ -148,29 +149,36 @@ def get_shlpr_idx(idx_table, shlpr_idx):
     assert(res.size == 1)
     return res[0]
 
-def get_t3(petite, cell=None, ops=None, Ls=None, L2L_Ls=None, tol=LS_DIFF_TOL):
+def get_t3(petite, cell=None, ops=None, Ls=None, L2L_Ls=None, buf=None, tol=LS_DIFF_TOL):
     if cell is None: cell = petite.cell
     if ops is None: ops = petite.ops
     if Ls is None: Ls = petite.Ls
     if L2L_Ls is None: L2L_Ls = petite.L2L_Ls
+    if buf is None: buf = petite.buf
 
     shlpr_cen_idx = get_shl_center_idx(cell, 2)
     shltrip_cen_idx = get_shl_center_idx(cell, 3)
+    nshltrip = len(shltrip_cen_idx)
     nL = len(Ls)
     nL2 = nL * nL
     nop = len(ops)
+    '''
     t3_iL2L = []
     t3_L2iL = []
     t3_iLs_idx  = []
     t3_sym_group = []
     t3_L_group = []
+    '''
 
     t1 = (time.clock(), time.time())
-    for i, shltrip in enumerate(shltrip_cen_idx):
+#    for i, shltrip in enumerate(shltrip_cen_idx):
+    def _get_iL(idx,shltrip,buf,nthreads):
+        lib.num_threads(nthreads)
+        t2 = (time.clock(), time.time())
         idx_i = get_shlpr_idx(shlpr_cen_idx, (shltrip[0],shltrip[1]))
         idx_j = get_shlpr_idx(shlpr_cen_idx, (shltrip[0],shltrip[2]))
 
-        L2L_LsLs_T = np.empty([nop, nL2], dtype=int)
+        L2L_LsLs_T = np.empty([nop, nL2], dtype=np.int32)
         for iop, op in enumerate(ops):
             tmp = lib.cartesian_prod((L2L_Ls[idx_i,:,iop], L2L_Ls[idx_j,:,iop]))
             idx_throw = np.unique(np.where(tmp == -1)[0])
@@ -178,10 +186,11 @@ def get_t3(petite, cell=None, ops=None, Ls=None, L2L_Ls=None, tol=LS_DIFF_TOL):
             L2L_LsLs_T[iop, idx_throw] = -1
 
         _L2L = L2L_LsLs_T.T
-        L2L = -np.ones(nL2+1, dtype=int)
+        L2L = -np.ones(nL2+1, dtype=np.int32)
         iL2L = []
-        L_group = []
-        sym_group = []
+        _L_group = []
+        _sym_group = []
+        _group_size = []
         for k in range(nL2-1, -1, -1):
             if L2L[k] == -1:
                 L2L[_L2L[k]] = k
@@ -190,26 +199,47 @@ def get_t3(petite, cell=None, ops=None, Ls=None, L2L_Ls=None, tol=LS_DIFF_TOL):
                 if L_idx[0] == -1:
                     L_idx = L_idx[1:]
                     op_idx = op_idx[1:]
-                L_group.append(L_idx)
-                sym_group.append(op_idx)
+                _group_size.append(op_idx.size)
+                _L_group.append(L_idx)
+                _sym_group.append(op_idx)
 
         iL2L = np.array(iL2L[::-1])
-        t3_iL2L.append(iL2L)
-        t3_L_group.append(L_group[::-1])
-        t3_sym_group.append(sym_group[::-1])
+        lib.logger.debug(petite, 'niL = %s', len(iL2L))
+        group_size = np.concatenate(_group_size[::-1], axis=None)
+        L_group = np.concatenate(_L_group[::-1], axis=None)
+        sym_group = np.concatenate(_sym_group[::-1], axis=None)
 
         L2L = L2L[:-1].copy()
-        L2iL = np.empty(nL2, dtype = int)
+        L2iL = np.empty(nL2, dtype = np.int32)
         L2iL[iL2L] = np.arange(len(iL2L))
         L2iL = L2iL[L2L]
-        t3_L2iL.append(L2iL)
 
-        idx_i = (iL2L // nL).reshape((-1,1))
-        idx_j = (iL2L % nL).reshape((-1,1))
-        t3_iLs_idx.append(np.hstack((idx_i, idx_j)))
+        #idx_i = (iL2L[L2iL] // nL).reshape((-1,1))
+        #idx_j = (iL2L[L2iL] % nL).reshape((-1,1))
+        Lop = np.empty(nL2, dtype = np.int32)
+        Lop[L_group] = sym_group
+        res = np.hstack((iL2L[L2iL].reshape(-1,1), Lop.reshape(-1,1)))
+        buf[idx] = res
+
+        #idx_i = (iL2L // nL).reshape((-1,1))
+        #idx_j = (iL2L % nL).reshape((-1,1))
+        #idx_ij = np.hstack((idx_i, idx_j))
+
+        t2 = lib.logger.timer_debug1(petite, '_get_iL:', *t2)
+        #return iL2L, L_group, sym_group, L2iL, idx_ij
+        return None
+
+    try:
+        from joblib import Parallel, delayed
+        with lib.with_multiproc_nproc(nshltrip) as mpi:
+            Parallel(n_jobs = mpi.nproc)(delayed(_get_iL)(i, shltrip, buf, lib.num_threads()) for i, shltrip in enumerate(shltrip_cen_idx))
+    except:
+        for i, shltrip in enumerate(shltrip_cen_idx):
+            _get_iL(i, shltrip, buf)
 
     t1 = lib.logger.timer_debug1(petite, 'get_t3:', *t1)
-    return t3_iLs_idx, t3_iL2L, t3_L2iL, t3_L_group, t3_sym_group
+    #return t3_iLs_idx, t3_iL2L, t3_L2iL, t3_L_group, t3_sym_group
+    return None
 
 def build_L2L_Ls(petite, cell=None, ops=None, Ls=None, tol=LS_DIFF_TOL):
     if cell is None: cell = petite.cell
@@ -224,17 +254,15 @@ def build_L2L_Ls(petite, cell=None, ops=None, Ls=None, tol=LS_DIFF_TOL):
     t1 = (time.clock(), time.time())
     try:
         from joblib import Parallel, delayed
-        import os
-        nproc = int(os.getenv('JOBLIB_N_PROC', 1))
-        n_jobs = min(nshlpr,nproc)
-        res = Parallel(n_jobs=n_jobs)(delayed(map_Ls_2c)(cell,Ls,ops,shlpr[0], shlpr[1], tol) for i, shlpr in enumerate(shlpr_cen))
+        with lib.with_multiproc_nproc(nshlpr) as mpi:
+            res = Parallel(n_jobs = mpi.nproc)(delayed(map_Ls_2c)(cell,Ls,ops,shlpr[0], shlpr[1], tol, lib.num_threads()) for i, shlpr in enumerate(shlpr_cen))
         L2L_Ls = np.asarray(res)
         #for i in range(nshlpr):
         #    L2L_Ls[i] = res[i]
     except:
-        L2L_Ls = np.empty([nshlpr,nL,nop], dtype=int)
+        L2L_Ls = np.empty([nshlpr,nL,nop], dtype=np.int32)
         for i, shlpr in enumerate(shlpr_cen):
-            L2L_Ls[i] = map_Ls_2c(cell, Ls, ops, shlpr[0], shlpr[1], tol)
+            L2L_Ls[i] = map_Ls_2c(cell, Ls, ops, shlpr[0], shlpr[1], tol, lib.num_threads())
     t1 = lib.logger.timer_debug1(petite, 'build_L2L_Ls:', *t1)
     return L2L_Ls
 
@@ -256,11 +284,19 @@ class Petite_List(lib.StreamObject):
         self.t2_L_group = None 
         self.t2_sym_group = None
 
+        '''
         self.t3_iLs_idx = None
         self.t3_iL2L = None
         self.t3_L2iL = None
         self.t3_L_group = None
         self.t3_sym_group = None
+        '''
+
+        shltrip_cen_idx = get_shl_center_idx(cell, 3)
+        self.nL = len(Ls)
+        self.nL2 = self.nL * self.nL
+        nshltrip = len(shltrip_cen_idx)
+        self.buf = np.memmap('petite_list', dtype=np.int32, shape=(nshltrip,self.nL2,2), mode='w+')
 
     build_L2L_Ls = build_L2L_Ls
     get_t2 = get_t2
@@ -269,5 +305,6 @@ class Petite_List(lib.StreamObject):
     def kernel(self):
         self.L2L_Ls = self.build_L2L_Ls()
         self.t2_iLs, self.t2_iL2L, self.t2_L2iL, self.t2_L_group, self.t2_sym_group = self.get_t2()
-        self.t3_iLs_idx, self.t3_iL2L, self.t3_L2iL, self.t3_L_group, self.t3_sym_group = self.get_t3()
+        #self.t3_iLs_idx, self.t3_iL2L, self.t3_L2iL, self.t3_L_group, self.t3_sym_group = self.get_t3()
+        self.get_t3()
 
