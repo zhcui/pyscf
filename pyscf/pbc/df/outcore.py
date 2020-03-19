@@ -23,6 +23,7 @@ from pyscf import gto
 from pyscf.ao2mo.outcore import balance_segs
 from pyscf.pbc.lib.kpts_helper import is_zero, gamma_point, unique, KPT_DIFF_TOL
 from pyscf.pbc.df.incore import wrap_int3c
+from pyscf.pbc.df.incore_symm import wrap_int3c_symm
 from pyscf import __config__
 
 libpbc = lib.load_library('libpbc')
@@ -215,7 +216,10 @@ def _aux_e2(cell, auxcell, erifile, intor='int3c2e', aosym='s2ij', comp=None,
     buf = numpy.empty(nkptij*comp*ni*nj*buflen, dtype=dtype)
     buf1 = numpy.empty_like(buf)
 
-    int3c = wrap_int3c(cell, auxcell, intor, aosym, comp, kptij_lst)
+    if cell.symmetry:
+        int3c = wrap_int3c_symm(cell, auxcell, intor, aosym, comp, kptij_lst)
+    else:
+        int3c = wrap_int3c(cell, auxcell, intor, aosym, comp, kptij_lst)
 
     kptis = kptij_lst[:,0]
     kptjs = kptij_lst[:,1]

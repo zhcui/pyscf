@@ -270,11 +270,13 @@ class Petite_List(lib.StreamObject):
     '''
     Petite list for lattice integral summation
     '''
-    def __init__(self, cell, Ls):
+    def __init__(self, cell, Ls, auxcell=None):
         self.cell = cell
         self.Ls = Ls
-        self.pg_symm = symmetry.Symmetry(cell, point_group=True)
+        self.pg_symm = symmetry.Symmetry(cell, auxcell=auxcell, point_group=True)
         self.ops = symmetry.transform_rot_a_to_r(self.cell, self.pg_symm.op_rot)
+        self.Dmats = self.pg_symm.Dmats
+        self.l_max = self.pg_symm.l_max
         self.verbose = self.cell.verbose
         self.L2L_Ls = None
 
@@ -292,10 +294,10 @@ class Petite_List(lib.StreamObject):
         self.t3_sym_group = None
         '''
 
-        shltrip_cen_idx = get_shl_center_idx(cell, 3)
+        self.shltrip_cen_idx = get_shl_center_idx(cell, 3)
         self.nL = len(Ls)
         self.nL2 = self.nL * self.nL
-        nshltrip = len(shltrip_cen_idx)
+        nshltrip = len(self.shltrip_cen_idx)
         self.buf = np.memmap('petite_list', dtype=np.int32, shape=(nshltrip,self.nL2,2), mode='w+')
 
     build_L2L_Ls = build_L2L_Ls
@@ -304,7 +306,7 @@ class Petite_List(lib.StreamObject):
 
     def kernel(self):
         self.L2L_Ls = self.build_L2L_Ls()
-        self.t2_iLs, self.t2_iL2L, self.t2_L2iL, self.t2_L_group, self.t2_sym_group = self.get_t2()
+        #self.t2_iLs, self.t2_iL2L, self.t2_L2iL, self.t2_L_group, self.t2_sym_group = self.get_t2()
         #self.t3_iLs_idx, self.t3_iL2L, self.t3_L2iL, self.t3_L_group, self.t3_sym_group = self.get_t3()
         self.get_t3()
 

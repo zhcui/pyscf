@@ -63,7 +63,7 @@ static void shift_bas(double *env_loc, double *env, double *Ls, int ptr, int iL)
         env_loc[ptr+2] = env[ptr+2] + Ls[iL*3+2];
 }
 
-static void sort3c_kks1(double complex *out, double *bufr, double *bufi,
+void sort3c_kks1(double complex *out, double *bufr, double *bufi,
                         int *kptij_idx, int *shls_slice, int *ao_loc,
                         int nkpts, int nkpts_ij, int comp, int ish, int jsh,
                         int msh0, int msh1)
@@ -249,7 +249,7 @@ void PBCnr3c_fill_kks1(int (*intor)(), double complex *out, int nkpts_ij,
                       shls_slice, ao_loc, cintopt, pbcopt, atm, natm, bas, nbas, env);
 }
 
-static void sort3c_kks2_igtj(double complex *out, double *bufr, double *bufi,
+void sort3c_kks2_igtj(double complex *out, double *bufr, double *bufi,
                              int *kptij_idx, int *shls_slice, int *ao_loc,
                              int nkpts, int nkpts_ij, int comp, int ish, int jsh,
                              int msh0, int msh1)

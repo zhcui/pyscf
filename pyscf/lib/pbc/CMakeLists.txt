@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-add_library(pbc SHARED ft_ao.c fill_ints.c optimizer.c grid_ao.c symmetry.c)
+add_library(pbc SHARED ft_ao.c fill_ints.c fill_ints_symm.c optimizer.c grid_ao.c symmetry.c)
 
 set_target_properties(pbc PROPERTIES
   LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}

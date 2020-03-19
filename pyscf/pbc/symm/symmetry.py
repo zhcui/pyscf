@@ -133,11 +133,14 @@ def get_Dmat_cart(op,l_max): #need verification
         Ds.append(trans)
     return Ds
 
-def make_Dmats(cell, ops):
+def make_Dmats(cell, ops, l_max=None):
     '''
     Computes < m | R | m' >
     '''
-    l_max = np.max(cell._bas[:,1])
+    if l_max is None:
+        l_max = np.max(cell._bas[:,1])
+    else:
+        l_max = max(l_max, np.max(cell._bas[:,1]))
     nop = len(ops)
     Dmats = []
 
@@ -147,7 +150,7 @@ def make_Dmats(cell, ops):
             Dmats.append([get_Dmat(op, l) for l in range(l_max+1)])
         else:
             Dmats.append(get_Dmat_cart(op, l_max))
-    return Dmats
+    return Dmats, l_max
 
 def cell_to_spgcell(cell):
     a = cell.lattice_vectors()
@@ -193,7 +196,7 @@ class Symmetry():
     contains space group symmetry info of a Cell object
     '''
 
-    def __init__(self, cell, point_group = True, symmorphic = True):
+    def __init__(self, cell, auxcell=None, point_group = True, symmorphic = True):
 
         self.cell = cell
         if self.cell is None: #no cell info
@@ -220,7 +223,10 @@ class Symmetry():
             self.op_rot = np.eye(3,dtype =int).reshape(1,3,3)
             self.op_trans = np.zeros((1,3))
 
-        self.Dmats = make_Dmats(self.cell, self.op_rot)
+        l_max = None
+        if auxcell is not None:
+            l_max = np.max(auxcell._bas[:,1])
+        self.Dmats, self.l_max = make_Dmats(self.cell, self.op_rot, l_max)
 
 def is_eye(op):
 
@@ -310,3 +316,19 @@ def symmetrize_dm(kd, ibz_kpt_scaled, dm, op_idx):
                     joff += nao_j
             ioff += nao_i
     return res
+
+
+def make_rot_loc(l_max, key):
+    l = np.arange(l_max+1)
+    if 'cart' in key:
+        dims = ((l+1)*(l+2)//2)**2
+    elif 'sph' in key:
+        dims = (l*2+1)**2
+    else:  # spinor
+        raise NotImplementedError
+
+    rot_loc = numpy.empty(len(dims)+1, dtype=np.int32)
+    rot_loc[0] = 0
+    dims.cumsum(dtype=np.int32, out=rot_loc[1:])
+    return rot_loc
+

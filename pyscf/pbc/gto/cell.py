@@ -211,7 +211,7 @@ def unpack(celldic):
 def dumps(cell):
     '''Serialize Cell object to a JSON formatted str.
     '''
-    exclude_keys = set(('output', 'stdout', '_keys'))
+    exclude_keys = set(('output', 'stdout', '_keys', 'symm_orb', 'irrep_id', 'irrep_name'))
 
     celldic = dict(cell.__dict__)
     for k in exclude_keys:
