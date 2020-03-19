@@ -439,7 +439,7 @@ class KPoints(lib.StreamObject):
             self.verbose = cell.verbose
         else:
             self.verbose = 5
-        self.sg_symm = symm.Symmetry(cell, point_group)
+        self.sg_symm = symm.Symmetry(cell, point_group=point_group)
 
         self.bz_k = bz_k
         self.bz_k_scaled = cell.get_scaled_kpts(bz_k)

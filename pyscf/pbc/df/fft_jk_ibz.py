@@ -234,7 +234,7 @@ def get_k_kpts_ibz(mydf, dm_kpts, kd, hermi=1, kpts_band=None, exxdiv=None):
         with lib.with_multiproc_nproc(kd.nbzk) as mpi:
             res = Parallel(n_jobs = mpi.nproc)(delayed(_get_vk_loc)(k, lib.num_threads()) for k in range(kd.nbzk))
     except:
-        res = [_get_vk_loc(k) for k in range(kd.nbzk)]
+        res = [_get_vk_loc(k, lib.num_threads()) for k in range(kd.nbzk)]
     for item in res:
         vk_kpts += item
     t1 = lib.logger.timer_debug1(mydf, 'get_k_kpts: make_kpt ', *t1)
