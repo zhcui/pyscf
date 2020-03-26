@@ -1,9 +1,9 @@
 #include <stdlib.h>
-#include <stdio.h>
 #include <string.h>
 #include <complex.h>
 #include <assert.h>
 #include <stdbool.h>
+#include <math.h>
 #include "config.h"
 #include "cint.h"
 #include "vhf/fblas.h"
@@ -143,8 +143,8 @@ static void _nr3c_fill_symm_kk(int (*intor)(), void (*fsort)(),
 
     shls[0] = ish;
     shls[1] = jsh;
-    shlcen[2] = shlcen_atm_idx[ish];
-    shlcen[1] = shlcen_atm_idx[jsh];
+    shlcen[2] = shlcen_atm_idx[jsh];
+    shlcen[1] = shlcen_atm_idx[ish];
     for (ksh = ksh0; ksh < ksh1; ksh++) {//loop over shells one by one
         l_k = bas[ANG_OF+ksh*BAS_SLOTS];
         dkmax = ao_loc[ksh+1] - ao_loc[ksh];
@@ -167,6 +167,7 @@ static void _nr3c_fill_symm_kk(int (*intor)(), void (*fsort)(),
             int_flags_L2[i] = false;
         }
         double *int_ijk_buf = malloc(sizeof(double)*dijmc*nimgs*nimgs);
+        double *pint_ijk;
 
         shlcen[0] = shlcen_atm_idx[ksh];
         int L2iL_off = get_shltrip_idx(shlcen, shltrip_cen_idx, nshltrip) * nimgs * nimgs;
@@ -184,32 +185,35 @@ static void _nr3c_fill_symm_kk(int (*intor)(), void (*fsort)(),
         for (iL0 = 0; iL0 < nimgs; iL0+=IMGBLK) {
             iLcount = MIN(IMGBLK, nimgs - iL0);
             for (iL = iL0; iL < iL0+iLcount; iL++) {
-                shift_bas(env_loc, env, Ls, iptrxyz, iL);
+                //shift_bas(env_loc, env, Ls, iptrxyz, iL);
                 pbuf = bufL;
                 for (jL = 0; jL < nimgs; jL++) {
+                    shift_bas(env_loc, env, Ls, iptrxyz, iL);
                     shift_bas(env_loc, env, Ls, jptrxyz, jL);
                     if ((*fprescreen)(shls, pbcopt, atm, bas, env_loc)) {
                         idx_L2 = pL2iL[iL * nimgs + jL];
+                        pint_ijk = int_ijk_buf+(size_t)dijmc*idx_L2;
                         iop = piop[iL * nimgs + jL];
-                        //if (int_flags_L2[idx_L2] == false){//build integral
+                        if (int_flags_L2[idx_L2] == false){//build integral
                             int_flags_L2[idx_L2] = true;
-                            if ((*intor)(int_ijk_buf+(size_t)dijmc*idx_L2, NULL, shls, atm, natm, bas, nbas,
+                            int iL_irr = idx_L2 / nimgs;
+                            int jL_irr = idx_L2 % nimgs;
+                            shift_bas(env_loc, env, Ls, iptrxyz, iL_irr);
+                            shift_bas(env_loc, env, Ls, jptrxyz, jL_irr);
+                            if ((*intor)(pint_ijk, NULL, shls, atm, natm, bas, nbas,
                                          env_loc, cintopt, cache)) {
                                 empty = 0;
                             }
-                        //}
-                        memcpy(pbuf, int_ijk_buf+(size_t)dijmc*idx_L2, sizeof(double)*dijmc);
+                        }
                         //multiply Wigner D matrices
-                        /*
                         if (op_flags[iop] == false) {
                             multiply_Dmats(Tkji, Dmats, rot_loc, rot_mat_size, nop, iop,
                                            di, dj, dkmax, l_i, l_j, l_k);
                             op_flags[iop] = true;
                         }
                         dgemm_(&TRANS_N, &TRANS_N, &dkji, &One, &dkji,
-                               &D1, Tkji+(size_t)dkji*dkji*iop, &dkji, pbuf, &dkji,
+                               &D1, Tkji+(size_t)dkji*dkji*iop, &dkji, pint_ijk, &dkji,
                                &D0, pbuf, &dkji);
-                        */
                     } else {
                         for (i = 0; i < dijmc; i++) {
                             pbuf[i] = 0;
