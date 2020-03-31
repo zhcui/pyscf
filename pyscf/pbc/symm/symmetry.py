@@ -99,15 +99,20 @@ def get_Dmat(op,l):
     if not right_hand:
         if l == 1:
             D[:,0] *= -1.0
-        if l == 2:
+        elif l == 2:
             D[:,0] *= -1.0
             D[:,3] *= -1.0
-        if l == 3:
+        elif l == 3:
             D[:,1] *= -1.0
             D[:,4] *= -1.0
             D[:,6] *= -1.0
-        if l > 3:
-            raise NotImplementedError("l > 3 NYI")
+        elif l == 4:
+            D[:,0] *= -1.0
+            D[:,2] *= -1.0
+            D[:,5] *= -1.0
+            D[:,7] *= -1.0
+        elif l > 4:
+            raise NotImplementedError("l > 4 NYI")
     return D.round(15)
 
 def get_Dmat_cart(op,l_max): #need verification

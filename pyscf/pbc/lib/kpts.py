@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Copyright 2014-2019 The PySCF Developers. All Rights Reserved.
+# Copyright 2014-2020 The PySCF Developers. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -59,6 +59,7 @@ def make_ibz_k(kpts, time_reversal=True):
         kpts.inv_op_rot = np.concatenate([inv_op_rot, -inv_op_rot])
 
     bz2bz_ks = map_k_points_fast(kpts.bz_k_scaled, kpts.inv_op_rot, time_reversal, KPT_DIFF_TOL)
+    kpts.bz2bz_ks = bz2bz_ks
     if -1 in bz2bz_ks:
         logger.warn(kpts,'k points have lower symmetry than lattice.')
 
@@ -111,6 +112,91 @@ def make_ibz_k(kpts, time_reversal=True):
                 if (np.absolute(diff) < KPT_DIFF_TOL).all():
                     kpts.sym_group[i].append(io)
                     break
+
+def make_ibz_kk(kpts, permutation=True):
+
+    ops = kpts.op_rot
+    bz2bz_ks = kpts.bz2bz_ks
+
+    nbzk = len(kpts.bz_k)
+    nbzk2 = nbzk*nbzk
+    nop = len(ops)
+    bz2bz_ksks_T = np.empty([nop, nbzk2], dtype=np.int32)
+
+    for iop, op in enumerate(ops):
+        tmp = lib.cartesian_prod((bz2bz_ks[:,iop], bz2bz_ks[:,iop]))
+        idx_throw = np.unique(np.where(tmp == -1)[0])
+        bz2bz_ksks_T[iop] = tmp[:,0] * nbzk + tmp[:,1]
+        bz2bz_ksks_T[iop, idx_throw] = -1
+
+    bz2bz_ksks = bz2bz_ksks_T.T
+    bz2bz_kk = -np.ones(nbzk2+1, dtype=np.int32)
+    ibz2bz_kk = []
+    k_group = []
+    sym_group = []
+    group_size = []
+    for k in range(nbzk2-1, -1, -1):
+        if bz2bz_kk[k] == -1:
+            bz2bz_kk[bz2bz_ksks[k]] = k
+            ibz2bz_kk.append(k)
+            k_idx, op_idx = np.unique(bz2bz_ksks[k], return_index=True)
+            if k_idx[0] == -1:
+                k_idx = k_idx[1:]
+                op_idx = op_idx[1:]
+            group_size.append(op_idx.size)
+            k_group.append(k_idx)
+            sym_group.append(op_idx)
+
+    ibz2bz_kk = np.array(ibz2bz_kk[::-1])
+    kpts.ibz2bz_kk = ibz2bz_kk
+    lib.logger.debug(kpts, 'nibz_kk = %s', len(ibz2bz_kk))
+
+    bz2bz_kk = bz2bz_kk[:-1].copy()
+    bz2ibz_kk = np.empty(nbzk2,dtype=np.int32)
+    bz2ibz_kk[ibz2bz_kk] = np.arange(len(ibz2bz_kk))
+    bz2ibz_kk = bz2ibz_kk[bz2bz_kk]
+
+    kpts.bz2ibz_kk = bz2ibz_kk
+    kpts.kk_group = k_group[::-1]
+    kpts.kk_sym_group = sym_group[::-1]
+    kpts.ibz_kk_weight = np.bincount(bz2ibz_kk) *(1.0 / nbzk2)
+
+    if permutation:
+        idx_i = ibz2bz_kk//nbzk
+        idx_j = ibz2bz_kk%nbzk
+        idx_ij = np.vstack((idx_i, idx_j))
+        idx_ij_sort = np.sort(idx_ij, axis=0)
+        _, idx_ij_s2 = np.unique(idx_ij_sort, axis=1, return_index=True)
+        ibz2bz_kk_s2 = ibz2bz_kk[idx_ij_s2]
+        lib.logger.debug(kpts, 'nibz_kk_s2 = %s', len(ibz2bz_kk_s2))
+        kpts.ibz2bz_kk_s2 = ibz2bz_kk_s2
+        kpts.ibz_kk_s2_weight = kpts.ibz_kk_weight[idx_ij_s2]
+
+        idx_i = ibz2bz_kk_s2//nbzk
+        idx_j = ibz2bz_kk_s2%nbzk
+        idx_ji = idx_j*nbzk + idx_i
+        kpts.ibz_kk_s2_weight[np.where(idx_i != idx_j)[0]]*=2.
+        for i in range(len(kpts.ibz_kk_s2_weight)):
+            if idx_ji[i] not in kpts.ibz2bz_kk:
+                kpts.ibz_kk_s2_weight[i] /= 2.
+
+
+    #idx_i = (iL2L[L2iL] // nL).reshape((-1,1))
+    #idx_j = (iL2L[L2iL] % nL).reshape((-1,1))
+    '''
+    Lop = np.empty(nL2, dtype = np.int32)
+    Lop[L_group] = sym_group
+    res = np.hstack((iL2L[L2iL].reshape(-1,1), Lop.reshape(-1,1)))
+    buf[idx] = res
+    '''
+    #idx_i = (iL2L // nL).reshape((-1,1))
+    #idx_j = (iL2L % nL).reshape((-1,1))
+    #idx_ij = np.hstack((idx_i, idx_j))
+
+    #return iL2L, L_group, sym_group, L2iL, idx_ij
+    return None
+
+
 
 def map_k_points_fast(bzk_kc, U_scc, time_reversal, tol=1e-7):
     '''
@@ -281,6 +367,39 @@ def transform_mo_coeff(kpts, mo_coeff_ibz):
             mos.append(_transform(mo_coeff, iop, op))
     return mos
 
+def transform_single_mo_coeff(kpts, mo_coeff, k):
+    '''
+    Arguments:
+        kpts : KPoints class
+        mo_coeff : (nibzk,nao,nmo) ndarray
+        k : int
+            index in the BZ
+    '''
+    ibz_k_idx = kpts.bz2ibz[k]
+    ibz_k_scaled = kpts.ibz_k_scaled[ibz_k_idx]
+    iop = kpts.sym_conn[k]
+    op = kpts.op_rot[iop]
+
+    mo_ibz = mo_coeff[ibz_k_idx]
+    mo_bz = None
+    time_reversal = False
+    if iop >= kpts.nrot:
+        time_reversal = True
+        op = -op
+    if symm.is_eye(op):
+        if time_reversal:
+            mo_bz = mo_ibz.conj()
+        else:
+            mo_bz = mo_ibz
+    elif symm.is_inversion(op):
+        mo_bz = mo_ibz.conj()
+    else:
+        if iop >= kpts.nrot:
+            iop -= kpts.nrot
+        mo_bz = symm.symmetrize_mo_coeff(kpts, ibz_k_scaled, mo_ibz, iop)
+        if time_reversal:
+            mo_bz = mo_bz.conj()
+    return mo_bz
 
 def transform_mo_occ(kpts, mo_occ_ibz):
     '''
@@ -441,11 +560,11 @@ class KPoints(lib.StreamObject):
             self.verbose = 5
         self.sg_symm = symm.Symmetry(cell, point_group=point_group)
 
+        self.bz2bz_ks = None
         self.bz_k = bz_k
         self.bz_k_scaled = cell.get_scaled_kpts(bz_k)
         self.bz_weight = np.asarray([1./len(bz_k)]*len(bz_k))
         self.bz2ibz = np.arange(len(bz_k), dtype=int)
-
         self.ibz_k_scaled = self.bz_k_scaled
         self.ibz_k = bz_k
         self.ibz_weight = np.asarray([1./len(bz_k)]*len(bz_k))
@@ -472,6 +591,21 @@ class KPoints(lib.StreamObject):
         self.make_ibz_k(time_reversal=time_reversal)
 
         self.dump_kpts()
+
+        #k pairs
+        self.ibz2bz_kk = None
+        self.ibz_kk_weight = None
+        self.ibz2bz_kk_s2 = None
+        self.ibz_kk_s2_weight = None
+        self.bz2ibz_kk = None
+        self.kk_group = None
+        self.kk_sym_group = None
+        self.make_ibz_kk()
+
+        print(self.ibz2bz_kk)
+        print(self.kk_group)
+        print(self.kk_sym_group)
+
 
     @property
     def nbzk(self):
@@ -524,9 +658,11 @@ class KPoints(lib.StreamObject):
         return kptij_lst
 
     make_ibz_k = make_ibz_k
+    make_ibz_kk = make_ibz_kk
     symmetrize_density = symmetrize_density
     symmetrize_wavefunction = symmetrize_wavefunction
     transform_mo_coeff = transform_mo_coeff
+    transform_single_mo_coeff = transform_single_mo_coeff
     transform_dm = transform_dm
     transform_mo_energy = transform_mo_energy
     transform_mo_occ = transform_mo_occ

@@ -1,3 +1,5 @@
+#include <stdio.h>
+#include <math.h>
 #include <stdlib.h>
 #include <string.h>
 #include <complex.h>
@@ -126,7 +128,14 @@ static void _nr3c_fill_symm_kk(int (*intor)(), void (*fsort)(),
     const int dj = ao_loc[jsh+1] - ao_loc[jsh];
     const int dij = di * dj;
     int dkmax;
+    int mi = 2 * l_i + 1;
+    int mj = 2 * l_j + 1;
+    int mk, mijk;
+    int nci = bas[NCTR_OF+ish*BAS_SLOTS];
+    int ncj = bas[NCTR_OF+jsh*BAS_SLOTS];
+    int nck;
 
+    int ii, jj, kk;
     int i, dijm, dijmc, dijmk, empty;
     int ksh, iL0, iL, jL, iLcount; 
     int idx_L2, iop;
@@ -147,6 +156,7 @@ static void _nr3c_fill_symm_kk(int (*intor)(), void (*fsort)(),
     for (ksh = ksh0; ksh < ksh1; ksh++) {//loop over shells one by one
         l_k = bas[ANG_OF+ksh*BAS_SLOTS];
         dkmax = ao_loc[ksh+1] - ao_loc[ksh];
+        nck = bas[NCTR_OF+ksh*BAS_SLOTS];
         dijm = dij * dkmax;
         dijmc = dijm * comp;
         dijmk = dijmc * nkpts;
@@ -175,12 +185,19 @@ static void _nr3c_fill_symm_kk(int (*intor)(), void (*fsort)(),
 
         int dkj = dkmax*dj;
         int dkji = dkj * di;
-        double *Tkji = malloc(sizeof(double)*dkji*dkji*nop);
+        mk = 2 * l_k + 1;
+        mijk = mi*mj*mk;
+        double *int_m = malloc(sizeof(double)*mijk);
+        double *int_d = malloc(sizeof(double)*dijmc);
+        double *Tkji = malloc(sizeof(double)*mijk*mijk*nop);
         bool op_flags[nop];
         for (i = 0; i < nop; i++) {
             op_flags[i] = false;
         }
 
+        double *tmp = malloc(sizeof(double)*dkji);
+        //printf("ijksh: %d, %d, %d, %d, %d, %d\n", ish, jsh, ksh, di, dj, dkmax);
+        //printf("mijk: %d, %d, %d, %d, %d, %d\n", mi,mj,mk, nci,ncj,nck);
         for (iL0 = 0; iL0 < nimgs; iL0+=IMGBLK) {
             iLcount = MIN(IMGBLK, nimgs - iL0);
             for (iL = iL0; iL < iL0+iLcount; iL++) {
@@ -189,7 +206,13 @@ static void _nr3c_fill_symm_kk(int (*intor)(), void (*fsort)(),
                 for (jL = 0; jL < nimgs; jL++) {
                     shift_bas(env_loc, env, Ls, iptrxyz, iL);
                     shift_bas(env_loc, env, Ls, jptrxyz, jL);
+                   
+
                     if ((*fprescreen)(shls, pbcopt, atm, bas, env_loc)) {
+
+                        //(*intor)(tmp, NULL, shls, atm, natm, bas, nbas,
+                        //                 env_loc, cintopt, cache);
+
                         idx_L2 = pL2iL[iL * nimgs + jL];
                         pint_ijk = int_ijk_buf+(size_t)dijmc*idx_L2;
                         iop = piop[iL * nimgs + jL];
@@ -207,12 +230,97 @@ static void _nr3c_fill_symm_kk(int (*intor)(), void (*fsort)(),
                         //multiply Wigner D matrices
                         if (op_flags[iop] == false) {
                             multiply_Dmats(Tkji, Dmats, rot_loc, rot_mat_size, nop, iop,
-                                           di, dj, dkmax, l_i, l_j, l_k);
+                                           mi, mj, mk, l_i, l_j, l_k);
                             op_flags[iop] = true;
                         }
-                        dgemm_(&TRANS_N, &TRANS_N, &dkji, &One, &dkji,
-                               &D1, Tkji+(size_t)dkji*dkji*iop, &dkji, pint_ijk, &dkji,
-                               &D0, pbuf, &dkji);
+
+                        if (nci==1 && ncj==1 && nck==1){
+                            dgemm_(&TRANS_N, &TRANS_N, &dkji, &One, &dkji,
+                                &D1, Tkji+(size_t)mijk*mijk*iop, &mijk, pint_ijk, &dkji,
+                                &D0, pbuf, &dkji);
+                        }
+                        else{
+                        double *pint_d = int_d;
+                        for (kk=0; kk<nck; kk++) {
+                            int koff = kk*mk;
+                            for (jj=0; jj<ncj; jj++) {
+                                int joff = jj*mj;
+                                for (ii=0; ii<nci; ii++) {
+                                    int ioff = ii*mi;
+                                    double *pint = pint_ijk + ioff + joff*di + koff*dij;
+                                    double *pint_m = int_m;
+                                    for (int k=0; k<mk; k++){
+                                    for (int j=0; j<mj; j++){
+                                    for (i=0; i<mi; i++){
+                                        pint_m[i] = pint[i];
+                                    }
+                                    pint += di;
+                                    pint_m += mi;
+                                    }
+                                    pint += di*mj*(ncj-1);
+                                    }
+                                    dgemm_(&TRANS_N, &TRANS_N, &mijk, &One, &mijk,
+                                        &D1, Tkji+(size_t)mijk*mijk*iop, &mijk, int_m, &mijk,
+                                        &D0, pint_d, &mijk);
+                                    pint_d += mijk;
+                                }
+                            }
+                        }
+
+                        pint_d = int_d;
+                        for (kk=0; kk<nck; kk++) {
+                            int koff = kk*mk;
+                            for (jj=0; jj<ncj; jj++) {
+                                int joff = jj*mj;
+                                for (ii=0; ii<nci; ii++) {
+                                    int ioff = ii*mi;
+                                    double *pint = pbuf + ioff + joff*di + koff*dij;
+                                    for (int k=0; k<mk; k++){
+                                    for (int j=0; j<mj; j++){
+                                    for (i=0; i<mi; i++){
+                                        pint[i] = pint_d[i];
+                                    }
+                                    pint += di;
+                                    pint_d += mi;
+                                    }
+                                    pint += di*mj*(ncj-1);
+                                    }
+                                }
+                            }
+                        }
+                        }
+
+                        /*
+                        if (ish == 1 && jsh==6 && ksh==17){
+                        printf("\n");
+                        for (i=0;i<dkji;i++) printf("%f, ", tmp[i]);
+                        printf("\n");
+                        for (i=0;i<dkji;i++) printf("%f, ", pbuf[i]);
+                        printf("\n");
+                        for (i=0;i<dkji;i++) printf("%f, ", int_d[i]);
+                        printf("\n");
+                        for (i=0;i<dkji;i++) printf("%f, ", pint_ijk[i]);
+                        printf("\n");
+                        exit(1);
+                        }*/
+
+                        /*
+                        double error =0.;
+                        for (i=0; i<dkji; i++) {
+                            error = fmax(error, fabs(pbuf[i] - tmp[i]));
+                        }
+                        if (error > 1e-7){
+                            printf("T mat: ");
+                            for (i=0; i<dkji*dkji; i++) printf("%f, ",Tkji[dkji*dkji*iop+i]);
+                            printf("\n");
+                            printf("pbuf: ");
+                            for (i=0; i<dkji; i++) printf("%f, ", pbuf[i]);
+                            printf("\n");
+                            printf("tmp: ");
+                            for (i=0; i<dkji; i++) printf("%f, ", tmp[i]);
+                            printf("\n");
+                        }*/
+
                     } else {
                         for (i = 0; i < dijmc; i++) {
                             pbuf[i] = 0;
@@ -241,9 +349,12 @@ static void _nr3c_fill_symm_kk(int (*intor)(), void (*fsort)(),
                    &ND1, bufkL_r, &dijmk, expkL_i+iL0, &nimgs,
                    &D1, bufkk_i, &dijmk);
         }
+        free(tmp);
         free(Tkji);
         free(int_flags_L2);
         free(int_ijk_buf);
+        free(int_m);
+        free(int_d);
         (*fsort)(out, bufkk_r, bufkk_i, kptij_idx, shls_slice,
                  ao_loc, nkpts, nkpts_ij, comp, ish, jsh,
                  ksh, ksh+1);

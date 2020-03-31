@@ -45,11 +45,11 @@ static int shloc_partition(int *kshloc, int *ao_loc, int ksh0, int ksh1, int dkm
         kshloc[0] = ksh0;
         for (ksh = ksh0+1; ksh < ksh1; ksh++) {
                 assert(ao_loc[ksh+1] - ao_loc[ksh] < dkmax);
-                if (ao_loc[ksh+1] - loclast > dkmax) {
+                //if (ao_loc[ksh+1] - loclast > dkmax) {
                         nloc += 1;
                         kshloc[nloc] = ksh;
                         loclast = ao_loc[ksh];
-                }
+                //}
         }
         nloc += 1;
         kshloc[nloc] = ksh1;
