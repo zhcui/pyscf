@@ -1,5 +1,5 @@
-#include <stdio.h>
-#include <math.h>
+//#include <stdio.h>
+//#include <math.h>
 #include <stdlib.h>
 #include <string.h>
 #include <complex.h>
@@ -195,7 +195,7 @@ static void _nr3c_fill_symm_kk(int (*intor)(), void (*fsort)(),
             op_flags[i] = false;
         }
 
-        double *tmp = malloc(sizeof(double)*dkji);
+        //double *tmp = malloc(sizeof(double)*dkji);
         //printf("ijksh: %d, %d, %d, %d, %d, %d\n", ish, jsh, ksh, di, dj, dkmax);
         //printf("mijk: %d, %d, %d, %d, %d, %d\n", mi,mj,mk, nci,ncj,nck);
         for (iL0 = 0; iL0 < nimgs; iL0+=IMGBLK) {
@@ -349,7 +349,7 @@ static void _nr3c_fill_symm_kk(int (*intor)(), void (*fsort)(),
                    &ND1, bufkL_r, &dijmk, expkL_i+iL0, &nimgs,
                    &D1, bufkk_i, &dijmk);
         }
-        free(tmp);
+        //free(tmp);
         free(Tkji);
         free(int_flags_L2);
         free(int_ijk_buf);

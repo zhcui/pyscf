@@ -602,11 +602,6 @@ class KPoints(lib.StreamObject):
         self.kk_sym_group = None
         self.make_ibz_kk()
 
-        print(self.ibz2bz_kk)
-        print(self.kk_group)
-        print(self.kk_sym_group)
-
-
     @property
     def nbzk(self):
         return self._nbzk
