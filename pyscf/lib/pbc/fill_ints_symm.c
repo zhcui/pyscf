@@ -66,7 +66,8 @@ static void shift_bas(double *env_loc, double *env, double *Ls, int ptr, int iL)
 static int get_shltrip_idx(int *shlcen, int *shltrip_cen_idx, int nshltrip)
 {
     int idx = -1;
-    for (int i=0; i<nshltrip; i++)
+    int i;
+    for (i=0; i<nshltrip; i++)
     {
         if (shlcen[0] == shltrip_cen_idx[0+i*3] &&
             shlcen[1] == shltrip_cen_idx[1+i*3] &&
@@ -136,7 +137,7 @@ static void _nr3c_fill_symm_kk(int (*intor)(), void (*fsort)(),
     int nck;
 
     int ii, jj, kk;
-    int i, dijm, dijmc, dijmk, empty;
+    int i, j, k, dijm, dijmc, dijmk, empty;
     int ksh, iL0, iL, jL, iLcount; 
     int idx_L2, iop;
 
@@ -249,8 +250,8 @@ static void _nr3c_fill_symm_kk(int (*intor)(), void (*fsort)(),
                                     int ioff = ii*mi;
                                     double *pint = pint_ijk + ioff + joff*di + koff*dij;
                                     double *pint_m = int_m;
-                                    for (int k=0; k<mk; k++){
-                                    for (int j=0; j<mj; j++){
+                                    for (k=0; k<mk; k++){
+                                    for (j=0; j<mj; j++){
                                     for (i=0; i<mi; i++){
                                         pint_m[i] = pint[i];
                                     }
@@ -275,8 +276,8 @@ static void _nr3c_fill_symm_kk(int (*intor)(), void (*fsort)(),
                                 for (ii=0; ii<nci; ii++) {
                                     int ioff = ii*mi;
                                     double *pint = pbuf + ioff + joff*di + koff*dij;
-                                    for (int k=0; k<mk; k++){
-                                    for (int j=0; j<mj; j++){
+                                    for (k=0; k<mk; k++){
+                                    for (j=0; j<mj; j++){
                                     for (i=0; i<mi; i++){
                                         pint[i] = pint_d[i];
                                     }
