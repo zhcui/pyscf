@@ -434,11 +434,13 @@ class KSCF(pbchf.SCF):
         if 'kpts' in self.__dict__:
             # To handle the attribute kpt loaded from chkfile
             self.kpt = self.__dict__.pop('kpts')
+        if self.kpts_descriptor is not None:
+            return self.kpts_descriptor.ibz_k
         return self.with_df.kpts
     @kpts.setter
     def kpts(self, x):
         self.with_df.kpts = np.reshape(x, (-1,3))
-        self.wtk = np.asarray([1./len(self.kpts)] * len(self.kpts))
+        self.wtk = np.asarray([1./len(self.with_df.kpts)] * len(self.with_df.kpts))
 
     @property
     def mo_energy_kpts(self):

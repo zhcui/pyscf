@@ -114,8 +114,7 @@ def energy_elec(mf, dm_kpts=None, h1e_kpts=None, vhf=None):
     if (len(h1e_kpts) != len(mf.wtk)):
         weight = [1./len(h1e_kpts)]*len(h1e_kpts)
 
-    e1 = (np.einsum('k,kij,kji', weight, h1e_kpts, dm_kpts[0]) +
-          np.einsum('k,kij,kji', weight, h1e_kpts, dm_kpts[1]))
+    e1 = np.einsum('k,kij,kji', weight, h1e_kpts, dm_kpts[0]+dm_kpts[1])
     tot_e = e1 + vhf.ecoul + vhf.exc
     mf.scf_summary['e1'] = e1.real
     mf.scf_summary['coul'] = vhf.ecoul.real
