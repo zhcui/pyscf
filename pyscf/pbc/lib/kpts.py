@@ -44,6 +44,10 @@ def make_ibz_k(kpts, time_reversal=True):
     op_rot = []
     for op in kpts.sg_symm.op_rot:
         op_rot.append(symm.transform_rot_a_to_b(kpts.cell,op))
+
+    inversion = -np.eye(3, dtype=int)
+    has_inversion = (op_rot == inversion).all(2).all(1).any()
+
     op_rot = np.asarray(op_rot)
 
     inv_op_rot = []
@@ -54,6 +58,8 @@ def make_ibz_k(kpts, time_reversal=True):
     kpts.op_rot = op_rot
     kpts.inv_op_rot = inv_op_rot
     kpts.nrot = len(kpts.op_rot)
+
+    time_reversal = time_reversal and not has_inversion
     if time_reversal:
         kpts.op_rot = np.concatenate([op_rot, -op_rot])
         kpts.inv_op_rot = np.concatenate([inv_op_rot, -inv_op_rot])
