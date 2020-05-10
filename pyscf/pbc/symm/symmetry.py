@@ -18,9 +18,11 @@
 
 import numpy as np
 from numpy.linalg import inv
+from pyscf import __config__
 from pyscf.symm.Dmatrix import *
 from functools import reduce
 
+SYMPREC = getattr(__config__, 'pbc_symm_symmetry_symprec', 1e-6)
 XYZ = np.eye(3)
 
 def is_right_hand_screw(c):
@@ -79,7 +81,7 @@ def transform_rot(op, a, b):
     '''
     P = np.dot(inv(b),a)
     R = reduce(np.dot,(P, op, inv(P))).round(15)
-    if(np.amax(np.absolute(R-R.round())) > 1e-6):
+    if(np.amax(np.absolute(R-R.round())) > SYMPREC):
         raise RuntimeError("rotation matrix is wrong!")
     return R.round().astype(int)
 
@@ -87,13 +89,14 @@ def get_Dmat(op,l):
     '''
     Get Wigner D matrix
     Arguments:
-        op : in (x,y,z) system
-        l  : angular momentum
+        op : (3,3) ndarray
+            rotation operator in (x,y,z) system
+        l : int
+            angular momentum
     '''
     c1 = XYZ
     c2 = np.dot(op, c1.T).T
     right_hand = is_right_hand_screw(c2)
-
     alpha,beta,gamma = get_euler_angles(c1,c2)
     D = Dmatrix(l, alpha, beta, gamma, reorder_p=True)
     if not right_hand:
@@ -176,7 +179,7 @@ class SpaceGroup():
         rotations : (n,3,3) ndarray 
         translations : (n,3) ndarray
     '''
-    def __init__(self, cell, symprec=1e-6):
+    def __init__(self, cell, symprec=SYMPREC):
         self.cell = cell
         self.symprec = symprec
         self.rotations = np.reshape(np.eye(3,dtype=int), (-1,3,3))
@@ -241,87 +244,86 @@ def is_inversion(op):
 
     return ((op + np.eye(3,dtype=int)) == 0).all()
 
-def _get_phase(cell, ishell, op, coords_scaled, kpt_scaled):
-    iatm = cell._bas[ishell,0]
-    r = coords_scaled[iatm]
-    r_diff = r - np.dot(op, r)
-    phase = np.exp(-1j * np.dot(kpt_scaled, r_diff) * 2.0 * np.pi)
-    return phase
+def get_phase(cell, op, coords_scaled, kpt_scaled):
+    natm = cell.natm
+    phase = np.zeros([natm], dtype = np.complex128)
+    atm_map = np.arange(natm)
+    for iatm in range(natm):
+        r = coords_scaled[iatm]
+        op_dot_r = np.dot(op, r)
+        op_dot_r_0 = np.mod(np.mod(op_dot_r, 1), 1)
+        diff = np.einsum('ki->k', abs(op_dot_r_0 - coords_scaled))
+        atm_map[iatm] = np.where(diff < SYMPREC)[0]
+        r_diff = op_dot_r_0 - op_dot_r
+        #sanity check
+        assert(np.linalg.norm(r_diff - r_diff.round()) < SYMPREC)
+        phase[iatm] = np.exp(-1j * np.dot(kpt_scaled, r_diff) * 2.0 * np.pi)
+    return atm_map, phase
 
-def symmetrize_mo_coeff(kd, ibz_kpt_scaled, mo_coeff, op_idx):
-    '''
-    get MO coefficients for a symmetry related k point
-    '''
+def get_rotation_mat(kd, ibz_kpt_scaled, mo_coeff_or_dm, op_idx):
     cell = kd.cell
     sg_symm = kd.sg_symm
     kpt_scaled = np.dot(inv(kd.op_rot[op_idx]), ibz_kpt_scaled)
     op = transform_rot_b_to_a(cell, kd.op_rot[op_idx])
     inv_op = inv(op)
     coords = cell.get_scaled_positions()
+    atm_map, phases = get_phase(cell, inv_op, coords, kpt_scaled)
 
-    res = np.empty_like(mo_coeff)
-    nshell = cell._bas.shape[0]
-    ioff = 0
-    for i in range(nshell):
-        phase = _get_phase(cell, i, inv_op, coords, kpt_scaled)
+    dim = mo_coeff_or_dm.shape[0]
+    mat = np.zeros([dim, dim], dtype=np.complex128)
+    aoslice = cell.aoslice_by_atom()
+    for iatm in range(cell.natm):
+        jatm = atm_map[iatm]
+        if iatm != jatm:
+            #sanity check
+            nao_i = aoslice[iatm][3] - aoslice[iatm][2]
+            nao_j = aoslice[jatm][3] - aoslice[jatm][2]
+            assert(nao_i == nao_j)
+            nshl_i = aoslice[iatm][1] - aoslice[iatm][0]
+            nshl_j = aoslice[jatm][1] - aoslice[jatm][0]
+            assert(nshl_i == nshl_j)
+            for ishl in range(nshl_i):
+                shl_i = ishl + aoslice[iatm][0]
+                shl_j = ishl + aoslice[jatm][0]
+                l_i = cell._bas[shl_i,1]
+                l_j = cell._bas[shl_j,1]
+                assert(l_i == l_j)
+        phase = phases[iatm]
+        ao_off_i = aoslice[iatm][2]
+        ao_off_j = aoslice[jatm][2]
+        shlid_0 = aoslice[iatm][0]
+        shlid_1 = aoslice[iatm][1]
+        for ishl in range(shlid_0, shlid_1):
+            l = cell._bas[ishl,1]
+            D = sg_symm.Dmats[op_idx][l] * phase
+            if not cell.cart:
+                nao = 2*l + 1
+            else:
+                nao = (l+1)*(l+2)//2
+            nz = cell._bas[ishl,3]
+            for j in range(nz):
+                mat[ao_off_i:ao_off_i+nao, ao_off_j:ao_off_j+nao] = D
+                ao_off_i += nao
+                ao_off_j += nao
+        assert(ao_off_i == aoslice[iatm][3])
+        assert(ao_off_j == aoslice[jatm][3])
+    return mat.T.conj()
 
-        l = cell._bas[i,1]
-        if not cell.cart:
-            nao = 2*l + 1
-        else:
-            nao = (l+1)*(l+2)//2
-        D = sg_symm.Dmats[op_idx][l] * phase
-        nz = cell._bas[i,3]
-        for j in range(nz):
-            res[ioff:ioff+nao,:] = np.dot(D.T.conj(), mo_coeff[ioff:ioff+nao,:])
-            ioff += nao
+def symmetrize_mo_coeff(kd, ibz_kpt_scaled, mo_coeff, op_idx):
+    '''
+    get MO coefficients for a symmetry related k point
+    '''
+    mat = get_rotation_mat(kd, ibz_kpt_scaled, mo_coeff, op_idx)
+    res = np.dot(mat, mo_coeff)
     return res
 
 def symmetrize_dm(kd, ibz_kpt_scaled, dm, op_idx):
     '''
     get density matrix for a symmetry related k point
     '''
-    cell = kd.cell
-    sg_symm = kd.sg_symm
-    kpt_scaled = np.dot(inv(kd.op_rot[op_idx]), ibz_kpt_scaled)
-    op = transform_rot_b_to_a(cell, kd.op_rot[op_idx])
-    inv_op = inv(op)
-    coords = cell.get_scaled_positions()
-
-    res = np.zeros_like(dm)
-    nshell = cell._bas.shape[0]
-    ioff = 0
-    for i in range(nshell):
-        phase_i = _get_phase(cell, i, inv_op, coords, kpt_scaled)
-
-        l_i = cell._bas[i,1]
-        if not cell.cart:
-            nao_i = 2*l_i + 1
-        else:
-            nao_i = (l_i+1)*(l_i+2)//2
-        nz_i = cell._bas[i,3]
-        Di = sg_symm.Dmats[op_idx][l_i] * phase_i
-        for iz in range(nz_i):
-            joff = 0
-            for j in range(nshell):
-                phase_j = _get_phase(cell, j, inv_op, coords, kpt_scaled)
-
-                l_j = cell._bas[j,1]
-                if not cell.cart:
-                    nao_j = 2*l_j + 1
-                else:
-                    nao_j = (l_j+1)*(l_j+2)//2
-                nz_j = cell._bas[j,3]
-                Dj = sg_symm.Dmats[op_idx][l_j] * phase_j
-                for jz in range(nz_j):
-                    dm_k = reduce(np.dot,(Di.T.conj(), dm[ioff:ioff+nao_i,joff:joff+nao_j], Dj))
-                    if res.dtype == np.double:
-                        dm_k = dm_k.real
-                    res[ioff:ioff+nao_i,joff:joff+nao_j] = dm_k
-                    joff += nao_j
-            ioff += nao_i
+    mat = get_rotation_mat(kd, ibz_kpt_scaled, dm, op_idx)
+    res = reduce(np.dot, (mat, dm, mat.T.conj()))
     return res
-
 
 def make_rot_loc(l_max, key):
     l = np.arange(l_max+1)
@@ -336,4 +338,3 @@ def make_rot_loc(l_max, key):
     rot_loc[0] = 0
     dims.cumsum(dtype=np.int32, out=rot_loc[1:])
     return rot_loc
-
