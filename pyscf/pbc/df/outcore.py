@@ -256,5 +256,3 @@ def _aux_e2(cell, auxcell, erifile, intor='int3c2e', aosym='s2ij', comp=None,
     if not isinstance(erifile, h5py.Group):
         feri.close()
     return erifile
-
-

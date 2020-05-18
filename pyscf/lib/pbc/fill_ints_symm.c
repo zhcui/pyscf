@@ -1,5 +1,3 @@
-//#include <stdio.h>
-//#include <math.h>
 #include <stdlib.h>
 #include <string.h>
 #include <complex.h>
@@ -14,6 +12,7 @@
 #define INTBUFMAX10     8000
 #define IMGBLK          80
 #define OF_CMPLX        2
+#define BLKSIZE         175
 
 #define MIN(X,Y)        ((X)<(Y)?(X):(Y))
 #define MAX(X,Y)        ((X)>(Y)?(X):(Y))
@@ -80,21 +79,139 @@ static int get_shltrip_idx(int *shlcen, int *shltrip_cen_idx, int nshltrip)
     return idx;
 }
 
+static void build_block_diag_mat(double* A, int dA, double* B, int dB, int nc)  
+{                                                                               
+    int i,j,k,off;                                                              
+    for(i=0; i<dA*dA; i++){                                                     
+        A[i] = 0.0;                                                             
+    }                                                                           
+    for(k=0; k<nc; k++){                                                        
+        off = k*dA*dB + k*dB;                                                
+        for(i=0; i<dB; i++){                                                    
+            for(j=0; j<dB; j++){                                                
+                A[off+i*dA+j] = B[i*dB+j];                                      
+    }}}                                                                         
+}            
+
 static void multiply_Dmats(double* Tkji, double *Dmats, int *rot_loc, int rot_mat_size, int nop, int iop, 
-                           int di, int dj, int dk, int l_i, int l_j, int l_k)
+                           int di, int dj, int dk, int l_i, int l_j, int l_k,
+                           int nci, int ncj, int nck)
 {
-    int dkj = dk*dj;
-    int dkji = dkj*di;
     double *pDmats, *pTk, *pTj, *pTi;
-    double *Tkj = malloc(sizeof(double)*dkj*dkj);
     pDmats = Dmats+(size_t)rot_mat_size*iop;
     pTk = pDmats + rot_loc[l_k];
     pTj = pDmats + rot_loc[l_j];
     pTi = pDmats + rot_loc[l_i];
-    kron(Tkj, pTk, pTj, dk, dk, dj, dj);
-    kron(Tkji+(size_t)dkji*dkji*iop, Tkj, pTi, dkj, dkj, di, di);
+
+    int dim_Tk = dk*nck;
+    int dim_Tj = dj*ncj;
+    int dim_Ti = di*nci;
+    double *Tk, *Tj, *Ti;
+    if (nck==1) {Tk = pTk;}
+    else {
+        Tk = malloc(sizeof(double)*dim_Tk*dim_Tk);
+        build_block_diag_mat(Tk, dim_Tk, pTk, dk, nck);
+    }
+    if (ncj==1) {Tj = pTj;}
+    else {
+        Tj = malloc(sizeof(double)*dim_Tj*dim_Tj);
+        build_block_diag_mat(Tj, dim_Tj, pTj, dj, ncj);
+    }
+    if (nci==1) {Ti = pTi;}
+    else {
+        Ti = malloc(sizeof(double)*dim_Ti*dim_Ti);
+        build_block_diag_mat(Ti, dim_Ti, pTi, di, nci);
+    }
+
+    int dim_Tkj = dim_Tk*dim_Tj;
+    double *Tkj = malloc(sizeof(double)*dim_Tkj*dim_Tkj);
+    kron(Tkj, Tk, Tj, dim_Tk, dim_Tk, dim_Tj, dim_Tj);
+
+    int dkji = dim_Tkj*dim_Ti;
+    kron(Tkji+(size_t)dkji*dkji*iop, Tkj, Ti, dim_Tkj, dim_Tkj, dim_Ti, dim_Ti);
+
     free(Tkj);
+    if (nck>1) free(Tk);
+    if (ncj>1) free(Tj);
+    if (nci>1) free(Ti);
 }
+
+
+static void apply_Dmats(double* out, double* ints, double *Dmats, int *rot_loc, int rot_mat_size, int iop,
+                           int di, int dj, int dk, int l_i, int l_j, int l_k,   
+                           int nci, int ncj, int nck)                           
+{                                                                               
+    double *pDmats, *pTk, *pTj, *pTi;                                           
+    pDmats = Dmats+(size_t)rot_mat_size*iop;                                    
+    pTk = pDmats + rot_loc[l_k];                                                
+    pTj = pDmats + rot_loc[l_j];                                                
+    pTi = pDmats + rot_loc[l_i];                                                
+                                                                                
+    int dim_Tk = dk*nck;                                                        
+    int dim_Tj = dj*ncj;                                                        
+    int dim_Ti = di*nci;                                                        
+    double *Tk, *Tj, *Ti;                                                       
+    if (nck==1) {Tk = pTk;}                                                     
+    else {                                                                      
+        Tk = malloc(sizeof(double)*dim_Tk*dim_Tk);                              
+        build_block_diag_mat(Tk, dim_Tk, pTk, dk, nck);                         
+    }
+    if (ncj==1) {Tj = pTj;}                                                     
+    else {
+        Tj = malloc(sizeof(double)*dim_Tj*dim_Tj);                              
+        build_block_diag_mat(Tj, dim_Tj, pTj, dj, ncj);                         
+    } 
+    if (nci==1) {Ti = pTi;}                                                     
+    else {
+        Ti = malloc(sizeof(double)*dim_Ti*dim_Ti);                              
+        build_block_diag_mat(Ti, dim_Ti, pTi, di, nci);                         
+    }
+
+    double *tmp1 = malloc(sizeof(double) * dim_Tk*dim_Tj*dim_Ti);
+    const char TRANS_N = 'N';                                                   
+    const char TRANS_T = 'T';                                                   
+    const double D0 = 0;                                                        
+    const double D1 = 1;
+    //#pragma omp parallel num_threads(2)
+    //{
+    int k,i,j;
+    double *tmp = malloc(sizeof(double) * dim_Tj*dim_Ti);
+    //#pragma omp for schedule(static) 
+    for (k=0; k<dim_Tk; k++) {
+        double *pint = ints + k*dim_Tj*dim_Ti;
+        double *ptmp1 = tmp1 + k*dim_Tj*dim_Ti;
+        dgemm_(&TRANS_N, &TRANS_N, &dim_Ti, &dim_Tj, &dim_Ti, 
+               &D1, Ti, &dim_Ti, pint, &dim_Ti,
+               &D0, tmp, &dim_Ti);
+        dgemm_(&TRANS_N, &TRANS_T, &dim_Ti, &dim_Tj, &dim_Tj,                   
+               &D1, tmp, &dim_Ti, Tj, &dim_Tj,                                 
+               &D0, ptmp1, &dim_Ti); 
+        /*
+        for (i=0; i<nci; i++){
+            dgemm_(&TRANS_N, &TRANS_N, &di, &dim_Tj, &di,                   
+                   &D1, Ti, &di, pint+i*di, &dim_Ti,                                 
+                   &D0, tmp+i*di, &dim_Ti);
+        }
+        for (j=0; j<ncj; j++){
+            dgemm_(&TRANS_N, &TRANS_T, &dim_Ti, &dj, &dj,                   
+                   &D1, tmp+dim_Ti*j*dj, &dim_Ti, Tj, &dj,                                  
+                   &D0, ptmp1+dim_Ti*j*dj, &dim_Ti);
+        }*/
+    }
+    free(tmp);
+    //}
+
+    int dim_TiTj = dim_Ti * dim_Tj;
+    dgemm_(&TRANS_N, &TRANS_T, &dim_TiTj, &dim_Tk, &dim_Tk,                   
+           &D1, tmp1, &dim_TiTj, Tk, &dim_Tk,                                  
+           &D0, out, &dim_TiTj);                                                                           
+
+    free(tmp1);                                                              
+    if (nck>1) free(Tk);                                                        
+    if (ncj>1) free(Tj);                                                        
+    if (nci>1) free(Ti);                                                        
+}                 
+
 
 static void _nr3c_fill_symm_kk(int (*intor)(), void (*fsort)(),
                           double complex *out, int nkpts_ij,
@@ -184,13 +301,13 @@ static void _nr3c_fill_symm_kk(int (*intor)(), void (*fsort)(),
         int *pL2iL = L2iL + (size_t)L2iL_off;
         int *piop = ops + (size_t)L2iL_off;
 
-        int dkj = dkmax*dj;
-        int dkji = dkj * di;
+        //int dkj = dkmax*dj;
+        //int dkji = dkj * di;
         mk = 2 * l_k + 1;
         mijk = mi*mj*mk;
         double *int_m = malloc(sizeof(double)*mijk);
         double *int_d = malloc(sizeof(double)*dijmc);
-        double *Tkji = malloc(sizeof(double)*mijk*mijk*nop);
+        double *Tkji = malloc(sizeof(double)*dijm*dijm*nop);
         bool op_flags[nop];
         for (i = 0; i < nop; i++) {
             op_flags[i] = false;
@@ -228,18 +345,27 @@ static void _nr3c_fill_symm_kk(int (*intor)(), void (*fsort)(),
                                 empty = 0;
                             }
                         }
+                        if (dijm > BLKSIZE) {
+                            apply_Dmats(pbuf, pint_ijk, Dmats, rot_loc, rot_mat_size, iop,
+                                        mi, mj, mk, l_i, l_j, l_k, nci, ncj, nck);
+                        }
+                        else{
                         //multiply Wigner D matrices
                         if (op_flags[iop] == false) {
                             multiply_Dmats(Tkji, Dmats, rot_loc, rot_mat_size, nop, iop,
-                                           mi, mj, mk, l_i, l_j, l_k);
+                                           mi, mj, mk, l_i, l_j, l_k, nci, ncj, nck);
                             op_flags[iop] = true;
                         }
 
-                        if (nci==1 && ncj==1 && nck==1){
-                            dgemm_(&TRANS_N, &TRANS_N, &dkji, &One, &dkji,
-                                &D1, Tkji+(size_t)mijk*mijk*iop, &mijk, pint_ijk, &dkji,
-                                &D0, pbuf, &dkji);
+                        if (true){ //(nci==1 && ncj==1 && nck==1){
+                            dgemm_(&TRANS_N, &TRANS_N, &dijm, &One, &dijm,
+                                &D1, Tkji+(size_t)dijm*dijm*iop, &dijm, pint_ijk, &dijm,
+                                &D0, pbuf, &dijm);
+                            //apply_Dmats(pbuf, pint_ijk, Dmats, rot_loc, rot_mat_size, iop,
+                            //            mi, mj, mk, l_i, l_j, l_k, nci, ncj, nck);   
                         }
+                        }
+                        /*
                         else{
                         double *pint_d = int_d;
                         for (kk=0; kk<nck; kk++) {
@@ -289,7 +415,7 @@ static void _nr3c_fill_symm_kk(int (*intor)(), void (*fsort)(),
                                 }
                             }
                         }
-                        }
+                        }*/
 
                         /*
                         if (ish == 1 && jsh==6 && ksh==17){

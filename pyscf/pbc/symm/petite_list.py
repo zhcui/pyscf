@@ -7,14 +7,22 @@ from pyscf.pbc.symm import symmetry
 
 LS_DIFF_TOL = getattr(__config__, 'pbc_symm_petite_list_ls_diff_tol', 1e-7)
 
-def _compute_gv(op, g, shl_cen1, shl_cen2):
-    os1 = shl_cen1 - np.dot(inv(op), shl_cen1)
-    os2 = shl_cen2 - np.dot(inv(op), shl_cen2)
-    gv = np.dot(inv(op), g) - os2 + os1
+def _compute_gv(cell, op, g, shl_cen1, shl_cen2):
+    g_a = coord_rtoa(cell, g)
+    op_dot_r = np.dot(inv(op), shl_cen1)
+    op_dot_r_0 = np.mod(np.mod(op_dot_r, 1), 1)
+    os1 = op_dot_r_0 - op_dot_r 
+    #os1 = shl_cen1 - np.dot(inv(op), shl_cen1)
+    op_dot_r = np.dot(inv(op), shl_cen2)                                        
+    op_dot_r_0 = np.mod(np.mod(op_dot_r, 1), 1)
+    os2 = op_dot_r_0 - op_dot_r
+    #os2 = shl_cen2 - np.dot(inv(op), shl_cen2)
+    gv_a = np.dot(inv(op), g_a) - os2 + os1
+    gv = coord_ator(cell, gv_a)
     return gv
 
-def get_Ls_2c(Ls, op, shl_cen1, shl_cen2):
-    gv = [_compute_gv(op, g, shl_cen1, shl_cen2) for i, g in enumerate(Ls)]
+def get_Ls_2c(cell, Ls, op, shl_cen1, shl_cen2):
+    gv = [_compute_gv(cell, op, g, shl_cen1, shl_cen2) for i, g in enumerate(Ls)]
     return np.asarray(gv)
 
 def get_shl_centers(cell, nc):
@@ -30,6 +38,14 @@ def get_shl_center_idx(cell, nc):
     shlpr_cen_idx = lib.cartesian_prod([atm_idx,]*nc)
     uniq_shlpr_cen_idx = np.unique(shlpr_cen_idx, axis=0)
     return uniq_shlpr_cen_idx
+
+def coord_rtoa(cell, coord):
+    b = cell.reciprocal_vectors()
+    coord_a = np.dot(coord, b.T)/(2.*np.pi)
+    return coord_a
+
+def coord_ator(cell, coord_a):
+    return np.dot(coord_a, cell.lattice_vectors())
 
 def Ls_rtoa(cell,Ls, tol=LS_DIFF_TOL):
     b = cell.reciprocal_vectors()
@@ -53,8 +69,10 @@ def map_Ls_2c(cell, g, ops, shl_cen1, shl_cen2, tol=LS_DIFF_TOL, nthreads=lib.nu
     nL = len(g)
     L2L = -np.ones([nL, len(ops)], dtype=np.int32)
 
+    shl_cen1_a = coord_rtoa(cell, shl_cen1)                                     
+    shl_cen2_a = coord_rtoa(cell, shl_cen2)
     for iop, op in enumerate(ops):
-        gv = get_Ls_2c(g, op, shl_cen1, shl_cen2)
+        gv = get_Ls_2c(cell,g, op, shl_cen1_a, shl_cen2_a)
         g_gv = np.concatenate([g, gv])
         g_gv = Ls_rtoa(cell, g_gv, tol)
 
@@ -243,7 +261,7 @@ def get_t3(petite, cell=None, ops=None, Ls=None, L2L_Ls=None, buf=None, tol=LS_D
 
 def build_L2L_Ls(petite, cell=None, ops=None, Ls=None, tol=LS_DIFF_TOL):
     if cell is None: cell = petite.cell
-    if ops is None: ops = petite.ops
+    if ops is None: ops = petite.ops_a
     if Ls is None: Ls = petite.Ls
 
     shlpr_cen = get_shl_centers(cell, 2)
@@ -275,6 +293,7 @@ class Petite_List(lib.StreamObject):
         self.Ls = Ls
         self.pg_symm = symmetry.Symmetry(cell, auxcell=auxcell, point_group=True)
         self.ops = symmetry.transform_rot_a_to_r(self.cell, self.pg_symm.op_rot)
+        self.ops_a = self.pg_symm.op_rot
         self.Dmats = self.pg_symm.Dmats
         self.l_max = self.pg_symm.l_max
         self.verbose = self.cell.verbose
@@ -297,6 +316,7 @@ class Petite_List(lib.StreamObject):
         self.shltrip_cen_idx = get_shl_center_idx(cell, 3)
         self.nL = len(Ls)
         self.nL2 = self.nL * self.nL
+        lib.logger.debug(self, 'nL2 = %s', self.nL2)
         nshltrip = len(self.shltrip_cen_idx)
         self.buf = np.memmap('petite_list', dtype=np.int32, shape=(nshltrip,self.nL2,2), mode='w+')
 

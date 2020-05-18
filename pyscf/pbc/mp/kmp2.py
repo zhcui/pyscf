@@ -138,7 +138,6 @@ def kernel_symm(mp, mo_energy, mo_coeff, verbose=logger.NOTE, with_t2=WITH_T2):
         kj_bz = kkidx_bz % nbzk
         ki = kd.bz2ibz[ki_bz]
         kj = kd.bz2ibz[kj_bz]
-
         for ka_bz in range(nbzk):
             kb_bz = kconserv[ki_bz,ka_bz,kj_bz]
             #ka = kd.bz2ibz[ka_bz]
