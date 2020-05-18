@@ -27,6 +27,7 @@ t2 and eris are never stored in full, only a partial
 eri of size (nkpts,nocc,nocc,nvir,nvir)
 '''
 
+import time
 import numpy as np
 from scipy.linalg import block_diag
 

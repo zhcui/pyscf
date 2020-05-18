@@ -59,7 +59,7 @@ class KnownValues(unittest.TestCase):
         kumf = kuhf.KUHF(cell, kpts=kpts)
         kumf = pscf.addons.smearing_(kumf, sigma=0.001, method='fermi',fix_spin=True)
         kumf.kernel()
-        self.assertAlmostEqual(kumf.e_tot, -7.567442776651001, 8)
+        self.assertAlmostEqual(kumf.e_tot, -7.567442788439032, 8)
 
     def test_kuhf_monkhorst(self):
         cell.spin = 0
