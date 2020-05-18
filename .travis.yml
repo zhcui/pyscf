@@ -25,12 +25,13 @@ python:
   - 3.6
   - 3.7
 
-#virtualenv:  affect python 3.5 3.6?
-#    system_site_packages: true
+cache:
+  apt: true
+  pip: true
 
 before_install:
-  - sudo apt-get -qq install gcc libblas-dev cmake curl
-  - pip install numpy scipy h5py nose nose-exclude nose-timer joblib
+  - sudo apt-get -qq install gcc gfortran libblas-dev cmake curl
+  - pip install numpy scipy h5py nose nose-exclude nose-timer codecov joblib
   - if [[ $(python --version 2>&1) =~ 3 ]]; then
        pip install ase spglib;
     fi
@@ -43,6 +44,7 @@ install:
   #  echo 'set(BLAS_LIBRARIES "-L${PROJECT_SOURCE_DIR} -l'${blaslib}'")' > cmake.arch.inc
   - cd $TRAVIS_BUILD_DIR/pyscf/lib &&
     curl http://www.sunqm.net/pyscf/files/bin/pyscf-1.7-deps.tar.gz | tar xzf -
+  - pip install pyberny geometric
   - cd $TRAVIS_BUILD_DIR/pyscf/lib &&
     mkdir build &&
     cd build &&
@@ -57,7 +59,8 @@ before_script:
 
 script:
   - cd $TRAVIS_BUILD_DIR/pyscf &&
-    echo 'pbc_tools_pbc_fft_engine = "NUMPY"' > pyscf_config.py
+    echo 'pbc_tools_pbc_fft_engine = "NUMPY"' > pyscf_config.py &&
+    echo "dftd3_DFTD3PATH = '$TRAVIS_BUILD_DIR/pyscf/lib/deps/lib'" >> pyscf_config.py
   - if [[ $(python --version 2>&1) =~ 2 ]]; then
        chmod +x test_py27.sh;
        ./test_py27.sh;
@@ -65,3 +68,6 @@ script:
        chmod +x test_py3.sh;
        ./test_py3.sh;
     fi
+
+after_success:
+  - codecov

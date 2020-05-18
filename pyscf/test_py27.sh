@@ -4,10 +4,10 @@ export OMP_NUM_THREADS=1
 export PYTHONPATH=$TRAVIS_BUILD_DIR:$PYTHONPATH 
 export PYSCF_CONFIG_FILE=$(pwd)/pyscf_config.py
 
-nosetests -v --with-timer \
-    --exclude-dir=geomopt --exclude-dir=dmrgscf --exclude-dir=fciqmcscf \
+nosetests -v --with-timer --with-coverage \
+    --exclude-dir=dmrgscf --exclude-dir=fciqmcscf \
     --exclude-dir=icmpspt --exclude-dir=shciscf --exclude-dir=examples --exclude-dir=nao \
-    --exclude-dir=cornell_shci \
+    --exclude-dir=cornell_shci --exclude-dir=pbc/grad \
     -e test_bz \
     -e h2o_vdz \
     -e test_mc2step_4o4e \
@@ -20,6 +20,8 @@ nosetests -v --with-timer \
     -e skip \
     -e call_in_background \
     -e libxc_cam_beta_bug \
+    -e test_finite_diff_rks_eph \
+    -e test_finite_diff_uks_eph \
     -I test_kuccsd_supercell_vs_kpts\.py \
     -I test_kccsd_ghf\.py \
     -I test_h_.*\.py \

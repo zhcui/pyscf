@@ -17,7 +17,6 @@
 #
 
 import sys
-import copy
 from functools import reduce
 import numpy
 from pyscf import lib
@@ -601,7 +600,7 @@ class StateSpecificFCISolver:
 class StateAverageMCSCFSolver:
     pass
 
-def state_average(casscf, weights=(0.5,0.5)):
+def state_average(casscf, weights=(0.5,0.5), wfnsym=None):
     ''' State average over the energy.  The energy funcitonal is
     E = w1<psi1|H|psi1> + w2<psi2|H|psi2> + ...
 
@@ -632,6 +631,7 @@ def state_average(casscf, weights=(0.5,0.5)):
             self.__dict__.update (fcibase.__dict__)
             self.nroots = len(weights)
             self.weights = weights
+            self.wfnsym = wfnsym
             self.e_states = [None]
             keys = set (('weights','e_states','_base_class'))
             self._keys = self._keys.union (keys)
@@ -654,7 +654,8 @@ def state_average(casscf, weights=(0.5,0.5)):
 # but undefined in fcibase object
             if 'nroots' not in kwargs:
                 kwargs['nroots'] = self.nroots
-            e, c = fcibase_class.kernel(self, h1, h2, norb, nelec, ci0, **kwargs)
+            e, c = fcibase_class.kernel(self, h1, h2, norb, nelec, ci0,
+                                        wfnsym=self.wfnsym, **kwargs)
             self.e_states = e
 
             log = logger.new_logger(self, kwargs.get('verbose'))
@@ -670,11 +671,14 @@ def state_average(casscf, weights=(0.5,0.5)):
 
         def approx_kernel(self, h1, h2, norb, nelec, ci0=None, **kwargs):
             try:
-                e, c = fcibase_class.approx_kernel(self, h1, h2, norb, nelec, ci0,
-                                                   nroots=self.nroots, **kwargs)
+                e, c = fcibase_class.approx_kernel(self, h1, h2, norb, nelec,
+                                                   ci0, nroots=self.nroots,
+                                                   wfnsym=self.wfnsym,
+                                                   **kwargs)
             except AttributeError:
                 e, c = fcibase_class.kernel(self, h1, h2, norb, nelec, ci0,
-                                            nroots=self.nroots, **kwargs)
+                                            nroots=self.nroots,
+                                            wfnsym=self.wfnsym, **kwargs)
             return numpy.einsum('i,i->', e, self.weights), c
 
         def make_rdm1(self, ci0, norb, nelec, *args, **kwargs):
@@ -795,7 +799,7 @@ def state_average_(casscf, weights=(0.5,0.5)):
     return casscf
 
 
-def state_specific_(casscf, state=1):
+def state_specific_(casscf, state=1, wfnsym=None):
     '''For excited state
 
     Kwargs:
@@ -816,11 +820,13 @@ def state_specific_(casscf, state=1):
         def __init__(self):
             self.nroots = state+1
             self._civec = None
+            self.wfnsym = wfnsym
         def kernel(self, h1, h2, norb, nelec, ci0=None, **kwargs):
             if self._civec is not None:
                 ci0 = self._civec
             e, c = fcibase_class.kernel(self, h1, h2, norb, nelec, ci0,
-                                        nroots=self.nroots, **kwargs)
+                                        nroots=self.nroots, wfnsym=self.wfnsym,
+                                        **kwargs)
             if state == 0:
                 e = [e]
                 c = [c]
@@ -838,11 +844,14 @@ def state_specific_(casscf, state=1):
             if self._civec is not None:
                 ci0 = self._civec
             try:
-                e, c = fcibase_class.approx_kernel(self, h1, h2, norb, nelec, ci0,
-                                            nroots=self.nroots, **kwargs)
+                e, c = fcibase_class.approx_kernel(self, h1, h2, norb, nelec,
+                                                   ci0, nroots=self.nroots,
+                                                   wfnsym=self.wfnsym,
+                                                   **kwargs)
             except AttributeError:
                 e, c = fcibase_class.kernel(self, h1, h2, norb, nelec, ci0,
-                                            nroots=self.nroots, **kwargs)
+                                            nroots=self.nroots,
+                                            wfnsym=self.wfnsym, **kwargs)
             if state == 0:
                 self._civec = [c]
                 return e, c
@@ -1021,7 +1030,6 @@ if __name__ == '__main__':
     from pyscf import mcscf
     from pyscf.tools import ring
 
-    mol = gto.Mole()
     mol.verbose = 0
     mol.output = None
     mol.atom = [['H', c] for c in ring.make(6, 1.2)]
@@ -1084,9 +1092,3 @@ if __name__ == '__main__':
     mc = state_specific_(mc, 2)
     emc = mc.kernel()[0]
 
-
-    mc = mcscf.CASSCF(m, 4, 4)
-    mc.verbose = 4
-    hot_tuning_(mc, 'config1')
-    mc.kernel()
-    mc = None  # release for gc

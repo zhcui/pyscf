@@ -20,7 +20,6 @@
 Foster-Boys localization
 '''
 
-import sys
 import time
 import numpy
 from functools import reduce
@@ -126,7 +125,7 @@ def atomic_init_guess(mol, mo_coeff):
     return lib.dot(u, vh).conj().T
 
 class Boys(ciah.CIAHOptimizer):
-    '''
+    r'''
     The Foster-Boys localization optimizer that maximizes the orbital dipole
 
     \sum_i | <i| r |i> |^2

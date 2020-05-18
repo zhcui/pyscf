@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Copyright 2014-2019 The PySCF Developers. All Rights Reserved.
+# Copyright 2014-2020 The PySCF Developers. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -27,7 +27,6 @@ from pyscf import scf
 from pyscf import ao2mo
 from pyscf import fci
 from pyscf.mcscf import addons
-from pyscf import symm
 from pyscf import __config__
 
 WITH_META_LOWDIN = getattr(__config__, 'mcscf_analyze_with_meta_lowdin', True)
@@ -404,8 +403,6 @@ def canonicalize(mc, mo_coeff=None, ci=None, eris=None, sort=False,
         A tuple, (natural orbitals, CI coefficients, orbital energies)
         The orbital energies are the diagonal terms of effective Fock matrix.
     '''
-    from pyscf.lo import orth
-    from pyscf.tools import dump_mat
     from pyscf.mcscf import addons
     log = logger.new_logger(mc, verbose)
 
@@ -754,14 +751,21 @@ class CASCI(lib.StreamObject):
 
         if (getattr(self._scf, 'with_solvent', None) and
             not getattr(self, 'with_solvent', None)):
-            log.warn('''Solvent model %s was found in SCF object.
-It is not applied to the CASSCF object. The CASSCF result is not affected by the SCF solvent model.
-To enable the solvent model for CASSCF, a decoration to CASSCF object as below needs be called
+            log.warn('''Solvent model %s was found at SCF level but not applied to the CASCI object.
+The SCF solvent model will not be applied to the current CASCI calculation.
+To enable the solvent model for CASCI, the following code needs to be called
         from pyscf import solvent
-        mc = mcscf.CASSCF(...)
+        mc = mcscf.CASCI(...)
         mc = solvent.ddCOSMO(mc)
 ''',
                      self._scf.with_solvent.__class__)
+        return self
+
+    def reset(self, mol=None):
+        if mol is not None:
+            self.mol = mol
+            self.fcisolver.mol = mol
+        self._scf.reset(mol)
         return self
 
     def energy_nuc(self):

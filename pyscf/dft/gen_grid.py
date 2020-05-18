@@ -164,7 +164,7 @@ def nwchem_prune(nuc, rads, n_ang, radii=radi.BRAGG_RADII):
     angs = leb_ngrid[angs]
     return angs
 
-# Prune scheme JCP 102, 346
+# Prune scheme JCP 102, 346 (1995); DOI:10.1063/1.469408
 def treutler_prune(nuc, rads, n_ang, radii=None):
     '''Treutler-Ahlrichs
 
@@ -196,7 +196,7 @@ def treutler_prune(nuc, rads, n_ang, radii=None):
 
 # Stratmann, Scuseria, Frisch. CPL, 257, 213 (1996), eq.11
 def stratmann(g):
-    '''Stratmann, Scuseria, Frisch. CPL, 257, 213 (1996)'''
+    '''Stratmann, Scuseria, Frisch. CPL, 257, 213 (1996); DOI:10.1016/0009-2614(96)00600-8'''
     a = .64  # for eq. 14
     g = numpy.asarray(g)
     ma = g/a
@@ -207,7 +207,7 @@ def stratmann(g):
     return g1
 
 def original_becke(g):
-    '''Becke, JCP, 88, 2547 (1988)'''
+    '''Becke, JCP 88, 2547 (1988); DOI:10.1063/1.454033'''
 #    This funciton has been optimized in the C code VXCgen_grid
 #    g = (3 - g**2) * g * .5
 #    g = (3 - g**2) * g * .5
@@ -500,9 +500,7 @@ class Grids(lib.StreamObject):
     def __setattr__(self, key, val):
         if key in ('atom_grid', 'atomic_radii', 'radii_adjust', 'radi_method',
                    'becke_scheme', 'prune', 'level'):
-            self.coords = None
-            self.weights = None
-            self.non0tab = None
+            self.reset()
         super(Grids, self).__setattr__(key, val)
 
     def dump_flags(self, verbose=None):
@@ -619,7 +617,6 @@ def prange(start, end, step):
 
 
 if __name__ == '__main__':
-    from pyscf import gto
     h2o = gto.Mole()
     h2o.verbose = 0
     h2o.output = None#"out_h2o"
@@ -628,10 +625,7 @@ if __name__ == '__main__':
         ['H' , (0. , -0.757 , 0.587)],
         ['H' , (0. , 0.757  , 0.587)] ]
     h2o.build()
-    import time
-    t0 = time.clock()
     g = Grids(h2o)
     g.build()
     print(g.coords.shape)
-    print(time.clock() - t0)
 
