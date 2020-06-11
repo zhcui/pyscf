@@ -16,6 +16,11 @@
  * Author: Qiming Sun <osirpt.sun@gmail.com>
  */
 
+#include <stdio.h>
+#include <sys/time.h>
+#include <time.h>
+
+
 #include <stdlib.h>
 #include <string.h>
 #include <complex.h>
@@ -129,7 +134,7 @@ static void _nr3c_fill_kk(int (*intor)(), void (*fsort)(),
                           double *expkL_r, double *expkL_i, int *kptij_idx,
                           int *shls_slice, int *ao_loc,
                           CINTOpt *cintopt, PBCOpt *pbcopt,
-                          int *atm, int natm, int *bas, int nbas, double *env)
+                          int *atm, int natm, int *bas, int nbas, double *env, double* t_cpu)
 {
         const int ish0 = shls_slice[0];
         const int jsh0 = shls_slice[2];
@@ -192,10 +197,13 @@ static void _nr3c_fill_kk(int (*intor)(), void (*fsort)(),
                 if ((*fprescreen)(shls, pbcopt, atm, bas, env_loc)) {
                         for (ksh = msh0; ksh < msh1; ksh++) {
                                 shls[2] = ksh;
+                                clock_t CPU_time_1 = clock();
                                 if ((*intor)(pbuf, NULL, shls, atm, natm, bas, nbas,
                                              env_loc, cintopt, cache)) {
                                         empty = 0;
                                 }
+                                clock_t CPU_time_2 = clock();
+                                *t_cpu += (double)(CPU_time_2-CPU_time_1)/CLOCKS_PER_SEC;
                                 dk = ao_loc[ksh+1] - ao_loc[ksh];
                                 pbuf += dij*dk * comp;
                         }
@@ -241,12 +249,12 @@ void PBCnr3c_fill_kks1(int (*intor)(), double complex *out, int nkpts_ij,
                        double *expkL_r, double *expkL_i, int *kptij_idx,
                        int *shls_slice, int *ao_loc,
                        CINTOpt *cintopt, PBCOpt *pbcopt,
-                       int *atm, int natm, int *bas, int nbas, double *env)
+                       int *atm, int natm, int *bas, int nbas, double *env, double* t)
 {
         _nr3c_fill_kk(intor, &sort3c_kks1, out,
                       nkpts_ij, nkpts, comp, nimgs, ish, jsh,
                       buf, env_loc, Ls, expkL_r, expkL_i, kptij_idx,
-                      shls_slice, ao_loc, cintopt, pbcopt, atm, natm, bas, nbas, env);
+                      shls_slice, ao_loc, cintopt, pbcopt, atm, natm, bas, nbas, env, t);
 }
 
 void sort3c_kks2_igtj(double complex *out, double *bufr, double *bufi,
@@ -327,7 +335,7 @@ void PBCnr3c_fill_kks2(int (*intor)(), double complex *out, int nkpts_ij,
                        double *expkL_r, double *expkL_i, int *kptij_idx,
                        int *shls_slice, int *ao_loc,
                        CINTOpt *cintopt, PBCOpt *pbcopt,
-                       int *atm, int natm, int *bas, int nbas, double *env)
+                       int *atm, int natm, int *bas, int nbas, double *env, double* t_cpu)
 {
         int ip = ish + shls_slice[0];
         int jp = jsh + shls_slice[2] - nbas;
@@ -335,12 +343,12 @@ void PBCnr3c_fill_kks2(int (*intor)(), double complex *out, int nkpts_ij,
                 _nr3c_fill_kk(intor, &sort3c_kks2_igtj, out,
                               nkpts_ij, nkpts, comp, nimgs, ish, jsh,
                               buf, env_loc, Ls, expkL_r, expkL_i, kptij_idx,
-                              shls_slice, ao_loc, cintopt, pbcopt, atm, natm, bas, nbas, env);
+                              shls_slice, ao_loc, cintopt, pbcopt, atm, natm, bas, nbas, env, t_cpu);
         } else if (ip == jp) {
                 _nr3c_fill_kk(intor, &sort3c_kks1, out,
                               nkpts_ij, nkpts, comp, nimgs, ish, jsh,
                               buf, env_loc, Ls, expkL_r, expkL_i, kptij_idx,
-                              shls_slice, ao_loc, cintopt, pbcopt, atm, natm, bas, nbas, env);
+                              shls_slice, ao_loc, cintopt, pbcopt, atm, natm, bas, nbas, env, t_cpu);
         }
 }
 
@@ -933,6 +941,8 @@ void PBCnr3c_drv(int (*intor)(), void (*fill)(), double complex *eri,
         const int cache_size = GTOmax_cache_size(intor, shls_slice, 3,
                                                  atm, natm, bas, nbas, env);
 
+        double* t_cpu = malloc(sizeof(double));
+        *t_cpu = 0.0;
 #pragma omp parallel
 {
         int ish, jsh, ij;
@@ -945,11 +955,12 @@ void PBCnr3c_drv(int (*intor)(), void (*fill)(), double complex *eri,
                 jsh = ij % njsh;
                 (*fill)(intor, eri, nkpts_ij, nkpts, comp, nimgs, ish, jsh,
                         buf, env_loc, Ls, expkL_r, expkL_i, kptij_idx,
-                        shls_slice, ao_loc, cintopt, pbcopt, atm, natm, bas, nbas, env);
+                        shls_slice, ao_loc, cintopt, pbcopt, atm, natm, bas, nbas, env, t_cpu);
         }
         free(buf);
         free(env_loc);
 }
+        printf("debug: ints cpu time: %f\n", *t_cpu);
         free(expkL_r);
 }
 
