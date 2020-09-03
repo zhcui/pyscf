@@ -141,6 +141,35 @@ static void multiply_Dmats(double* Tkji, double *Dmats, int *rot_loc, int rot_ma
     if (nci>1) free(Ti);
 }
 
+static void multiply_two_Dmats(double* Tji, double *Dmats, int *rot_loc, int rot_mat_size, int nop, int iop,
+                               int di, int dj, int l_i, int l_j, int nci, int ncj)
+{
+    double *pDmats, *pTj, *pTi;
+    pDmats = Dmats+(size_t)rot_mat_size*iop;
+    pTj = pDmats + rot_loc[l_j];
+    pTi = pDmats + rot_loc[l_i];
+
+    int dim_Tj = dj*ncj;
+    int dim_Ti = di*nci;
+    double *Tj, *Ti;
+    if (ncj==1) {Tj = pTj;}
+    else {
+        Tj = malloc(sizeof(double)*dim_Tj*dim_Tj);
+        build_block_diag_mat(Tj, dim_Tj, pTj, dj, ncj);
+    }
+    if (nci==1) {Ti = pTi;}
+    else {
+        Ti = malloc(sizeof(double)*dim_Ti*dim_Ti);
+        build_block_diag_mat(Ti, dim_Ti, pTi, di, nci);
+    }
+
+    int dji = dim_Tj*dim_Ti;
+    kron(Tji+(size_t)dji*dji*iop, Tj, Ti, dim_Tj, dim_Tj, dim_Ti, dim_Ti);
+
+    if (ncj>1) free(Tj);
+    if (nci>1) free(Ti);
+}
+
 
 static void build_Dmats(double** pD, double *Dmats, int *rot_loc, int rot_mat_size, int nop, int l)
 {
@@ -269,54 +298,36 @@ static void apply_Dmats(double* out, double* ints, double *Dmats, int *rot_loc, 
 
 static void apply_Tmats_batch_gemm(double* out, double* Tkji, double* ints, int* op_idx, int* L2_off, int dijk, int nL)
 {
-//mkl_set_num_threads(4);
-MKL_INT    m[GRP_COUNT] = {dijk};
-MKL_INT    k[GRP_COUNT] = {dijk};
-MKL_INT    n[GRP_COUNT] = {1};
+    MKL_INT    m[GRP_COUNT] = {dijk};
+    MKL_INT    k[GRP_COUNT] = {dijk};
+    MKL_INT    n[GRP_COUNT] = {1};
 
-MKL_INT    lda[GRP_COUNT] = {dijk};
-MKL_INT    ldb[GRP_COUNT] = {dijk};
-MKL_INT    ldc[GRP_COUNT] = {dijk};
+    MKL_INT    lda[GRP_COUNT] = {dijk};
+    MKL_INT    ldb[GRP_COUNT] = {dijk};
+    MKL_INT    ldc[GRP_COUNT] = {dijk};
 
-CBLAS_TRANSPOSE    transA[GRP_COUNT] = {CblasNoTrans};
-CBLAS_TRANSPOSE    transB[GRP_COUNT] = {CblasNoTrans};
+    CBLAS_TRANSPOSE    transA[GRP_COUNT] = {CblasNoTrans};
+    CBLAS_TRANSPOSE    transB[GRP_COUNT] = {CblasNoTrans};
 
-double    alpha[GRP_COUNT] = {1.0};
-double    beta[GRP_COUNT] = {0.0};
+    double    alpha[GRP_COUNT] = {1.0};
+    double    beta[GRP_COUNT] = {0.0};
 
-MKL_INT    size_per_grp[GRP_COUNT] = {nL};
+    MKL_INT    size_per_grp[GRP_COUNT] = {nL};
 
-// Total number of multiplications: nL
-const double *a_array[nL], *b_array[nL];
-double *c_array[nL];
-int iL;
-for (iL=0; iL<nL; iL++){
-    int iop = op_idx[iL];
-    int idx_L2 = L2_off[iL];
-    a_array[iL] = Tkji+(size_t)dijk*dijk*iop; 
-    b_array[iL] = ints+(size_t)dijk*idx_L2; 
-    c_array[iL] = out+(size_t)dijk*iL;
-}
+    const double *a_array[nL], *b_array[nL];
+    double *c_array[nL];
+    int iL;
+    for (iL=0; iL<nL; iL++){
+        int iop = op_idx[iL];
+        int idx_L2 = L2_off[iL];
+        a_array[iL] = Tkji+(size_t)dijk*dijk*iop; 
+        b_array[iL] = ints+(size_t)dijk*idx_L2; 
+        c_array[iL] = out+(size_t)dijk*iL;
+    }
 
-// Call cblas_dgemm_batch
-cblas_dgemm_batch (
-        CblasColMajor,
-        transA,
-        transB,
-        m,
-        n,
-        k,
-        alpha,
-        a_array,
-        lda,
-        b_array,
-        ldb,
-        beta,
-        c_array,
-        ldc,
-        GRP_COUNT,
-        size_per_grp);
-//mkl_set_num_threads(1);
+    cblas_dgemm_batch (CblasColMajor, transA, transB, m, n, k,
+        alpha, a_array, lda, b_array, ldb, beta, c_array, ldc,
+        GRP_COUNT, size_per_grp);
 }
 
 static void apply_Dmats_batch_gemm(double* out, double* ints, double** Di, double** Dj, double** Dk,
@@ -441,6 +452,83 @@ static void apply_Dmats_batch_gemm(double* out, double* ints, double** Di, doubl
     free(tmp2);
 }
 
+static void apply_Tji_Dk_batch_gemm(double* out, double* ints, double* Tji, double** Dk,
+                                   int* op_idx, int* L2_off, int nL,
+                                   int dij, int mk, int nck) {
+
+    int dk = mk * nck;
+    int dijk = dij * dk;
+    /************
+    * apply Tji *
+    ************/
+    MKL_INT    m1[GRP_COUNT] = {dij};
+    MKL_INT    k1[GRP_COUNT] = {dij};
+    MKL_INT    n1[GRP_COUNT] = {1};
+    MKL_INT    lda1[GRP_COUNT] = {dij};
+    MKL_INT    ldb1[GRP_COUNT] = {dij};
+    MKL_INT    ldc1[GRP_COUNT] = {dij};
+    CBLAS_TRANSPOSE    transA[GRP_COUNT] = {CblasNoTrans};
+    CBLAS_TRANSPOSE    transB[GRP_COUNT] = {CblasNoTrans};
+    double    alpha[GRP_COUNT] = {1.0};
+    double    beta[GRP_COUNT] = {0.0};
+    MKL_INT    size_per_grp1[GRP_COUNT] = {nL*dk};
+    const double *amat1[nL*dk], *bmat1[nL*dk];
+    double *cmat1[nL*dk];
+    int iL, k, ic, ioff=0;
+    double *pTji, *pints;
+    double *tmp1 = malloc(sizeof(double)*dijk*nL);
+    double *ptmp1;
+    for (iL=0; iL<nL; iL++) {
+        pTji = Tji + op_idx[iL]*dij*dij;
+        pints = ints + (size_t)dijk*L2_off[iL];
+        ptmp1 = tmp1 + (size_t)dijk*iL;
+        for (k=0; k<dk; k++) {
+            amat1[ioff] = pTji;
+            bmat1[ioff] = pints + (size_t)dij*k;
+            cmat1[ioff] = ptmp1 + (size_t)dij*k;
+            ioff++;
+        }
+    }
+
+    cblas_dgemm_batch(CblasColMajor, transA, transB, m1, n1, k1,
+        alpha, amat1, lda1, bmat1, ldb1, beta, cmat1, ldc1,
+        GRP_COUNT, size_per_grp1);
+
+    /************
+    * apply Dk  *
+    ************/
+    MKL_INT    m3[GRP_COUNT] = {dij};
+    MKL_INT    k3[GRP_COUNT] = {mk};
+    MKL_INT    n3[GRP_COUNT] = {mk};
+    MKL_INT    lda3[GRP_COUNT] = {dij};
+    MKL_INT    ldb3[GRP_COUNT] = {mk};
+    MKL_INT    ldc3[GRP_COUNT] = {dij};
+    MKL_INT    size_per_grp3[GRP_COUNT] = {nL*nck};
+    CBLAS_TRANSPOSE    transB2[GRP_COUNT] = {CblasTrans};
+    const double *amat3[nL*nck], *bmat3[nL*nck];
+    double *cmat3[nL*nck];
+    double *pout, *pD;
+    ioff = 0;
+    for (iL=0; iL<nL; iL++) {
+        pD = Dk[op_idx[iL]];
+        pints = tmp1 + (size_t)dijk*iL;
+        pout = out + (size_t)dijk*iL;
+        for (ic=0; ic<nck; ic++) {
+            amat3[ioff] = pints + (size_t)dij*mk*ic;
+            bmat3[ioff] = pD;
+            cmat3[ioff] = pout + (size_t)dij*mk*ic;
+            ioff++;
+        }
+    }
+
+    cblas_dgemm_batch(CblasColMajor, transA, transB2, m3, n3, k3,
+        alpha, amat3, lda3, bmat3, ldb3, beta, cmat3, ldc3,
+        GRP_COUNT, size_per_grp3);
+
+    free(tmp1);
+}
+
+
 static void _nr3c_fill_symm_kk(int (*intor)(), void (*fsort)(),
                           double complex *out, int nkpts_ij,
                           int nkpts, int comp, int nimgs, int ish, int jsh,
@@ -539,13 +627,19 @@ static void _nr3c_fill_symm_kk(int (*intor)(), void (*fsort)(),
         double *pDk[nop];
         build_Dmats(pDk, Dmats, rot_loc, rot_mat_size, nop, l_k);
 
-        double *Tkji;
+        double *Tkji, *Tji;
         if (dijm <= BLKSIZE){
             Tkji = malloc(sizeof(double)*dijm*dijm*nop);
             //direct product of Wigner D matrices
             for (iop=0; iop<nop; iop++) {
                 multiply_Dmats(Tkji, Dmats, rot_loc, rot_mat_size, nop, iop,
                            mi, mj, mk, l_i, l_j, l_k, nci, ncj, nck);
+            }
+        } else if (dij <= BLKSIZE) {
+            Tji = malloc(sizeof(double)*dij*dij*nop);
+            for (iop=0; iop<nop; iop++) {
+                multiply_two_Dmats(Tji, Dmats, rot_loc, rot_mat_size, nop, iop,
+                                   mi, mj, l_i, l_j, nci, ncj);
             }
         }
 
@@ -599,15 +693,18 @@ static void _nr3c_fill_symm_kk(int (*intor)(), void (*fsort)(),
                 if (dijm <= BLKSIZE){
                     //multiply Tmats
                     apply_Tmats_batch_gemm(pbuf, Tkji, int_ijk_buf, op_idx+nimgs*iL, int_idx+nimgs*iL, dijm, nimgs);
+                } else if (dij <= BLKSIZE) {
+                    apply_Tji_Dk_batch_gemm(pbuf, int_ijk_buf, Tji, pDk,
+                                            op_idx+nimgs*iL, int_idx+nimgs*iL, nimgs,
+                                            dij, mk, nck);
                 } else {
                     //apply Dmats
                     apply_Dmats_batch_gemm(pbuf, int_ijk_buf, pDi, pDj, pDk,
-                                       op_idx+nimgs*iL, int_idx+nimgs*iL, nimgs,
-                                       mi, mj, mk, nci, ncj, nck);
+                                           op_idx+nimgs*iL, int_idx+nimgs*iL, nimgs,
+                                           mi, mj, mk, nci, ncj, nck);
                 }
                 clock_t CPU_time_2 = clock();
                 *tD += (double)(CPU_time_2-CPU_time_1)/CLOCKS_PER_SEC;
-
 
                 dgemm_(&TRANS_N, &TRANS_N, &dijmc, &nkpts, &nimgs,
                        &D1, bufL, &dijmc, expkL_r, &nimgs,
@@ -630,8 +727,11 @@ static void _nr3c_fill_symm_kk(int (*intor)(), void (*fsort)(),
                    &ND1, bufkL_r, &dijmk, expkL_i+iL0, &nimgs,
                    &D1, bufkk_i, &dijmk);
         }
-        //free(tmp);
-        if (dijm <= BLKSIZE) {free(Tkji);}
+        if (dijm <= BLKSIZE) {
+            free(Tkji);
+        } else if (dij <= BLKSIZE) {
+            free(Tji);
+        }
         free(int_flags_L2);
         free(int_ijk_buf);
         (*fsort)(out, bufkk_r, bufkk_i, kptij_idx, shls_slice,

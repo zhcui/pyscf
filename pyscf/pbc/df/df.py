@@ -162,7 +162,7 @@ def _make_j3c(mydf, cell, auxcell, kptij_lst, cderi_file):
     outcore._aux_e2(cell, fused_cell, fswap, 'int3c2e', aosym='s2',
                     kptij_lst=kptij_lst, dataname='j3c-junk', max_memory=max_memory)
     t1 = log.timer_debug1('3c2e', *t1)
-    exit()
+
     nao = cell.nao_nr()
     naux = auxcell.nao_nr()
     mesh = mydf.mesh
