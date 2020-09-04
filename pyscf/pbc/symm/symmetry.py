@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# Authors: Xing Zhang
+# Authors: Xing Zhang <zhangxing.nju@gmail.com>
 #
 
 import numpy as np
@@ -160,16 +160,6 @@ def make_Dmats(cell, ops, l_max=None):
             Dmats.append(get_Dmat_cart(op, l_max))
     return Dmats, l_max
 
-def cell_to_spgcell(cell):
-    a = cell.lattice_vectors()
-    atm_pos = cell.get_scaled_positions()
-    atm_num = []
-    from pyscf.data import elements
-    for symbol in cell.elements:
-        atm_num.append(elements.NUC[symbol])
-    spg_cell = (a,atm_pos,atm_num)
-    return spg_cell
-
 class SpaceGroup():
     '''
     Determines the space group of a lattice.
@@ -188,14 +178,14 @@ class SpaceGroup():
 
     def get_space_group(self):
         try:
-            import spglib
+            from pyscf.pbc.symm.pyscf_spglib import cell_to_spgcell, get_spacegroup, get_symmetry
             cell = cell_to_spgcell(self.cell)
-            self.symbol = spglib.get_spacegroup(cell, symprec=self.symprec)
-            symmetry = spglib.get_symmetry(cell, symprec=self.symprec)
+            self.symbol = get_spacegroup(cell, symprec=self.symprec)
+            symmetry = get_symmetry(cell, symprec=self.symprec)
             self.rotations = symmetry['rotations']
             self.translations = symmetry['translations']
         except:
-            raise NotImplementedError("use spglib to determine space group for now")
+           raise NotImplementedError("use spglib to determine space group for now")
 
         return self
 

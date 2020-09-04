@@ -20,7 +20,6 @@ import numpy as np
 import ctypes
 from pyscf import lib
 from pyscf.lib import logger
-from pyscf.pbc.tools.pyscf_ase import get_space_group
 from pyscf import __config__
 from pyscf.pbc.symm import symmetry as symm
 from pyscf.pbc.lib.kpts_helper import member
