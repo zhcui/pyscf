@@ -23,7 +23,7 @@ if (CMAKE_COMPILER_IS_GNUCC) # Does it skip the link flag on old OsX?
     set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--no-as-needed")
   endif()
 endif()
-set(CMAKE_C_FLAGS "-I/home/xzhang8/.conda/envs/py37/include -g -Wall ${CMAKE_C_FLAGS}")
+set(CMAKE_C_FLAGS "-g -Wall ${CMAKE_C_FLAGS}")
 
 if (${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION} VERSION_GREATER 3.0.0)
   cmake_policy(SET CMP0042 NEW)
@@ -61,6 +61,15 @@ endif()
 # These settings can be written in the cmake.arch.inc file. This config file
 # will automatically load all settings specified in cmake.arch.inc
 #
+
+if (${BLA_VENDOR} STREQUAL "Intel10_64lp_seq")
+  find_path (BLAS_INCLUDE_DIRS mkl.h
+    /usr/include
+    /usr/local/include
+    /usr/include/x86_64-linux-gnu
+    $ENV{MKLROOT}/include)
+  include_directories(${BLAS_INCLUDE_DIRS})
+endif()
 
 find_package(OpenMP)
 if(OPENMP_FOUND)
