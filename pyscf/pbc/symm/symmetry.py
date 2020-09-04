@@ -185,7 +185,7 @@ class SpaceGroup():
             self.rotations = symmetry['rotations']
             self.translations = symmetry['translations']
         except:
-           raise NotImplementedError("use spglib to determine space group for now")
+            raise NotImplementedError("use spglib to determine space group for now")
 
         return self
 
