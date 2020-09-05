@@ -19,6 +19,7 @@
 import numpy as np
 from numpy.linalg import inv
 from pyscf import __config__
+from pyscf import lib
 from pyscf.symm.Dmatrix import *
 from functools import reduce
 
@@ -160,7 +161,7 @@ def make_Dmats(cell, ops, l_max=None):
             Dmats.append(get_Dmat_cart(op, l_max))
     return Dmats, l_max
 
-class SpaceGroup():
+class SpaceGroup(lib.StreamObject):
     '''
     Determines the space group of a lattice.
     Attributes:
@@ -174,20 +175,28 @@ class SpaceGroup():
         self.symprec = symprec
         self.rotations = np.reshape(np.eye(3,dtype=int), (-1,3,3))
         self.translations = np.zeros((1,3))
-        self.symbol = None
 
-    def get_space_group(self):
+    def get_space_group(self, dump_info=True):
         try:
-            from pyscf.pbc.symm.pyscf_spglib import cell_to_spgcell, get_spacegroup, get_symmetry
+            from pyscf.pbc.symm.pyscf_spglib import cell_to_spgcell, get_symmetry_dataset, get_symmetry
             cell = cell_to_spgcell(self.cell)
-            self.symbol = get_spacegroup(cell, symprec=self.symprec)
-            symmetry = get_symmetry(cell, symprec=self.symprec)
-            self.rotations = symmetry['rotations']
-            self.translations = symmetry['translations']
+            dataset = get_symmetry_dataset(cell, symprec=self.symprec)
+            self.international_symbol = dataset['international']
+            self.international_number = dataset['number']
+            self.point_group_symbol = dataset['pointgroup']
+            ops = get_symmetry(cell, symprec=self.symprec)
+            self.rotations = ops['rotations']
+            self.translations = ops['translations']
         except:
             raise NotImplementedError("use spglib to determine space group for now")
 
+        if dump_info:
+            self.dump_info()
         return self
+
+    def dump_info(self):
+        self.stdout.write('[Cell] International symbol:  %s (%d)\n' % (self.international_symbol, self.international_number))
+        self.stdout.write('[Cell] Point group symbol:  %s\n' % self.point_group_symbol)
 
 class Symmetry():
     '''

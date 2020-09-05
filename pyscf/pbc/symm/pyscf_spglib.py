@@ -36,3 +36,4 @@ def cell_to_spgcell(cell):
 
 get_spacegroup = spglib.get_spacegroup
 get_symmetry = spglib.get_symmetry
+get_symmetry_dataset = spglib.get_symmetry_dataset
