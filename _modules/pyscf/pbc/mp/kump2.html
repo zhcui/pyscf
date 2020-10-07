@@ -1,0 +1,628 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pyscf.pbc.mp.kump2 &mdash; PySCF 1.7.5 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home" alt="Documentation Home"> PySCF
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.7
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../overview.html">1. An overview of PySCF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../version.html">2. Version history</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../install.html">3. Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../code-rule.html">4. Code standard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../benchmark.html">5. Benchmark</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorial.html">6. Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../theory.html">7. Theoretical methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../advanced.html">8. Miscellaneous</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../interface.html">9. Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules.html">10. Main modules</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">PySCF</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>pyscf.pbc.mp.kump2</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pyscf.pbc.mp.kump2</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># Copyright 2014-2020 The PySCF Developers. All Rights Reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+<span class="c1">#</span>
+<span class="c1">#     http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1">#</span>
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+<span class="c1">#</span>
+<span class="c1"># Author: James McClain &lt;jdmcclain47@gmail.com&gt;</span>
+<span class="c1">#</span>
+
+
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">kpoint-adapted unrestricted MP2</span>
+<span class="sd">t2[i,j,a,b] = &lt;ij|ab&gt; / D_ij^ab</span>
+
+<span class="sd">t2 and eris are never stored in full, only a partial</span>
+<span class="sd">eri of size (nkpts,nocc,nocc,nvir,nvir)</span>
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">lib</span>
+<span class="kn">from</span> <span class="nn">pyscf.lib</span> <span class="k">import</span> <span class="n">logger</span>
+<span class="kn">from</span> <span class="nn">pyscf.pbc.mp</span> <span class="k">import</span> <span class="n">kmp2</span>
+<span class="kn">from</span> <span class="nn">pyscf.pbc.lib</span> <span class="k">import</span> <span class="n">kpts_helper</span>
+<span class="kn">from</span> <span class="nn">pyscf.pbc.mp.kmp2</span> <span class="k">import</span> <span class="n">_frozen_sanity_check</span>
+<span class="kn">from</span> <span class="nn">pyscf.lib.parameters</span> <span class="k">import</span> <span class="n">LARGE_DENOM</span>
+
+<span class="k">def</span> <span class="nf">padding_k_idx</span><span class="p">(</span><span class="n">mp</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;split&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;For a description, see `padding_k_idx` in kmp2.py.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        mp (:class:`MP2`): An instantiation of an SCF or post-Hartree-Fock object.</span>
+<span class="sd">        kind (str): either &quot;split&quot; (occupied and virtual spaces are split) or &quot;joint&quot; (occupied and virtual spaces are</span>
+<span class="sd">        the joint;</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Two lists corresponding to the occupied and virtual spaces for kind=&quot;split&quot;. Each list contains integer arrays</span>
+<span class="sd">        with indexes pointing to actual non-zero entries in the padded vector/matrix/tensor. If kind=&quot;joint&quot;, a single</span>
+<span class="sd">        list of arrays is returned corresponding to the entire MO space.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">kind</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;split&quot;</span><span class="p">,</span> <span class="s2">&quot;joint&quot;</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The &#39;kind&#39; argument must be one of &#39;split&#39;, &#39;joint&#39;&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">kind</span> <span class="o">==</span> <span class="s2">&quot;split&quot;</span><span class="p">:</span>
+        <span class="n">indexes_oa</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">indexes_va</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">indexes_ob</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">indexes_vb</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">indexesa</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">indexesb</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">dense_oa</span><span class="p">,</span> <span class="n">dense_ob</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">nocc</span>
+    <span class="n">dense_nmoa</span><span class="p">,</span> <span class="n">dense_nmob</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">nmo</span>
+    <span class="n">dense_va</span> <span class="o">=</span> <span class="n">dense_nmoa</span> <span class="o">-</span> <span class="n">dense_oa</span>
+    <span class="n">dense_vb</span> <span class="o">=</span> <span class="n">dense_nmob</span> <span class="o">-</span> <span class="n">dense_ob</span>
+
+    <span class="n">nocca_per_kpt</span><span class="p">,</span> <span class="n">noccb_per_kpt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">get_nocc</span><span class="p">(</span><span class="n">mp</span><span class="p">,</span> <span class="n">per_kpoint</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+    <span class="n">nmoa_per_kpt</span><span class="p">,</span> <span class="n">nmob_per_kpt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">get_nmo</span><span class="p">(</span><span class="n">mp</span><span class="p">,</span> <span class="n">per_kpoint</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+
+    <span class="c1"># alpha spin</span>
+    <span class="k">for</span> <span class="n">k_oa</span><span class="p">,</span> <span class="n">k_nmoa</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">nocca_per_kpt</span><span class="p">,</span> <span class="n">nmoa_per_kpt</span><span class="p">):</span>
+        <span class="n">k_va</span> <span class="o">=</span> <span class="n">k_nmoa</span> <span class="o">-</span> <span class="n">k_oa</span>
+        <span class="k">if</span> <span class="n">kind</span> <span class="o">==</span> <span class="s2">&quot;split&quot;</span><span class="p">:</span>
+            <span class="n">indexes_oa</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">k_oa</span><span class="p">))</span>
+            <span class="n">indexes_va</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">dense_va</span> <span class="o">-</span> <span class="n">k_va</span><span class="p">,</span> <span class="n">dense_va</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">indexesa</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">k_oa</span><span class="p">),</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">dense_nmoa</span> <span class="o">-</span> <span class="n">k_va</span><span class="p">,</span> <span class="n">dense_nmoa</span><span class="p">),</span>
+            <span class="p">)))</span>
+
+    <span class="c1"># beta spin</span>
+    <span class="k">for</span> <span class="n">k_ob</span><span class="p">,</span> <span class="n">k_nmob</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">noccb_per_kpt</span><span class="p">,</span> <span class="n">nmob_per_kpt</span><span class="p">):</span>
+        <span class="n">k_vb</span> <span class="o">=</span> <span class="n">k_nmob</span> <span class="o">-</span> <span class="n">k_ob</span>
+        <span class="k">if</span> <span class="n">kind</span> <span class="o">==</span> <span class="s2">&quot;split&quot;</span><span class="p">:</span>
+            <span class="n">indexes_ob</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">k_ob</span><span class="p">))</span>
+            <span class="n">indexes_vb</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">dense_vb</span> <span class="o">-</span> <span class="n">k_vb</span><span class="p">,</span> <span class="n">dense_vb</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">indexesb</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">k_ob</span><span class="p">),</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">dense_nmob</span> <span class="o">-</span> <span class="n">k_vb</span><span class="p">,</span> <span class="n">dense_nmob</span><span class="p">),</span>
+            <span class="p">)))</span>
+
+    <span class="k">if</span> <span class="n">kind</span> <span class="o">==</span> <span class="s2">&quot;split&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">indexes_oa</span><span class="p">,</span> <span class="n">indexes_va</span><span class="p">],</span> <span class="p">[</span><span class="n">indexes_ob</span><span class="p">,</span> <span class="n">indexes_vb</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">indexesa</span><span class="p">,</span> <span class="n">indexesb</span>
+
+
+<span class="k">def</span> <span class="nf">padded_mo_energy</span><span class="p">(</span><span class="n">mp</span><span class="p">,</span> <span class="n">mo_energy</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Pads energies of active MOs.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        mp (:class:`MP2`): An instantiation of an SCF or post-Hartree-Fock object.</span>
+<span class="sd">        mo_energy (ndarray): original non-padded molecular energies;</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Padded molecular energies.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">frozen_mask</span> <span class="o">=</span> <span class="n">get_frozen_mask</span><span class="p">(</span><span class="n">mp</span><span class="p">)</span>
+    <span class="n">padding_convention</span> <span class="o">=</span> <span class="n">padding_k_idx</span><span class="p">(</span><span class="n">mp</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;joint&quot;</span><span class="p">)</span>
+    <span class="n">nkpts</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">nkpts</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nkpts</span><span class="p">,</span> <span class="n">mp</span><span class="o">.</span><span class="n">nmo</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">mo_energy</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">dtype</span><span class="p">),</span>
+              <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nkpts</span><span class="p">,</span> <span class="n">mp</span><span class="o">.</span><span class="n">nmo</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">mo_energy</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">dtype</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">spin</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nkpts</span><span class="p">):</span>
+            <span class="n">result</span><span class="p">[</span><span class="n">spin</span><span class="p">][</span><span class="n">np</span><span class="o">.</span><span class="n">ix_</span><span class="p">([</span><span class="n">k</span><span class="p">],</span> <span class="n">padding_convention</span><span class="p">[</span><span class="n">k</span><span class="p">])]</span> <span class="o">=</span> <span class="n">mo_energy</span><span class="p">[</span><span class="n">spin</span><span class="p">][</span><span class="n">k</span><span class="p">][</span><span class="n">frozen_mask</span><span class="p">[</span><span class="n">k</span><span class="p">]]</span>
+
+    <span class="k">return</span> <span class="n">result</span>
+
+
+<span class="k">def</span> <span class="nf">padded_mo_coeff</span><span class="p">(</span><span class="n">mp</span><span class="p">,</span> <span class="n">mo_coeff</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Pads coefficients of active MOs.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        mp (:class:`MP2`): An instantiation of an SCF or post-Hartree-Fock object.</span>
+<span class="sd">        mo_coeff (ndarray): original non-padded molecular coefficients;</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Padded molecular coefficients.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">frozen_mask</span> <span class="o">=</span> <span class="n">get_frozen_mask</span><span class="p">(</span><span class="n">mp</span><span class="p">)</span>
+    <span class="n">padding_convention</span> <span class="o">=</span> <span class="n">padding_k_idx</span><span class="p">(</span><span class="n">mp</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;joint&quot;</span><span class="p">)</span>
+    <span class="n">nkpts</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">nkpts</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nkpts</span><span class="p">,</span> <span class="n">mo_coeff</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">mp</span><span class="o">.</span><span class="n">nmo</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">mo_coeff</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">dtype</span><span class="p">),</span>
+              <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nkpts</span><span class="p">,</span> <span class="n">mo_coeff</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">mp</span><span class="o">.</span><span class="n">nmo</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">mo_coeff</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">dtype</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">spin</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nkpts</span><span class="p">):</span>
+            <span class="n">result</span><span class="p">[</span><span class="n">spin</span><span class="p">][</span><span class="n">np</span><span class="o">.</span><span class="n">ix_</span><span class="p">([</span><span class="n">k</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="n">spin</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">padding_convention</span><span class="p">[</span><span class="n">spin</span><span class="p">][</span><span class="n">k</span><span class="p">])]</span> <span class="o">=</span> \
+                <span class="n">mo_coeff</span><span class="p">[</span><span class="n">spin</span><span class="p">][</span><span class="n">k</span><span class="p">][:,</span> <span class="n">frozen_mask</span><span class="p">[</span><span class="n">spin</span><span class="p">][</span><span class="n">k</span><span class="p">]]</span>
+
+    <span class="k">return</span> <span class="n">result</span>
+
+
+<span class="k">def</span> <span class="nf">_is_arraylike</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">))</span>
+
+
+<span class="k">def</span> <span class="nf">get_nocc</span><span class="p">(</span><span class="n">mp</span><span class="p">,</span> <span class="n">per_kpoint</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Number of occupied orbitals for k-point calculations.</span>
+
+<span class="sd">    Number of occupied orbitals for use in a calculation with k-points, taking into</span>
+<span class="sd">    account frozen orbitals.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        mp (:class:`MP2`): An instantiation of an SCF or post-Hartree-Fock object.</span>
+<span class="sd">        per_kpoint (bool, optional): True returns the number of occupied</span>
+<span class="sd">            orbitals at each k-point.  False gives the max of this list.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        nocc (int, list of int): Number of occupied orbitals. For return type, see description of arg</span>
+<span class="sd">            `per_kpoint`.</span>
+
+<span class="sd">    Notes:</span>
+<span class="sd">        For specifying frozen orbitals inside mp, the following options are accepted:</span>
+
+<span class="sd">            +=========================+========================================+===============================+</span>
+<span class="sd">            | Argument (Example)      | Argument Meaning                       | Example Meaning               |</span>
+<span class="sd">            +=========================+========================================+===============================+</span>
+<span class="sd">            | int (1)                 | Freeze the same number of orbitals     | Freeze one (lowest) orbital   |</span>
+<span class="sd">            |                         | regardless of spin and/or kpt          | for all kpts and spin cases   |</span>
+<span class="sd">            +-------------------------+----------------------------------------+-------------------------------+</span>
+<span class="sd">            | 2-tuple of list of int  | inner list: List of orbitals indices   | Freeze the orbitals [0,4] for |</span>
+<span class="sd">            | ([0, 4], [0, 5, 6])     |   to freeze at all kpts                | spin0, and orbitals [0,5,6]   |</span>
+<span class="sd">            |                         | outer list: Spin index                 | for spin1 at all kpts         |</span>
+<span class="sd">            +-------------------------+----------------------------------------+-------------------------------+</span>
+<span class="sd">            | list(2) of list of list | inner list: list of orbital indices to | Freeze orbital 0 for spin0 at |</span>
+<span class="sd">            | ([[0,],[]],             |   freeze at each kpt for given spin    | kpt0, and freeze orbital 0,1  |</span>
+<span class="sd">            |  [[0,1],[4]])           | outer list: spin index                 | for spin1 at kpt0 and orbital |</span>
+<span class="sd">            |                         |                                        | 4 at kpt1                     |</span>
+<span class="sd">            +-------------------------+----------------------------------------+-------------------------------+</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">for</span> <span class="n">spin</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">moocc</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">mo_occ</span><span class="p">[</span><span class="n">spin</span><span class="p">]):</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">moocc</span> <span class="o">%</span> <span class="mi">1</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Fractional occupation numbers encountered @ kp=</span><span class="si">{:d}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">. This may have been caused by &quot;</span>
+                                   <span class="s2">&quot;smearing of occupation numbers in the mean-field calculation. If so, consider &quot;</span>
+                                   <span class="s2">&quot;executing mf.smearing_method = False; mf.mo_occ = mf.get_occ() prior to calling &quot;</span>
+                                   <span class="s2">&quot;this&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">moocc</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">mp</span><span class="o">.</span><span class="n">_nocc</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">mp</span><span class="o">.</span><span class="n">_nocc</span>
+
+    <span class="k">elif</span> <span class="n">mp</span><span class="o">.</span><span class="n">frozen</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">nocc</span> <span class="o">=</span> <span class="p">[[</span><span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">mo_occ</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">nkpts</span><span class="p">)],</span>
+                <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">mo_occ</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">nkpts</span><span class="p">)]]</span>
+
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">frozen</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">integer</span><span class="p">)):</span>
+        <span class="n">nocc</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="mi">2</span>
+        <span class="k">for</span> <span class="n">spin</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="n">nocc</span><span class="p">[</span><span class="n">spin</span><span class="p">]</span> <span class="o">=</span> <span class="p">[(</span><span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">mo_occ</span><span class="p">[</span><span class="n">spin</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-</span> <span class="n">mp</span><span class="o">.</span><span class="n">frozen</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">nkpts</span><span class="p">)]</span>
+
+    <span class="k">elif</span> <span class="p">(</span><span class="n">_is_arraylike</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">frozen</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="ow">and</span>
+          <span class="nb">isinstance</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">frozen</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">integer</span><span class="p">))):</span>  <span class="c1"># case example: ([0, 4], [0, 5, 6])</span>
+        <span class="n">nocc</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="mi">2</span>
+        <span class="k">assert</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">frozen</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">spin</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="p">[</span><span class="n">_frozen_sanity_check</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">frozen</span><span class="p">[</span><span class="n">spin</span><span class="p">],</span> <span class="n">mp</span><span class="o">.</span><span class="n">mo_occ</span><span class="p">[</span><span class="n">spin</span><span class="p">][</span><span class="n">ikpt</span><span class="p">],</span> <span class="n">ikpt</span><span class="p">)</span> <span class="k">for</span> <span class="n">ikpt</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">nkpts</span><span class="p">)]</span>
+            <span class="n">nocc_spin</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">ikpt</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">nkpts</span><span class="p">):</span>
+                <span class="n">max_occ_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">mo_occ</span><span class="p">[</span><span class="n">spin</span><span class="p">][</span><span class="n">ikpt</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">))</span>
+                <span class="n">frozen_nocc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">frozen</span><span class="p">[</span><span class="n">spin</span><span class="p">])</span> <span class="o">&lt;=</span> <span class="n">max_occ_idx</span><span class="p">)</span>
+                <span class="n">nocc_spin</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">mo_occ</span><span class="p">[</span><span class="n">spin</span><span class="p">][</span><span class="n">ikpt</span><span class="p">])</span> <span class="o">-</span> <span class="n">frozen_nocc</span><span class="p">)</span>
+            <span class="n">nocc</span><span class="p">[</span><span class="n">spin</span><span class="p">]</span> <span class="o">=</span> <span class="n">nocc_spin</span>
+
+    <span class="k">elif</span> <span class="p">(</span><span class="n">_is_arraylike</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">frozen</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="ow">and</span>
+          <span class="nb">isinstance</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">frozen</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">))):</span>  <span class="c1"># case example: ([[0,],[]], [[0,1],[4]])</span>
+        <span class="k">assert</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">frozen</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">spin</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="n">nkpts</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">frozen</span><span class="p">[</span><span class="n">spin</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">nkpts</span> <span class="o">!=</span> <span class="n">mp</span><span class="o">.</span><span class="n">nkpts</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Frozen list has a different number of k-points (length) than passed in&#39;</span>
+                                   <span class="s1">&#39;mean-field/correlated calculation.  </span><span class="se">\n\n</span><span class="s1">Calculation nkpts = </span><span class="si">%d</span><span class="s1">, frozen&#39;</span>
+                                   <span class="s1">&#39;list = </span><span class="si">%s</span><span class="s1"> (length = </span><span class="si">%d</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">nkpts</span><span class="p">,</span> <span class="n">mp</span><span class="o">.</span><span class="n">frozen</span><span class="p">,</span> <span class="n">nkpts</span><span class="p">))</span>
+        <span class="n">nocc</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="mi">2</span>
+        <span class="k">for</span> <span class="n">spin</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="p">[</span><span class="n">_frozen_sanity_check</span><span class="p">(</span><span class="n">frozen</span><span class="p">,</span> <span class="n">mo_occ</span><span class="p">,</span> <span class="n">ikpt</span><span class="p">)</span>
+             <span class="k">for</span> <span class="n">ikpt</span><span class="p">,</span> <span class="n">frozen</span><span class="p">,</span> <span class="n">mo_occ</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">nkpts</span><span class="p">),</span> <span class="n">mp</span><span class="o">.</span><span class="n">frozen</span><span class="p">[</span><span class="n">spin</span><span class="p">],</span> <span class="n">mp</span><span class="o">.</span><span class="n">mo_occ</span><span class="p">[</span><span class="n">spin</span><span class="p">])]</span>
+            <span class="n">nocc_spin</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">ikpt</span><span class="p">,</span> <span class="n">frozen</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">frozen</span><span class="p">[</span><span class="n">spin</span><span class="p">]):</span>
+                <span class="n">max_occ_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">mo_occ</span><span class="p">[</span><span class="n">spin</span><span class="p">][</span><span class="n">ikpt</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">))</span>
+                <span class="n">frozen_nocc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">frozen</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">max_occ_idx</span><span class="p">)</span>
+                <span class="n">nocc_spin</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">mo_occ</span><span class="p">[</span><span class="n">spin</span><span class="p">][</span><span class="n">ikpt</span><span class="p">])</span> <span class="o">-</span> <span class="n">frozen_nocc</span><span class="p">)</span>
+            <span class="n">nocc</span><span class="p">[</span><span class="n">spin</span><span class="p">]</span> <span class="o">=</span> <span class="n">nocc_spin</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;No known conversion for frozen </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">mp</span><span class="o">.</span><span class="n">frozen</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">spin</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]:</span>
+        <span class="k">assert</span> <span class="nb">any</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">nocc</span><span class="p">[</span><span class="n">spin</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;Must have occupied orbitals (spin=</span><span class="si">%d</span><span class="s1">)! </span><span class="se">\n\n</span><span class="s1">nocc </span><span class="si">%s</span><span class="se">\n</span><span class="s1">frozen </span><span class="si">%s</span><span class="se">\n</span><span class="s1">mo_occ </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span>
+               <span class="p">(</span><span class="n">spin</span><span class="p">,</span> <span class="n">nocc</span><span class="p">,</span> <span class="n">mp</span><span class="o">.</span><span class="n">frozen</span><span class="p">,</span> <span class="n">mp</span><span class="o">.</span><span class="n">mo_occ</span><span class="p">))</span>
+
+    <span class="n">nocca</span><span class="p">,</span> <span class="n">noccb</span> <span class="o">=</span> <span class="n">nocc</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">per_kpoint</span><span class="p">:</span>
+        <span class="n">nocca</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">nocca</span><span class="p">)</span>
+        <span class="n">noccb</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">noccb</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">nocca</span><span class="p">,</span> <span class="n">noccb</span>
+
+
+<span class="k">def</span> <span class="nf">get_nmo</span><span class="p">(</span><span class="n">mp</span><span class="p">,</span> <span class="n">per_kpoint</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Number of orbitals for k-point calculations.</span>
+
+<span class="sd">    Number of orbitals for use in a calculation with k-points, taking into account</span>
+<span class="sd">    frozen orbitals.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        If `per_kpoint` is False, then the number of orbitals here is equal to max(nocc) + max(nvir),</span>
+<span class="sd">        where each max is done over all k-points.  Otherwise the number of orbitals is returned</span>
+<span class="sd">        as a list of number of orbitals at each k-point.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        mp (:class:`MP2`): An instantiation of an SCF or post-Hartree-Fock object.</span>
+<span class="sd">        per_kpoint (bool, optional): True returns the number of orbitals at each k-point.</span>
+<span class="sd">            For a description of False, see Note.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        nmo (int, list of int): Number of orbitals. For return type, see description of arg</span>
+<span class="sd">            `per_kpoint`.</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">mp</span><span class="o">.</span><span class="n">_nmo</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">mp</span><span class="o">.</span><span class="n">_nmo</span>
+
+    <span class="n">nmo</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">frozen</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">integer</span><span class="p">)):</span>
+        <span class="k">for</span> <span class="n">spin</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="n">nmo</span><span class="p">[</span><span class="n">spin</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">mo_occ</span><span class="p">[</span><span class="n">spin</span><span class="p">][</span><span class="n">k</span><span class="p">])</span> <span class="o">-</span> <span class="n">mp</span><span class="o">.</span><span class="n">frozen</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">nkpts</span><span class="p">)]</span>
+
+    <span class="k">elif</span> <span class="n">mp</span><span class="o">.</span><span class="n">frozen</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">nmo</span> <span class="o">=</span> <span class="p">[[</span><span class="nb">len</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">mo_occ</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">k</span><span class="p">])</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">nkpts</span><span class="p">)],</span>
+               <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">mo_occ</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">k</span><span class="p">])</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">nkpts</span><span class="p">)]]</span>
+
+    <span class="k">elif</span> <span class="p">(</span><span class="n">_is_arraylike</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">frozen</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="ow">and</span>
+          <span class="nb">isinstance</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">frozen</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">integer</span><span class="p">))):</span>  <span class="c1"># case example: ([0, 4], [0, 5, 6])</span>
+        <span class="k">assert</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">frozen</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">spin</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="p">[</span><span class="n">_frozen_sanity_check</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">frozen</span><span class="p">[</span><span class="n">spin</span><span class="p">],</span> <span class="n">mp</span><span class="o">.</span><span class="n">mo_occ</span><span class="p">[</span><span class="n">spin</span><span class="p">][</span><span class="n">ikpt</span><span class="p">],</span> <span class="n">ikpt</span><span class="p">)</span> <span class="k">for</span> <span class="n">ikpt</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">nkpts</span><span class="p">)]</span>
+            <span class="n">nmo</span><span class="p">[</span><span class="n">spin</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">mo_occ</span><span class="p">[</span><span class="n">spin</span><span class="p">][</span><span class="n">ikpt</span><span class="p">])</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">frozen</span><span class="p">[</span><span class="n">spin</span><span class="p">])</span> <span class="k">for</span> <span class="n">ikpt</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">nkpts</span><span class="p">)]</span>
+
+    <span class="k">elif</span> <span class="p">(</span><span class="n">_is_arraylike</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">frozen</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="ow">and</span>
+          <span class="nb">isinstance</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">frozen</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">))):</span>  <span class="c1"># case example: ([[0,],[]], [[0,1],[4]])</span>
+        <span class="k">assert</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">frozen</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">spin</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="n">nkpts</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">frozen</span><span class="p">[</span><span class="n">spin</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">nkpts</span> <span class="o">!=</span> <span class="n">mp</span><span class="o">.</span><span class="n">nkpts</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Frozen list has a different number of k-points (length) than passed in&#39;</span>
+                                   <span class="s1">&#39;mean-field/correlated calculation.  </span><span class="se">\n\n</span><span class="s1">Calculation nkpts = </span><span class="si">%d</span><span class="s1">, frozen&#39;</span>
+                                   <span class="s1">&#39;list = </span><span class="si">%s</span><span class="s1"> (length = </span><span class="si">%d</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">nkpts</span><span class="p">,</span> <span class="n">mp</span><span class="o">.</span><span class="n">frozen</span><span class="p">,</span> <span class="n">nkpts</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">spin</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="p">[</span><span class="n">_frozen_sanity_check</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">frozen</span><span class="p">[</span><span class="n">spin</span><span class="p">][</span><span class="n">ikpt</span><span class="p">],</span> <span class="n">mp</span><span class="o">.</span><span class="n">mo_occ</span><span class="p">[</span><span class="n">spin</span><span class="p">][</span><span class="n">ikpt</span><span class="p">],</span> <span class="n">ikpt</span><span class="p">)</span> <span class="k">for</span> <span class="n">ikpt</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">nkpts</span><span class="p">)]</span>
+            <span class="n">nmo</span><span class="p">[</span><span class="n">spin</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">mo_occ</span><span class="p">[</span><span class="n">spin</span><span class="p">][</span><span class="n">ikpt</span><span class="p">])</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">frozen</span><span class="p">[</span><span class="n">spin</span><span class="p">][</span><span class="n">ikpt</span><span class="p">])</span> <span class="k">for</span> <span class="n">ikpt</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nkpts</span><span class="p">)]</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;No known conversion for frozen </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">mp</span><span class="o">.</span><span class="n">frozen</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">spin</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]:</span>
+        <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">nmo</span><span class="p">[</span><span class="n">spin</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;Must have a positive number of orbitals! (spin=</span><span class="si">%d</span><span class="s1">)&#39;</span>
+                   <span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">nmo </span><span class="si">%s</span><span class="se">\n</span><span class="s1">frozen </span><span class="si">%s</span><span class="se">\n</span><span class="s1">mo_occ </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">spin</span><span class="p">,</span> <span class="n">nmo</span><span class="p">,</span> <span class="n">mp</span><span class="o">.</span><span class="n">frozen</span><span class="p">,</span> <span class="n">mp</span><span class="o">.</span><span class="n">mo_occ</span><span class="p">))</span>
+
+    <span class="n">nmoa</span><span class="p">,</span> <span class="n">nmob</span> <span class="o">=</span> <span class="n">nmo</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">per_kpoint</span><span class="p">:</span>
+        <span class="c1"># Depending on whether there are more occupied bands, we want to make sure    that</span>
+        <span class="c1"># nmo has enough room for max(nocc) + max(nvir) number of orbitals for        occupied</span>
+        <span class="c1"># and virtual space</span>
+        <span class="n">nocca</span><span class="p">,</span> <span class="n">noccb</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">get_nocc</span><span class="p">(</span><span class="n">per_kpoint</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">nmoa</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">nocca</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">nmoa</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">nocca</span><span class="p">))</span>
+        <span class="n">nmob</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">noccb</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">nmob</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">noccb</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">nmoa</span><span class="p">,</span> <span class="n">nmob</span>
+
+
+<span class="k">def</span> <span class="nf">get_frozen_mask</span><span class="p">(</span><span class="n">mp</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Boolean mask for orbitals in k-point post-HF method.</span>
+
+<span class="sd">    Creates a boolean mask to remove frozen orbitals and keep other orbitals for post-HF</span>
+<span class="sd">    calculations.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        mp (:class:`MP2`): An instantiation of an SCF or post-Hartree-Fock object.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        moidx (list of :obj:`ndarray` of `np.bool`): Boolean mask of orbitals to include.</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">moidx</span> <span class="o">=</span> <span class="p">[[</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">bool</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">mp</span><span class="o">.</span><span class="n">mo_occ</span><span class="p">[</span><span class="n">s</span><span class="p">]]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]]</span>
+
+    <span class="k">if</span> <span class="n">mp</span><span class="o">.</span><span class="n">frozen</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">frozen</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">integer</span><span class="p">)):</span>
+        <span class="k">for</span> <span class="n">spin</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">moidx</span><span class="p">[</span><span class="n">spin</span><span class="p">]:</span>
+                <span class="n">idx</span><span class="p">[:</span><span class="n">mp</span><span class="o">.</span><span class="n">frozen</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">elif</span> <span class="p">(</span><span class="n">_is_arraylike</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">frozen</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="ow">and</span>
+          <span class="nb">isinstance</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">frozen</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">integer</span><span class="p">))):</span>  <span class="c1"># case example: ([0, 4], [0, 5, 6])</span>
+        <span class="k">assert</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">frozen</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">spin</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="p">[</span><span class="n">_frozen_sanity_check</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">frozen</span><span class="p">[</span><span class="n">spin</span><span class="p">],</span> <span class="n">mp</span><span class="o">.</span><span class="n">mo_occ</span><span class="p">[</span><span class="n">spin</span><span class="p">][</span><span class="n">ikpt</span><span class="p">],</span> <span class="n">ikpt</span><span class="p">)</span> <span class="k">for</span> <span class="n">ikpt</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">nkpts</span><span class="p">)]</span>
+            <span class="k">for</span> <span class="n">ikpt</span><span class="p">,</span> <span class="n">kpt_occ</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">moidx</span><span class="p">[</span><span class="n">spin</span><span class="p">]):</span>
+                <span class="n">kpt_occ</span><span class="p">[</span><span class="n">mp</span><span class="o">.</span><span class="n">frozen</span><span class="p">[</span><span class="n">spin</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">elif</span> <span class="p">(</span><span class="n">_is_arraylike</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">frozen</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="ow">and</span>
+          <span class="nb">isinstance</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">frozen</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">))):</span>  <span class="c1"># case example: ([[0,],[]], [[0,1],[4]])</span>
+        <span class="k">assert</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">frozen</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">spin</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="n">nkpts</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">frozen</span><span class="p">[</span><span class="n">spin</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">nkpts</span> <span class="o">!=</span> <span class="n">mp</span><span class="o">.</span><span class="n">nkpts</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Frozen list has a different number of k-points (length) than passed in&#39;</span>
+                                   <span class="s1">&#39;mean-field/correlated calculation.  </span><span class="se">\n\n</span><span class="s1">Calculation nkpts = </span><span class="si">%d</span><span class="s1">, frozen&#39;</span>
+                                   <span class="s1">&#39;list = </span><span class="si">%s</span><span class="s1"> (length = </span><span class="si">%d</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">nkpts</span><span class="p">,</span> <span class="n">mp</span><span class="o">.</span><span class="n">frozen</span><span class="p">,</span> <span class="n">nkpts</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">spin</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="p">[</span><span class="n">_frozen_sanity_check</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">frozen</span><span class="p">[</span><span class="n">spin</span><span class="p">][</span><span class="n">ikpt</span><span class="p">],</span> <span class="n">mp</span><span class="o">.</span><span class="n">mo_occ</span><span class="p">[</span><span class="n">spin</span><span class="p">][</span><span class="n">ikpt</span><span class="p">],</span> <span class="n">ikpt</span><span class="p">)</span> <span class="k">for</span> <span class="n">ikpt</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">nkpts</span><span class="p">)]</span>
+            <span class="k">for</span> <span class="n">ikpt</span><span class="p">,</span> <span class="n">kpt_occ</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">moidx</span><span class="p">[</span><span class="n">spin</span><span class="p">]):</span>
+                <span class="n">kpt_occ</span><span class="p">[</span><span class="n">mp</span><span class="o">.</span><span class="n">frozen</span><span class="p">[</span><span class="n">spin</span><span class="p">][</span><span class="n">ikpt</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;No known conversion for frozen </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">mp</span><span class="o">.</span><span class="n">frozen</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">moidx</span>
+
+
+<span class="k">def</span> <span class="nf">_add_padding</span><span class="p">(</span><span class="n">mp</span><span class="p">,</span> <span class="n">mo_coeff</span><span class="p">,</span> <span class="n">mo_energy</span><span class="p">):</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Implementation needs to be checked first&quot;</span><span class="p">)</span>
+    <span class="n">nmo</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">nmo</span>
+    <span class="n">nocc</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">nocc</span>
+
+    <span class="c1"># Check if these are padded mo coefficients and energies</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">([</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">nmo</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">mo_coeff</span><span class="p">]):</span>
+        <span class="n">mo_coeff</span> <span class="o">=</span> <span class="n">padded_mo_coeff</span><span class="p">(</span><span class="n">mp</span><span class="p">,</span> <span class="n">mo_coeff</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">([</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">nmo</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">mo_energy</span><span class="p">]):</span>
+        <span class="n">mo_energy</span> <span class="o">=</span> <span class="n">padded_mo_energy</span><span class="p">(</span><span class="n">mp</span><span class="p">,</span> <span class="n">mo_energy</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">mo_coeff</span><span class="p">,</span> <span class="n">mo_energy</span>
+
+
+<span class="k">class</span> <span class="nc">KUMP2</span><span class="p">(</span><span class="n">kmp2</span><span class="o">.</span><span class="n">KMP2</span><span class="p">):</span>
+    <span class="n">get_nocc</span> <span class="o">=</span> <span class="n">get_nocc</span>
+    <span class="n">get_nmo</span> <span class="o">=</span> <span class="n">get_nmo</span>
+    <span class="n">get_frozen_mask</span> <span class="o">=</span> <span class="n">get_frozen_mask</span>
+
+    <span class="k">def</span> <span class="nf">kernel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mo_energy</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mo_coeff</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+        <span class="k">if</span> <span class="n">mo_energy</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">mo_energy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mo_energy</span>
+        <span class="k">if</span> <span class="n">mo_coeff</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">mo_coeff</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mo_coeff</span>
+        <span class="k">if</span> <span class="n">mo_energy</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">mo_coeff</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">log</span> <span class="o">=</span> <span class="n">logger</span><span class="o">.</span><span class="n">Logger</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;mo_coeff, mo_energy are not given.</span><span class="se">\n</span><span class="s1">&#39;</span>
+                     <span class="s1">&#39;You may need to call mf.kernel() to generate them.&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span>
+
+        <span class="n">mo_coeff</span><span class="p">,</span> <span class="n">mo_energy</span> <span class="o">=</span> <span class="n">_add_padding</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mo_coeff</span><span class="p">,</span> <span class="n">mo_energy</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">e_corr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">t2</span> <span class="o">=</span> \
+                <span class="n">kernel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mo_energy</span><span class="p">,</span> <span class="n">mo_coeff</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;KMP2 energy = </span><span class="si">%.15g</span><span class="s1">&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">e_corr</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">e_corr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">t2</span>
+
+
+<span class="kn">from</span> <span class="nn">pyscf.pbc</span> <span class="k">import</span> <span class="n">scf</span>
+<span class="n">scf</span><span class="o">.</span><span class="n">kuhf</span><span class="o">.</span><span class="n">KUHF</span><span class="o">.</span><span class="n">MP2</span> <span class="o">=</span> <span class="n">lib</span><span class="o">.</span><span class="n">class_as_method</span><span class="p">(</span><span class="n">KUMP2</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2015-2020, The PySCF Developers
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

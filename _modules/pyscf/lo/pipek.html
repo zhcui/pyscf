@@ -1,15 +1,18 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pyscf.lo.pipek &mdash; PySCF 1.5.0 documentation</title>
+  <title>pyscf.lo.pipek &mdash; PySCF 1.7.5 documentation</title>
   
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
 
   
   
@@ -17,42 +20,37 @@
   
 
   
-
-  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
-  
-
-  
-  
-    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-    <link rel="top" title="PySCF 1.5.0 documentation" href="../../../index.html"/>
-        <link rel="up" title="Module code" href="../../index.html"/> 
-
-  
-  <script src="../../../_static/js/modernizr.min.js"></script>
-
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
-            <a href="../../../index.html" class="icon icon-home"> PySCF
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> PySCF
           
 
           
@@ -62,7 +60,7 @@
             
             
               <div class="version">
-                1.5
+                1.7
               </div>
             
           
@@ -79,6 +77,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -88,46 +87,28 @@
             
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../overview.html">1. An overview of PySCF</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">2. Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../version.html">2. Version history</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../install.html">3. Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../gto.html">4. gto &#8212; Molecular structure and GTO basis</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../lib.html">5. <code class="docutils literal"><span class="pre">lib</span></code> &#8212; Helper functions, parameters, and C extensions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../scf.html">6. scf &#8212; Mean-field methods</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../ao2mo.html">7. ao2mo &#8212; Integral transformations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../mcscf.html">8. mcscf &#8212; Multi-configurational self-consistent field</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../fci.html">9. fci &#8212; Full configuration interaction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../symm.html">10. symm &#8211; Point group symmetry and spin symmetry</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../df.html">11. df &#8212; Density fitting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../dft.html">12. dft &#8212; Density functional theory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../tddft.html">13. tddft &#8212; Time dependent density functional theory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../cc.html">14. cc &#8212; Coupled cluster</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../ci.html">15. ci &#8212; Configuration interaction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../dmrgscf.html">16. dmrgscf</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../fciqmcscf.html">17. fciqmcscf</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../tools.html">18. tools</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../grad.html">19. grad &#8212; Analytical nuclear gradients</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../hessian.html">20. hessian &#8212; Analytical nuclear Hessian</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../pbc.html">21. pbc &#8212; Periodic boundary conditions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../nao.html">22. nao &#8212; Numerical Atomic Orbitals</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../lo.html">23. lo &#8212; Orbital localization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../advanced.html">24. Miscellaneous</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../qmmm.html">25. qmmm &#8212; QM/MM interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../mrpt.html">26. mrpt &#8212; Multi-reference perturbation theory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../benchmark.html">27. Benchmark</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../code-rule.html">28. Code standard</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../version.html">29. Version history</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../code-rule.html">4. Code standard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../benchmark.html">5. Benchmark</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">6. Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../theory.html">7. Theoretical methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../advanced.html">8. Miscellaneous</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../interface.html">9. Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">10. Main modules</a></li>
 </ul>
 
             
           
         </div>
+        
       </div>
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../index.html">PySCF</a>
@@ -135,9 +116,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -158,7 +140,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../../index.html">Module code</a> &raquo;</li>
         
@@ -166,8 +148,6 @@
     
     
       <li class="wy-breadcrumbs-aside">
-        
-            
         
       </li>
     
@@ -181,7 +161,7 @@
             
   <h1>Source code for pyscf.lo.pipek</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python</span>
-<span class="c1"># Copyright 2014-2018 The PySCF Developers. All Rights Reserved.</span>
+<span class="c1"># Copyright 2014-2019 The PySCF Developers. All Rights Reserved.</span>
 <span class="c1">#</span>
 <span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
 <span class="c1"># you may not use this file except in compliance with the License.</span>
@@ -200,11 +180,11 @@
 
 <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">Pipek-Mezey localization</span>
+
+<span class="sd">ref. JCTC, 10, 642 (2014); DOI:10.1021/ct401016x</span>
 <span class="sd">&#39;&#39;&#39;</span>
 
-<span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">numpy</span>
-<span class="kn">import</span> <span class="nn">scipy.linalg</span>
 <span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">reduce</span>
 
 <span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">lib</span>
@@ -213,59 +193,164 @@
 <span class="kn">from</span> <span class="nn">pyscf.lo</span> <span class="k">import</span> <span class="n">boys</span>
 <span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">__config__</span>
 
-
-<div class="viewcode-block" id="atomic_pops"><a class="viewcode-back" href="../../../lo.html#pyscf.lo.pipek.atomic_pops">[docs]</a><span class="k">def</span> <span class="nf">atomic_pops</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">mo_coeff</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;meta_lowdin&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="atomic_pops"><a class="viewcode-back" href="../../../modules/lo.html#pyscf.lo.pipek.atomic_pops">[docs]</a><span class="k">def</span> <span class="nf">atomic_pops</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">mo_coeff</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;meta_lowdin&#39;</span><span class="p">,</span> <span class="n">mf</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Kwargs:</span>
 <span class="sd">        method : string</span>
-<span class="sd">            one of mulliken, lowdin, meta_lowdin</span>
+<span class="sd">            The atomic population projection scheme. It can be mulliken,</span>
+<span class="sd">            lowdin, meta_lowdin, iao, or becke</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        A 3-index tensor [A,i,j] indicates the population of any orbital-pair</span>
 <span class="sd">        density |i&gt;&lt;j| for each species (atom in this case).  This tensor is</span>
 <span class="sd">        used to construct the population and gradients etc.</span>
-<span class="sd">        </span>
+
 <span class="sd">        You can customize the PM localization wrt other population metric,</span>
 <span class="sd">        such as the charge of a site, the charge of a fragment (a group of</span>
 <span class="sd">        atoms) by overwriting this tensor.  See also the example</span>
 <span class="sd">        pyscf/examples/loc_orb/40-hubbard_model_PM_localization.py for the PM</span>
 <span class="sd">        localization of site-based population for hubbard model.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="s1">&#39;pbc_intor&#39;</span><span class="p">):</span>  <span class="c1"># whether mol object is a cell</span>
-        <span class="n">s</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">pbc_intor</span><span class="p">(</span><span class="s1">&#39;int1e_ovlp_sph&#39;</span><span class="p">,</span> <span class="n">hermi</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">s</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">intor_symmetric</span><span class="p">(</span><span class="s1">&#39;int1e_ovlp&#39;</span><span class="p">)</span>
+    <span class="n">method</span> <span class="o">=</span> <span class="n">method</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">)</span>
     <span class="n">nmo</span> <span class="o">=</span> <span class="n">mo_coeff</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
     <span class="n">proj</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">mol</span><span class="o">.</span><span class="n">natm</span><span class="p">,</span><span class="n">nmo</span><span class="p">,</span><span class="n">nmo</span><span class="p">))</span>
 
-    <span class="k">if</span> <span class="n">method</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;mulliken&#39;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="s1">&#39;pbc_intor&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>  <span class="c1"># whether mol object is a cell</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">pbc_intor</span><span class="p">(</span><span class="s1">&#39;int1e_ovlp_sph&#39;</span><span class="p">,</span> <span class="n">hermi</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">intor_symmetric</span><span class="p">(</span><span class="s1">&#39;int1e_ovlp&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;becke&#39;</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">pyscf.dft</span> <span class="k">import</span> <span class="n">gen_grid</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">mf</span><span class="p">,</span> <span class="s1">&#39;grids&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">mf</span><span class="p">,</span> <span class="s1">&#39;_numint&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)):</span>
+            <span class="c1"># Call DFT to initialize grids and numint objects</span>
+            <span class="n">mf</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">RKS</span><span class="p">()</span>
+        <span class="n">grids</span> <span class="o">=</span> <span class="n">mf</span><span class="o">.</span><span class="n">grids</span>
+        <span class="n">ni</span> <span class="o">=</span> <span class="n">mf</span><span class="o">.</span><span class="n">_numint</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">grids</span><span class="p">,</span> <span class="n">gen_grid</span><span class="o">.</span><span class="n">Grids</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;PM becke scheme for PBC systems&#39;</span><span class="p">)</span>
+
+        <span class="c1"># The atom-wise Becke grids (without concatenated to a vector of grids)</span>
+        <span class="n">coords</span><span class="p">,</span> <span class="n">weights</span> <span class="o">=</span> <span class="n">grids</span><span class="o">.</span><span class="n">get_partition</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">concat</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">mol</span><span class="o">.</span><span class="n">natm</span><span class="p">):</span>
+            <span class="n">ao</span> <span class="o">=</span> <span class="n">ni</span><span class="o">.</span><span class="n">eval_ao</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">coords</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">deriv</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">aow</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;pi,p-&gt;pi&#39;</span><span class="p">,</span> <span class="n">ao</span><span class="p">,</span> <span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="n">charge_matrix</span> <span class="o">=</span> <span class="n">lib</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">aow</span><span class="o">.</span><span class="n">conj</span><span class="p">()</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">ao</span><span class="p">)</span>
+            <span class="n">proj</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">reduce</span><span class="p">(</span><span class="n">lib</span><span class="o">.</span><span class="n">dot</span><span class="p">,</span> <span class="p">(</span><span class="n">mo_coeff</span><span class="o">.</span><span class="n">conj</span><span class="p">()</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">charge_matrix</span><span class="p">,</span> <span class="n">mo_coeff</span><span class="p">))</span>
+
+    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;mulliken&#39;</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">b0</span><span class="p">,</span> <span class="n">b1</span><span class="p">,</span> <span class="n">p0</span><span class="p">,</span> <span class="n">p1</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">mol</span><span class="o">.</span><span class="n">offset_nr_by_atom</span><span class="p">()):</span>
             <span class="n">csc</span> <span class="o">=</span> <span class="n">reduce</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">,</span> <span class="p">(</span><span class="n">mo_coeff</span><span class="p">[</span><span class="n">p0</span><span class="p">:</span><span class="n">p1</span><span class="p">]</span><span class="o">.</span><span class="n">conj</span><span class="p">()</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">s</span><span class="p">[</span><span class="n">p0</span><span class="p">:</span><span class="n">p1</span><span class="p">],</span> <span class="n">mo_coeff</span><span class="p">))</span>
             <span class="n">proj</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">csc</span> <span class="o">+</span> <span class="n">csc</span><span class="o">.</span><span class="n">conj</span><span class="p">()</span><span class="o">.</span><span class="n">T</span><span class="p">)</span> <span class="o">*</span> <span class="o">.</span><span class="mi">5</span>
 
-    <span class="k">elif</span> <span class="n">method</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;lowdin&#39;</span><span class="p">,</span> <span class="s1">&#39;meta_lowdin&#39;</span><span class="p">):</span>
+    <span class="k">elif</span> <span class="n">method</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;lowdin&#39;</span><span class="p">,</span> <span class="s1">&#39;meta-lowdin&#39;</span><span class="p">):</span>
         <span class="n">c</span> <span class="o">=</span> <span class="n">orth</span><span class="o">.</span><span class="n">restore_ao_character</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="s1">&#39;ANO&#39;</span><span class="p">)</span>
+        <span class="c1">#csc = reduce(lib.dot, (mo_coeff.conj().T, s, orth_local_ao_coeff))</span>
         <span class="n">csc</span> <span class="o">=</span> <span class="n">reduce</span><span class="p">(</span><span class="n">lib</span><span class="o">.</span><span class="n">dot</span><span class="p">,</span> <span class="p">(</span><span class="n">mo_coeff</span><span class="o">.</span><span class="n">conj</span><span class="p">()</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">orth</span><span class="o">.</span><span class="n">orth_ao</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">)))</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">b0</span><span class="p">,</span> <span class="n">b1</span><span class="p">,</span> <span class="n">p0</span><span class="p">,</span> <span class="n">p1</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">mol</span><span class="o">.</span><span class="n">offset_nr_by_atom</span><span class="p">()):</span>
             <span class="n">proj</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">csc</span><span class="p">[:,</span><span class="n">p0</span><span class="p">:</span><span class="n">p1</span><span class="p">],</span> <span class="n">csc</span><span class="p">[:,</span><span class="n">p0</span><span class="p">:</span><span class="n">p1</span><span class="p">]</span><span class="o">.</span><span class="n">conj</span><span class="p">()</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">method</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;iao&#39;</span><span class="p">,</span> <span class="s1">&#39;ibo&#39;</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">pyscf.lo</span> <span class="k">import</span> <span class="n">iao</span>
+        <span class="k">assert</span> <span class="n">mf</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="c1"># FIXME: How to handle UHF/UKS object?</span>
+        <span class="n">orb_occ</span> <span class="o">=</span> <span class="n">mf</span><span class="o">.</span><span class="n">mo_coeff</span><span class="p">[:,</span><span class="n">mf</span><span class="o">.</span><span class="n">mo_occ</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="n">iao_coeff</span> <span class="o">=</span> <span class="n">iao</span><span class="o">.</span><span class="n">iao</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">orb_occ</span><span class="p">)</span>
+        <span class="c1">#</span>
+        <span class="c1"># IAO is generally not orthogonalized. For simplicity, we take Lowdin</span>
+        <span class="c1"># orthogonalization here. Other orthogonalization can be used. Results</span>
+        <span class="c1"># should be very closed to the Lowdin-orth orbitals</span>
+        <span class="c1">#</span>
+        <span class="c1"># PM with Mulliken population of non-orth IAOs can be found in</span>
+        <span class="c1"># ibo.PipekMezey function</span>
+        <span class="c1">#</span>
+        <span class="n">iao_coeff</span> <span class="o">=</span> <span class="n">orth</span><span class="o">.</span><span class="n">vec_lowdin</span><span class="p">(</span><span class="n">iao_coeff</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+        <span class="n">csc</span> <span class="o">=</span> <span class="n">reduce</span><span class="p">(</span><span class="n">lib</span><span class="o">.</span><span class="n">dot</span><span class="p">,</span> <span class="p">(</span><span class="n">mo_coeff</span><span class="o">.</span><span class="n">conj</span><span class="p">()</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">iao_coeff</span><span class="p">))</span>
+
+        <span class="n">iao_mol</span> <span class="o">=</span> <span class="n">iao</span><span class="o">.</span><span class="n">reference_mol</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">b0</span><span class="p">,</span> <span class="n">b1</span><span class="p">,</span> <span class="n">p0</span><span class="p">,</span> <span class="n">p1</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">iao_mol</span><span class="o">.</span><span class="n">offset_nr_by_atom</span><span class="p">()):</span>
+            <span class="n">proj</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">csc</span><span class="p">[:,</span><span class="n">p0</span><span class="p">:</span><span class="n">p1</span><span class="p">],</span> <span class="n">csc</span><span class="p">[:,</span><span class="n">p0</span><span class="p">:</span><span class="n">p1</span><span class="p">]</span><span class="o">.</span><span class="n">conj</span><span class="p">()</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s1">&#39;method = </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">method</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">proj</span></div>
 
 
-<span class="k">class</span> <span class="nc">PipekMezey</span><span class="p">(</span><span class="n">boys</span><span class="o">.</span><span class="n">Boys</span><span class="p">):</span>
+<div class="viewcode-block" id="PipekMezey"><a class="viewcode-back" href="../../../modules/lo.html#pyscf.lo.pipek.PipekMezey">[docs]</a><span class="k">class</span> <span class="nc">PipekMezey</span><span class="p">(</span><span class="n">boys</span><span class="o">.</span><span class="n">Boys</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    The Pipek-Mezey localization optimizer that maximizes the orbital</span>
+<span class="sd">    population</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        mol : Mole object</span>
+
+<span class="sd">    Kwargs:</span>
+<span class="sd">        mo_coeff : size (N,N) np.array</span>
+<span class="sd">            The orbital space to localize for PM localization.</span>
+<span class="sd">            When initializing the localization optimizer ``bopt = PM(mo_coeff)``,</span>
+
+<span class="sd">            Note these orbitals ``mo_coeff`` may or may not be used as initial</span>
+<span class="sd">            guess, depending on the attribute ``.init_guess`` . If ``.init_guess``</span>
+<span class="sd">            is set to None, the ``mo_coeff`` will be used as initial guess. If</span>
+<span class="sd">            ``.init_guess`` is &#39;atomic&#39;, a few atomic orbitals will be</span>
+<span class="sd">            constructed inside the space of the input orbitals and the atomic</span>
+<span class="sd">            orbitals will be used as initial guess.</span>
+
+<span class="sd">            Note when calling .kernel(orb) method with a set of orbitals as</span>
+<span class="sd">            argument, the orbitals will be used as initial guess regardless of</span>
+<span class="sd">            the value of the attributes .mo_coeff and .init_guess.</span>
+
+<span class="sd">    Attributes for PM class:</span>
+<span class="sd">        verbose : int</span>
+<span class="sd">            Print level.  Default value equals to :class:`Mole.verbose`.</span>
+<span class="sd">        max_memory : float or int</span>
+<span class="sd">            Allowed memory in MB.  Default value equals to :class:`Mole.max_memory`.</span>
+<span class="sd">        conv_tol : float</span>
+<span class="sd">            Converge threshold.  Default 1e-6</span>
+<span class="sd">        conv_tol_grad : float</span>
+<span class="sd">            Converge threshold for orbital rotation gradients.  Default 1e-3</span>
+<span class="sd">        max_cycle : int</span>
+<span class="sd">            The max. number of macro iterations. Default 100</span>
+<span class="sd">        max_iters : int</span>
+<span class="sd">            The max. number of iterations in each macro iteration. Default 20</span>
+<span class="sd">        max_stepsize : float</span>
+<span class="sd">            The step size for orbital rotation.  Small step (0.005 - 0.05) is prefered.</span>
+<span class="sd">            Default 0.03.</span>
+<span class="sd">        init_guess : str or None</span>
+<span class="sd">            Initial guess for optimization. If set to None, orbitals defined</span>
+<span class="sd">            by the attribute .mo_coeff will be used as initial guess. If set</span>
+<span class="sd">            to &#39;atomic&#39;, atomic orbitals will be used as initial guess.</span>
+<span class="sd">            Default &#39;atomic&#39;</span>
+<span class="sd">        pop_method : str</span>
+<span class="sd">            How the orbital population is calculated. By default, meta-lowdin</span>
+<span class="sd">            population (JCTC, 10, 3784) is used. It can be set to &#39;mulliken&#39;,</span>
+<span class="sd">            or &#39;lowdin&#39; for other population definition</span>
+<span class="sd">        exponent : int</span>
+<span class="sd">            The power to define norm. It can be 2 or 4. Default 2.</span>
+
+<span class="sd">    Saved results</span>
+
+<span class="sd">        mo_coeff : ndarray</span>
+<span class="sd">            Localized orbitals</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+
 
     <span class="n">pop_method</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">__config__</span><span class="p">,</span> <span class="s1">&#39;lo_pipek_PM_pop_method&#39;</span><span class="p">,</span> <span class="s1">&#39;meta_lowdin&#39;</span><span class="p">)</span>
-    <span class="n">conv_tol</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">__config__</span><span class="p">,</span> <span class="s1">&#39;lo_pipek_PM_conv_tol&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="n">e</span><span class="o">-</span><span class="mi">6</span><span class="p">)</span>
+    <span class="n">conv_tol</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">__config__</span><span class="p">,</span> <span class="s1">&#39;lo_pipek_PM_conv_tol&#39;</span><span class="p">,</span> <span class="mf">1e-6</span><span class="p">)</span>
     <span class="n">exponent</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">__config__</span><span class="p">,</span> <span class="s1">&#39;lo_pipek_PM_exponent&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>  <span class="c1"># should be 2 or 4</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mol</span><span class="p">,</span> <span class="n">mo_coeff</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="n">boys</span><span class="o">.</span><span class="n">Boys</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mol</span><span class="p">,</span> <span class="n">mo_coeff</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_keys</span><span class="o">.</span><span class="n">union</span><span class="p">([</span><span class="s1">&#39;pop_method&#39;</span><span class="p">,</span> <span class="s1">&#39;exponent&#39;</span><span class="p">])</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mol</span><span class="p">,</span> <span class="n">mo_coeff</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mf</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">boys</span><span class="o">.</span><span class="n">Boys</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mol</span><span class="p">,</span> <span class="n">mo_coeff</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_scf</span> <span class="o">=</span> <span class="n">mf</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_keys</span><span class="o">.</span><span class="n">union</span><span class="p">([</span><span class="s1">&#39;pop_method&#39;</span><span class="p">,</span> <span class="s1">&#39;exponent&#39;</span><span class="p">,</span> <span class="s1">&#39;_scf&#39;</span><span class="p">])</span>
 
-    <span class="k">def</span> <span class="nf">dump_flags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">boys</span><span class="o">.</span><span class="n">Boys</span><span class="o">.</span><span class="n">dump_flags</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">dump_flags</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">boys</span><span class="o">.</span><span class="n">Boys</span><span class="o">.</span><span class="n">dump_flags</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;pop_method = </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">pop_method</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">gen_g_hop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u</span><span class="p">):</span>
@@ -339,15 +424,20 @@
             <span class="n">pop2</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;xii-&gt;xi&#39;</span><span class="p">,</span> <span class="n">pop</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
             <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;xi,xi&#39;</span><span class="p">,</span> <span class="n">pop2</span><span class="p">,</span> <span class="n">pop2</span><span class="p">)</span>
 
-    <span class="nd">@lib</span><span class="o">.</span><span class="n">with_doc</span><span class="p">(</span><span class="n">atomic_pops</span><span class="o">.</span><span class="n">__doc__</span><span class="p">)</span>
+<div class="viewcode-block" id="PipekMezey.atomic_pops"><a class="viewcode-back" href="../../../modules/lo.html#pyscf.lo.pipek.PipekMezey.atomic_pops">[docs]</a>    <span class="nd">@lib</span><span class="o">.</span><span class="n">with_doc</span><span class="p">(</span><span class="n">atomic_pops</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">atomic_pops</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mol</span><span class="p">,</span> <span class="n">mo_coeff</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">method</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">method</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pop_method</span>
-        <span class="k">return</span> <span class="n">atomic_pops</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">mo_coeff</span><span class="p">,</span> <span class="n">method</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">method</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;iao&#39;</span><span class="p">,</span> <span class="s1">&#39;ibo&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scf</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;PM with IAO scheme should include an scf &#39;</span>
+                         <span class="s1">&#39;object when creating PM object.</span><span class="se">\n</span><span class="s1">    PM(mol, mf=scf_object)&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;PM attribute method is not valid&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">atomic_pops</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">mo_coeff</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scf</span><span class="p">)</span></div></div>
 
 <span class="n">PM</span> <span class="o">=</span> <span class="n">Pipek</span> <span class="o">=</span> <span class="n">PipekMezey</span>
 
-<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">gto</span><span class="p">,</span> <span class="n">scf</span>
 
     <span class="n">mol</span> <span class="o">=</span> <span class="n">gto</span><span class="o">.</span><span class="n">Mole</span><span class="p">()</span>
@@ -364,9 +454,7 @@
 </pre></div>
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -375,11 +463,19 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015-, Qiming Sun &lt;osirpt.sun@gmail.com&gt;.
+        
+        &copy; Copyright 2015-2020, The PySCF Developers
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -391,38 +487,15 @@
   </div>
   
 
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../../',
-            VERSION:'1.5.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: ''
-        };
-    </script>
-      <script type="text/javascript" src="../../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

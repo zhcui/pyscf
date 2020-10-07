@@ -1,0 +1,525 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pyscf.soscf.ciah &mdash; PySCF 1.7.5 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> PySCF
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.7
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html">1. An overview of PySCF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../version.html">2. Version history</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">3. Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../code-rule.html">4. Code standard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../benchmark.html">5. Benchmark</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">6. Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../theory.html">7. Theoretical methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../advanced.html">8. Miscellaneous</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../interface.html">9. Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">10. Main modules</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">PySCF</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>pyscf.soscf.ciah</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pyscf.soscf.ciah</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># Copyright 2014-2020 The PySCF Developers. All Rights Reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+<span class="c1">#</span>
+<span class="c1">#     http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1">#</span>
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+<span class="c1">#</span>
+<span class="c1"># Author: Qiming Sun &lt;osirpt.sun@gmail.com&gt;</span>
+<span class="c1">#</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">import</span> <span class="nn">scipy.linalg</span>
+<span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">lib</span>
+<span class="kn">from</span> <span class="nn">pyscf.lib</span> <span class="k">import</span> <span class="n">logger</span>
+<span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">__config__</span>
+
+
+<span class="k">def</span> <span class="nf">expmat</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">scipy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">expm</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+
+<div class="viewcode-block" id="CIAHOptimizer"><a class="viewcode-back" href="../../../modules/soscf.html#pyscf.soscf.ciah.CIAHOptimizer">[docs]</a><span class="k">class</span> <span class="nc">CIAHOptimizer</span><span class="p">(</span><span class="n">lib</span><span class="o">.</span><span class="n">StreamObject</span><span class="p">):</span>
+
+    <span class="n">conv_tol_grad</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">__config__</span><span class="p">,</span> <span class="s1">&#39;soscf_ciah_CIAHOptimizer_conv_tol_grad&#39;</span><span class="p">,</span> <span class="mf">1e-4</span><span class="p">)</span>
+    <span class="n">max_stepsize</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">__config__</span><span class="p">,</span> <span class="s1">&#39;soscf_ciah_CIAHOptimizer_max_stepsize&#39;</span><span class="p">,</span> <span class="o">.</span><span class="mi">05</span><span class="p">)</span>
+    <span class="n">max_iters</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">__config__</span><span class="p">,</span> <span class="s1">&#39;soscf_ciah_CIAHOptimizer_max_iters&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+    <span class="n">kf_interval</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">__config__</span><span class="p">,</span> <span class="s1">&#39;soscf_ciah_CIAHOptimizer_kf_interval&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+    <span class="n">kf_trust_region</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">__config__</span><span class="p">,</span> <span class="s1">&#39;soscf_ciah_CIAHOptimizer_kf_trust_region&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+    <span class="n">ah_start_tol</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">__config__</span><span class="p">,</span> <span class="s1">&#39;soscf_ciah_CIAHOptimizer_ah_start_tol&#39;</span><span class="p">,</span> <span class="mf">5.</span><span class="p">)</span>
+    <span class="n">ah_start_cycle</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">__config__</span><span class="p">,</span> <span class="s1">&#39;soscf_ciah_CIAHOptimizer_ah_start_cycle&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">ah_level_shift</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">__config__</span><span class="p">,</span> <span class="s1">&#39;soscf_ciah_CIAHOptimizer_ah_level_shift&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">ah_conv_tol</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">__config__</span><span class="p">,</span> <span class="s1">&#39;soscf_ciah_CIAHOptimizer_ah_conv_tol&#39;</span><span class="p">,</span> <span class="mf">1e-12</span><span class="p">)</span>
+    <span class="n">ah_lindep</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">__config__</span><span class="p">,</span> <span class="s1">&#39;soscf_ciah_CIAHOptimizer_ah_lindep&#39;</span><span class="p">,</span> <span class="mf">1e-14</span><span class="p">)</span>
+    <span class="n">ah_max_cycle</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">__config__</span><span class="p">,</span> <span class="s1">&#39;soscf_ciah_CIAHOptimizer_ah_max_cycle&#39;</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+    <span class="n">ah_trust_region</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">__config__</span><span class="p">,</span> <span class="s1">&#39;soscf_ciah_CIAHOptimizer_ah_trust_region&#39;</span><span class="p">,</span> <span class="mf">3.</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_keys</span> <span class="o">=</span> <span class="nb">set</span><span class="p">((</span><span class="s1">&#39;conv_tol_grad&#39;</span><span class="p">,</span> <span class="s1">&#39;max_stepsize&#39;</span><span class="p">,</span> <span class="s1">&#39;max_iters&#39;</span><span class="p">,</span>
+                          <span class="s1">&#39;kf_interval&#39;</span><span class="p">,</span> <span class="s1">&#39;kf_trust_region&#39;</span><span class="p">,</span> <span class="s1">&#39;ah_start_tol&#39;</span><span class="p">,</span>
+                          <span class="s1">&#39;ah_start_cycle&#39;</span><span class="p">,</span> <span class="s1">&#39;ah_level_shift&#39;</span><span class="p">,</span> <span class="s1">&#39;ah_conv_tol&#39;</span><span class="p">,</span>
+                          <span class="s1">&#39;ah_lindep&#39;</span><span class="p">,</span> <span class="s1">&#39;ah_max_cycle&#39;</span><span class="p">,</span> <span class="s1">&#39;ah_trust_region&#39;</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">gen_g_hop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">pack_uniq_var</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mat</span><span class="p">):</span>
+        <span class="n">nmo</span> <span class="o">=</span> <span class="n">mat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">tril_indices</span><span class="p">(</span><span class="n">nmo</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">mat</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">unpack_uniq_var</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+        <span class="n">nmo</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">size</span><span class="o">*</span><span class="mi">2</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">tril_indices</span><span class="p">(</span><span class="n">nmo</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">mat</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nmo</span><span class="p">,</span><span class="n">nmo</span><span class="p">))</span>
+        <span class="n">mat</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+        <span class="k">return</span> <span class="n">mat</span> <span class="o">-</span> <span class="n">mat</span><span class="o">.</span><span class="n">conj</span><span class="p">()</span><span class="o">.</span><span class="n">T</span>
+
+    <span class="k">def</span> <span class="nf">extract_rotation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dr</span><span class="p">,</span> <span class="n">u0</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="n">dr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">unpack_uniq_var</span><span class="p">(</span><span class="n">dr</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">u0</span><span class="p">,</span> <span class="n">expmat</span><span class="p">(</span><span class="n">dr</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">get_grad</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">cost_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+
+
+<span class="k">def</span> <span class="nf">rotate_orb_cc</span><span class="p">(</span><span class="n">iah</span><span class="p">,</span> <span class="n">u0</span><span class="p">,</span> <span class="n">conv_tol_grad</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">logger</span><span class="o">.</span><span class="n">NOTE</span><span class="p">):</span>
+    <span class="n">t2m</span> <span class="o">=</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">clock</span><span class="p">(),</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">verbose</span><span class="p">,</span> <span class="n">logger</span><span class="o">.</span><span class="n">Logger</span><span class="p">):</span>
+        <span class="n">log</span> <span class="o">=</span> <span class="n">verbose</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">log</span> <span class="o">=</span> <span class="n">logger</span><span class="o">.</span><span class="n">Logger</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">conv_tol_grad</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">conv_tol_grad</span> <span class="o">=</span> <span class="n">iah</span><span class="o">.</span><span class="n">conv_tol_grad</span>
+
+    <span class="n">g_orb</span><span class="p">,</span> <span class="n">h_op</span><span class="p">,</span> <span class="n">h_diag</span> <span class="o">=</span> <span class="n">iah</span><span class="o">.</span><span class="n">gen_g_hop</span><span class="p">(</span><span class="n">u0</span><span class="p">)</span>
+    <span class="n">g_kf</span> <span class="o">=</span> <span class="n">g_orb</span>
+    <span class="n">norm_gkf</span> <span class="o">=</span> <span class="n">norm_gorb</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">g_orb</span><span class="p">)</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;    |g|= </span><span class="si">%4.3g</span><span class="s1"> (keyframe)&#39;</span><span class="p">,</span> <span class="n">norm_gorb</span><span class="p">)</span>
+    <span class="n">t3m</span> <span class="o">=</span> <span class="n">log</span><span class="o">.</span><span class="n">timer</span><span class="p">(</span><span class="s1">&#39;gen h_op&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">t2m</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">h_diag</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">def</span> <span class="nf">precond</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">x</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">def</span> <span class="nf">precond</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span>
+            <span class="n">hdiagd</span> <span class="o">=</span> <span class="n">h_diag</span><span class="o">-</span><span class="p">(</span><span class="n">e</span><span class="o">-</span><span class="n">iah</span><span class="o">.</span><span class="n">ah_level_shift</span><span class="p">)</span>
+            <span class="n">hdiagd</span><span class="p">[</span><span class="nb">abs</span><span class="p">(</span><span class="n">hdiagd</span><span class="p">)</span><span class="o">&lt;</span><span class="mf">1e-8</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1e-8</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">/</span><span class="n">hdiagd</span>
+            <span class="k">return</span> <span class="n">x</span>
+
+    <span class="k">def</span> <span class="nf">scale_down_step</span><span class="p">(</span><span class="n">dxi</span><span class="p">,</span> <span class="n">hdxi</span><span class="p">,</span> <span class="n">norm_gorb</span><span class="p">):</span>
+        <span class="n">dxmax</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">dxi</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">dxmax</span> <span class="o">&gt;</span> <span class="n">iah</span><span class="o">.</span><span class="n">max_stepsize</span><span class="p">:</span>
+            <span class="n">scale</span> <span class="o">=</span> <span class="n">iah</span><span class="o">.</span><span class="n">max_stepsize</span> <span class="o">/</span> <span class="n">dxmax</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">debug1</span><span class="p">(</span><span class="s1">&#39;Scale rotation by </span><span class="si">%g</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">scale</span><span class="p">)</span>
+            <span class="n">dxi</span> <span class="o">*=</span> <span class="n">scale</span>
+            <span class="n">hdxi</span> <span class="o">*=</span> <span class="n">scale</span>
+        <span class="k">return</span> <span class="n">dxi</span><span class="p">,</span> <span class="n">hdxi</span>
+
+    <span class="k">class</span> <span class="nc">Statistic</span><span class="p">:</span>
+        <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">imic</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tot_hop</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tot_kf</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="n">kf_trust_region</span> <span class="o">=</span> <span class="n">iah</span><span class="o">.</span><span class="n">kf_trust_region</span>
+    <span class="n">g_op</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">g_orb</span>
+    <span class="n">x0_guess</span> <span class="o">=</span> <span class="n">g_orb</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">stat</span> <span class="o">=</span> <span class="n">Statistic</span><span class="p">()</span>
+        <span class="n">dr</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">ikf</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">ukf</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="k">for</span> <span class="n">ah_conv</span><span class="p">,</span> <span class="n">ihop</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">dxi</span><span class="p">,</span> <span class="n">hdxi</span><span class="p">,</span> <span class="n">residual</span><span class="p">,</span> <span class="n">seig</span> \
+                <span class="ow">in</span> <span class="n">davidson_cc</span><span class="p">(</span><span class="n">h_op</span><span class="p">,</span> <span class="n">g_op</span><span class="p">,</span> <span class="n">precond</span><span class="p">,</span> <span class="n">x0_guess</span><span class="p">,</span>
+                               <span class="n">tol</span><span class="o">=</span><span class="n">iah</span><span class="o">.</span><span class="n">ah_conv_tol</span><span class="p">,</span> <span class="n">max_cycle</span><span class="o">=</span><span class="n">iah</span><span class="o">.</span><span class="n">ah_max_cycle</span><span class="p">,</span>
+                               <span class="n">lindep</span><span class="o">=</span><span class="n">iah</span><span class="o">.</span><span class="n">ah_lindep</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">log</span><span class="p">):</span>
+            <span class="n">stat</span><span class="o">.</span><span class="n">tot_hop</span> <span class="o">=</span> <span class="n">ihop</span>
+            <span class="n">norm_residual</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">residual</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">ah_conv</span> <span class="ow">or</span> <span class="n">ihop</span> <span class="o">==</span> <span class="n">iah</span><span class="o">.</span><span class="n">ah_max_cycle</span> <span class="ow">or</span> <span class="c1"># make sure to use the last step</span>
+                <span class="p">((</span><span class="n">norm_residual</span> <span class="o">&lt;</span> <span class="n">iah</span><span class="o">.</span><span class="n">ah_start_tol</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">ihop</span> <span class="o">&gt;=</span> <span class="n">iah</span><span class="o">.</span><span class="n">ah_start_cycle</span><span class="p">))</span> <span class="ow">or</span>
+                <span class="p">(</span><span class="n">seig</span> <span class="o">&lt;</span> <span class="n">iah</span><span class="o">.</span><span class="n">ah_lindep</span><span class="p">)):</span>
+                <span class="n">stat</span><span class="o">.</span><span class="n">imic</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">dxmax</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">dxi</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+                <span class="n">dxi</span><span class="p">,</span> <span class="n">hdxi</span> <span class="o">=</span> <span class="n">scale_down_step</span><span class="p">(</span><span class="n">dxi</span><span class="p">,</span> <span class="n">hdxi</span><span class="p">,</span> <span class="n">norm_gorb</span><span class="p">)</span>
+
+                <span class="n">dr</span> <span class="o">=</span> <span class="n">dr</span> <span class="o">+</span> <span class="n">dxi</span>
+                <span class="n">g_orb</span> <span class="o">=</span> <span class="n">g_orb</span> <span class="o">+</span> <span class="n">hdxi</span>
+                <span class="n">norm_dr</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">dr</span><span class="p">)</span>
+                <span class="n">norm_gorb</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">g_orb</span><span class="p">)</span>
+                <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;    imic </span><span class="si">%d</span><span class="s1">(</span><span class="si">%d</span><span class="s1">)  |g|= </span><span class="si">%4.3g</span><span class="s1">  |dxi|= </span><span class="si">%4.3g</span><span class="s1">  &#39;</span>
+                          <span class="s1">&#39;max(|x|)= </span><span class="si">%4.3g</span><span class="s1">  |dr|= </span><span class="si">%4.3g</span><span class="s1">  eig= </span><span class="si">%4.3g</span><span class="s1">  seig= </span><span class="si">%4.3g</span><span class="s1">&#39;</span><span class="p">,</span>
+                          <span class="n">stat</span><span class="o">.</span><span class="n">imic</span><span class="p">,</span> <span class="n">ihop</span><span class="p">,</span> <span class="n">norm_gorb</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">dxi</span><span class="p">),</span>
+                          <span class="n">dxmax</span><span class="p">,</span> <span class="n">norm_dr</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">seig</span><span class="p">)</span>
+
+                <span class="n">max_cycle</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">iah</span><span class="o">.</span><span class="n">max_iters</span><span class="p">,</span>
+                                <span class="n">iah</span><span class="o">.</span><span class="n">max_iters</span><span class="o">-</span><span class="nb">int</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">norm_gkf</span><span class="o">+</span><span class="mf">1e-9</span><span class="p">)</span><span class="o">*</span><span class="mi">2</span><span class="p">))</span>
+                <span class="n">log</span><span class="o">.</span><span class="n">debug1</span><span class="p">(</span><span class="s1">&#39;Set max_cycle </span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">max_cycle</span><span class="p">)</span>
+                <span class="n">ikf</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">if</span> <span class="n">stat</span><span class="o">.</span><span class="n">imic</span> <span class="o">&gt;</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">norm_gorb</span> <span class="o">&gt;</span> <span class="n">norm_gkf</span><span class="o">*</span><span class="n">iah</span><span class="o">.</span><span class="n">ah_trust_region</span><span class="p">:</span>
+                    <span class="n">g_orb</span> <span class="o">=</span> <span class="n">g_orb</span> <span class="o">-</span> <span class="n">hdxi</span>
+                    <span class="n">dr</span> <span class="o">-=</span> <span class="n">dxi</span>
+                    <span class="n">norm_gorb</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">g_orb</span><span class="p">)</span>
+                    <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;|g| &gt;&gt; keyframe, Restore previouse step&#39;</span><span class="p">)</span>
+                    <span class="k">break</span>
+
+                <span class="k">elif</span> <span class="p">(</span><span class="n">stat</span><span class="o">.</span><span class="n">imic</span> <span class="o">&gt;=</span> <span class="n">max_cycle</span> <span class="ow">or</span> <span class="n">norm_gorb</span> <span class="o">&lt;</span> <span class="n">conv_tol_grad</span><span class="o">*.</span><span class="mi">2</span><span class="p">):</span>
+                    <span class="k">break</span>
+
+                <span class="k">elif</span> <span class="p">(</span><span class="n">ikf</span> <span class="o">&gt;</span> <span class="mi">2</span> <span class="ow">and</span> <span class="c1"># avoid frequent keyframe</span>
+                      <span class="p">(</span><span class="n">ikf</span> <span class="o">&gt;=</span> <span class="nb">max</span><span class="p">(</span><span class="n">iah</span><span class="o">.</span><span class="n">kf_interval</span><span class="p">,</span> <span class="n">iah</span><span class="o">.</span><span class="n">kf_interval</span><span class="o">-</span><span class="n">numpy</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">norm_dr</span><span class="o">+</span><span class="mf">1e-9</span><span class="p">))</span> <span class="ow">or</span>
+<span class="c1"># Insert keyframe if the keyframe and the esitimated g_orb are too different</span>
+                       <span class="n">norm_gorb</span> <span class="o">&lt;</span> <span class="n">norm_gkf</span><span class="o">/</span><span class="n">kf_trust_region</span><span class="p">)):</span>
+                    <span class="n">ikf</span> <span class="o">=</span> <span class="mi">0</span>
+                    <span class="n">ukf</span> <span class="o">=</span> <span class="n">iah</span><span class="o">.</span><span class="n">extract_rotation</span><span class="p">(</span><span class="n">dr</span><span class="p">,</span> <span class="n">ukf</span><span class="p">)</span>
+                    <span class="n">dr</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span>
+                    <span class="n">g_kf1</span> <span class="o">=</span> <span class="n">iah</span><span class="o">.</span><span class="n">get_grad</span><span class="p">(</span><span class="n">u0</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">ukf</span><span class="p">))</span>
+                    <span class="n">stat</span><span class="o">.</span><span class="n">tot_kf</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="n">norm_gkf1</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">g_kf1</span><span class="p">)</span>
+                    <span class="n">norm_dg</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">g_kf1</span><span class="o">-</span><span class="n">g_orb</span><span class="p">)</span>
+                    <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Adjust keyframe g_orb to |g|= </span><span class="si">%4.3g</span><span class="s1">  &#39;</span>
+                              <span class="s1">&#39;|g-correction|= </span><span class="si">%4.3g</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">norm_gkf1</span><span class="p">,</span> <span class="n">norm_dg</span><span class="p">)</span>
+
+                    <span class="k">if</span> <span class="p">(</span><span class="n">norm_dg</span> <span class="o">&lt;</span> <span class="n">norm_gorb</span><span class="o">*</span><span class="n">iah</span><span class="o">.</span><span class="n">ah_trust_region</span>  <span class="c1"># kf not too diff</span>
+                        <span class="c1">#or norm_gkf1 &lt; norm_gkf  # grad is decaying</span>
+                        <span class="c1"># close to solution</span>
+                        <span class="ow">or</span> <span class="n">norm_gkf1</span> <span class="o">&lt;</span> <span class="n">conv_tol_grad</span><span class="o">*</span><span class="n">iah</span><span class="o">.</span><span class="n">ah_trust_region</span><span class="p">):</span>
+                        <span class="n">kf_trust_region</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">norm_gorb</span><span class="o">/</span><span class="p">(</span><span class="n">norm_dg</span><span class="o">+</span><span class="mf">1e-9</span><span class="p">),</span> <span class="n">iah</span><span class="o">.</span><span class="n">kf_trust_region</span><span class="p">),</span> <span class="mi">10</span><span class="p">)</span>
+                        <span class="n">log</span><span class="o">.</span><span class="n">debug1</span><span class="p">(</span><span class="s1">&#39;Set kf_trust_region = </span><span class="si">%g</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">kf_trust_region</span><span class="p">)</span>
+                        <span class="n">g_orb</span> <span class="o">=</span> <span class="n">g_kf</span> <span class="o">=</span> <span class="n">g_kf1</span>
+                        <span class="n">norm_gorb</span> <span class="o">=</span> <span class="n">norm_gkf</span> <span class="o">=</span> <span class="n">norm_gkf1</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">g_orb</span> <span class="o">=</span> <span class="n">g_orb</span> <span class="o">-</span> <span class="n">hdxi</span>
+                        <span class="n">dr</span> <span class="o">-=</span> <span class="n">dxi</span>
+                        <span class="n">norm_gorb</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">g_orb</span><span class="p">)</span>
+                        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Out of trust region. Restore previouse step&#39;</span><span class="p">)</span>
+                        <span class="k">break</span>
+
+        <span class="n">u</span> <span class="o">=</span> <span class="n">iah</span><span class="o">.</span><span class="n">extract_rotation</span><span class="p">(</span><span class="n">dr</span><span class="p">,</span> <span class="n">ukf</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;    tot inner=</span><span class="si">%d</span><span class="s1">  |g|= </span><span class="si">%4.3g</span><span class="s1">  |u-1|= </span><span class="si">%4.3g</span><span class="s1">&#39;</span><span class="p">,</span>
+                  <span class="n">stat</span><span class="o">.</span><span class="n">imic</span><span class="p">,</span> <span class="n">norm_gorb</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">tril</span><span class="p">(</span><span class="n">u</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">)))</span>
+        <span class="n">h_op</span> <span class="o">=</span> <span class="n">h_diag</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">t3m</span> <span class="o">=</span> <span class="n">log</span><span class="o">.</span><span class="n">timer</span><span class="p">(</span><span class="s1">&#39;aug_hess in </span><span class="si">%d</span><span class="s1"> inner iters&#39;</span> <span class="o">%</span> <span class="n">stat</span><span class="o">.</span><span class="n">imic</span><span class="p">,</span> <span class="o">*</span><span class="n">t3m</span><span class="p">)</span>
+        <span class="n">u0</span> <span class="o">=</span> <span class="p">(</span><span class="k">yield</span> <span class="n">u</span><span class="p">,</span> <span class="n">g_kf</span><span class="p">,</span> <span class="n">stat</span><span class="p">)</span>
+
+        <span class="n">g_kf</span><span class="p">,</span> <span class="n">h_op</span><span class="p">,</span> <span class="n">h_diag</span> <span class="o">=</span> <span class="n">iah</span><span class="o">.</span><span class="n">gen_g_hop</span><span class="p">(</span><span class="n">u0</span><span class="p">)</span>
+        <span class="n">norm_gkf</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">g_kf</span><span class="p">)</span>
+        <span class="n">norm_dg</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">g_kf</span><span class="o">-</span><span class="n">g_orb</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;    |g|= </span><span class="si">%4.3g</span><span class="s1"> (keyframe), |g-correction|= </span><span class="si">%4.3g</span><span class="s1">&#39;</span><span class="p">,</span>
+                  <span class="n">norm_gkf</span><span class="p">,</span> <span class="n">norm_dg</span><span class="p">)</span>
+        <span class="n">kf_trust_region</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">norm_gorb</span><span class="o">/</span><span class="p">(</span><span class="n">norm_dg</span><span class="o">+</span><span class="mf">1e-9</span><span class="p">),</span> <span class="n">iah</span><span class="o">.</span><span class="n">kf_trust_region</span><span class="p">),</span> <span class="mi">10</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug1</span><span class="p">(</span><span class="s1">&#39;Set  kf_trust_region = </span><span class="si">%g</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">kf_trust_region</span><span class="p">)</span>
+        <span class="n">g_orb</span> <span class="o">=</span> <span class="n">g_kf</span>
+        <span class="n">norm_gorb</span> <span class="o">=</span> <span class="n">norm_gkf</span>
+        <span class="n">x0_guess</span> <span class="o">=</span> <span class="n">dxi</span>
+
+<span class="k">def</span> <span class="nf">davidson_cc</span><span class="p">(</span><span class="n">h_op</span><span class="p">,</span> <span class="n">g_op</span><span class="p">,</span> <span class="n">precond</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-10</span><span class="p">,</span> <span class="n">xs</span><span class="o">=</span><span class="p">[],</span> <span class="n">ax</span><span class="o">=</span><span class="p">[],</span>
+                <span class="n">max_cycle</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">lindep</span><span class="o">=</span><span class="mf">1e-14</span><span class="p">,</span> <span class="n">dot</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">logger</span><span class="o">.</span><span class="n">WARN</span><span class="p">):</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">verbose</span><span class="p">,</span> <span class="n">logger</span><span class="o">.</span><span class="n">Logger</span><span class="p">):</span>
+        <span class="n">log</span> <span class="o">=</span> <span class="n">verbose</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">log</span> <span class="o">=</span> <span class="n">logger</span><span class="o">.</span><span class="n">Logger</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+
+    <span class="n">toloose</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">tol</span><span class="p">)</span>
+    <span class="c1"># the first trial vector is (1,0,0,...), which is not included in xs</span>
+    <span class="n">xs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+    <span class="n">nx</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span>
+
+    <span class="n">max_cycle</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">max_cycle</span><span class="p">,</span> <span class="n">x0</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+    <span class="n">heff</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">max_cycle</span><span class="o">+</span><span class="n">nx</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">max_cycle</span><span class="o">+</span><span class="n">nx</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">x0</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+    <span class="n">ovlp</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">max_cycle</span><span class="o">+</span><span class="n">nx</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">x0</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">nx</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">xs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x0</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">h_op</span><span class="p">(</span><span class="n">x0</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">nx</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+                <span class="n">heff</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">dot</span><span class="p">(</span><span class="n">xs</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">conj</span><span class="p">(),</span> <span class="n">ax</span><span class="p">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+                <span class="n">ovlp</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">dot</span><span class="p">(</span><span class="n">xs</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">conj</span><span class="p">(),</span> <span class="n">xs</span><span class="p">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">heff</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="n">i</span><span class="p">,</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">heff</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">1</span><span class="p">:</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">conj</span><span class="p">()</span>
+            <span class="n">ovlp</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="n">i</span><span class="p">,</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">ovlp</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">1</span><span class="p">:</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">conj</span><span class="p">()</span>
+
+    <span class="n">w_t</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">istep</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_cycle</span><span class="p">):</span>
+        <span class="n">g</span> <span class="o">=</span> <span class="n">g_op</span><span class="p">()</span>
+        <span class="n">nx</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nx</span><span class="p">):</span>
+            <span class="n">heff</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">dot</span><span class="p">(</span><span class="n">xs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">conj</span><span class="p">(),</span> <span class="n">g</span><span class="p">)</span>
+            <span class="n">heff</span><span class="p">[</span><span class="n">nx</span><span class="p">,</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">dot</span><span class="p">(</span><span class="n">xs</span><span class="p">[</span><span class="n">nx</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">conj</span><span class="p">(),</span> <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="n">ovlp</span><span class="p">[</span><span class="n">nx</span><span class="p">,</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">dot</span><span class="p">(</span><span class="n">xs</span><span class="p">[</span><span class="n">nx</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">conj</span><span class="p">(),</span> <span class="n">xs</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="n">heff</span><span class="p">[</span><span class="mi">0</span><span class="p">,:</span><span class="n">nx</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">heff</span><span class="p">[:</span><span class="n">nx</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">conj</span><span class="p">()</span>
+        <span class="n">heff</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="n">nx</span><span class="p">,</span><span class="n">nx</span><span class="p">]</span> <span class="o">=</span> <span class="n">heff</span><span class="p">[</span><span class="n">nx</span><span class="p">,</span><span class="mi">1</span><span class="p">:</span><span class="n">nx</span><span class="p">]</span><span class="o">.</span><span class="n">conj</span><span class="p">()</span>
+        <span class="n">ovlp</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="n">nx</span><span class="p">,</span><span class="n">nx</span><span class="p">]</span> <span class="o">=</span> <span class="n">ovlp</span><span class="p">[</span><span class="n">nx</span><span class="p">,</span><span class="mi">1</span><span class="p">:</span><span class="n">nx</span><span class="p">]</span><span class="o">.</span><span class="n">conj</span><span class="p">()</span>
+        <span class="n">nvec</span> <span class="o">=</span> <span class="n">nx</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="c1">#        s0 = scipy.linalg.eigh(ovlp[:nvec,:nvec])[0][0]</span>
+<span class="c1">#        if s0 &lt; lindep:</span>
+<span class="c1">#            yield True, istep, w_t, xtrial, hx, dx, s0</span>
+<span class="c1">#            break</span>
+        <span class="n">wlast</span> <span class="o">=</span> <span class="n">w_t</span>
+        <span class="n">xtrial</span><span class="p">,</span> <span class="n">w_t</span><span class="p">,</span> <span class="n">v_t</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">seig</span> <span class="o">=</span> \
+                <span class="n">_regular_step</span><span class="p">(</span><span class="n">heff</span><span class="p">[:</span><span class="n">nvec</span><span class="p">,:</span><span class="n">nvec</span><span class="p">],</span> <span class="n">ovlp</span><span class="p">[:</span><span class="n">nvec</span><span class="p">,:</span><span class="n">nvec</span><span class="p">],</span> <span class="n">xs</span><span class="p">,</span>
+                              <span class="n">lindep</span><span class="p">,</span> <span class="n">log</span><span class="p">)</span>
+        <span class="n">s0</span> <span class="o">=</span> <span class="n">seig</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">hx</span> <span class="o">=</span> <span class="n">_dgemv</span><span class="p">(</span><span class="n">v_t</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">ax</span><span class="p">)</span>
+        <span class="c1"># note g*v_t[0], as the first trial vector is (1,0,0,...)</span>
+        <span class="n">dx</span> <span class="o">=</span> <span class="n">hx</span> <span class="o">+</span> <span class="n">g</span><span class="o">*</span><span class="n">v_t</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">w_t</span> <span class="o">*</span> <span class="n">v_t</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">xtrial</span>
+        <span class="n">norm_dx</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">dx</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug1</span><span class="p">(</span><span class="s1">&#39;... AH step </span><span class="si">%d</span><span class="s1">  index= </span><span class="si">%d</span><span class="s1">  |dx|= </span><span class="si">%.5g</span><span class="s1">  eig= </span><span class="si">%.5g</span><span class="s1">  v[0]= </span><span class="si">%.5g</span><span class="s1">  lindep= </span><span class="si">%.5g</span><span class="s1">&#39;</span><span class="p">,</span> \
+                   <span class="n">istep</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">norm_dx</span><span class="p">,</span> <span class="n">w_t</span><span class="p">,</span> <span class="n">v_t</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">s0</span><span class="p">)</span>
+        <span class="n">hx</span> <span class="o">*=</span> <span class="mi">1</span><span class="o">/</span><span class="n">v_t</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># == h_op(xtrial)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">w_t</span><span class="o">-</span><span class="n">wlast</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">tol</span> <span class="ow">and</span> <span class="n">norm_dx</span> <span class="o">&lt;</span> <span class="n">toloose</span><span class="p">)</span> <span class="ow">or</span> <span class="n">s0</span> <span class="o">&lt;</span> <span class="n">lindep</span><span class="p">:</span>
+            <span class="c1"># Avoid adding more trial vectors if hessian converged</span>
+            <span class="k">yield</span> <span class="kc">True</span><span class="p">,</span> <span class="n">istep</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">w_t</span><span class="p">,</span> <span class="n">xtrial</span><span class="p">,</span> <span class="n">hx</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">s0</span>
+            <span class="k">if</span> <span class="n">s0</span> <span class="o">&lt;</span> <span class="n">lindep</span> <span class="ow">or</span> <span class="n">norm_dx</span> <span class="o">&lt;</span> <span class="n">lindep</span><span class="p">:</span><span class="c1"># or numpy.linalg.norm(xtrial) &lt; lindep:</span>
+                <span class="c1"># stop the iteration because eigenvectors would be barely updated</span>
+                <span class="k">break</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="kc">False</span><span class="p">,</span> <span class="n">istep</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">w_t</span><span class="p">,</span> <span class="n">xtrial</span><span class="p">,</span> <span class="n">hx</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">s0</span>
+            <span class="n">x0</span> <span class="o">=</span> <span class="n">precond</span><span class="p">(</span><span class="n">dx</span><span class="p">,</span> <span class="n">w_t</span><span class="p">)</span>
+            <span class="n">xs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x0</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">h_op</span><span class="p">(</span><span class="n">x0</span><span class="p">))</span>
+
+
+<span class="k">def</span> <span class="nf">_regular_step</span><span class="p">(</span><span class="n">heff</span><span class="p">,</span> <span class="n">ovlp</span><span class="p">,</span> <span class="n">xs</span><span class="p">,</span> <span class="n">lindep</span><span class="p">,</span> <span class="n">log</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">e</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigh</span><span class="p">(</span><span class="n">heff</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span><span class="mi">1</span><span class="p">:],</span> <span class="n">ovlp</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span><span class="mi">1</span><span class="p">:])</span>
+    <span class="k">except</span> <span class="n">scipy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">LinAlgError</span><span class="p">:</span>
+        <span class="n">e</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">lib</span><span class="o">.</span><span class="n">safe_eigh</span><span class="p">(</span><span class="n">heff</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span><span class="mi">1</span><span class="p">:],</span> <span class="n">ovlp</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span><span class="mi">1</span><span class="p">:],</span> <span class="n">lindep</span><span class="p">)[:</span><span class="mi">2</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">numpy</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">e</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mf">1e-5</span><span class="p">):</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Negative hessians found </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">e</span><span class="p">[</span><span class="n">e</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="n">w</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">seig</span> <span class="o">=</span> <span class="n">lib</span><span class="o">.</span><span class="n">safe_eigh</span><span class="p">(</span><span class="n">heff</span><span class="p">,</span> <span class="n">ovlp</span><span class="p">,</span> <span class="n">lindep</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">log</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;=</span> <span class="n">logger</span><span class="o">.</span><span class="n">DEBUG3</span><span class="p">:</span>
+        <span class="n">numpy</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug3</span><span class="p">(</span><span class="s1">&#39;v[0] </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug3</span><span class="p">(</span><span class="s1">&#39;AH eigs </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span>
+        <span class="n">numpy</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">75</span><span class="p">)</span>
+
+    <span class="c1">#if e[0] &lt; -.1:</span>
+    <span class="c1">#    sel = 0</span>
+    <span class="c1">#else:</span>
+    <span class="c1"># There exists systems that the first eigenvalue of AH is -inf.</span>
+    <span class="c1"># Dynamically choosing the eigenvectors may be better.</span>
+    <span class="n">idx</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mf">0.1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">sel</span> <span class="o">=</span> <span class="n">idx</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">debug1</span><span class="p">(</span><span class="s1">&#39;CIAH eigen-sel </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">sel</span><span class="p">)</span>
+
+    <span class="n">w_t</span> <span class="o">=</span> <span class="n">w</span><span class="p">[</span><span class="n">sel</span><span class="p">]</span>
+    <span class="n">xtrial</span> <span class="o">=</span> <span class="n">_dgemv</span><span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span><span class="n">sel</span><span class="p">]</span><span class="o">/</span><span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="n">sel</span><span class="p">],</span> <span class="n">xs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">xtrial</span><span class="p">,</span> <span class="n">w_t</span><span class="p">,</span> <span class="n">v</span><span class="p">[:,</span><span class="n">sel</span><span class="p">],</span> <span class="n">sel</span><span class="p">,</span> <span class="n">seig</span>
+
+<span class="k">def</span> <span class="nf">_dgemv</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">m</span><span class="p">):</span>
+    <span class="n">vm</span> <span class="o">=</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">m</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">vi</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
+        <span class="n">vm</span> <span class="o">+=</span> <span class="n">vi</span> <span class="o">*</span> <span class="n">m</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">vm</span>
+
+
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2015-2020, The PySCF Developers
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

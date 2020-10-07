@@ -1,0 +1,372 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pyscf.dft.radi &mdash; PySCF 1.7.5 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> PySCF
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.7
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html">1. An overview of PySCF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../version.html">2. Version history</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">3. Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../code-rule.html">4. Code standard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../benchmark.html">5. Benchmark</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">6. Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../theory.html">7. Theoretical methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../advanced.html">8. Miscellaneous</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../interface.html">9. Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">10. Main modules</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">PySCF</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../dft.html">pyscf.dft</a> &raquo;</li>
+        
+      <li>pyscf.dft.radi</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pyscf.dft.radi</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># Copyright 2014-2018 The PySCF Developers. All Rights Reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+<span class="c1">#</span>
+<span class="c1">#     http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1">#</span>
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+<span class="c1">#</span>
+<span class="c1"># Author: Qiming Sun &lt;osirpt.sun@gmail.com&gt;</span>
+<span class="c1">#</span>
+
+<span class="sd">&#39;&#39;&#39;radii grids&#39;&#39;&#39;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">from</span> <span class="nn">pyscf.data</span> <span class="k">import</span> <span class="n">radii</span>
+<span class="kn">from</span> <span class="nn">pyscf.data.elements</span> <span class="k">import</span> <span class="n">charge</span> <span class="k">as</span> <span class="n">elements_proton</span>
+
+<span class="n">BRAGG_RADII</span> <span class="o">=</span> <span class="n">radii</span><span class="o">.</span><span class="n">BRAGG</span>
+<span class="n">COVALENT_RADII</span> <span class="o">=</span> <span class="n">radii</span><span class="o">.</span><span class="n">COVALENT</span>
+
+<span class="c1"># P.M.W. Gill, B.G. Johnson, J.A. Pople, Chem. Phys. Letters 209 (1993) 506-512</span>
+<span class="n">SG1RADII</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">((</span>
+    <span class="mi">0</span><span class="p">,</span>
+    <span class="mf">1.0000</span><span class="p">,</span>                                                 <span class="mf">0.5882</span><span class="p">,</span>
+    <span class="mf">3.0769</span><span class="p">,</span> <span class="mf">2.0513</span><span class="p">,</span> <span class="mf">1.5385</span><span class="p">,</span> <span class="mf">1.2308</span><span class="p">,</span> <span class="mf">1.0256</span><span class="p">,</span> <span class="mf">0.8791</span><span class="p">,</span> <span class="mf">0.7692</span><span class="p">,</span> <span class="mf">0.6838</span><span class="p">,</span>
+    <span class="mf">4.0909</span><span class="p">,</span> <span class="mf">3.1579</span><span class="p">,</span> <span class="mf">2.5714</span><span class="p">,</span> <span class="mf">2.1687</span><span class="p">,</span> <span class="mf">1.8750</span><span class="p">,</span> <span class="mf">1.6514</span><span class="p">,</span> <span class="mf">1.4754</span><span class="p">,</span> <span class="mf">1.3333</span><span class="p">))</span>
+
+
+<span class="c1"># Murray, N.C. Handy, G.J. Laming,  Mol. Phys. 78, 997(1993)</span>
+<span class="k">def</span> <span class="nf">murray</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Not implemented&#39;</span><span class="p">)</span>
+
+<span class="c1"># Gauss-Chebyshev of the first kind,  and the transformed interval [0,\infty)</span>
+<div class="viewcode-block" id="becke"><a class="viewcode-back" href="../../../modules/dft.html#pyscf.dft.radi.becke">[docs]</a><span class="k">def</span> <span class="nf">becke</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">charge</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Becke, JCP 88, 2547 (1988); DOI:10.1063/1.454033&#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">charge</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">rm</span> <span class="o">=</span> <span class="n">BRAGG_RADII</span><span class="p">[</span><span class="n">charge</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">rm</span> <span class="o">=</span> <span class="n">BRAGG_RADII</span><span class="p">[</span><span class="n">charge</span><span class="p">]</span> <span class="o">*</span> <span class="o">.</span><span class="mi">5</span>
+    <span class="n">t</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">polynomial</span><span class="o">.</span><span class="n">chebyshev</span><span class="o">.</span><span class="n">chebgauss</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">t</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">t</span><span class="p">)</span> <span class="o">*</span> <span class="n">rm</span>
+    <span class="n">w</span> <span class="o">*=</span> <span class="mi">2</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">t</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">rm</span>
+    <span class="k">return</span> <span class="n">r</span><span class="p">,</span> <span class="n">w</span></div>
+
+<span class="c1"># scale rad and rad_weight if necessary</span>
+<span class="c1"># gauss-legendre</span>
+<div class="viewcode-block" id="delley"><a class="viewcode-back" href="../../../modules/dft.html#pyscf.dft.radi.delley">[docs]</a><span class="k">def</span> <span class="nf">delley</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;B. Delley radial grids. Ref. JCP 104, 9848 (1996); DOI:10.1063/1.471749. log2 algorithm&#39;&#39;&#39;</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">dr</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">r_outer</span> <span class="o">=</span> <span class="mf">12.</span>
+    <span class="n">step</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">/</span> <span class="p">(</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">rfac</span> <span class="o">=</span> <span class="n">r_outer</span> <span class="o">/</span> <span class="n">numpy</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="n">n</span><span class="o">*</span><span class="n">step</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+        <span class="n">xi</span> <span class="o">=</span> <span class="n">rfac</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="p">(</span><span class="n">i</span><span class="o">*</span><span class="n">step</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">r</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">xi</span>
+        <span class="n">dri</span> <span class="o">=</span> <span class="n">rfac</span> <span class="o">*</span> <span class="p">(</span><span class="o">-</span><span class="mf">2.0</span><span class="o">*</span><span class="n">i</span><span class="o">*</span><span class="p">(</span><span class="n">step</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">((</span><span class="mi">1</span><span class="o">-</span><span class="p">(</span><span class="n">i</span><span class="o">*</span><span class="n">step</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span> <span class="c1"># d xi / dr</span>
+        <span class="n">dr</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">dri</span>
+    <span class="k">return</span> <span class="n">r</span><span class="p">,</span> <span class="n">dr</span></div>
+<span class="n">gauss_legendre</span> <span class="o">=</span> <span class="n">delley</span>
+
+<div class="viewcode-block" id="mura_knowles"><a class="viewcode-back" href="../../../modules/dft.html#pyscf.dft.radi.mura_knowles">[docs]</a><span class="k">def</span> <span class="nf">mura_knowles</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Mura-Knowles [JCP 104, 9848 (1996); DOI:10.1063/1.471749] log3 quadrature radial grids&#39;&#39;&#39;</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">dr</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="c1"># 7 for Li, Be, Na, Mg, K, Ca, otherwise 5</span>
+    <span class="k">if</span> <span class="n">charge</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="mi">20</span><span class="p">):</span>
+        <span class="n">far</span> <span class="o">=</span> <span class="mi">7</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">far</span> <span class="o">=</span> <span class="mf">5.2</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span><span class="o">+.</span><span class="mi">5</span><span class="p">)</span> <span class="o">/</span> <span class="n">n</span>
+        <span class="n">r</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">far</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">x</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span>
+        <span class="n">dr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">far</span> <span class="o">*</span> <span class="mi">3</span><span class="o">*</span><span class="n">x</span><span class="o">*</span><span class="n">x</span><span class="o">/</span><span class="p">((</span><span class="mi">1</span><span class="o">-</span><span class="n">x</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span><span class="o">*</span><span class="n">n</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">r</span><span class="p">,</span> <span class="n">dr</span></div>
+
+<span class="c1"># Gauss-Chebyshev of the second kind,  and the transformed interval [0,\infty)</span>
+<span class="c1"># Ref  Matthias Krack and Andreas M. Koster,  J. Chem. Phys. 108 (1998), 3226</span>
+<div class="viewcode-block" id="gauss_chebyshev"><a class="viewcode-back" href="../../../modules/dft.html#pyscf.dft.radi.gauss_chebyshev">[docs]</a><span class="k">def</span> <span class="nf">gauss_chebyshev</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Gauss-Chebyshev [JCP 108, 3226 (1998); DOI:10.1063/1.475719) radial grids&#39;&#39;&#39;</span>
+    <span class="n">ln2</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">numpy</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">fac</span> <span class="o">=</span> <span class="mf">16.</span><span class="o">/</span><span class="mi">3</span> <span class="o">/</span> <span class="p">(</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">x1</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="p">(</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">xi</span> <span class="o">=</span> <span class="p">((</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">n</span><span class="o">+</span><span class="mf">1.</span><span class="p">)</span> <span class="o">+</span>
+          <span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="mf">2.</span><span class="o">/</span><span class="mi">3</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x1</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">x1</span><span class="p">)</span> <span class="o">/</span> <span class="n">numpy</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+    <span class="n">xi</span> <span class="o">=</span> <span class="p">(</span><span class="n">xi</span> <span class="o">-</span> <span class="n">xi</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="mi">2</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">numpy</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">xi</span><span class="p">)</span> <span class="o">*</span> <span class="n">ln2</span>
+    <span class="n">dr</span> <span class="o">=</span> <span class="n">fac</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x1</span><span class="p">)</span><span class="o">**</span><span class="mi">4</span> <span class="o">*</span> <span class="n">ln2</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">xi</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">r</span><span class="p">,</span> <span class="n">dr</span></div>
+
+
+<div class="viewcode-block" id="treutler_ahlrichs"><a class="viewcode-back" href="../../../modules/dft.html#pyscf.dft.radi.treutler_ahlrichs">[docs]</a><span class="k">def</span> <span class="nf">treutler_ahlrichs</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Treutler-Ahlrichs [JCP 102, 346 (1995); DOI:10.1063/1.469408] (M4) radial grids</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">dr</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">step</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="p">(</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">ln2</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">numpy</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">cos</span><span class="p">((</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">step</span><span class="p">)</span>
+        <span class="n">r</span> <span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">ln2</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">x</span><span class="p">)</span><span class="o">**.</span><span class="mi">6</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">log</span><span class="p">((</span><span class="mi">1</span><span class="o">-</span><span class="n">x</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">dr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">step</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sin</span><span class="p">((</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">step</span><span class="p">)</span> \
+                <span class="o">*</span> <span class="n">ln2</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">x</span><span class="p">)</span><span class="o">**.</span><span class="mi">6</span> <span class="o">*</span><span class="p">(</span><span class="o">-.</span><span class="mi">6</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">x</span><span class="p">)</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">log</span><span class="p">((</span><span class="mi">1</span><span class="o">-</span><span class="n">x</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">x</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">r</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">dr</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span></div>
+<span class="n">treutler</span> <span class="o">=</span> <span class="n">treutler_ahlrichs</span>
+
+
+
+
+<div class="viewcode-block" id="becke_atomic_radii_adjust"><a class="viewcode-back" href="../../../modules/dft.html#pyscf.dft.radi.becke_atomic_radii_adjust">[docs]</a><span class="k">def</span> <span class="nf">becke_atomic_radii_adjust</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">atomic_radii</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Becke atomic radii adjust function&#39;&#39;&#39;</span>
+<span class="c1"># Becke atomic size adjustment.  J. Chem. Phys. 88, 2547</span>
+<span class="c1"># i &gt; j</span>
+<span class="c1"># fac(i,j) = \frac{1}{4} ( \frac{ra(j)}{ra(i)} - \frac{ra(i)}{ra(j)}</span>
+<span class="c1"># fac(j,i) = -fac(i,j)</span>
+    <span class="n">charges</span> <span class="o">=</span> <span class="p">[</span><span class="n">elements_proton</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">mol</span><span class="o">.</span><span class="n">elements</span><span class="p">]</span>
+    <span class="n">rad</span> <span class="o">=</span> <span class="n">atomic_radii</span><span class="p">[</span><span class="n">charges</span><span class="p">]</span> <span class="o">+</span> <span class="mf">1e-200</span>
+    <span class="n">rr</span> <span class="o">=</span> <span class="n">rad</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.</span><span class="o">/</span><span class="n">rad</span><span class="p">)</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="o">.</span><span class="mi">25</span> <span class="o">*</span> <span class="p">(</span><span class="n">rr</span><span class="o">.</span><span class="n">T</span> <span class="o">-</span> <span class="n">rr</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">[</span><span class="n">a</span><span class="o">&lt;-.</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="o">-.</span><span class="mi">5</span>
+    <span class="n">a</span><span class="p">[</span><span class="n">a</span><span class="o">&gt;</span><span class="mf">0.5</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.5</span>
+    <span class="c1">#:return lambda i,j,g: g + a[i,j]*(1-g**2)</span>
+    <span class="k">def</span> <span class="nf">fadjust</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">g</span><span class="p">):</span>
+        <span class="n">g1</span> <span class="o">=</span> <span class="n">g</span><span class="o">**</span><span class="mi">2</span>
+        <span class="n">g1</span> <span class="o">-=</span> <span class="mf">1.</span>
+        <span class="n">g1</span> <span class="o">*=</span> <span class="o">-</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span>
+        <span class="n">g1</span> <span class="o">+=</span> <span class="n">g</span>
+        <span class="k">return</span> <span class="n">g1</span>
+    <span class="k">return</span> <span class="n">fadjust</span></div>
+
+<div class="viewcode-block" id="treutler_atomic_radii_adjust"><a class="viewcode-back" href="../../../modules/dft.html#pyscf.dft.radi.treutler_atomic_radii_adjust">[docs]</a><span class="k">def</span> <span class="nf">treutler_atomic_radii_adjust</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">atomic_radii</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Treutler atomic radii adjust function: [JCP 102, 346 (1995); DOI:10.1063/1.469408]&#39;&#39;&#39;</span>
+<span class="c1"># JCP 102, 346 (1995)</span>
+<span class="c1"># i &gt; j</span>
+<span class="c1"># fac(i,j) = \frac{1}{4} ( \frac{ra(j)}{ra(i)} - \frac{ra(i)}{ra(j)}</span>
+<span class="c1"># fac(j,i) = -fac(i,j)</span>
+    <span class="n">charges</span> <span class="o">=</span> <span class="p">[</span><span class="n">elements_proton</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">mol</span><span class="o">.</span><span class="n">elements</span><span class="p">]</span>
+    <span class="n">rad</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">atomic_radii</span><span class="p">[</span><span class="n">charges</span><span class="p">])</span> <span class="o">+</span> <span class="mf">1e-200</span>
+    <span class="n">rr</span> <span class="o">=</span> <span class="n">rad</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.</span><span class="o">/</span><span class="n">rad</span><span class="p">)</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="o">.</span><span class="mi">25</span> <span class="o">*</span> <span class="p">(</span><span class="n">rr</span><span class="o">.</span><span class="n">T</span> <span class="o">-</span> <span class="n">rr</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">[</span><span class="n">a</span><span class="o">&lt;-.</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="o">-.</span><span class="mi">5</span>
+    <span class="n">a</span><span class="p">[</span><span class="n">a</span><span class="o">&gt;</span><span class="mf">0.5</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.5</span>
+    <span class="c1">#:return lambda i,j,g: g + a[i,j]*(1-g**2)</span>
+    <span class="k">def</span> <span class="nf">fadjust</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">g</span><span class="p">):</span>
+        <span class="n">g1</span> <span class="o">=</span> <span class="n">g</span><span class="o">**</span><span class="mi">2</span>
+        <span class="n">g1</span> <span class="o">-=</span> <span class="mf">1.</span>
+        <span class="n">g1</span> <span class="o">*=</span> <span class="o">-</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span>
+        <span class="n">g1</span> <span class="o">+=</span> <span class="n">g</span>
+        <span class="k">return</span> <span class="n">g1</span>
+    <span class="k">return</span> <span class="n">fadjust</span></div>
+
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2015-2020, The PySCF Developers
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

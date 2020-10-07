@@ -1,0 +1,847 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pyscf.rt.tdscf &mdash; PySCF 1.7.5 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> PySCF
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.7
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html">1. An overview of PySCF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../version.html">2. Version history</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">3. Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../code-rule.html">4. Code standard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../benchmark.html">5. Benchmark</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">6. Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../theory.html">7. Theoretical methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../advanced.html">8. Miscellaneous</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../interface.html">9. Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">10. Main modules</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">PySCF</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>pyscf.rt.tdscf</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pyscf.rt.tdscf</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright 2014-2020 The PySCF Developers. All Rights Reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+<span class="c1">#</span>
+<span class="c1">#     http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1">#</span>
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+<span class="c1"># 3. Use proper functions provided by PySCF</span>
+<span class="c1">#   * Switch between df.incore and df.outcore according to system memory</span>
+<span class="c1">#   *   (Koh: Is there an identical function in outcore? which one, incore or outcore, is used when need of more memory?)</span>
+<span class="c1">#   * Use get_veff of scf object instead of get_vxc</span>
+<span class="c1">#   *   (Koh: get_vxc cannot generate correct J,K matrix from complex density matrix)</span>
+<span class="c1">#</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">scipy</span><span class="o">,</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">scipy.linalg</span>
+<span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">gto</span><span class="p">,</span> <span class="n">df</span>
+<span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">lib</span>
+<span class="kn">from</span> <span class="nn">pyscf.lib</span> <span class="k">import</span> <span class="n">logger</span>
+<span class="kn">from</span> <span class="nn">pyscf.scf</span> <span class="k">import</span> <span class="n">diis</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="n">FSPERAU</span> <span class="o">=</span> <span class="mf">0.0241888</span>
+
+<span class="k">def</span> <span class="nf">transmat</span><span class="p">(</span><span class="n">M</span><span class="p">,</span><span class="n">U</span><span class="p">,</span><span class="n">inv</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">inv</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="c1"># U.t() * M * U</span>
+        <span class="n">Mtilde</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">U</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">conj</span><span class="p">(),</span><span class="n">M</span><span class="p">),</span><span class="n">U</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">inv</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+        <span class="c1"># U * M * U.t()</span>
+        <span class="n">Mtilde</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">U</span><span class="p">,</span><span class="n">M</span><span class="p">),</span><span class="n">U</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">conj</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">Mtilde</span>
+
+<span class="k">def</span> <span class="nf">trdot</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">B</span><span class="p">):</span>
+    <span class="n">C</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">B</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">C</span>
+
+<div class="viewcode-block" id="matrixpower"><a class="viewcode-back" href="../../../modules/rt.html#pyscf.rt.tdscf.matrixpower">[docs]</a><span class="k">def</span> <span class="nf">matrixpower</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="n">PrintCondition</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Raise a Hermitian Matrix to a possibly fractional power. &quot;&quot;&quot;</span>
+    <span class="n">u</span><span class="p">,</span><span class="n">s</span><span class="p">,</span><span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">svd</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">PrintCondition</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;matrixpower: Minimal Eigenvalue =&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="mf">10.0</span><span class="p">,</span><span class="o">-</span><span class="mf">14.0</span><span class="p">)):</span>
+            <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="mf">10.0</span><span class="p">,</span><span class="o">-</span><span class="mf">14.0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">u</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="n">p</span><span class="p">)),</span><span class="n">v</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="RTTDSCF"><a class="viewcode-back" href="../../../modules/rt.html#pyscf.rt.tdscf.RTTDSCF">[docs]</a><span class="k">class</span> <span class="nc">RTTDSCF</span><span class="p">(</span><span class="n">lib</span><span class="o">.</span><span class="n">StreamObject</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    RT-TDSCF base object.</span>
+<span class="sd">    Other types of propagations may inherit from this.</span>
+<span class="sd">    Calling this class starts the propagation</span>
+<span class="sd">    Attributes:</span>
+<span class="sd">        verbose: int</span>
+<span class="sd">            Print level.  Default value equals to :class:`ks.verbose`</span>
+<span class="sd">        conv_tol: float</span>
+<span class="sd">            converge threshold.  Default value equals to :class:`ks.conv_tol`</span>
+<span class="sd">        auxbas: str</span>
+<span class="sd">            auxilliary basis for 2c/3c eri. Default is weigend</span>
+<span class="sd">        prm: str</span>
+<span class="sd">            string object with |variable    value| on each line</span>
+<span class="sd">    Saved results</span>
+
+<span class="sd">        output: str</span>
+<span class="sd">            name of the file with result of propagation</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ks</span><span class="p">,</span><span class="n">prm</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">output</span> <span class="o">=</span> <span class="s2">&quot;log.dat&quot;</span><span class="p">,</span> <span class="n">auxbas</span> <span class="o">=</span> <span class="s2">&quot;weigend&quot;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">ks</span><span class="o">.</span><span class="n">verbose</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">enuc</span> <span class="o">=</span> <span class="n">ks</span><span class="o">.</span><span class="n">energy_nuc</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conv_tol</span> <span class="o">=</span> <span class="n">ks</span><span class="o">.</span><span class="n">conv_tol</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">auxbas</span> <span class="o">=</span> <span class="n">auxbas</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hyb</span> <span class="o">=</span> <span class="n">ks</span><span class="o">.</span><span class="n">_numint</span><span class="o">.</span><span class="n">hybrid_coeff</span><span class="p">(</span><span class="n">ks</span><span class="o">.</span><span class="n">xc</span><span class="p">,</span> <span class="n">spin</span><span class="o">=</span><span class="p">(</span><span class="n">ks</span><span class="o">.</span><span class="n">mol</span><span class="o">.</span><span class="n">spin</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">adiis</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ks</span>  <span class="o">=</span> <span class="n">ks</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eri3c</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eri2c</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">s</span> <span class="o">=</span> <span class="n">ks</span><span class="o">.</span><span class="n">mol</span><span class="o">.</span><span class="n">intor_symmetric</span><span class="p">(</span><span class="s1">&#39;int1e_ovlp&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">matrixpower</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="p">,</span><span class="o">-</span><span class="mf">1.</span><span class="o">/</span><span class="mf">2.</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_keys</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+        <span class="n">fmat</span><span class="p">,</span> <span class="n">c_am</span><span class="p">,</span> <span class="n">v_lm</span><span class="p">,</span> <span class="n">rho</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">initialcondition</span><span class="p">(</span><span class="n">prm</span><span class="p">)</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="n">fmat</span><span class="p">,</span> <span class="n">c_am</span><span class="p">,</span> <span class="n">v_lm</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">output</span><span class="p">)</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="s2">&quot;Propagation time: </span><span class="si">%f</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">-</span><span class="n">start</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;RT-TDSCF is an experimental feature. It is &#39;</span>
+                    <span class="s1">&#39;still in testing.</span><span class="se">\n</span><span class="s1">Features and APIs may be changed &#39;</span>
+                    <span class="s1">&#39;in the future.&#39;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="RTTDSCF.auxmol_set"><a class="viewcode-back" href="../../../modules/rt.html#pyscf.rt.tdscf.RTTDSCF.auxmol_set">[docs]</a>    <span class="k">def</span> <span class="nf">auxmol_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mol</span><span class="p">,</span> <span class="n">auxbas</span> <span class="o">=</span> <span class="s2">&quot;weigend&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate 2c/3c electron integral (eri2c,eri3c)</span>
+<span class="sd">        Generate ovlp matrix (S), and AO to Lowdin AO matrix transformation matrix (X)</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            mol: Mole class</span>
+<span class="sd">                Default is ks.mol</span>
+
+<span class="sd">        Kwargs:</span>
+<span class="sd">            auxbas: str</span>
+<span class="sd">                auxilliary basis for 2c/3c eri. Default is weigend</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            eri3c: float</span>
+<span class="sd">                3 center eri. shape: (AO,AO,AUX)</span>
+<span class="sd">            eri2c: float</span>
+<span class="sd">                2 center eri. shape: (AUX,AUX)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">auxmol</span> <span class="o">=</span> <span class="n">gto</span><span class="o">.</span><span class="n">Mole</span><span class="p">()</span>
+        <span class="n">auxmol</span><span class="o">.</span><span class="n">atom</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">atom</span>
+        <span class="n">auxmol</span><span class="o">.</span><span class="n">basis</span> <span class="o">=</span> <span class="n">auxbas</span>
+        <span class="n">auxmol</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">auxmol</span> <span class="o">=</span> <span class="n">auxmol</span>
+        <span class="n">atm</span><span class="p">,</span> <span class="n">bas</span><span class="p">,</span> <span class="n">env</span> <span class="o">=</span> <span class="n">gto</span><span class="o">.</span><span class="n">conc_env</span><span class="p">(</span><span class="n">mol</span><span class="o">.</span><span class="n">_atm</span><span class="p">,</span> <span class="n">mol</span><span class="o">.</span><span class="n">_bas</span><span class="p">,</span> <span class="n">mol</span><span class="o">.</span><span class="n">_env</span><span class="p">,</span> <span class="n">auxmol</span><span class="o">.</span><span class="n">_atm</span><span class="p">,</span>\
+        <span class="n">auxmol</span><span class="o">.</span><span class="n">_bas</span><span class="p">,</span> <span class="n">auxmol</span><span class="o">.</span><span class="n">_env</span><span class="p">)</span>
+        <span class="n">eri3c</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">incore</span><span class="o">.</span><span class="n">aux_e2</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">auxmol</span><span class="p">,</span> <span class="n">intor</span><span class="o">=</span><span class="s2">&quot;cint3c2e_sph&quot;</span><span class="p">,</span> <span class="n">aosym</span><span class="o">=</span><span class="s2">&quot;s1&quot;</span><span class="p">,</span>\
+        <span class="n">comp</span><span class="o">=</span><span class="mi">1</span> <span class="p">)</span>
+        <span class="n">eri2c</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">incore</span><span class="o">.</span><span class="n">fill_2c2e</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span><span class="n">auxmol</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eri3c</span> <span class="o">=</span> <span class="n">eri3c</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eri2c</span> <span class="o">=</span> <span class="n">eri2c</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">eri3c</span><span class="p">,</span> <span class="n">eri2c</span></div>
+
+
+<div class="viewcode-block" id="RTTDSCF.fockbuild"><a class="viewcode-back" href="../../../modules/rt.html#pyscf.rt.tdscf.RTTDSCF.fockbuild">[docs]</a>    <span class="k">def</span> <span class="nf">fockbuild</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">dm_lao</span><span class="p">,</span><span class="n">it</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Updates Fock matrix</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            dm_lao: float or complex</span>
+<span class="sd">                Lowdin AO density matrix.</span>
+<span class="sd">            it: int</span>
+<span class="sd">                iterator for SCF DIIS</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            fmat: float or complex</span>
+<span class="sd">                Fock matrix in Lowdin AO basis</span>
+<span class="sd">            jmat: float or complex</span>
+<span class="sd">                Coulomb matrix in AO basis</span>
+<span class="sd">            kmat: float or complex</span>
+<span class="sd">                Exact Exchange in AO basis</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;Model&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;TDHF&quot;</span><span class="p">:</span>
+            <span class="n">Pt</span> <span class="o">=</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">transmat</span><span class="p">(</span><span class="n">dm_lao</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">jmat</span><span class="p">,</span><span class="n">kmat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_jk</span><span class="p">(</span><span class="n">Pt</span><span class="p">)</span>
+            <span class="n">veff</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">jmat</span><span class="o">+</span><span class="n">jmat</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">conj</span><span class="p">())</span> <span class="o">-</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">kmat</span> <span class="o">+</span> <span class="n">kmat</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">conj</span><span class="p">()))</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">adiis</span> <span class="ow">and</span> <span class="n">it</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">transmat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">adiis</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="p">,</span><span class="n">Pt</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">h</span> <span class="o">+</span> <span class="n">veff</span><span class="p">),</span>\
+                <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">),</span> <span class="n">jmat</span><span class="p">,</span> <span class="n">kmat</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span>  <span class="n">transmat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">h</span> <span class="o">+</span> <span class="n">veff</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">),</span> <span class="n">jmat</span><span class="p">,</span> <span class="n">kmat</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;Model&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;TDDFT&quot;</span><span class="p">:</span>
+            <span class="n">Pt</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">transmat</span><span class="p">(</span><span class="n">dm_lao</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">jmat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">J</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_j</span><span class="p">(</span><span class="n">Pt</span><span class="p">)</span>
+            <span class="n">Veff</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">J</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">complex</span><span class="p">)</span>
+            <span class="n">Vxc</span><span class="p">,</span> <span class="n">excsum</span><span class="p">,</span> <span class="n">kmat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_vxc</span><span class="p">(</span><span class="n">Pt</span><span class="p">)</span>
+            <span class="n">Veff</span> <span class="o">+=</span> <span class="n">Vxc</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">adiis</span> <span class="ow">and</span> <span class="n">it</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">transmat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">adiis</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="p">,</span><span class="n">Pt</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">h</span> <span class="o">+</span> <span class="n">Veff</span><span class="p">),</span>\
+                <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">),</span> <span class="n">jmat</span><span class="p">,</span> <span class="n">kmat</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">transmat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">h</span> <span class="o">+</span> <span class="n">Veff</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">),</span> <span class="n">jmat</span><span class="p">,</span> <span class="n">kmat</span></div>
+
+
+<div class="viewcode-block" id="RTTDSCF.get_vxc"><a class="viewcode-back" href="../../../modules/rt.html#pyscf.rt.tdscf.RTTDSCF.get_vxc">[docs]</a>    <span class="k">def</span> <span class="nf">get_vxc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">dm</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update exchange matrices and energy</span>
+<span class="sd">        Args:</span>
+<span class="sd">            dm: float or complex</span>
+<span class="sd">                AO density matrix.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            vxc: float or complex</span>
+<span class="sd">                exchange-correlation matrix in AO basis</span>
+<span class="sd">            excsum: float</span>
+<span class="sd">                exchange-correlation energy</span>
+<span class="sd">            kmat: float or complex</span>
+<span class="sd">                Exact Exchange in AO basis</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">nelec</span><span class="p">,</span> <span class="n">excsum</span><span class="p">,</span> <span class="n">vxc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ks</span><span class="o">.</span><span class="n">_numint</span><span class="o">.</span><span class="n">nr_vxc</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ks</span><span class="o">.</span><span class="n">mol</span><span class="p">,</span> \
+        <span class="bp">self</span><span class="o">.</span><span class="n">ks</span><span class="o">.</span><span class="n">grids</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ks</span><span class="o">.</span><span class="n">xc</span><span class="p">,</span> <span class="n">dm</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">exc</span> <span class="o">=</span> <span class="n">excsum</span>
+        <span class="n">vxc</span>  <span class="o">=</span> <span class="n">vxc</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">complex</span><span class="p">)</span>
+        <span class="k">if</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hyb</span> <span class="o">&gt;</span> <span class="mf">0.01</span><span class="p">):</span>
+            <span class="n">kmat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_k</span><span class="p">(</span><span class="n">dm</span><span class="p">)</span>
+            <span class="n">vxc</span> <span class="o">+=</span> <span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">hyb</span> <span class="o">*</span> <span class="n">kmat</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">kmat</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="n">vxc</span><span class="p">,</span> <span class="n">excsum</span><span class="p">,</span> <span class="n">kmat</span></div>
+
+<div class="viewcode-block" id="RTTDSCF.get_jk"><a class="viewcode-back" href="../../../modules/rt.html#pyscf.rt.tdscf.RTTDSCF.get_jk">[docs]</a>    <span class="k">def</span> <span class="nf">get_jk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dm</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update Coulomb and Exact Exchange Matrix</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            dm: float or complex</span>
+<span class="sd">                AO density matrix.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            jmat: float or complex</span>
+<span class="sd">                Coulomb matrix in AO basis</span>
+<span class="sd">            kmat: float or complex</span>
+<span class="sd">                Exact Exchange in AO basis</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">jmat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_j</span><span class="p">(</span><span class="n">dm</span><span class="p">)</span>
+        <span class="n">kmat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_k</span><span class="p">(</span><span class="n">dm</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">jmat</span><span class="p">,</span> <span class="n">kmat</span></div>
+
+<div class="viewcode-block" id="RTTDSCF.get_j"><a class="viewcode-back" href="../../../modules/rt.html#pyscf.rt.tdscf.RTTDSCF.get_j">[docs]</a>    <span class="k">def</span> <span class="nf">get_j</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">dm</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update Coulomb Matrix</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            dm: float or complex</span>
+<span class="sd">                AO density matrix.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            jmat: float or complex</span>
+<span class="sd">                Coulomb matrix in AO basis</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">rho</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">&quot;ijp,ij-&gt;p&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">eri3c</span><span class="p">,</span> <span class="n">dm</span><span class="p">)</span>
+        <span class="n">rho</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eri2c</span><span class="p">,</span> <span class="n">rho</span><span class="p">)</span>
+        <span class="n">jmat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">&quot;p,ijp-&gt;ij&quot;</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">eri3c</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">jmat</span></div>
+
+<div class="viewcode-block" id="RTTDSCF.get_k"><a class="viewcode-back" href="../../../modules/rt.html#pyscf.rt.tdscf.RTTDSCF.get_k">[docs]</a>    <span class="k">def</span> <span class="nf">get_k</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">dm</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update Exact Exchange Matrix</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            dm: float or complex</span>
+<span class="sd">                AO density matrix.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            kmat: float or complex</span>
+<span class="sd">                Exact Exchange in AO basis</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">naux</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">auxmol</span><span class="o">.</span><span class="n">nao_nr</span><span class="p">()</span>
+        <span class="n">nao</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ks</span><span class="o">.</span><span class="n">mol</span><span class="o">.</span><span class="n">nao_nr</span><span class="p">()</span>
+        <span class="n">kpj</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">&quot;ijp,jk-&gt;ikp&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">eri3c</span><span class="p">,</span> <span class="n">dm</span><span class="p">)</span>
+        <span class="n">pik</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eri2c</span><span class="p">,</span> <span class="n">kpj</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">naux</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">conj</span><span class="p">())</span>
+        <span class="n">kmat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">&quot;pik,kjp-&gt;ij&quot;</span><span class="p">,</span> <span class="n">pik</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">naux</span><span class="p">,</span><span class="n">nao</span><span class="p">,</span><span class="n">nao</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">eri3c</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">kmat</span></div>
+
+<div class="viewcode-block" id="RTTDSCF.initialcondition"><a class="viewcode-back" href="../../../modules/rt.html#pyscf.rt.tdscf.RTTDSCF.initialcondition">[docs]</a>    <span class="k">def</span> <span class="nf">initialcondition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">prm</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Prepare the variables/Matrices needed for propagation</span>
+<span class="sd">        The SCF is done here to make matrices that are not accessable from pyscf.scf</span>
+<span class="sd">        Args:</span>
+<span class="sd">            prm: str</span>
+<span class="sd">                string object with |variable    value| on each line</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            fmat: float or complex</span>
+<span class="sd">                Fock matrix in Lowdin AO basis</span>
+<span class="sd">            c_am: float</span>
+<span class="sd">                Transformation Matrix |AO&gt;&lt;MO|</span>
+<span class="sd">            v_lm: float</span>
+<span class="sd">                Transformation Matrix |LAO&gt;&lt;MO|</span>
+<span class="sd">            rho: float or complex</span>
+<span class="sd">                Initial MO density matrix.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">pyscf.rt</span> <span class="k">import</span> <span class="n">tdfields</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">auxmol_set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ks</span><span class="o">.</span><span class="n">mol</span><span class="p">,</span> <span class="n">auxbas</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">auxbas</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            ===================================</span>
+<span class="s2">            |  Realtime TDSCF module          |</span>
+<span class="s2">            ===================================</span>
+<span class="s2">            | J. Parkhill, T. Nguyen          |</span>
+<span class="s2">            | J. Koh, J. Herr,  K. Yao        |</span>
+<span class="s2">            ===================================</span>
+<span class="s2">            | Refs: 10.1021/acs.jctc.5b00262  |</span>
+<span class="s2">            |       10.1063/1.4916822         |</span>
+<span class="s2">            ===================================</span>
+<span class="s2">            &quot;&quot;&quot;</span><span class="p">)</span>
+        <span class="n">n_ao</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ks</span><span class="o">.</span><span class="n">mol</span><span class="o">.</span><span class="n">nao_nr</span><span class="p">()</span>
+        <span class="n">n_occ</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ks</span><span class="o">.</span><span class="n">mo_occ</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="s2">&quot;n_ao: </span><span class="si">%d</span><span class="s2">        n_occ: </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">n_ao</span><span class="p">,</span> <span class="n">n_occ</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">readparams</span><span class="p">(</span><span class="n">prm</span><span class="p">)</span>
+        <span class="n">fmat</span><span class="p">,</span> <span class="n">c_am</span><span class="p">,</span> <span class="n">v_lm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">initfockbuild</span><span class="p">()</span> <span class="c1"># updates self.C</span>
+        <span class="n">rho</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ks</span><span class="o">.</span><span class="n">mo_occ</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">complex</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">field</span> <span class="o">=</span> <span class="n">tdfields</span><span class="o">.</span><span class="n">FIELDS</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">initializeexpectation</span><span class="p">(</span><span class="n">rho</span><span class="p">,</span> <span class="n">c_am</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">fmat</span><span class="p">,</span> <span class="n">c_am</span><span class="p">,</span> <span class="n">v_lm</span><span class="p">,</span> <span class="n">rho</span></div>
+
+<div class="viewcode-block" id="RTTDSCF.readparams"><a class="viewcode-back" href="../../../modules/rt.html#pyscf.rt.tdscf.RTTDSCF.readparams">[docs]</a>    <span class="k">def</span> <span class="nf">readparams</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">prm</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set Defaults, Read the file and fill the params dictionary</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            prm: str</span>
+<span class="sd">                string object with |variable    value| on each line</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;Model&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;TDDFT&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;Method&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;MMUT&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;BBGKY&quot;</span><span class="p">]</span><span class="o">=</span><span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;TDCIS&quot;</span><span class="p">]</span><span class="o">=</span><span class="mi">1</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;dt&quot;</span><span class="p">]</span> <span class="o">=</span>  <span class="mf">0.02</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;MaxIter&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">15000</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;ExDir&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;EyDir&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;EzDir&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;FieldAmplitude&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.01</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;FieldFreq&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.9202</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;Tau&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.07</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;tOn&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">7.0</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;Tau&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;ApplyImpulse&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;ApplyCw&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;StatusEvery&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">5000</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;Print&quot;</span><span class="p">]</span><span class="o">=</span><span class="mi">0</span>
+        <span class="c1"># Here they should be read from disk.</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">prm</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">prm</span><span class="o">.</span><span class="n">splitlines</span><span class="p">():</span>
+                <span class="n">s</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;MaxIter&quot;</span> <span class="ow">or</span> <span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="nb">str</span><span class="p">(</span><span class="s2">&quot;ApplyImpulse&quot;</span><span class="p">)</span> <span class="ow">or</span> \
+                    <span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="nb">str</span><span class="p">(</span><span class="s2">&quot;ApplyCw&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="nb">str</span><span class="p">(</span><span class="s2">&quot;StatusEvery&quot;</span><span class="p">):</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                    <span class="k">elif</span> <span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Model&quot;</span> <span class="ow">or</span> <span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Method&quot;</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="s2">&quot;=============================&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="s2">&quot;         Parameters&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="s2">&quot;=============================&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="s2">&quot;Model: &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;Model&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">())</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="s2">&quot;Method: &quot;</span><span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;Method&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">())</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="s2">&quot;dt: </span><span class="si">%.2f</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;dt&quot;</span><span class="p">])</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="s2">&quot;MaxIter: </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;MaxIter&quot;</span><span class="p">])</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="s2">&quot;ExDir: </span><span class="si">%.2f</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;ExDir&quot;</span><span class="p">])</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="s2">&quot;EyDir: </span><span class="si">%.2f</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;EyDir&quot;</span><span class="p">])</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="s2">&quot;EzDir: </span><span class="si">%.2f</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;EzDir&quot;</span><span class="p">])</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="s2">&quot;FieldAmplitude: </span><span class="si">%.4f</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;FieldAmplitude&quot;</span><span class="p">])</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="s2">&quot;FieldFreq: </span><span class="si">%.4f</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;FieldFreq&quot;</span><span class="p">])</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="s2">&quot;Tau: </span><span class="si">%.2f</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;Tau&quot;</span><span class="p">])</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="s2">&quot;tOn: </span><span class="si">%.2f</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;tOn&quot;</span><span class="p">])</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="s2">&quot;ApplyImpulse: </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;ApplyImpulse&quot;</span><span class="p">])</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="s2">&quot;ApplyCw: </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;ApplyCw&quot;</span><span class="p">])</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="s2">&quot;StatusEvery: </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;StatusEvery&quot;</span><span class="p">])</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="s2">&quot;=============================</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span></div>
+
+<div class="viewcode-block" id="RTTDSCF.initfockbuild"><a class="viewcode-back" href="../../../modules/rt.html#pyscf.rt.tdscf.RTTDSCF.initfockbuild">[docs]</a>    <span class="k">def</span> <span class="nf">initfockbuild</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Using Roothan&#39;s equation to build a Initial Fock matrix and</span>
+<span class="sd">        Transformation Matrices</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            fmat: float or complex</span>
+<span class="sd">                Fock matrix in Lowdin AO basis</span>
+<span class="sd">            c_am: float</span>
+<span class="sd">                Transformation Matrix |AO&gt;&lt;MO|</span>
+<span class="sd">            v_lm: float</span>
+<span class="sd">                Transformation Matrix |LAO&gt;&lt;MO|</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">n_occ</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ks</span><span class="o">.</span><span class="n">mo_occ</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">err</span> <span class="o">=</span> <span class="mi">100</span>
+        <span class="n">it</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ks</span><span class="o">.</span><span class="n">get_hcore</span><span class="p">()</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">sx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">dm_lao</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">transmat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ks</span><span class="o">.</span><span class="n">get_init_guess</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ks</span><span class="o">.</span><span class="n">mol</span><span class="p">,</span> \
+        <span class="bp">self</span><span class="o">.</span><span class="n">ks</span><span class="o">.</span><span class="n">init_guess</span><span class="p">),</span> <span class="n">sx</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">complex</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ks</span><span class="o">.</span><span class="n">diis</span><span class="p">,</span> <span class="n">lib</span><span class="o">.</span><span class="n">diis</span><span class="o">.</span><span class="n">DIIS</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">adiis</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ks</span><span class="o">.</span><span class="n">diis</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">ks</span><span class="o">.</span><span class="n">diis</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">adiis</span> <span class="o">=</span> <span class="n">diis</span><span class="o">.</span><span class="n">SCF_DIIS</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ks</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ks</span><span class="o">.</span><span class="n">diis_file</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">adiis</span><span class="o">.</span><span class="n">space</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ks</span><span class="o">.</span><span class="n">diis_space</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">adiis</span><span class="o">.</span><span class="n">rollback</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ks</span><span class="o">.</span><span class="n">diis_space_rollback</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">adiis</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="n">fmat</span><span class="p">,</span> <span class="n">jmat</span><span class="p">,</span> <span class="n">kmat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fockbuild</span><span class="p">(</span><span class="n">dm_lao</span><span class="p">)</span>
+        <span class="n">etot</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">energy</span><span class="p">(</span><span class="n">dm_lao</span><span class="p">,</span><span class="n">fmat</span><span class="p">,</span> <span class="n">jmat</span><span class="p">,</span> <span class="n">kmat</span><span class="p">)</span><span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">enuc</span>
+
+        <span class="k">while</span> <span class="p">(</span><span class="n">err</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv_tol</span><span class="p">):</span>
+            <span class="c1"># Diagonalize F in the lowdin basis</span>
+            <span class="n">eigs</span><span class="p">,</span> <span class="n">v_lm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eig</span><span class="p">(</span><span class="n">fmat</span><span class="p">)</span>
+            <span class="n">idx</span> <span class="o">=</span> <span class="n">eigs</span><span class="o">.</span><span class="n">argsort</span><span class="p">()</span>
+            <span class="n">eigs</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+            <span class="n">v_lm</span> <span class="o">=</span> <span class="n">v_lm</span><span class="p">[:,</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="c1"># Fill up the density in the MO basis and then Transform back</span>
+            <span class="n">rho</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ks</span><span class="o">.</span><span class="n">mo_occ</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">complex</span><span class="p">)</span>
+            <span class="n">dm_lao</span> <span class="o">=</span> <span class="n">transmat</span><span class="p">(</span><span class="n">rho</span><span class="p">,</span><span class="n">v_lm</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">etot_old</span> <span class="o">=</span> <span class="n">etot</span>
+            <span class="n">etot</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">energy</span><span class="p">(</span><span class="n">dm_lao</span><span class="p">,</span><span class="n">fmat</span><span class="p">,</span> <span class="n">jmat</span><span class="p">,</span> <span class="n">kmat</span><span class="p">)</span>
+            <span class="n">fmat</span><span class="p">,</span> <span class="n">jmat</span><span class="p">,</span> <span class="n">kmat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fockbuild</span><span class="p">(</span><span class="n">dm_lao</span><span class="p">,</span><span class="n">it</span><span class="p">)</span>
+            <span class="n">err</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">etot</span><span class="o">-</span><span class="n">etot_old</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;Ne: </span><span class="si">%f</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">rho</span><span class="p">))</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;Iteration: </span><span class="si">%d</span><span class="s2">         Energy: </span><span class="si">%.11f</span><span class="s2">      </span><span class="se">\</span>
+<span class="s2">            Error = </span><span class="si">%.11f</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">it</span><span class="p">,</span> <span class="n">etot</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+            <span class="n">it</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">it</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">ks</span><span class="o">.</span><span class="n">max_cycle</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;Max cycle of SCF reached: </span><span class="si">%d</span><span class="se">\n</span><span class="s2"> Exiting TDSCF. Please raise ks.max_cycle&quot;</span><span class="p">,</span> <span class="n">it</span><span class="p">)</span>
+                <span class="n">quit</span><span class="p">()</span>
+        <span class="n">rho</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ks</span><span class="o">.</span><span class="n">mo_occ</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">complex</span><span class="p">)</span>
+        <span class="n">dm_lao</span> <span class="o">=</span> <span class="n">transmat</span><span class="p">(</span><span class="n">rho</span><span class="p">,</span><span class="n">v_lm</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">c_am</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span><span class="n">v_lm</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;Ne: </span><span class="si">%f</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">rho</span><span class="p">))</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;Converged Energy: </span><span class="si">%f</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">etot</span><span class="p">)</span>
+        <span class="c1"># logger.log(self, &quot;Eigenvalues: %f&quot;, eigs.real)</span>
+        <span class="c1"># print &quot;Eigenvalues: &quot;, eigs.real</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;Initial Fock Built time: </span><span class="si">%f</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">-</span><span class="n">start</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">fmat</span><span class="p">,</span> <span class="n">c_am</span><span class="p">,</span> <span class="n">v_lm</span></div>
+
+    <span class="k">def</span> <span class="nf">split_rk4_step_mmut</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">v</span> <span class="p">,</span> <span class="n">oldrho</span> <span class="p">,</span> <span class="n">tnow</span><span class="p">,</span> <span class="n">dt</span> <span class="p">,</span><span class="n">IsOn</span><span class="p">):</span>
+        <span class="n">Ud</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">w</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="n">j</span><span class="p">)</span><span class="o">*</span><span class="n">dt</span><span class="p">);</span>
+        <span class="n">U</span> <span class="o">=</span> <span class="n">transmat</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">Ud</span><span class="p">),</span><span class="n">v</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">RhoHalfStepped</span> <span class="o">=</span> <span class="n">transmat</span><span class="p">(</span><span class="n">oldrho</span><span class="p">,</span><span class="n">U</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="c1"># If any TCL propagation occurs...</span>
+        <span class="c1"># DontDo=</span>
+        <span class="c1"># SplitLiouvillian( RhoHalfStepped, k1,tnow,IsOn);</span>
+        <span class="c1"># v2 = (dt/2.0) * k1;</span>
+        <span class="c1"># v2 += RhoHalfStepped;</span>
+        <span class="c1"># SplitLiouvillian(  v2, k2,tnow+(dt/2.0),IsOn);</span>
+        <span class="c1"># v3 = (dt/2.0) * k2;</span>
+        <span class="c1"># v3 += RhoHalfStepped;</span>
+        <span class="c1"># SplitLiouvillian(  v3, k3,tnow+(dt/2.0),IsOn);</span>
+        <span class="c1"># v4 = (dt) * k3;</span>
+        <span class="c1"># v4 += RhoHalfStepped;</span>
+        <span class="c1"># SplitLiouvillian(  v4, k4,tnow+dt,IsOn);</span>
+        <span class="c1"># newrho = RhoHalfStepped;</span>
+        <span class="c1"># newrho += dt*(1.0/6.0)*k1;</span>
+        <span class="c1"># newrho += dt*(2.0/6.0)*k2;</span>
+        <span class="c1"># newrho += dt*(2.0/6.0)*k3;</span>
+        <span class="c1"># newrho += dt*(1.0/6.0)*k4;</span>
+        <span class="c1"># newrho = U*newrho*U.t();</span>
+        <span class="c1">#</span>
+        <span class="n">newrho</span> <span class="o">=</span> <span class="n">transmat</span><span class="p">(</span><span class="n">RhoHalfStepped</span><span class="p">,</span><span class="n">U</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">newrho</span>
+
+<div class="viewcode-block" id="RTTDSCF.tddftstep"><a class="viewcode-back" href="../../../modules/rt.html#pyscf.rt.tdscf.RTTDSCF.tddftstep">[docs]</a>    <span class="k">def</span> <span class="nf">tddftstep</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">fmat</span><span class="p">,</span> <span class="n">c_am</span><span class="p">,</span> <span class="n">v_lm</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">rhom12</span><span class="p">,</span> <span class="n">tnow</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Take dt step in propagation</span>
+<span class="sd">        updates matrices and rho to next timestep</span>
+<span class="sd">        Args:</span>
+<span class="sd">            fmat: float or complex</span>
+<span class="sd">                Fock matrix in Lowdin AO basis</span>
+<span class="sd">            c_am: float or complex</span>
+<span class="sd">                Transformation Matrix |AO&gt;&lt;MO|</span>
+<span class="sd">            v_lm: float or complex</span>
+<span class="sd">                Transformation Matrix |LAO&gt;&lt;MO|</span>
+<span class="sd">            rho: complex</span>
+<span class="sd">                MO density matrix.</span>
+<span class="sd">            rhom12: complex</span>
+<span class="sd">            tnow: float</span>
+<span class="sd">                current time in A.U.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            n_rho: complex</span>
+<span class="sd">                MO density matrix.</span>
+<span class="sd">            n_rhom12: complex</span>
+<span class="sd">            n_c_am: complex</span>
+<span class="sd">                Transformation Matrix |AO&gt;&lt;MO|</span>
+<span class="sd">            n_v_lm: complex</span>
+<span class="sd">                Transformation Matrix |LAO&gt;&lt;MO|</span>
+<span class="sd">            n_fmat: complex</span>
+<span class="sd">                Fock matrix in Lowdin AO basis</span>
+<span class="sd">            n_jmat: complex</span>
+<span class="sd">                Coulomb matrix in AO basis</span>
+<span class="sd">            n_kmat: complex</span>
+<span class="sd">                Exact Exchange in AO basis</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;Method&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;MMUT&quot;</span><span class="p">):</span>
+            <span class="n">fmat</span><span class="p">,</span> <span class="n">n_jmat</span><span class="p">,</span> <span class="n">n_kmat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fockbuild</span><span class="p">(</span><span class="n">transmat</span><span class="p">(</span><span class="n">rho</span><span class="p">,</span><span class="n">v_lm</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+            <span class="n">n_fmat</span> <span class="o">=</span> <span class="n">fmat</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="n">fmat_c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">fmat</span><span class="p">)</span>
+            <span class="n">fmat_prev</span> <span class="o">=</span> <span class="n">transmat</span><span class="p">(</span><span class="n">fmat_c</span><span class="p">,</span> <span class="n">v_lm</span><span class="p">)</span>
+            <span class="n">eigs</span><span class="p">,</span> <span class="n">rot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eig</span><span class="p">(</span><span class="n">fmat_prev</span><span class="p">)</span>
+            <span class="n">idx</span> <span class="o">=</span> <span class="n">eigs</span><span class="o">.</span><span class="n">argsort</span><span class="p">()</span>
+            <span class="n">eigs</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+            <span class="n">rot</span> <span class="o">=</span> <span class="n">rot</span><span class="p">[:,</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="n">rho</span> <span class="o">=</span> <span class="n">transmat</span><span class="p">(</span><span class="n">rho</span><span class="p">,</span> <span class="n">rot</span><span class="p">)</span>
+            <span class="n">v_lm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">v_lm</span> <span class="p">,</span> <span class="n">rot</span><span class="p">)</span>
+            <span class="n">c_am</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="p">,</span> <span class="n">v_lm</span><span class="p">)</span>
+            <span class="n">n_v_lm</span> <span class="o">=</span> <span class="n">v_lm</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="n">n_c_am</span> <span class="o">=</span> <span class="n">c_am</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="n">fmat_mo</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">eigs</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">complex</span><span class="p">)</span>
+            <span class="n">fmatfield</span><span class="p">,</span> <span class="n">IsOn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">applyfield</span><span class="p">(</span><span class="n">fmat_mo</span><span class="p">,</span><span class="n">c_am</span><span class="p">,</span><span class="n">tnow</span><span class="p">)</span>
+            <span class="n">w</span><span class="p">,</span><span class="n">v</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eig</span><span class="p">(</span><span class="n">fmatfield</span><span class="p">)</span>
+            <span class="n">NewRhoM12</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">split_rk4_step_mmut</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">rhom12</span><span class="p">,</span> <span class="n">tnow</span><span class="p">,</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;dt&quot;</span><span class="p">],</span> <span class="n">IsOn</span><span class="p">)</span>
+            <span class="n">NewRho</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">split_rk4_step_mmut</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">NewRhoM12</span><span class="p">,</span> <span class="n">tnow</span><span class="p">,</span>\
+            <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;dt&quot;</span><span class="p">]</span><span class="o">/</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">IsOn</span><span class="p">)</span>
+            <span class="n">n_rho</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">NewRho</span><span class="o">+</span><span class="p">(</span><span class="n">NewRho</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">conj</span><span class="p">()));</span>
+            <span class="n">n_rhom12</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">NewRhoM12</span><span class="o">+</span><span class="p">(</span><span class="n">NewRhoM12</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">conj</span><span class="p">()))</span>
+            <span class="k">return</span> <span class="n">n_rho</span><span class="p">,</span> <span class="n">n_rhom12</span><span class="p">,</span> <span class="n">n_c_am</span><span class="p">,</span> <span class="n">n_v_lm</span><span class="p">,</span> <span class="n">n_fmat</span><span class="p">,</span> <span class="n">n_jmat</span><span class="p">,</span> <span class="n">n_kmat</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Unknown Method...&quot;</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="RTTDSCF.dipole"><a class="viewcode-back" href="../../../modules/rt.html#pyscf.rt.tdscf.RTTDSCF.dipole">[docs]</a>    <span class="k">def</span> <span class="nf">dipole</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">c_am</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            c_am: float or complex</span>
+<span class="sd">                Transformation Matrix |AO&gt;&lt;MO|</span>
+<span class="sd">            rho: complex</span>
+<span class="sd">                MO density matrix.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            dipole: float</span>
+<span class="sd">                xyz component of dipole of a molecule. [x y z]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">expectation</span><span class="p">(</span><span class="n">rho</span><span class="p">,</span> <span class="n">c_am</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RTTDSCF.energy"><a class="viewcode-back" href="../../../modules/rt.html#pyscf.rt.tdscf.RTTDSCF.energy">[docs]</a>    <span class="k">def</span> <span class="nf">energy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">dm_lao</span><span class="p">,</span><span class="n">fmat</span><span class="p">,</span><span class="n">jmat</span><span class="p">,</span><span class="n">kmat</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            dm_lao: complex</span>
+<span class="sd">                Density in LAO basis.</span>
+<span class="sd">            fmat: complex</span>
+<span class="sd">                Fock matrix in Lowdin AO basis</span>
+<span class="sd">            jmat: complex</span>
+<span class="sd">                Coulomb matrix in AO basis</span>
+<span class="sd">            kmat: complex</span>
+<span class="sd">                Exact Exchange in AO basis</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            e_tot: float</span>
+<span class="sd">                Total Energy of a system</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;Model&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;TDHF&quot;</span><span class="p">):</span>
+            <span class="n">hlao</span> <span class="o">=</span> <span class="n">transmat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">h</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+            <span class="n">e_tot</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">enuc</span><span class="o">+</span><span class="n">np</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">dm_lao</span><span class="p">,</span><span class="n">hlao</span><span class="o">+</span><span class="n">fmat</span><span class="p">)))</span><span class="o">.</span><span class="n">real</span>
+            <span class="k">return</span> <span class="n">e_tot</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;Model&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;TDDFT&quot;</span><span class="p">:</span>
+            <span class="n">dm</span> <span class="o">=</span> <span class="n">transmat</span><span class="p">(</span><span class="n">dm_lao</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">exc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">exc</span>
+            <span class="k">if</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hyb</span> <span class="o">&gt;</span> <span class="mf">0.01</span><span class="p">):</span>
+                <span class="n">exc</span> <span class="o">-=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">hyb</span> <span class="o">*</span> <span class="n">trdot</span><span class="p">(</span><span class="n">dm</span><span class="p">,</span><span class="n">kmat</span><span class="p">)</span>
+            <span class="c1"># if not using auxmol</span>
+            <span class="n">eh</span> <span class="o">=</span> <span class="n">trdot</span><span class="p">(</span><span class="n">dm</span><span class="p">,</span><span class="mi">2</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">h</span><span class="p">)</span>
+            <span class="n">ej</span> <span class="o">=</span> <span class="n">trdot</span><span class="p">(</span><span class="n">dm</span><span class="p">,</span><span class="n">jmat</span><span class="p">)</span>
+            <span class="n">e_tot</span> <span class="o">=</span> <span class="p">(</span><span class="n">eh</span> <span class="o">+</span> <span class="n">ej</span> <span class="o">+</span> <span class="n">exc</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">enuc</span><span class="p">)</span><span class="o">.</span><span class="n">real</span>
+            <span class="k">return</span> <span class="n">e_tot</span></div>
+
+<div class="viewcode-block" id="RTTDSCF.loginstant"><a class="viewcode-back" href="../../../modules/rt.html#pyscf.rt.tdscf.RTTDSCF.loginstant">[docs]</a>    <span class="k">def</span> <span class="nf">loginstant</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">c_am</span><span class="p">,</span> <span class="n">v_lm</span><span class="p">,</span> <span class="n">fmat</span><span class="p">,</span> <span class="n">jmat</span><span class="p">,</span> <span class="n">kmat</span><span class="p">,</span> <span class="n">tnow</span><span class="p">,</span> <span class="n">it</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        time is logged in atomic units.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            rho: complex</span>
+<span class="sd">                MO density matrix.</span>
+<span class="sd">            c_am: complex</span>
+<span class="sd">                Transformation Matrix |AO&gt;&lt;MO|</span>
+<span class="sd">            v_lm: complex</span>
+<span class="sd">                Transformation Matrix |LAO&gt;&lt;MO|</span>
+<span class="sd">            fmat: complex</span>
+<span class="sd">                Fock matrix in Lowdin AO basis</span>
+<span class="sd">            jmat: complex</span>
+<span class="sd">                Coulomb matrix in AO basis</span>
+<span class="sd">            kmat: complex</span>
+<span class="sd">                Exact Exchange in AO basis</span>
+<span class="sd">            tnow: float</span>
+<span class="sd">                Current time in propagation in A.U.</span>
+<span class="sd">            it: int</span>
+<span class="sd">                Number of iteration of propagation</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            tore: str</span>
+<span class="sd">                |t, dipole(x,y,z), energy|</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">precision</span> <span class="o">=</span> <span class="mi">7</span><span class="p">)</span>
+        <span class="n">tore</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">tnow</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot; &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dipole</span><span class="p">(</span><span class="n">rho</span><span class="p">,</span> <span class="n">c_am</span><span class="p">)</span><span class="o">.</span><span class="n">real</span><span class="p">)</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">&quot;]&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">&quot;[&quot;</span><span class="p">)</span><span class="o">+</span>\
+         <span class="s2">&quot; &quot;</span> <span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">energy</span><span class="p">(</span><span class="n">transmat</span><span class="p">(</span><span class="n">rho</span><span class="p">,</span><span class="n">v_lm</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span><span class="n">fmat</span><span class="p">,</span> <span class="n">jmat</span><span class="p">,</span> <span class="n">kmat</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">it</span><span class="o">%</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;StatusEvery&quot;</span><span class="p">]</span> <span class="o">==</span><span class="mi">0</span> <span class="ow">or</span> <span class="n">it</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;MaxIter&quot;</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;t: </span><span class="si">%f</span><span class="s2"> fs    Energy: </span><span class="si">%f</span><span class="s2"> a.u.   Total Density: </span><span class="si">%f</span><span class="s2">&quot;</span><span class="p">,</span>\
+            <span class="n">tnow</span><span class="o">*</span><span class="n">FSPERAU</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">energy</span><span class="p">(</span><span class="n">transmat</span><span class="p">(</span><span class="n">rho</span><span class="p">,</span><span class="n">v_lm</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span><span class="n">fmat</span><span class="p">,</span> <span class="n">jmat</span><span class="p">,</span> <span class="n">kmat</span><span class="p">),</span> \
+            <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">rho</span><span class="p">))</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;Dipole moment(X, Y, Z, au): </span><span class="si">%8.5f</span><span class="s2">, </span><span class="si">%8.5f</span><span class="s2">, </span><span class="si">%8.5f</span><span class="s2">&quot;</span><span class="p">,</span>\
+             <span class="bp">self</span><span class="o">.</span><span class="n">dipole</span><span class="p">(</span><span class="n">rho</span><span class="p">,</span> <span class="n">c_am</span><span class="p">)</span><span class="o">.</span><span class="n">real</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">dipole</span><span class="p">(</span><span class="n">rho</span><span class="p">,</span> <span class="n">c_am</span><span class="p">)</span><span class="o">.</span><span class="n">real</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>\
+             <span class="bp">self</span><span class="o">.</span><span class="n">dipole</span><span class="p">(</span><span class="n">rho</span><span class="p">,</span> <span class="n">c_am</span><span class="p">)</span><span class="o">.</span><span class="n">real</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">tore</span></div>
+
+<div class="viewcode-block" id="RTTDSCF.prop"><a class="viewcode-back" href="../../../modules/rt.html#pyscf.rt.tdscf.RTTDSCF.prop">[docs]</a>    <span class="k">def</span> <span class="nf">prop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fmat</span><span class="p">,</span> <span class="n">c_am</span><span class="p">,</span> <span class="n">v_lm</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">output</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The main tdscf propagation loop.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            fmat: complex</span>
+<span class="sd">                Fock matrix in Lowdin AO basis</span>
+<span class="sd">            c_am: complex</span>
+<span class="sd">                Transformation Matrix |AO&gt;&lt;MO|</span>
+<span class="sd">            v_lm: complex</span>
+<span class="sd">                Transformation Matrix |LAO&gt;&lt;MO|</span>
+<span class="sd">            rho: complex</span>
+<span class="sd">                MO density matrix.</span>
+<span class="sd">            output: str</span>
+<span class="sd">                name of the file with result of propagation</span>
+<span class="sd">        Saved results:</span>
+<span class="sd">            f: file</span>
+<span class="sd">                output file with |t, dipole(x,y,z), energy|</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">it</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">tnow</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">rhom12</span> <span class="o">=</span> <span class="n">rho</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">output</span><span class="p">,</span><span class="s2">&quot;a&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">Propagation Begins&quot;</span><span class="p">)</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="k">while</span> <span class="p">(</span><span class="n">it</span><span class="o">&lt;</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;MaxIter&quot;</span><span class="p">]):</span>
+            <span class="n">rho</span><span class="p">,</span> <span class="n">rhom12</span><span class="p">,</span> <span class="n">c_am</span><span class="p">,</span> <span class="n">v_lm</span><span class="p">,</span> <span class="n">fmat</span><span class="p">,</span> <span class="n">jmat</span><span class="p">,</span> <span class="n">kmat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tddftstep</span><span class="p">(</span><span class="n">fmat</span><span class="p">,</span> <span class="n">c_am</span><span class="p">,</span> <span class="n">v_lm</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">rhom12</span><span class="p">,</span> <span class="n">tnow</span><span class="p">)</span>
+            <span class="c1"># rho = newrho.copy()</span>
+            <span class="c1"># rhom12 = newrhom12.copy()</span>
+            <span class="c1">#self.log.append(self.loginstant(it))</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">loginstant</span><span class="p">(</span><span class="n">rho</span><span class="p">,</span> <span class="n">c_am</span><span class="p">,</span> <span class="n">v_lm</span><span class="p">,</span> <span class="n">fmat</span><span class="p">,</span> <span class="n">jmat</span><span class="p">,</span> <span class="n">kmat</span><span class="p">,</span> <span class="n">tnow</span><span class="p">,</span> <span class="n">it</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="c1"># Do logging.</span>
+            <span class="n">tnow</span> <span class="o">=</span> <span class="n">tnow</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;dt&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">it</span><span class="o">%</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;StatusEvery&quot;</span><span class="p">]</span> <span class="o">==</span><span class="mi">0</span> <span class="ow">or</span> \
+            <span class="n">it</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;MaxIter&quot;</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                <span class="n">end</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">%f</span><span class="s2"> hr/ps&quot;</span><span class="p">,</span> \
+                <span class="p">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mi">60</span><span class="o">*</span><span class="mi">60</span><span class="o">*</span><span class="n">tnow</span> <span class="o">*</span> <span class="n">FSPERAU</span> <span class="o">*</span> <span class="mf">0.001</span><span class="p">))</span>
+            <span class="n">it</span> <span class="o">=</span> <span class="n">it</span> <span class="o">+</span> <span class="mi">1</span>
+
+        <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2015-2020, The PySCF Developers
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

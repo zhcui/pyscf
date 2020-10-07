@@ -1,15 +1,18 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pyscf.dft.uks &mdash; PySCF 1.5.0 documentation</title>
+  <title>pyscf.dft.uks &mdash; PySCF 1.7.5 documentation</title>
   
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
 
   
   
@@ -17,42 +20,37 @@
   
 
   
-
-  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
-  
-
-  
-  
-    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-    <link rel="top" title="PySCF 1.5.0 documentation" href="../../../index.html"/>
-        <link rel="up" title="Module code" href="../../index.html"/> 
-
-  
-  <script src="../../../_static/js/modernizr.min.js"></script>
-
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
-            <a href="../../../index.html" class="icon icon-home"> PySCF
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> PySCF
           
 
           
@@ -62,7 +60,7 @@
             
             
               <div class="version">
-                1.5
+                1.7
               </div>
             
           
@@ -79,6 +77,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -88,46 +87,28 @@
             
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../overview.html">1. An overview of PySCF</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">2. Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../version.html">2. Version history</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../install.html">3. Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../gto.html">4. gto &#8212; Molecular structure and GTO basis</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../lib.html">5. <code class="docutils literal"><span class="pre">lib</span></code> &#8212; Helper functions, parameters, and C extensions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../scf.html">6. scf &#8212; Mean-field methods</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../ao2mo.html">7. ao2mo &#8212; Integral transformations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../mcscf.html">8. mcscf &#8212; Multi-configurational self-consistent field</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../fci.html">9. fci &#8212; Full configuration interaction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../symm.html">10. symm &#8211; Point group symmetry and spin symmetry</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../df.html">11. df &#8212; Density fitting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../dft.html">12. dft &#8212; Density functional theory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../tddft.html">13. tddft &#8212; Time dependent density functional theory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../cc.html">14. cc &#8212; Coupled cluster</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../ci.html">15. ci &#8212; Configuration interaction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../dmrgscf.html">16. dmrgscf</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../fciqmcscf.html">17. fciqmcscf</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../tools.html">18. tools</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../grad.html">19. grad &#8212; Analytical nuclear gradients</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../hessian.html">20. hessian &#8212; Analytical nuclear Hessian</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../pbc.html">21. pbc &#8212; Periodic boundary conditions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../nao.html">22. nao &#8212; Numerical Atomic Orbitals</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../lo.html">23. lo &#8212; Orbital localization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../advanced.html">24. Miscellaneous</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../qmmm.html">25. qmmm &#8212; QM/MM interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../mrpt.html">26. mrpt &#8212; Multi-reference perturbation theory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../benchmark.html">27. Benchmark</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../code-rule.html">28. Code standard</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../version.html">29. Version history</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../code-rule.html">4. Code standard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../benchmark.html">5. Benchmark</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">6. Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../theory.html">7. Theoretical methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../advanced.html">8. Miscellaneous</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../interface.html">9. Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">10. Main modules</a></li>
 </ul>
 
             
           
         </div>
+        
       </div>
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../index.html">PySCF</a>
@@ -135,9 +116,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -158,16 +140,16 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../dft.html">pyscf.dft</a> &raquo;</li>
         
       <li>pyscf.dft.uks</li>
     
     
       <li class="wy-breadcrumbs-aside">
-        
-            
         
       </li>
     
@@ -181,7 +163,7 @@
             
   <h1>Source code for pyscf.dft.uks</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python</span>
-<span class="c1"># Copyright 2014-2018 The PySCF Developers. All Rights Reserved.</span>
+<span class="c1"># Copyright 2014-2019 The PySCF Developers. All Rights Reserved.</span>
 <span class="c1">#</span>
 <span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
 <span class="c1"># you may not use this file except in compliance with the License.</span>
@@ -209,8 +191,7 @@
 <span class="kn">from</span> <span class="nn">pyscf.scf</span> <span class="k">import</span> <span class="n">uhf</span>
 <span class="kn">from</span> <span class="nn">pyscf.dft</span> <span class="k">import</span> <span class="n">rks</span>
 
-
-<div class="viewcode-block" id="get_veff"><a class="viewcode-back" href="../../../dft.html#pyscf.dft.uks.get_veff">[docs]</a><span class="k">def</span> <span class="nf">get_veff</span><span class="p">(</span><span class="n">ks</span><span class="p">,</span> <span class="n">mol</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dm</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dm_last</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vhf_last</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">hermi</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<div class="viewcode-block" id="get_veff"><a class="viewcode-back" href="../../../modules/dft.html#pyscf.dft.uks.get_veff">[docs]</a><span class="k">def</span> <span class="nf">get_veff</span><span class="p">(</span><span class="n">ks</span><span class="p">,</span> <span class="n">mol</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dm</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dm_last</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vhf_last</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">hermi</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Coulomb + XC functional for UKS.  See pyscf/dft/rks.py</span>
 <span class="sd">    :func:`get_veff` fore more details.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
@@ -226,13 +207,13 @@
 
     <span class="k">if</span> <span class="n">ks</span><span class="o">.</span><span class="n">grids</span><span class="o">.</span><span class="n">coords</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">ks</span><span class="o">.</span><span class="n">grids</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">with_non0tab</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">ks</span><span class="o">.</span><span class="n">small_rho_cutoff</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="n">e</span><span class="o">-</span><span class="mi">20</span> <span class="ow">and</span> <span class="n">ground_state</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">ks</span><span class="o">.</span><span class="n">small_rho_cutoff</span> <span class="o">&gt;</span> <span class="mf">1e-20</span> <span class="ow">and</span> <span class="n">ground_state</span><span class="p">:</span>
             <span class="n">ks</span><span class="o">.</span><span class="n">grids</span> <span class="o">=</span> <span class="n">rks</span><span class="o">.</span><span class="n">prune_small_rho_grids_</span><span class="p">(</span><span class="n">ks</span><span class="p">,</span> <span class="n">mol</span><span class="p">,</span> <span class="n">dm</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">dm</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">ks</span><span class="o">.</span><span class="n">grids</span><span class="p">)</span>
         <span class="n">t0</span> <span class="o">=</span> <span class="n">logger</span><span class="o">.</span><span class="n">timer</span><span class="p">(</span><span class="n">ks</span><span class="p">,</span> <span class="s1">&#39;setting up grids&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">t0</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">ks</span><span class="o">.</span><span class="n">nlc</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">ks</span><span class="o">.</span><span class="n">nlcgrids</span><span class="o">.</span><span class="n">coords</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">ks</span><span class="o">.</span><span class="n">nlcgrids</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">with_non0tab</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">ks</span><span class="o">.</span><span class="n">small_rho_cutoff</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="n">e</span><span class="o">-</span><span class="mi">20</span> <span class="ow">and</span> <span class="n">ground_state</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ks</span><span class="o">.</span><span class="n">small_rho_cutoff</span> <span class="o">&gt;</span> <span class="mf">1e-20</span> <span class="ow">and</span> <span class="n">ground_state</span><span class="p">:</span>
                 <span class="n">ks</span><span class="o">.</span><span class="n">nlcgrids</span> <span class="o">=</span> <span class="n">rks</span><span class="o">.</span><span class="n">prune_small_rho_grids_</span><span class="p">(</span><span class="n">ks</span><span class="p">,</span> <span class="n">mol</span><span class="p">,</span> <span class="n">dm</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">dm</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">ks</span><span class="o">.</span><span class="n">nlcgrids</span><span class="p">)</span>
             <span class="n">t0</span> <span class="o">=</span> <span class="n">logger</span><span class="o">.</span><span class="n">timer</span><span class="p">(</span><span class="n">ks</span><span class="p">,</span> <span class="s1">&#39;setting up nlc grids&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">t0</span><span class="p">)</span>
 
@@ -240,10 +221,12 @@
     <span class="k">if</span> <span class="n">hermi</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>  <span class="c1"># because rho = 0</span>
         <span class="n">n</span><span class="p">,</span> <span class="n">exc</span><span class="p">,</span> <span class="n">vxc</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">n</span><span class="p">,</span> <span class="n">exc</span><span class="p">,</span> <span class="n">vxc</span> <span class="o">=</span> <span class="n">ni</span><span class="o">.</span><span class="n">nr_uks</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">ks</span><span class="o">.</span><span class="n">grids</span><span class="p">,</span> <span class="n">ks</span><span class="o">.</span><span class="n">xc</span><span class="p">,</span> <span class="n">dm</span><span class="p">)</span>
+        <span class="n">max_memory</span> <span class="o">=</span> <span class="n">ks</span><span class="o">.</span><span class="n">max_memory</span> <span class="o">-</span> <span class="n">lib</span><span class="o">.</span><span class="n">current_memory</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">n</span><span class="p">,</span> <span class="n">exc</span><span class="p">,</span> <span class="n">vxc</span> <span class="o">=</span> <span class="n">ni</span><span class="o">.</span><span class="n">nr_uks</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">ks</span><span class="o">.</span><span class="n">grids</span><span class="p">,</span> <span class="n">ks</span><span class="o">.</span><span class="n">xc</span><span class="p">,</span> <span class="n">dm</span><span class="p">,</span> <span class="n">max_memory</span><span class="o">=</span><span class="n">max_memory</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">ks</span><span class="o">.</span><span class="n">nlc</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
             <span class="k">assert</span><span class="p">(</span><span class="s1">&#39;VV10&#39;</span> <span class="ow">in</span> <span class="n">ks</span><span class="o">.</span><span class="n">nlc</span><span class="o">.</span><span class="n">upper</span><span class="p">())</span>
-            <span class="n">_</span><span class="p">,</span> <span class="n">enlc</span><span class="p">,</span> <span class="n">vnlc</span> <span class="o">=</span> <span class="n">ni</span><span class="o">.</span><span class="n">nr_rks</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">ks</span><span class="o">.</span><span class="n">nlcgrids</span><span class="p">,</span> <span class="n">ks</span><span class="o">.</span><span class="n">xc</span><span class="o">+</span><span class="s1">&#39;__&#39;</span><span class="o">+</span><span class="n">ks</span><span class="o">.</span><span class="n">nlc</span><span class="p">,</span> <span class="n">dm</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">dm</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">enlc</span><span class="p">,</span> <span class="n">vnlc</span> <span class="o">=</span> <span class="n">ni</span><span class="o">.</span><span class="n">nr_rks</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">ks</span><span class="o">.</span><span class="n">nlcgrids</span><span class="p">,</span> <span class="n">ks</span><span class="o">.</span><span class="n">xc</span><span class="o">+</span><span class="s1">&#39;__&#39;</span><span class="o">+</span><span class="n">ks</span><span class="o">.</span><span class="n">nlc</span><span class="p">,</span> <span class="n">dm</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">dm</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                                      <span class="n">max_memory</span><span class="o">=</span><span class="n">max_memory</span><span class="p">)</span>
             <span class="n">exc</span> <span class="o">+=</span> <span class="n">enlc</span>
             <span class="n">vxc</span> <span class="o">+=</span> <span class="n">vnlc</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">ks</span><span class="p">,</span> <span class="s1">&#39;nelec by numeric integration = </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
@@ -252,7 +235,7 @@
     <span class="c1">#enabling range-separated hybrids</span>
     <span class="n">omega</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">hyb</span> <span class="o">=</span> <span class="n">ni</span><span class="o">.</span><span class="n">rsh_and_hybrid_coeff</span><span class="p">(</span><span class="n">ks</span><span class="o">.</span><span class="n">xc</span><span class="p">,</span> <span class="n">spin</span><span class="o">=</span><span class="n">mol</span><span class="o">.</span><span class="n">spin</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">hyb</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="n">e</span><span class="o">-</span><span class="mi">10</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">alpha</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="n">e</span><span class="o">-</span><span class="mi">10</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">hyb</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-10</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">alpha</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-10</span><span class="p">:</span>
         <span class="n">vk</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">ks</span><span class="o">.</span><span class="n">_eri</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">ks</span><span class="o">.</span><span class="n">direct_scf</span> <span class="ow">and</span>
             <span class="nb">getattr</span><span class="p">(</span><span class="n">vhf_last</span><span class="p">,</span> <span class="s1">&#39;vj&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
@@ -268,8 +251,8 @@
             <span class="n">ddm</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">dm</span><span class="p">)</span> <span class="o">-</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">dm_last</span><span class="p">)</span>
             <span class="n">vj</span><span class="p">,</span> <span class="n">vk</span> <span class="o">=</span> <span class="n">ks</span><span class="o">.</span><span class="n">get_jk</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">ddm</span><span class="p">,</span> <span class="n">hermi</span><span class="p">)</span>
             <span class="n">vk</span> <span class="o">*=</span> <span class="n">hyb</span>
-            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">omega</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="n">e</span><span class="o">-</span><span class="mi">10</span><span class="p">:</span>
-                <span class="n">vklr</span> <span class="o">=</span> <span class="n">rks</span><span class="o">.</span><span class="n">_get_k_lr</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">ddm</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="n">hermi</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">omega</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1e-10</span><span class="p">:</span>
+                <span class="n">vklr</span> <span class="o">=</span> <span class="n">ks</span><span class="o">.</span><span class="n">get_k</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">ddm</span><span class="p">,</span> <span class="n">hermi</span><span class="p">,</span> <span class="n">omega</span><span class="p">)</span>
                 <span class="n">vklr</span> <span class="o">*=</span> <span class="p">(</span><span class="n">alpha</span> <span class="o">-</span> <span class="n">hyb</span><span class="p">)</span>
                 <span class="n">vk</span> <span class="o">+=</span> <span class="n">vklr</span>
             <span class="n">vj</span> <span class="o">=</span> <span class="n">vj</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">vj</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">vhf_last</span><span class="o">.</span><span class="n">vj</span>
@@ -278,63 +261,102 @@
             <span class="n">vj</span><span class="p">,</span> <span class="n">vk</span> <span class="o">=</span> <span class="n">ks</span><span class="o">.</span><span class="n">get_jk</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">dm</span><span class="p">,</span> <span class="n">hermi</span><span class="p">)</span>
             <span class="n">vj</span> <span class="o">=</span> <span class="n">vj</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">vj</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
             <span class="n">vk</span> <span class="o">*=</span> <span class="n">hyb</span>
-            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">omega</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="n">e</span><span class="o">-</span><span class="mi">10</span><span class="p">:</span>
-                <span class="n">vklr</span> <span class="o">=</span> <span class="n">rks</span><span class="o">.</span><span class="n">_get_k_lr</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">dm</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="n">hermi</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">omega</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1e-10</span><span class="p">:</span>
+                <span class="n">vklr</span> <span class="o">=</span> <span class="n">ks</span><span class="o">.</span><span class="n">get_k</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">dm</span><span class="p">,</span> <span class="n">hermi</span><span class="p">,</span> <span class="n">omega</span><span class="p">)</span>
                 <span class="n">vklr</span> <span class="o">*=</span> <span class="p">(</span><span class="n">alpha</span> <span class="o">-</span> <span class="n">hyb</span><span class="p">)</span>
                 <span class="n">vk</span> <span class="o">+=</span> <span class="n">vklr</span>
         <span class="n">vxc</span> <span class="o">+=</span> <span class="n">vj</span> <span class="o">-</span> <span class="n">vk</span>
 
         <span class="k">if</span> <span class="n">ground_state</span><span class="p">:</span>
-            <span class="n">exc</span> <span class="o">-=</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;ij,ji&#39;</span><span class="p">,</span> <span class="n">dm</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">vk</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span>
-                   <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;ij,ji&#39;</span><span class="p">,</span> <span class="n">dm</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">vk</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span> <span class="o">*</span> <span class="o">.</span><span class="mi">5</span>
+            <span class="n">exc</span> <span class="o">-=</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;ij,ji&#39;</span><span class="p">,</span> <span class="n">dm</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">vk</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">real</span> <span class="o">+</span>
+                   <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;ij,ji&#39;</span><span class="p">,</span> <span class="n">dm</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">vk</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">real</span><span class="p">)</span> <span class="o">*</span> <span class="o">.</span><span class="mi">5</span>
     <span class="k">if</span> <span class="n">ground_state</span><span class="p">:</span>
-        <span class="n">ecoul</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;ij,ji&#39;</span><span class="p">,</span> <span class="n">dm</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">dm</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">vj</span><span class="p">)</span> <span class="o">*</span> <span class="o">.</span><span class="mi">5</span>
+        <span class="n">ecoul</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;ij,ji&#39;</span><span class="p">,</span> <span class="n">dm</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">dm</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">vj</span><span class="p">)</span><span class="o">.</span><span class="n">real</span> <span class="o">*</span> <span class="o">.</span><span class="mi">5</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">ecoul</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="n">vxc</span> <span class="o">=</span> <span class="n">lib</span><span class="o">.</span><span class="n">tag_array</span><span class="p">(</span><span class="n">vxc</span><span class="p">,</span> <span class="n">ecoul</span><span class="o">=</span><span class="n">ecoul</span><span class="p">,</span> <span class="n">exc</span><span class="o">=</span><span class="n">exc</span><span class="p">,</span> <span class="n">vj</span><span class="o">=</span><span class="n">vj</span><span class="p">,</span> <span class="n">vk</span><span class="o">=</span><span class="n">vk</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">vxc</span></div>
 
+<div class="viewcode-block" id="get_vsap"><a class="viewcode-back" href="../../../modules/dft.html#pyscf.dft.uks.get_vsap">[docs]</a><span class="k">def</span> <span class="nf">get_vsap</span><span class="p">(</span><span class="n">ks</span><span class="p">,</span> <span class="n">mol</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Superposition of atomic potentials</span>
+
+<span class="sd">    S. Lehtola, Assessment of initial guesses for self-consistent</span>
+<span class="sd">    field calculations. Superposition of Atomic Potentials: simple yet</span>
+<span class="sd">    efficient, J. Chem. Theory Comput. 15, 1593 (2019). DOI:</span>
+<span class="sd">    10.1021/acs.jctc.8b01089. arXiv:1810.11659.</span>
+
+<span class="sd">    This function evaluates the effective charge of a neutral atom,</span>
+<span class="sd">    given by exchange-only LDA on top of spherically symmetric</span>
+<span class="sd">    unrestricted Hartree-Fock calculations as described in</span>
+
+<span class="sd">    S. Lehtola, L. Visscher, E. Engel, Efficient implementation of the</span>
+<span class="sd">    superposition of atomic potentials initial guess for electronic</span>
+<span class="sd">    structure calculations in Gaussian basis sets, J. Chem. Phys., in</span>
+<span class="sd">    press (2020).</span>
+
+<span class="sd">    The potentials have been calculated for the ground-states of</span>
+<span class="sd">    spherically symmetric atoms at the non-relativistic level of theory</span>
+<span class="sd">    as described in</span>
+
+<span class="sd">    S. Lehtola, &quot;Fully numerical calculations on atoms with fractional</span>
+<span class="sd">    occupations and range-separated exchange functionals&quot;, Phys. Rev. A</span>
+<span class="sd">    101, 012516 (2020). DOI: 10.1103/PhysRevA.101.012516</span>
+
+<span class="sd">    using accurate finite-element calculations as described in</span>
+
+<span class="sd">    S. Lehtola, &quot;Fully numerical Hartree-Fock and density functional</span>
+<span class="sd">    calculations. I. Atoms&quot;, Int. J. Quantum Chem. e25945 (2019).</span>
+<span class="sd">    DOI: 10.1002/qua.25945</span>
+
+<span class="sd">    .. note::</span>
+<span class="sd">        This function will modify the input ks object.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        ks : an instance of :class:`RKS`</span>
+<span class="sd">            XC functional are controlled by ks.xc attribute.  Attribute</span>
+<span class="sd">            ks.grids might be initialized.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        matrix Vsap = Vnuc + J + Vxc.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">Vsap</span> <span class="o">=</span> <span class="n">rks</span><span class="o">.</span><span class="n">get_vsap</span><span class="p">(</span><span class="n">ks</span><span class="p">,</span> <span class="n">mol</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="n">Vsap</span><span class="p">,</span> <span class="n">Vsap</span><span class="p">])</span></div>
 
 <span class="k">def</span> <span class="nf">energy_elec</span><span class="p">(</span><span class="n">ks</span><span class="p">,</span> <span class="n">dm</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">h1e</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vhf</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">dm</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="n">dm</span> <span class="o">=</span> <span class="n">ks</span><span class="o">.</span><span class="n">make_rdm1</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">h1e</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="n">h1e</span> <span class="o">=</span> <span class="n">ks</span><span class="o">.</span><span class="n">get_hcore</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">vhf</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">vhf</span><span class="p">,</span> <span class="s1">&#39;ecoul&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">vhf</span> <span class="o">=</span> <span class="n">ks</span><span class="o">.</span><span class="n">get_veff</span><span class="p">(</span><span class="n">ks</span><span class="o">.</span><span class="n">mol</span><span class="p">,</span> <span class="n">dm</span><span class="p">)</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dm</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="ow">and</span> <span class="n">dm</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-        <span class="n">dm</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">dm</span><span class="o">*.</span><span class="mi">5</span><span class="p">,</span> <span class="n">dm</span><span class="o">*.</span><span class="mi">5</span><span class="p">))</span>
-    <span class="n">e1</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;ij,ji&#39;</span><span class="p">,</span> <span class="n">h1e</span><span class="p">,</span> <span class="n">dm</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-    <span class="n">e1</span><span class="o">+=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;ij,ji&#39;</span><span class="p">,</span> <span class="n">h1e</span><span class="p">,</span> <span class="n">dm</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-    <span class="n">tot_e</span> <span class="o">=</span> <span class="n">e1</span> <span class="o">+</span> <span class="n">vhf</span><span class="o">.</span><span class="n">ecoul</span> <span class="o">+</span> <span class="n">vhf</span><span class="o">.</span><span class="n">exc</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">ks</span><span class="p">,</span> <span class="s1">&#39;E1 = </span><span class="si">%s</span><span class="s1">  Ecoul = </span><span class="si">%s</span><span class="s1">  Exc = </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">e1</span><span class="p">,</span> <span class="n">vhf</span><span class="o">.</span><span class="n">ecoul</span><span class="p">,</span> <span class="n">vhf</span><span class="o">.</span><span class="n">exc</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">tot_e</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">vhf</span><span class="o">.</span><span class="n">ecoul</span><span class="o">+</span><span class="n">vhf</span><span class="o">.</span><span class="n">exc</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">dm</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="ow">and</span> <span class="n">dm</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">):</span>
+        <span class="n">dm</span> <span class="o">=</span> <span class="n">dm</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">dm</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">rks</span><span class="o">.</span><span class="n">energy_elec</span><span class="p">(</span><span class="n">ks</span><span class="p">,</span> <span class="n">dm</span><span class="p">,</span> <span class="n">h1e</span><span class="p">,</span> <span class="n">vhf</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="UKS"><a class="viewcode-back" href="../../../dft.html#pyscf.dft.uks.UKS">[docs]</a><span class="k">class</span> <span class="nc">UKS</span><span class="p">(</span><span class="n">uhf</span><span class="o">.</span><span class="n">UHF</span><span class="p">):</span>
+<div class="viewcode-block" id="UKS"><a class="viewcode-back" href="../../../modules/dft.html#pyscf.dft.uks.UKS">[docs]</a><span class="k">class</span> <span class="nc">UKS</span><span class="p">(</span><span class="n">rks</span><span class="o">.</span><span class="n">KohnShamDFT</span><span class="p">,</span> <span class="n">uhf</span><span class="o">.</span><span class="n">UHF</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Unrestricted Kohn-Sham</span>
 <span class="sd">    See pyscf/dft/rks.py RKS class for document of the attributes&#39;&#39;&#39;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mol</span><span class="p">):</span>
-        <span class="n">uhf</span><span class="o">.</span><span class="n">UHF</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mol</span><span class="p">)</span>
-        <span class="n">rks</span><span class="o">.</span><span class="n">_dft_common_init_</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mol</span><span class="p">,</span> <span class="n">xc</span><span class="o">=</span><span class="s1">&#39;LDA,VWN&#39;</span><span class="p">):</span>
+        <span class="n">uhf</span><span class="o">.</span><span class="n">UHF</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mol</span><span class="p">)</span>
+        <span class="n">rks</span><span class="o">.</span><span class="n">KohnShamDFT</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xc</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">dump_flags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">uhf</span><span class="o">.</span><span class="n">UHF</span><span class="o">.</span><span class="n">dump_flags</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;XC functionals = </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">xc</span><span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">nlc</span><span class="o">!=</span><span class="s1">&#39;&#39;</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;NLC functional = </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nlc</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;small_rho_cutoff = </span><span class="si">%g</span><span class="s1">&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">small_rho_cutoff</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">grids</span><span class="o">.</span><span class="n">dump_flags</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">dump_flags</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">uhf</span><span class="o">.</span><span class="n">UHF</span><span class="o">.</span><span class="n">dump_flags</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+        <span class="n">rks</span><span class="o">.</span><span class="n">KohnShamDFT</span><span class="o">.</span><span class="n">dump_flags</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
 
     <span class="n">get_veff</span> <span class="o">=</span> <span class="n">get_veff</span>
+    <span class="n">get_vsap</span> <span class="o">=</span> <span class="n">get_vsap</span>
     <span class="n">energy_elec</span> <span class="o">=</span> <span class="n">energy_elec</span>
-    <span class="n">define_xc_</span> <span class="o">=</span> <span class="n">rks</span><span class="o">.</span><span class="n">define_xc_</span>
 
-    <span class="k">def</span> <span class="nf">nuc_grad_method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">init_guess_by_vsap</span> <span class="o">=</span> <span class="n">rks</span><span class="o">.</span><span class="n">init_guess_by_vsap</span>
+
+<div class="viewcode-block" id="UKS.nuc_grad_method"><a class="viewcode-back" href="../../../modules/dft.html#pyscf.dft.uks.UKS.nuc_grad_method">[docs]</a>    <span class="k">def</span> <span class="nf">nuc_grad_method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="kn">from</span> <span class="nn">pyscf.grad</span> <span class="k">import</span> <span class="n">uks</span>
-        <span class="k">return</span> <span class="n">uks</span><span class="o">.</span><span class="n">Gradients</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">uks</span><span class="o">.</span><span class="n">Gradients</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div></div>
 
 
-<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">gto</span>
     <span class="n">mol</span> <span class="o">=</span> <span class="n">gto</span><span class="o">.</span><span class="n">Mole</span><span class="p">()</span>
     <span class="n">mol</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="mi">7</span>
@@ -352,9 +374,7 @@
 </pre></div>
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -363,11 +383,19 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015-, Qiming Sun &lt;osirpt.sun@gmail.com&gt;.
+        
+        &copy; Copyright 2015-2020, The PySCF Developers
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -379,38 +407,15 @@
   </div>
   
 
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../../',
-            VERSION:'1.5.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: ''
-        };
-    </script>
-      <script type="text/javascript" src="../../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

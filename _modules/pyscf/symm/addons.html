@@ -1,15 +1,18 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pyscf.symm.addons &mdash; PySCF 1.5.0 documentation</title>
+  <title>pyscf.symm.addons &mdash; PySCF 1.7.5 documentation</title>
   
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
 
   
   
@@ -17,42 +20,37 @@
   
 
   
-
-  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
-  
-
-  
-  
-    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-    <link rel="top" title="PySCF 1.5.0 documentation" href="../../../index.html"/>
-        <link rel="up" title="Module code" href="../../index.html"/> 
-
-  
-  <script src="../../../_static/js/modernizr.min.js"></script>
-
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
-            <a href="../../../index.html" class="icon icon-home"> PySCF
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> PySCF
           
 
           
@@ -62,7 +60,7 @@
             
             
               <div class="version">
-                1.5
+                1.7
               </div>
             
           
@@ -79,6 +77,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -88,46 +87,28 @@
             
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../overview.html">1. An overview of PySCF</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">2. Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../version.html">2. Version history</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../install.html">3. Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../gto.html">4. gto &#8212; Molecular structure and GTO basis</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../lib.html">5. <code class="docutils literal"><span class="pre">lib</span></code> &#8212; Helper functions, parameters, and C extensions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../scf.html">6. scf &#8212; Mean-field methods</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../ao2mo.html">7. ao2mo &#8212; Integral transformations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../mcscf.html">8. mcscf &#8212; Multi-configurational self-consistent field</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../fci.html">9. fci &#8212; Full configuration interaction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../symm.html">10. symm &#8211; Point group symmetry and spin symmetry</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../df.html">11. df &#8212; Density fitting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../dft.html">12. dft &#8212; Density functional theory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../tddft.html">13. tddft &#8212; Time dependent density functional theory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../cc.html">14. cc &#8212; Coupled cluster</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../ci.html">15. ci &#8212; Configuration interaction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../dmrgscf.html">16. dmrgscf</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../fciqmcscf.html">17. fciqmcscf</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../tools.html">18. tools</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../grad.html">19. grad &#8212; Analytical nuclear gradients</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../hessian.html">20. hessian &#8212; Analytical nuclear Hessian</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../pbc.html">21. pbc &#8212; Periodic boundary conditions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../nao.html">22. nao &#8212; Numerical Atomic Orbitals</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../lo.html">23. lo &#8212; Orbital localization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../advanced.html">24. Miscellaneous</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../qmmm.html">25. qmmm &#8212; QM/MM interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../mrpt.html">26. mrpt &#8212; Multi-reference perturbation theory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../benchmark.html">27. Benchmark</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../code-rule.html">28. Code standard</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../version.html">29. Version history</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../code-rule.html">4. Code standard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../benchmark.html">5. Benchmark</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">6. Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../theory.html">7. Theoretical methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../advanced.html">8. Miscellaneous</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../interface.html">9. Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">10. Main modules</a></li>
 </ul>
 
             
           
         </div>
+        
       </div>
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../index.html">PySCF</a>
@@ -135,9 +116,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -158,7 +140,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../../index.html">Module code</a> &raquo;</li>
         
@@ -166,8 +148,6 @@
     
     
       <li class="wy-breadcrumbs-aside">
-        
-            
         
       </li>
     
@@ -208,9 +188,11 @@
 <span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">__config__</span>
 
 
-<div class="viewcode-block" id="label_orb_symm"><a class="viewcode-back" href="../../../symm.html#pyscf.symm.addons.label_orb_symm">[docs]</a><span class="k">def</span> <span class="nf">label_orb_symm</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">irrep_name</span><span class="p">,</span> <span class="n">symm_orb</span><span class="p">,</span> <span class="n">mo</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="n">MULTI_IRREPS</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
+<div class="viewcode-block" id="label_orb_symm"><a class="viewcode-back" href="../../../modules/symm.html#pyscf.symm.addons.label_orb_symm">[docs]</a><span class="k">def</span> <span class="nf">label_orb_symm</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">irrep_name</span><span class="p">,</span> <span class="n">symm_orb</span><span class="p">,</span> <span class="n">mo</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                    <span class="n">check</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="n">__config__</span><span class="p">,</span> <span class="s1">&#39;symm_addons_label_orb_symm_check&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
-                   <span class="n">tol</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="n">__config__</span><span class="p">,</span> <span class="s1">&#39;symm_addons_label_orb_symm_tol&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="n">e</span><span class="o">-</span><span class="mi">9</span><span class="p">)):</span>
+                   <span class="n">tol</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="n">__config__</span><span class="p">,</span> <span class="s1">&#39;symm_addons_label_orb_symm_tol&#39;</span><span class="p">,</span> <span class="mf">1e-9</span><span class="p">)):</span>
     <span class="sd">&#39;&#39;&#39;Label the symmetry of given orbitals</span>
 
 <span class="sd">    irrep_name can be either the symbol or the ID of the irreducible</span>
@@ -254,7 +236,7 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="n">s_moso</span> <span class="o">=</span> <span class="n">lib</span><span class="o">.</span><span class="n">cho_solve</span><span class="p">(</span><span class="n">ovlpso</span><span class="p">,</span> <span class="n">moso</span><span class="p">)</span>
         <span class="k">except</span><span class="p">:</span>
-            <span class="n">ovlpso</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">diag_indices</span><span class="p">(</span><span class="n">csym</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])]</span> <span class="o">+=</span> <span class="mi">1</span><span class="n">e</span><span class="o">-</span><span class="mi">12</span>
+            <span class="n">ovlpso</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">diag_indices</span><span class="p">(</span><span class="n">csym</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])]</span> <span class="o">+=</span> <span class="mf">1e-12</span>
             <span class="n">s_moso</span> <span class="o">=</span> <span class="n">lib</span><span class="o">.</span><span class="n">cho_solve</span><span class="p">(</span><span class="n">ovlpso</span><span class="p">,</span> <span class="n">moso</span><span class="p">)</span>
         <span class="n">norm</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;ki,ki-&gt;i&#39;</span><span class="p">,</span> <span class="n">moso</span><span class="o">.</span><span class="n">conj</span><span class="p">(),</span> <span class="n">s_moso</span><span class="p">)</span><span class="o">.</span><span class="n">real</span>
     <span class="n">norm</span> <span class="o">/=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">norm</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># for orbitals which are not normalized</span>
@@ -266,7 +248,7 @@
         <span class="n">largest_norm</span> <span class="o">=</span> <span class="n">norm</span><span class="p">[</span><span class="n">iridx</span><span class="p">,</span><span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nmo</span><span class="p">)]</span>
         <span class="n">orbidx</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">largest_norm</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="o">-</span><span class="n">tol</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">orbidx</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">idx</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">largest_norm</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="o">-</span><span class="n">tol</span><span class="o">*</span><span class="mi">1</span><span class="n">e2</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">idx</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">largest_norm</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="o">-</span><span class="n">tol</span><span class="o">*</span><span class="mf">1e2</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">idx</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;orbitals </span><span class="si">%s</span><span class="s1"> not symmetrized, norm = </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span>
                                  <span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">largest_norm</span><span class="p">[</span><span class="n">idx</span><span class="p">]))</span>
@@ -278,7 +260,7 @@
                 <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="s1">&#39;norm = </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">largest_norm</span><span class="p">[</span><span class="n">orbidx</span><span class="p">])</span>
     <span class="k">return</span> <span class="n">orbsym</span></div>
 
-<div class="viewcode-block" id="symmetrize_orb"><a class="viewcode-back" href="../../../symm.html#pyscf.symm.addons.symmetrize_orb">[docs]</a><span class="k">def</span> <span class="nf">symmetrize_orb</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">mo</span><span class="p">,</span> <span class="n">orbsym</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<div class="viewcode-block" id="symmetrize_orb"><a class="viewcode-back" href="../../../modules/symm.html#pyscf.symm.addons.symmetrize_orb">[docs]</a><span class="k">def</span> <span class="nf">symmetrize_orb</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">mo</span><span class="p">,</span> <span class="n">orbsym</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                    <span class="n">check</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="n">__config__</span><span class="p">,</span> <span class="s1">&#39;symm_addons_symmetrize_orb_check&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)):</span>
     <span class="sd">&#39;&#39;&#39;Symmetrize the given orbitals.</span>
 
@@ -339,9 +321,9 @@
         <span class="n">mo1</span><span class="p">[:,</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">csym</span><span class="p">,</span> <span class="n">sc</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">mo1</span></div>
 
-<div class="viewcode-block" id="symmetrize_space"><a class="viewcode-back" href="../../../symm.html#pyscf.symm.addons.symmetrize_space">[docs]</a><span class="k">def</span> <span class="nf">symmetrize_space</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">mo</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<div class="viewcode-block" id="symmetrize_space"><a class="viewcode-back" href="../../../modules/symm.html#pyscf.symm.addons.symmetrize_space">[docs]</a><span class="k">def</span> <span class="nf">symmetrize_space</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">mo</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                      <span class="n">check</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="n">__config__</span><span class="p">,</span> <span class="s1">&#39;symm_addons_symmetrize_space_check&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
-                     <span class="n">tol</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="n">__config__</span><span class="p">,</span> <span class="s1">&#39;symm_addons_symmetrize_space_tol&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="n">e</span><span class="o">-</span><span class="mi">7</span><span class="p">)):</span>
+                     <span class="n">tol</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="n">__config__</span><span class="p">,</span> <span class="s1">&#39;symm_addons_symmetrize_space_tol&#39;</span><span class="p">,</span> <span class="mf">1e-7</span><span class="p">)):</span>
     <span class="sd">&#39;&#39;&#39;Symmetrize the given orbital space.</span>
 
 <span class="sd">    This function is different to the :func:`symmetrize_orb`:  In this function,</span>
@@ -387,17 +369,17 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="n">diag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;ki,ki-&gt;i&#39;</span><span class="p">,</span> <span class="n">moso</span><span class="o">.</span><span class="n">conj</span><span class="p">(),</span> <span class="n">lib</span><span class="o">.</span><span class="n">cho_solve</span><span class="p">(</span><span class="n">ovlpso</span><span class="p">,</span> <span class="n">moso</span><span class="p">))</span>
         <span class="k">except</span><span class="p">:</span>
-            <span class="n">ovlpso</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">diag_indices</span><span class="p">(</span><span class="n">csym</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])]</span> <span class="o">+=</span> <span class="mi">1</span><span class="n">e</span><span class="o">-</span><span class="mi">12</span>
+            <span class="n">ovlpso</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">diag_indices</span><span class="p">(</span><span class="n">csym</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])]</span> <span class="o">+=</span> <span class="mf">1e-12</span>
             <span class="n">diag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;ki,ki-&gt;i&#39;</span><span class="p">,</span> <span class="n">moso</span><span class="o">.</span><span class="n">conj</span><span class="p">(),</span> <span class="n">lib</span><span class="o">.</span><span class="n">cho_solve</span><span class="p">(</span><span class="n">ovlpso</span><span class="p">,</span> <span class="n">moso</span><span class="p">))</span>
-        <span class="n">idx</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">diag</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="n">e</span><span class="o">-</span><span class="mi">8</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">diag</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-8</span>
         <span class="n">orb_exclude</span> <span class="o">=</span> <span class="n">mo</span><span class="p">[:,</span><span class="n">idx</span><span class="p">]</span>
         <span class="n">mo1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">orb_exclude</span><span class="p">)</span>
         <span class="n">moso1</span> <span class="o">=</span> <span class="n">moso</span><span class="p">[:,</span><span class="o">~</span><span class="n">idx</span><span class="p">]</span>
         <span class="n">dm</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">moso1</span><span class="p">,</span> <span class="n">moso1</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">conj</span><span class="p">())</span>
 
-        <span class="k">if</span> <span class="n">dm</span><span class="o">.</span><span class="n">trace</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="n">e</span><span class="o">-</span><span class="mi">8</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">dm</span><span class="o">.</span><span class="n">trace</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mf">1e-8</span><span class="p">:</span>
             <span class="n">e</span><span class="p">,</span> <span class="n">u</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigh</span><span class="p">(</span><span class="n">dm</span><span class="p">,</span> <span class="n">ovlpso</span><span class="p">)</span>
-            <span class="n">mo1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">csym</span><span class="p">,</span> <span class="n">u</span><span class="p">[:,</span><span class="nb">abs</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">e</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="n">e</span><span class="o">-</span><span class="mi">6</span><span class="p">]))</span>
+            <span class="n">mo1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">csym</span><span class="p">,</span> <span class="n">u</span><span class="p">[:,</span><span class="nb">abs</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">e</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-6</span><span class="p">]))</span>
     <span class="n">mo1</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">hstack</span><span class="p">(</span><span class="n">mo1</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">mo1</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="n">nmo</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The input orbital space is not symmetrized.</span><span class="se">\n</span><span class="s1"> One &#39;</span>
@@ -409,11 +391,11 @@
     <span class="n">idx</span> <span class="o">=</span> <span class="n">mo_mapping</span><span class="o">.</span><span class="n">mo_1to1map</span><span class="p">(</span><span class="n">reduce</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">,</span> <span class="p">(</span><span class="n">mo</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">mo1</span><span class="p">)))</span>
     <span class="k">return</span> <span class="n">mo1</span><span class="p">[:,</span><span class="n">idx</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="std_symb"><a class="viewcode-back" href="../../../symm.html#pyscf.symm.addons.std_symb">[docs]</a><span class="k">def</span> <span class="nf">std_symb</span><span class="p">(</span><span class="n">gpname</span><span class="p">):</span>
+<div class="viewcode-block" id="std_symb"><a class="viewcode-back" href="../../../modules/symm.html#pyscf.symm.addons.std_symb">[docs]</a><span class="k">def</span> <span class="nf">std_symb</span><span class="p">(</span><span class="n">gpname</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;std_symb(&#39;d2h&#39;) returns D2h; std_symb(&#39;D2H&#39;) returns D2h&#39;&#39;&#39;</span>
     <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">gpname</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">+</span> <span class="n">gpname</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span></div>
 
-<div class="viewcode-block" id="irrep_name2id"><a class="viewcode-back" href="../../../symm.html#pyscf.symm.addons.irrep_name2id">[docs]</a><span class="k">def</span> <span class="nf">irrep_name2id</span><span class="p">(</span><span class="n">gpname</span><span class="p">,</span> <span class="n">symb</span><span class="p">):</span>
+<div class="viewcode-block" id="irrep_name2id"><a class="viewcode-back" href="../../../modules/symm.html#pyscf.symm.addons.irrep_name2id">[docs]</a><span class="k">def</span> <span class="nf">irrep_name2id</span><span class="p">(</span><span class="n">gpname</span><span class="p">,</span> <span class="n">symb</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Convert the irrep symbol to internal irrep ID</span>
 
 <span class="sd">    Args:</span>
@@ -432,7 +414,7 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">param</span><span class="o">.</span><span class="n">IRREP_ID_TABLE</span><span class="p">[</span><span class="n">gpname</span><span class="p">][</span><span class="n">symb</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="irrep_id2name"><a class="viewcode-back" href="../../../symm.html#pyscf.symm.addons.irrep_id2name">[docs]</a><span class="k">def</span> <span class="nf">irrep_id2name</span><span class="p">(</span><span class="n">gpname</span><span class="p">,</span> <span class="n">irrep_id</span><span class="p">):</span>
+<div class="viewcode-block" id="irrep_id2name"><a class="viewcode-back" href="../../../modules/symm.html#pyscf.symm.addons.irrep_id2name">[docs]</a><span class="k">def</span> <span class="nf">irrep_id2name</span><span class="p">(</span><span class="n">gpname</span><span class="p">,</span> <span class="n">irrep_id</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Convert the internal irrep ID to irrep symbol</span>
 
 <span class="sd">    Args:</span>
@@ -448,12 +430,14 @@
     <span class="k">if</span> <span class="n">gpname</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;Dooh&#39;</span><span class="p">,</span> <span class="s1">&#39;Coov&#39;</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">basis</span><span class="o">.</span><span class="n">linearmole_irrep_id2symb</span><span class="p">(</span><span class="n">gpname</span><span class="p">,</span> <span class="n">irrep_id</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">param</span><span class="o">.</span><span class="n">CHARACTER_TABLE</span><span class="p">[</span><span class="n">gpname</span><span class="p">][</span><span class="n">irrep_id</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span></div>
+        <span class="c1"># irrep_id may be obtained from high symmetry (Dooh, Coov)</span>
+        <span class="n">irrep_id_in_d2h</span> <span class="o">=</span> <span class="n">irrep_id</span> <span class="o">%</span> <span class="mi">10</span>
+        <span class="k">return</span> <span class="n">param</span><span class="o">.</span><span class="n">CHARACTER_TABLE</span><span class="p">[</span><span class="n">gpname</span><span class="p">][</span><span class="n">irrep_id_in_d2h</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span></div>
 
 <span class="k">def</span> <span class="nf">irrep_name</span><span class="p">(</span><span class="n">pgname</span><span class="p">,</span> <span class="n">irrep_id</span><span class="p">):</span>
     <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;This function was obsoleted. Use irrep_id2name&#39;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="route"><a class="viewcode-back" href="../../../symm.html#pyscf.symm.addons.route">[docs]</a><span class="k">def</span> <span class="nf">route</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">nelec</span><span class="p">,</span> <span class="n">orbsym</span><span class="p">):</span>
+<div class="viewcode-block" id="route"><a class="viewcode-back" href="../../../modules/symm.html#pyscf.symm.addons.route">[docs]</a><span class="k">def</span> <span class="nf">route</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">nelec</span><span class="p">,</span> <span class="n">orbsym</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Pick orbitals to form a determinant which has the right symmetry.</span>
 <span class="sd">    If solution is not found, return []</span>
 <span class="sd">    &#39;&#39;&#39;</span>
@@ -475,7 +459,7 @@
         <span class="n">orbsym</span> <span class="o">=</span> <span class="n">orbsym</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">riter</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">nelec</span><span class="p">,</span> <span class="n">orbsym</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="eigh"><a class="viewcode-back" href="../../../symm.html#pyscf.symm.addons.eigh">[docs]</a><span class="k">def</span> <span class="nf">eigh</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">orbsym</span><span class="p">):</span>
+<div class="viewcode-block" id="eigh"><a class="viewcode-back" href="../../../modules/symm.html#pyscf.symm.addons.eigh">[docs]</a><span class="k">def</span> <span class="nf">eigh</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">orbsym</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Solve eigenvalue problem based on the symmetry information for basis.</span>
 <span class="sd">    See also pyscf/lib/linalg_helper.py :func:`eigh_by_blocks`</span>
 
@@ -493,7 +477,34 @@
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">eigh_by_blocks</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">orbsym</span><span class="p">)</span></div>
 
-<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">direct_prod</span><span class="p">(</span><span class="n">orbsym1</span><span class="p">,</span> <span class="n">orbsym2</span><span class="p">,</span> <span class="n">groupname</span><span class="o">=</span><span class="s1">&#39;D2h&#39;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">groupname</span> <span class="o">==</span> <span class="s1">&#39;SO3&#39;</span><span class="p">:</span>
+        <span class="n">prod</span> <span class="o">=</span> <span class="n">orbsym1</span><span class="p">[:,</span><span class="kc">None</span><span class="p">]</span> <span class="o">^</span> <span class="n">orbsym2</span>
+        <span class="n">orbsym1_not_s</span> <span class="o">=</span> <span class="n">orbsym1</span> <span class="o">!=</span> <span class="mi">0</span>
+        <span class="n">orbsym2_not_s</span> <span class="o">=</span> <span class="n">orbsym2</span> <span class="o">!=</span> <span class="mi">0</span>
+        <span class="n">prod</span><span class="p">[</span><span class="n">orbsym1_not_s</span><span class="p">[:,</span><span class="kc">None</span><span class="p">]</span> <span class="o">&amp;</span> <span class="n">orbsym2_not_s</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">MULTI_IRREPS</span>
+        <span class="n">prod</span><span class="p">[</span><span class="n">orbsym1</span><span class="p">[:,</span><span class="kc">None</span><span class="p">]</span> <span class="o">==</span> <span class="n">orbsym2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">elif</span> <span class="n">groupname</span> <span class="o">==</span> <span class="s1">&#39;Dooh&#39;</span><span class="p">:</span>
+        <span class="n">orbsym1_octa</span> <span class="o">=</span> <span class="p">(</span><span class="n">orbsym1</span> <span class="o">//</span> <span class="mi">10</span><span class="p">)</span> <span class="o">*</span> <span class="mi">8</span> <span class="o">+</span> <span class="n">orbsym1</span> <span class="o">%</span> <span class="mi">10</span>
+        <span class="n">orbsym2_octa</span> <span class="o">=</span> <span class="p">(</span><span class="n">orbsym2</span> <span class="o">//</span> <span class="mi">10</span><span class="p">)</span> <span class="o">*</span> <span class="mi">8</span> <span class="o">+</span> <span class="n">orbsym2</span> <span class="o">%</span> <span class="mi">10</span>
+        <span class="n">prod</span> <span class="o">=</span> <span class="n">orbsym1_octa</span><span class="p">[:,</span><span class="kc">None</span><span class="p">]</span> <span class="o">^</span> <span class="n">orbsym2_octa</span>
+        <span class="n">prod</span> <span class="o">=</span> <span class="p">(</span><span class="n">prod</span> <span class="o">%</span> <span class="mi">8</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">prod</span> <span class="o">//</span> <span class="mi">8</span><span class="p">)</span> <span class="o">*</span> <span class="mi">10</span>
+        <span class="n">orbsym1_irrepE</span> <span class="o">=</span> <span class="p">(</span><span class="n">orbsym1</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">orbsym1</span> <span class="o">!=</span> <span class="mi">4</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">orbsym1</span> <span class="o">!=</span> <span class="mi">5</span><span class="p">)</span>
+        <span class="n">orbsym2_irrepE</span> <span class="o">=</span> <span class="p">(</span><span class="n">orbsym2</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">orbsym2</span> <span class="o">!=</span> <span class="mi">4</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">orbsym2</span> <span class="o">!=</span> <span class="mi">5</span><span class="p">)</span>
+        <span class="n">prod</span><span class="p">[</span><span class="n">orbsym1_irrepE</span><span class="p">[:,</span><span class="kc">None</span><span class="p">]</span> <span class="o">&amp;</span> <span class="n">orbsym2_irrepE</span><span class="p">]</span> <span class="o">=</span> <span class="n">MULTI_IRREPS</span>
+        <span class="n">prod</span><span class="p">[</span><span class="n">orbsym1</span><span class="p">[:,</span><span class="kc">None</span><span class="p">]</span> <span class="o">==</span> <span class="n">orbsym2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">elif</span> <span class="n">groupname</span> <span class="o">==</span> <span class="s1">&#39;Coov&#39;</span><span class="p">:</span>
+        <span class="n">prod</span> <span class="o">=</span> <span class="n">orbsym1</span><span class="p">[:,</span><span class="kc">None</span><span class="p">]</span> <span class="o">^</span> <span class="n">orbsym2</span>
+        <span class="n">orbsym1_irrepE</span> <span class="o">=</span> <span class="n">orbsym1</span> <span class="o">&gt;=</span> <span class="mi">2</span>
+        <span class="n">orbsym2_irrepE</span> <span class="o">=</span> <span class="n">orbsym2</span> <span class="o">&gt;=</span> <span class="mi">2</span>
+        <span class="n">prod</span><span class="p">[</span><span class="n">orbsym1_irrepE</span><span class="p">[:,</span><span class="kc">None</span><span class="p">]</span> <span class="o">&amp;</span> <span class="n">orbsym2_irrepE</span><span class="p">]</span> <span class="o">=</span> <span class="n">MULTI_IRREPS</span>
+        <span class="n">prod</span><span class="p">[</span><span class="n">orbsym1</span><span class="p">[:,</span><span class="kc">None</span><span class="p">]</span> <span class="o">==</span> <span class="n">orbsym2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">else</span><span class="p">:</span>  <span class="c1"># D2h and subgroup</span>
+        <span class="n">prod</span> <span class="o">=</span> <span class="n">orbsym1</span><span class="p">[:,</span><span class="kc">None</span><span class="p">]</span> <span class="o">^</span> <span class="n">orbsym2</span>
+    <span class="k">return</span> <span class="n">prod</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">gto</span>
     <span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">scf</span>
     <span class="n">mol</span> <span class="o">=</span> <span class="n">gto</span><span class="o">.</span><span class="n">Mole</span><span class="p">()</span>
@@ -508,7 +519,7 @@
     <span class="n">nao</span><span class="p">,</span> <span class="n">nmo</span> <span class="o">=</span> <span class="n">mf</span><span class="o">.</span><span class="n">mo_coeff</span><span class="o">.</span><span class="n">shape</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">label_orb_symm</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">mol</span><span class="o">.</span><span class="n">irrep_name</span><span class="p">,</span> <span class="n">mol</span><span class="o">.</span><span class="n">symm_orb</span><span class="p">,</span> <span class="n">mf</span><span class="o">.</span><span class="n">mo_coeff</span><span class="p">))</span>
     <span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-    <span class="n">u</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="n">nmo</span><span class="p">,</span><span class="n">nmo</span><span class="p">))</span><span class="o">*</span><span class="mi">1</span><span class="n">e</span><span class="o">-</span><span class="mi">2</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="n">nmo</span><span class="p">,</span><span class="n">nmo</span><span class="p">))</span><span class="o">*</span><span class="mf">1e-2</span>
     <span class="n">u</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">expm</span><span class="p">(</span><span class="n">u</span> <span class="o">-</span> <span class="n">u</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
     <span class="n">mo</span> <span class="o">=</span> <span class="n">symmetrize_orb</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">mf</span><span class="o">.</span><span class="n">mo_coeff</span><span class="p">,</span> <span class="n">u</span><span class="p">))</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">label_orb_symm</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">mol</span><span class="o">.</span><span class="n">irrep_name</span><span class="p">,</span> <span class="n">mol</span><span class="o">.</span><span class="n">symm_orb</span><span class="p">,</span> <span class="n">mo</span><span class="p">))</span>
@@ -519,9 +530,7 @@
 </pre></div>
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -530,11 +539,19 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015-, Qiming Sun &lt;osirpt.sun@gmail.com&gt;.
+        
+        &copy; Copyright 2015-2020, The PySCF Developers
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -546,38 +563,15 @@
   </div>
   
 
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../../',
-            VERSION:'1.5.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: ''
-        };
-    </script>
-      <script type="text/javascript" src="../../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

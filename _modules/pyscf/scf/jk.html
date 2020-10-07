@@ -1,0 +1,460 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pyscf.scf.jk &mdash; PySCF 1.7.5 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> PySCF
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.7
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html">1. An overview of PySCF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../version.html">2. Version history</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">3. Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../code-rule.html">4. Code standard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../benchmark.html">5. Benchmark</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">6. Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../theory.html">7. Theoretical methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../advanced.html">8. Miscellaneous</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../interface.html">9. Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">10. Main modules</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">PySCF</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../scf.html">pyscf.scf</a> &raquo;</li>
+        
+      <li>pyscf.scf.jk</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pyscf.scf.jk</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># Copyright 2014-2020 The PySCF Developers. All Rights Reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+<span class="c1">#</span>
+<span class="c1">#     http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1">#</span>
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+<span class="c1">#</span>
+<span class="c1"># Author: Qiming Sun &lt;osirpt.sun@gmail.com&gt;</span>
+<span class="c1">#</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">General JK contraction function for</span>
+<span class="sd">* arbitrary integrals</span>
+<span class="sd">* 4 different molecules</span>
+<span class="sd">* multiple density matrices</span>
+<span class="sd">* arbitrary basis subset for the 4 indices</span>
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">lib</span>
+<span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">gto</span>
+<span class="kn">from</span> <span class="nn">pyscf.lib</span> <span class="k">import</span> <span class="n">logger</span>
+<span class="kn">from</span> <span class="nn">pyscf.scf</span> <span class="k">import</span> <span class="n">_vhf</span>
+
+
+<div class="viewcode-block" id="get_jk"><a class="viewcode-back" href="../../../modules/scf.html#pyscf.scf.jk.get_jk">[docs]</a><span class="k">def</span> <span class="nf">get_jk</span><span class="p">(</span><span class="n">mols</span><span class="p">,</span> <span class="n">dms</span><span class="p">,</span> <span class="n">scripts</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;ijkl,ji-&gt;kl&#39;</span><span class="p">],</span> <span class="n">intor</span><span class="o">=</span><span class="s1">&#39;int2e_sph&#39;</span><span class="p">,</span>
+           <span class="n">aosym</span><span class="o">=</span><span class="s1">&#39;s1&#39;</span><span class="p">,</span> <span class="n">comp</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">hermi</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">shls_slice</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+           <span class="n">verbose</span><span class="o">=</span><span class="n">logger</span><span class="o">.</span><span class="n">WARN</span><span class="p">,</span> <span class="n">vhfopt</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Compute J/K matrices for the given density matrix</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        mols : an instance of :class:`Mole` or a list of `Mole` objects</span>
+
+<span class="sd">        dms : ndarray or list of ndarrays</span>
+<span class="sd">            A density matrix or a list of density matrices</span>
+
+<span class="sd">    Kwargs:</span>
+<span class="sd">        hermi : int</span>
+<span class="sd">            Whether the returned J (K) matrix is hermitian</span>
+
+<span class="sd">            | 0 : no hermitian or symmetric</span>
+<span class="sd">            | 1 : hermitian</span>
+<span class="sd">            | 2 : anti-hermitian</span>
+
+<span class="sd">        intor : str</span>
+<span class="sd">            2-electron integral name.  See :func:`getints` for the complete</span>
+<span class="sd">            list of available 2-electron integral names</span>
+<span class="sd">        aosym : int or str</span>
+<span class="sd">            Permutation symmetry for the AO integrals</span>
+
+<span class="sd">            | 4 or &#39;4&#39; or &#39;s4&#39;: 4-fold symmetry (default)</span>
+<span class="sd">            | &#39;2ij&#39; or &#39;s2ij&#39; : symmetry between i, j in (ij|kl)</span>
+<span class="sd">            | &#39;2kl&#39; or &#39;s2kl&#39; : symmetry between k, l in (ij|kl)</span>
+<span class="sd">            | 1 or &#39;1&#39; or &#39;s1&#39;: no symmetry</span>
+<span class="sd">            | &#39;a4ij&#39; : 4-fold symmetry with anti-symmetry between i, j in (ij|kl)</span>
+<span class="sd">            | &#39;a4kl&#39; : 4-fold symmetry with anti-symmetry between k, l in (ij|kl)</span>
+<span class="sd">            | &#39;a2ij&#39; : anti-symmetry between i, j in (ij|kl)</span>
+<span class="sd">            | &#39;a2kl&#39; : anti-symmetry between k, l in (ij|kl)</span>
+
+<span class="sd">        comp : int</span>
+<span class="sd">            Components of the integrals, e.g. cint2e_ip_sph has 3 components.</span>
+<span class="sd">        scripts : string or a list of strings</span>
+<span class="sd">            Contraction description (following numpy.einsum convention) based on</span>
+<span class="sd">            letters [ijkl].  Each script will be one-to-one applied to each</span>
+<span class="sd">            entry of dms.  So it must have the same number of elements as the</span>
+<span class="sd">            dms, len(scripts) == len(dms).</span>
+<span class="sd">        shls_slice : 8-element list</span>
+<span class="sd">            (ish_start, ish_end, jsh_start, jsh_end, ksh_start, ksh_end, lsh_start, lsh_end)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Depending on the number of density matrices, the function returns one</span>
+<span class="sd">        J/K matrix or a list of J/K matrices (the same number of entries as the</span>
+<span class="sd">        input dms).</span>
+<span class="sd">        Each JK matrices may be a 2D array or 3D array if the AO integral</span>
+<span class="sd">        has multiple components.</span>
+
+<span class="sd">    Examples:</span>
+
+<span class="sd">    &gt;&gt;&gt; from pyscf import gto</span>
+<span class="sd">    &gt;&gt;&gt; mol = gto.M(atom=&#39;H 0 -.5 0; H 0 .5 0&#39;, basis=&#39;cc-pvdz&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; nao = mol.nao_nr()</span>
+<span class="sd">    &gt;&gt;&gt; dm = numpy.random.random((nao,nao))</span>
+<span class="sd">    &gt;&gt;&gt; # Default, Coulomb matrix</span>
+<span class="sd">    &gt;&gt;&gt; vj = get_jk(mol, dm)</span>
+<span class="sd">    &gt;&gt;&gt; # Coulomb matrix with 8-fold permutation symmetry for AO integrals</span>
+<span class="sd">    &gt;&gt;&gt; vj = get_jk(mol, dm, &#39;ijkl,ji-&gt;kl&#39;, aosym=&#39;s8&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; # Exchange matrix with 8-fold permutation symmetry for AO integrals</span>
+<span class="sd">    &gt;&gt;&gt; vk = get_jk(mol, dm, &#39;ijkl,jk-&gt;il&#39;, aosym=&#39;s8&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; # Compute coulomb and exchange matrices together</span>
+<span class="sd">    &gt;&gt;&gt; vj, vk = get_jk(mol, (dm,dm), (&#39;ijkl,ji-&gt;kl&#39;,&#39;ijkl,li-&gt;kj&#39;), aosym=&#39;s8&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; # Analytical gradients for coulomb matrix</span>
+<span class="sd">    &gt;&gt;&gt; j1 = get_jk(mol, dm, &#39;ijkl,lk-&gt;ij&#39;, intor=&#39;int2e_ip1_sph&#39;, aosym=&#39;s2kl&#39;, comp=3)</span>
+
+<span class="sd">    &gt;&gt;&gt; # contraction across two molecules</span>
+<span class="sd">    &gt;&gt;&gt; mol1 = gto.M(atom=&#39;He 2 0 0&#39;, basis=&#39;6-31g&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; nao1 = mol1.nao_nr()</span>
+<span class="sd">    &gt;&gt;&gt; dm1 = numpy.random.random((nao1,nao1))</span>
+<span class="sd">    &gt;&gt;&gt; # Coulomb interaction between two molecules, note 4-fold symmetry can be applied</span>
+<span class="sd">    &gt;&gt;&gt; jcross = get_jk((mol1,mol1,mol,mol), dm, scripts=&#39;ijkl,lk-&gt;ij&#39;, aosym=&#39;s4&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; ecoul = numpy.einsum(&#39;ij,ij&#39;, jcross, dm1)</span>
+<span class="sd">    &gt;&gt;&gt; # Exchange interaction between two molecules, no symmetry can be used</span>
+<span class="sd">    &gt;&gt;&gt; kcross = get_jk((mol1,mol,mol,mol1), dm, scripts=&#39;ijkl,jk-&gt;il&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; ex = numpy.einsum(&#39;ij,ji&#39;, kcross, dm1)</span>
+
+<span class="sd">    &gt;&gt;&gt; # Analytical gradients for coulomb matrix between two molecules</span>
+<span class="sd">    &gt;&gt;&gt; jcros1 = get_jk((mol1,mol1,mol,mol), dm, scripts=&#39;ijkl,lk-&gt;ij&#39;, intor=&#39;int2e_ip1_sph&#39;, comp=3)</span>
+<span class="sd">    &gt;&gt;&gt; # Analytical gradients for coulomb interaction between 1s density and the other molecule</span>
+<span class="sd">    &gt;&gt;&gt; jpart1 = get_jk((mol1,mol1,mol,mol), dm, scripts=&#39;ijkl,lk-&gt;ij&#39;, intor=&#39;int2e_ip1_sph&#39;, comp=3,</span>
+<span class="sd">    ...                 shls_slice=(0,1,0,1,0,mol.nbas,0,mol.nbas))</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mols</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
+        <span class="n">intor</span><span class="p">,</span> <span class="n">comp</span> <span class="o">=</span> <span class="n">gto</span><span class="o">.</span><span class="n">moleintor</span><span class="o">.</span><span class="n">_get_intor_and_comp</span><span class="p">(</span><span class="n">mols</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">_add_suffix</span><span class="p">(</span><span class="n">intor</span><span class="p">),</span> <span class="n">comp</span><span class="p">)</span>
+        <span class="k">assert</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">mols</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">)</span>
+        <span class="k">assert</span><span class="p">(</span><span class="n">mols</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">cart</span> <span class="o">==</span> <span class="n">mols</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">cart</span> <span class="o">==</span> <span class="n">mols</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">cart</span> <span class="o">==</span> <span class="n">mols</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">cart</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">shls_slice</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">shls_slice</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([(</span><span class="mi">0</span><span class="p">,</span> <span class="n">mol</span><span class="o">.</span><span class="n">nbas</span><span class="p">)</span> <span class="k">for</span> <span class="n">mol</span> <span class="ow">in</span> <span class="n">mols</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">shls_slice</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">shls_slice</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="c1"># concatenate unique mols and build corresponding shls_slice</span>
+        <span class="n">mol_ids</span> <span class="o">=</span> <span class="p">[</span><span class="nb">id</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span> <span class="k">for</span> <span class="n">mol</span> <span class="ow">in</span> <span class="n">mols</span><span class="p">]</span>
+        <span class="n">atm</span><span class="p">,</span> <span class="n">bas</span><span class="p">,</span> <span class="n">env</span> <span class="o">=</span> <span class="n">mols</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">_atm</span><span class="p">,</span> <span class="n">mols</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">_bas</span><span class="p">,</span> <span class="n">mols</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">_env</span>
+        <span class="n">bas_start</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">):</span>
+            <span class="n">first</span> <span class="o">=</span> <span class="n">mol_ids</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">mol_ids</span><span class="p">[</span><span class="n">m</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">first</span> <span class="o">==</span> <span class="n">m</span><span class="p">:</span>  <span class="c1"># the unique mol, not repeated in mols</span>
+                <span class="n">bas_start</span><span class="p">[</span><span class="n">m</span><span class="p">]</span> <span class="o">=</span> <span class="n">bas</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">atm</span><span class="p">,</span> <span class="n">bas</span><span class="p">,</span> <span class="n">env</span> <span class="o">=</span> <span class="n">gto</span><span class="o">.</span><span class="n">conc_env</span><span class="p">(</span><span class="n">atm</span><span class="p">,</span> <span class="n">bas</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">mols</span><span class="p">[</span><span class="n">m</span><span class="p">]</span><span class="o">.</span><span class="n">_atm</span><span class="p">,</span>
+                                             <span class="n">mols</span><span class="p">[</span><span class="n">m</span><span class="p">]</span><span class="o">.</span><span class="n">_bas</span><span class="p">,</span> <span class="n">mols</span><span class="p">[</span><span class="n">m</span><span class="p">]</span><span class="o">.</span><span class="n">_env</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">bas_start</span><span class="p">[</span><span class="n">m</span><span class="p">]</span> <span class="o">=</span> <span class="n">bas_start</span><span class="p">[</span><span class="n">first</span><span class="p">]</span>
+            <span class="n">shls_slice</span><span class="p">[</span><span class="n">m</span><span class="p">]</span> <span class="o">+=</span> <span class="n">bas_start</span><span class="p">[</span><span class="n">m</span><span class="p">]</span>
+        <span class="n">shls_slice</span> <span class="o">=</span> <span class="n">shls_slice</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">intor</span><span class="p">,</span> <span class="n">comp</span> <span class="o">=</span> <span class="n">gto</span><span class="o">.</span><span class="n">moleintor</span><span class="o">.</span><span class="n">_get_intor_and_comp</span><span class="p">(</span><span class="n">mols</span><span class="o">.</span><span class="n">_add_suffix</span><span class="p">(</span><span class="n">intor</span><span class="p">),</span> <span class="n">comp</span><span class="p">)</span>
+        <span class="n">atm</span><span class="p">,</span> <span class="n">bas</span><span class="p">,</span> <span class="n">env</span> <span class="o">=</span> <span class="n">mols</span><span class="o">.</span><span class="n">_atm</span><span class="p">,</span> <span class="n">mols</span><span class="o">.</span><span class="n">_bas</span><span class="p">,</span> <span class="n">mols</span><span class="o">.</span><span class="n">_env</span>
+        <span class="k">if</span> <span class="n">shls_slice</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">shls_slice</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">mols</span><span class="o">.</span><span class="n">nbas</span><span class="p">)</span> <span class="o">*</span> <span class="mi">4</span>
+
+    <span class="n">single_script</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">scripts</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">single_script</span><span class="p">:</span>
+        <span class="n">scripts</span> <span class="o">=</span> <span class="p">[</span><span class="n">scripts</span><span class="p">]</span>
+    <span class="c1"># Check if letters other than ijkl were provided.</span>
+    <span class="k">if</span> <span class="nb">set</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">scripts</span><span class="p">[:</span><span class="mi">4</span><span class="p">]))</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="s1">&#39;ijkl,-&gt;&#39;</span><span class="p">):</span>
+        <span class="c1"># Translate these letters to ijkl if possible</span>
+        <span class="n">scripts</span> <span class="o">=</span> <span class="p">[</span><span class="n">script</span><span class="o">.</span><span class="n">translate</span><span class="p">({</span><span class="nb">ord</span><span class="p">(</span><span class="n">script</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span> <span class="s1">&#39;i&#39;</span><span class="p">,</span>
+                                     <span class="nb">ord</span><span class="p">(</span><span class="n">script</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span> <span class="s1">&#39;j&#39;</span><span class="p">,</span>
+                                     <span class="nb">ord</span><span class="p">(</span><span class="n">script</span><span class="p">[</span><span class="mi">2</span><span class="p">]):</span> <span class="s1">&#39;k&#39;</span><span class="p">,</span>
+                                     <span class="nb">ord</span><span class="p">(</span><span class="n">script</span><span class="p">[</span><span class="mi">3</span><span class="p">]):</span> <span class="s1">&#39;l&#39;</span><span class="p">})</span>
+                   <span class="k">for</span> <span class="n">script</span> <span class="ow">in</span> <span class="n">scripts</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">set</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">scripts</span><span class="p">[:</span><span class="mi">4</span><span class="p">]))</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="s1">&#39;ijkl,-&gt;&#39;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Scripts unsupported </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">scripts</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dms</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="ow">and</span> <span class="n">dms</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">dms</span> <span class="o">=</span> <span class="p">[</span><span class="n">dms</span><span class="p">]</span>
+    <span class="k">assert</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">scripts</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">dms</span><span class="p">))</span>
+
+    <span class="c1">#format scripts</span>
+    <span class="n">descript</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">script</span> <span class="ow">in</span> <span class="n">scripts</span><span class="p">:</span>
+        <span class="n">dmsym</span><span class="p">,</span> <span class="n">vsym</span> <span class="o">=</span> <span class="n">script</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;-&gt;&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">vsym</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;a2&#39;</span><span class="p">,</span> <span class="s1">&#39;s2&#39;</span><span class="p">,</span> <span class="s1">&#39;s1&#39;</span><span class="p">):</span>
+            <span class="n">descript</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dmsym</span> <span class="o">+</span> <span class="s1">&#39;-&gt;&#39;</span> <span class="o">+</span> <span class="n">vsym</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">hermi</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">descript</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dmsym</span> <span class="o">+</span> <span class="s1">&#39;-&gt;s1&#39;</span> <span class="o">+</span> <span class="n">vsym</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">descript</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dmsym</span> <span class="o">+</span> <span class="s1">&#39;-&gt;s2&#39;</span> <span class="o">+</span> <span class="n">vsym</span><span class="p">)</span>
+
+    <span class="n">vs</span> <span class="o">=</span> <span class="n">_vhf</span><span class="o">.</span><span class="n">direct_bindm</span><span class="p">(</span><span class="n">intor</span><span class="p">,</span> <span class="n">aosym</span><span class="p">,</span> <span class="n">descript</span><span class="p">,</span> <span class="n">dms</span><span class="p">,</span> <span class="n">comp</span><span class="p">,</span> <span class="n">atm</span><span class="p">,</span> <span class="n">bas</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span>
+                           <span class="n">vhfopt</span><span class="o">=</span><span class="n">vhfopt</span><span class="p">,</span> <span class="n">shls_slice</span><span class="o">=</span><span class="n">shls_slice</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">hermi</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">vs</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">v</span><span class="p">:</span>
+                    <span class="n">lib</span><span class="o">.</span><span class="n">hermi_triu</span><span class="p">(</span><span class="n">vi</span><span class="p">,</span> <span class="n">hermi</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">lib</span><span class="o">.</span><span class="n">hermi_triu</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">hermi</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">single_script</span><span class="p">:</span>
+        <span class="n">vs</span> <span class="o">=</span> <span class="n">vs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">vs</span></div>
+
+<span class="n">jk_build</span> <span class="o">=</span> <span class="n">get_jk</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">mol</span> <span class="o">=</span> <span class="n">gto</span><span class="o">.</span><span class="n">M</span><span class="p">(</span><span class="n">atom</span><span class="o">=</span><span class="s1">&#39;H 0 -.5 0; H 0 .5 0&#39;</span><span class="p">,</span> <span class="n">basis</span><span class="o">=</span><span class="s1">&#39;cc-pvdz&#39;</span><span class="p">)</span>
+
+    <span class="n">nao</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">nao_nr</span><span class="p">()</span>
+    <span class="n">dm</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="n">nao</span><span class="p">,</span><span class="n">nao</span><span class="p">))</span>
+    <span class="n">eri0</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">intor</span><span class="p">(</span><span class="s1">&#39;int2e_sph&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">nao</span><span class="p">,)</span><span class="o">*</span><span class="mi">4</span><span class="p">)</span>
+    <span class="n">vj</span> <span class="o">=</span> <span class="n">get_jk</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">dm</span><span class="p">,</span> <span class="s1">&#39;ijkl,ji-&gt;kl&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">vj</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;ijkl,ji-&gt;kl&#39;</span><span class="p">,</span> <span class="n">eri0</span><span class="p">,</span> <span class="n">dm</span><span class="p">)))</span>
+    <span class="n">vj</span> <span class="o">=</span> <span class="n">get_jk</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">dm</span><span class="p">,</span> <span class="s1">&#39;ijkl,ji-&gt;kl&#39;</span><span class="p">,</span> <span class="n">aosym</span><span class="o">=</span><span class="s1">&#39;s8&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">vj</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;ijkl,ji-&gt;kl&#39;</span><span class="p">,</span> <span class="n">eri0</span><span class="p">,</span> <span class="n">dm</span><span class="p">)))</span>
+    <span class="n">vk</span> <span class="o">=</span> <span class="n">get_jk</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">dm</span><span class="p">,</span> <span class="s1">&#39;ijkl,jk-&gt;il&#39;</span><span class="p">,</span> <span class="n">aosym</span><span class="o">=</span><span class="s1">&#39;s8&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">vk</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;ijkl,jk-&gt;il&#39;</span><span class="p">,</span> <span class="n">eri0</span><span class="p">,</span> <span class="n">dm</span><span class="p">)))</span>
+    <span class="n">vj</span><span class="p">,</span> <span class="n">vk</span> <span class="o">=</span> <span class="n">get_jk</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="p">(</span><span class="n">dm</span><span class="p">,</span><span class="n">dm</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;ijkl,ji-&gt;kl&#39;</span><span class="p">,</span><span class="s1">&#39;ijkl,li-&gt;kj&#39;</span><span class="p">))</span>
+    <span class="n">eri1</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">intor</span><span class="p">(</span><span class="s1">&#39;int2e_ip1_sph&#39;</span><span class="p">,</span> <span class="n">comp</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="mi">3</span><span class="p">]</span><span class="o">+</span><span class="p">[</span><span class="n">nao</span><span class="p">]</span><span class="o">*</span><span class="mi">4</span><span class="p">)</span>
+    <span class="n">j1</span> <span class="o">=</span> <span class="n">get_jk</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">dm</span><span class="p">,</span> <span class="s1">&#39;ijkl,lk-&gt;ij&#39;</span><span class="p">,</span> <span class="n">intor</span><span class="o">=</span><span class="s1">&#39;int2e_ip1_sph&#39;</span><span class="p">,</span> <span class="n">aosym</span><span class="o">=</span><span class="s1">&#39;s2kl&#39;</span><span class="p">,</span> <span class="n">comp</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">j1</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;xijkl,lk-&gt;xij&#39;</span><span class="p">,</span> <span class="n">eri1</span><span class="p">,</span> <span class="n">dm</span><span class="p">)))</span>
+
+    <span class="n">mol1</span> <span class="o">=</span> <span class="n">gto</span><span class="o">.</span><span class="n">M</span><span class="p">(</span><span class="n">atom</span><span class="o">=</span><span class="s1">&#39;He 2 0 0&#39;</span><span class="p">,</span> <span class="n">basis</span><span class="o">=</span><span class="s1">&#39;6-31g&#39;</span><span class="p">)</span>
+    <span class="n">nao1</span> <span class="o">=</span> <span class="n">mol1</span><span class="o">.</span><span class="n">nao_nr</span><span class="p">()</span>
+    <span class="n">dm1</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="n">nao1</span><span class="p">,</span><span class="n">nao1</span><span class="p">))</span>
+    <span class="n">eri0</span> <span class="o">=</span> <span class="n">gto</span><span class="o">.</span><span class="n">conc_mol</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">mol1</span><span class="p">)</span><span class="o">.</span><span class="n">intor</span><span class="p">(</span><span class="s1">&#39;int2e_sph&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="n">nao</span><span class="o">+</span><span class="n">nao1</span><span class="p">]</span><span class="o">*</span><span class="mi">4</span><span class="p">)</span>
+    <span class="n">jcross</span> <span class="o">=</span> <span class="n">get_jk</span><span class="p">((</span><span class="n">mol1</span><span class="p">,</span><span class="n">mol1</span><span class="p">,</span><span class="n">mol</span><span class="p">,</span><span class="n">mol</span><span class="p">),</span> <span class="n">dm</span><span class="p">,</span> <span class="n">scripts</span><span class="o">=</span><span class="s1">&#39;ijkl,lk-&gt;ij&#39;</span><span class="p">,</span> <span class="n">aosym</span><span class="o">=</span><span class="s1">&#39;s4&#39;</span><span class="p">)</span>
+    <span class="n">ecoul</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;ij,ij&#39;</span><span class="p">,</span> <span class="n">jcross</span><span class="p">,</span> <span class="n">dm1</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">jcross</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;ijkl,lk-&gt;ij&#39;</span><span class="p">,</span> <span class="n">eri0</span><span class="p">[</span><span class="n">nao</span><span class="p">:,</span><span class="n">nao</span><span class="p">:,:</span><span class="n">nao</span><span class="p">,:</span><span class="n">nao</span><span class="p">],</span> <span class="n">dm</span><span class="p">)))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">ecoul</span><span class="o">-</span><span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;ijkl,lk,ij&#39;</span><span class="p">,</span> <span class="n">eri0</span><span class="p">[</span><span class="n">nao</span><span class="p">:,</span><span class="n">nao</span><span class="p">:,:</span><span class="n">nao</span><span class="p">,:</span><span class="n">nao</span><span class="p">],</span> <span class="n">dm</span><span class="p">,</span> <span class="n">dm1</span><span class="p">))</span>
+    <span class="n">kcross</span> <span class="o">=</span> <span class="n">get_jk</span><span class="p">((</span><span class="n">mol1</span><span class="p">,</span><span class="n">mol</span><span class="p">,</span><span class="n">mol</span><span class="p">,</span><span class="n">mol1</span><span class="p">),</span> <span class="n">dm</span><span class="p">,</span> <span class="n">scripts</span><span class="o">=</span><span class="s1">&#39;ijkl,jk-&gt;il&#39;</span><span class="p">)</span>
+    <span class="n">ex</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;ij,ji&#39;</span><span class="p">,</span> <span class="n">kcross</span><span class="p">,</span> <span class="n">dm1</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">kcross</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;ijkl,jk-&gt;il&#39;</span><span class="p">,</span> <span class="n">eri0</span><span class="p">[</span><span class="n">nao</span><span class="p">:,:</span><span class="n">nao</span><span class="p">,:</span><span class="n">nao</span><span class="p">,</span><span class="n">nao</span><span class="p">:],</span> <span class="n">dm</span><span class="p">)))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">ex</span><span class="o">-</span><span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;ijkl,jk,li&#39;</span><span class="p">,</span> <span class="n">eri0</span><span class="p">[</span><span class="n">nao</span><span class="p">:,:</span><span class="n">nao</span><span class="p">,:</span><span class="n">nao</span><span class="p">,</span><span class="n">nao</span><span class="p">:],</span> <span class="n">dm</span><span class="p">,</span> <span class="n">dm1</span><span class="p">))</span>
+    <span class="n">kcross</span> <span class="o">=</span> <span class="n">get_jk</span><span class="p">((</span><span class="n">mol1</span><span class="p">,</span><span class="n">mol</span><span class="p">,</span><span class="n">mol</span><span class="p">,</span><span class="n">mol1</span><span class="p">),</span> <span class="n">dm1</span><span class="p">,</span> <span class="n">scripts</span><span class="o">=</span><span class="s1">&#39;ijkl,li-&gt;kj&#39;</span><span class="p">)</span>
+    <span class="n">ex</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;ij,ji&#39;</span><span class="p">,</span> <span class="n">kcross</span><span class="p">,</span> <span class="n">dm</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">kcross</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;ijkl,li-&gt;kj&#39;</span><span class="p">,</span> <span class="n">eri0</span><span class="p">[</span><span class="n">nao</span><span class="p">:,:</span><span class="n">nao</span><span class="p">,:</span><span class="n">nao</span><span class="p">,</span><span class="n">nao</span><span class="p">:],</span> <span class="n">dm1</span><span class="p">)))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">ex</span><span class="o">-</span><span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;ijkl,jk,li&#39;</span><span class="p">,</span> <span class="n">eri0</span><span class="p">[</span><span class="n">nao</span><span class="p">:,:</span><span class="n">nao</span><span class="p">,:</span><span class="n">nao</span><span class="p">,</span><span class="n">nao</span><span class="p">:],</span> <span class="n">dm</span><span class="p">,</span> <span class="n">dm1</span><span class="p">))</span>
+
+    <span class="n">j1part</span> <span class="o">=</span> <span class="n">get_jk</span><span class="p">((</span><span class="n">mol1</span><span class="p">,</span><span class="n">mol1</span><span class="p">,</span><span class="n">mol</span><span class="p">,</span><span class="n">mol</span><span class="p">),</span> <span class="n">dm1</span><span class="p">[:</span><span class="mi">1</span><span class="p">,:</span><span class="mi">1</span><span class="p">],</span> <span class="n">scripts</span><span class="o">=</span><span class="s1">&#39;ijkl,ji-&gt;kl&#39;</span><span class="p">,</span> <span class="n">intor</span><span class="o">=</span><span class="s1">&#39;int2e&#39;</span><span class="p">,</span>
+                    <span class="n">shls_slice</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">mol</span><span class="o">.</span><span class="n">nbas</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">mol</span><span class="o">.</span><span class="n">nbas</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">j1part</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;ijkl,ji-&gt;kl&#39;</span><span class="p">,</span> <span class="n">eri0</span><span class="p">[</span><span class="n">nao</span><span class="p">:</span><span class="n">nao</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">nao</span><span class="p">:</span><span class="n">nao</span><span class="o">+</span><span class="mi">1</span><span class="p">,:</span><span class="n">nao</span><span class="p">,:</span><span class="n">nao</span><span class="p">],</span> <span class="n">dm1</span><span class="p">[:</span><span class="mi">1</span><span class="p">,:</span><span class="mi">1</span><span class="p">])))</span>
+    <span class="n">k1part</span> <span class="o">=</span> <span class="n">get_jk</span><span class="p">((</span><span class="n">mol1</span><span class="p">,</span><span class="n">mol</span><span class="p">,</span><span class="n">mol</span><span class="p">,</span><span class="n">mol1</span><span class="p">),</span> <span class="n">dm1</span><span class="p">[:,:</span><span class="mi">1</span><span class="p">],</span> <span class="n">scripts</span><span class="o">=</span><span class="s1">&#39;ijkl,li-&gt;kj&#39;</span><span class="p">,</span> <span class="n">intor</span><span class="o">=</span><span class="s1">&#39;int2e&#39;</span><span class="p">,</span>
+                    <span class="n">shls_slice</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">mol</span><span class="o">.</span><span class="n">nbas</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">mol1</span><span class="o">.</span><span class="n">nbas</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">k1part</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;ijkl,li-&gt;kj&#39;</span><span class="p">,</span> <span class="n">eri0</span><span class="p">[</span><span class="n">nao</span><span class="p">:</span><span class="n">nao</span><span class="o">+</span><span class="mi">1</span><span class="p">,:</span><span class="mi">1</span><span class="p">,:</span><span class="n">nao</span><span class="p">,</span><span class="n">nao</span><span class="p">:],</span> <span class="n">dm1</span><span class="p">[:,:</span><span class="mi">1</span><span class="p">])))</span>
+
+    <span class="n">j1part</span> <span class="o">=</span> <span class="n">get_jk</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">dm</span><span class="p">[:</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">],</span> <span class="n">scripts</span><span class="o">=</span><span class="s1">&#39;ijkl,ji-&gt;kl&#39;</span><span class="p">,</span> <span class="n">intor</span><span class="o">=</span><span class="s1">&#39;int2e&#39;</span><span class="p">,</span>
+                    <span class="n">shls_slice</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">mol</span><span class="o">.</span><span class="n">nbas</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">mol</span><span class="o">.</span><span class="n">nbas</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">j1part</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;ijkl,ji-&gt;kl&#39;</span><span class="p">,</span> <span class="n">eri0</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">,:</span><span class="mi">1</span><span class="p">,:</span><span class="n">nao</span><span class="p">,:</span><span class="n">nao</span><span class="p">],</span> <span class="n">dm</span><span class="p">[:</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">])))</span>
+    <span class="n">k1part</span> <span class="o">=</span> <span class="n">get_jk</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">dm</span><span class="p">[:,</span><span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">],</span> <span class="n">scripts</span><span class="o">=</span><span class="s1">&#39;ijkl,li-&gt;kj&#39;</span><span class="p">,</span> <span class="n">intor</span><span class="o">=</span><span class="s1">&#39;int2e&#39;</span><span class="p">,</span>
+                    <span class="n">shls_slice</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">mol</span><span class="o">.</span><span class="n">nbas</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">mol</span><span class="o">.</span><span class="n">nbas</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">k1part</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;ijkl,li-&gt;kj&#39;</span><span class="p">,</span> <span class="n">eri0</span><span class="p">[:</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">,:</span><span class="n">nao</span><span class="p">,:</span><span class="n">nao</span><span class="p">],</span> <span class="n">dm</span><span class="p">[:,</span><span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">])))</span>
+
+    <span class="n">eri1</span> <span class="o">=</span> <span class="n">gto</span><span class="o">.</span><span class="n">conc_mol</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">mol1</span><span class="p">)</span><span class="o">.</span><span class="n">intor</span><span class="p">(</span><span class="s1">&#39;int2e_ip1_sph&#39;</span><span class="p">,</span><span class="n">comp</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="mi">3</span><span class="p">]</span><span class="o">+</span><span class="p">[</span><span class="n">nao</span><span class="o">+</span><span class="n">nao1</span><span class="p">]</span><span class="o">*</span><span class="mi">4</span><span class="p">)</span>
+    <span class="n">j1cross</span> <span class="o">=</span> <span class="n">get_jk</span><span class="p">((</span><span class="n">mol1</span><span class="p">,</span><span class="n">mol1</span><span class="p">,</span><span class="n">mol</span><span class="p">,</span><span class="n">mol</span><span class="p">),</span> <span class="n">dm</span><span class="p">,</span> <span class="n">scripts</span><span class="o">=</span><span class="s1">&#39;ijkl,lk-&gt;ij&#39;</span><span class="p">,</span> <span class="n">intor</span><span class="o">=</span><span class="s1">&#39;int2e_ip1_sph&#39;</span><span class="p">,</span> <span class="n">comp</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">j1cross</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;xijkl,lk-&gt;xij&#39;</span><span class="p">,</span> <span class="n">eri1</span><span class="p">[:,</span><span class="n">nao</span><span class="p">:,</span><span class="n">nao</span><span class="p">:,:</span><span class="n">nao</span><span class="p">,:</span><span class="n">nao</span><span class="p">],</span> <span class="n">dm</span><span class="p">)))</span>
+    <span class="n">j1part</span> <span class="o">=</span> <span class="n">get_jk</span><span class="p">((</span><span class="n">mol1</span><span class="p">,</span><span class="n">mol1</span><span class="p">,</span><span class="n">mol</span><span class="p">,</span><span class="n">mol</span><span class="p">),</span> <span class="n">dm</span><span class="p">,</span> <span class="n">scripts</span><span class="o">=</span><span class="s1">&#39;ijkl,lk-&gt;ij&#39;</span><span class="p">,</span> <span class="n">intor</span><span class="o">=</span><span class="s1">&#39;int2e_ip1_sph&#39;</span><span class="p">,</span> <span class="n">comp</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+                    <span class="n">shls_slice</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">mol</span><span class="o">.</span><span class="n">nbas</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">mol</span><span class="o">.</span><span class="n">nbas</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">j1part</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;xijkl,lk-&gt;xij&#39;</span><span class="p">,</span> <span class="n">eri1</span><span class="p">[:,</span><span class="n">nao</span><span class="p">:</span><span class="n">nao</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">nao</span><span class="p">:</span><span class="n">nao</span><span class="o">+</span><span class="mi">1</span><span class="p">,:</span><span class="n">nao</span><span class="p">,:</span><span class="n">nao</span><span class="p">],</span> <span class="n">dm</span><span class="p">)))</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2015-2020, The PySCF Developers
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

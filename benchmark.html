@@ -1,15 +1,18 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>27. Benchmark &mdash; PySCF 1.5.0 documentation</title>
+  <title>5. Benchmark &mdash; PySCF 1.7.5 documentation</title>
   
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
 
   
   
@@ -17,43 +20,39 @@
   
 
   
-
-  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
 
-  
-
-  
-  
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-    <link rel="top" title="PySCF 1.5.0 documentation" href="index.html"/>
-        <link rel="next" title="28. Code standard" href="code-rule.html"/>
-        <link rel="prev" title="26. mrpt — Multi-reference perturbation theory" href="mrpt.html"/> 
-
-  
-  <script src="_static/js/modernizr.min.js"></script>
-
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="6. Tutorial" href="tutorial.html" />
+    <link rel="prev" title="4. Code standard" href="code-rule.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
-            <a href="index.html" class="icon icon-home"> PySCF
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> PySCF
           
 
           
@@ -63,7 +62,7 @@
             
             
               <div class="version">
-                1.5
+                1.7
               </div>
             
           
@@ -80,6 +79,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -89,46 +89,28 @@
             
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="overview.html">1. An overview of PySCF</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial.html">2. Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="version.html">2. Version history</a></li>
 <li class="toctree-l1"><a class="reference internal" href="install.html">3. Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="gto.html">4. gto &#8212; Molecular structure and GTO basis</a></li>
-<li class="toctree-l1"><a class="reference internal" href="lib.html">5. <code class="docutils literal"><span class="pre">lib</span></code> &#8212; Helper functions, parameters, and C extensions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="scf.html">6. scf &#8212; Mean-field methods</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ao2mo.html">7. ao2mo &#8212; Integral transformations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="mcscf.html">8. mcscf &#8212; Multi-configurational self-consistent field</a></li>
-<li class="toctree-l1"><a class="reference internal" href="fci.html">9. fci &#8212; Full configuration interaction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="symm.html">10. symm &#8211; Point group symmetry and spin symmetry</a></li>
-<li class="toctree-l1"><a class="reference internal" href="df.html">11. df &#8212; Density fitting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="dft.html">12. dft &#8212; Density functional theory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tddft.html">13. tddft &#8212; Time dependent density functional theory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cc.html">14. cc &#8212; Coupled cluster</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ci.html">15. ci &#8212; Configuration interaction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="dmrgscf.html">16. dmrgscf</a></li>
-<li class="toctree-l1"><a class="reference internal" href="fciqmcscf.html">17. fciqmcscf</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tools.html">18. tools</a></li>
-<li class="toctree-l1"><a class="reference internal" href="grad.html">19. grad &#8212; Analytical nuclear gradients</a></li>
-<li class="toctree-l1"><a class="reference internal" href="hessian.html">20. hessian &#8212; Analytical nuclear Hessian</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pbc.html">21. pbc &#8212; Periodic boundary conditions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="nao.html">22. nao &#8212; Numerical Atomic Orbitals</a></li>
-<li class="toctree-l1"><a class="reference internal" href="lo.html">23. lo &#8212; Orbital localization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="advanced.html">24. Miscellaneous</a></li>
-<li class="toctree-l1"><a class="reference internal" href="qmmm.html">25. qmmm &#8212; QM/MM interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="mrpt.html">26. mrpt &#8212; Multi-reference perturbation theory</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">27. Benchmark</a></li>
-<li class="toctree-l1"><a class="reference internal" href="code-rule.html">28. Code standard</a></li>
-<li class="toctree-l1"><a class="reference internal" href="version.html">29. Version history</a></li>
+<li class="toctree-l1"><a class="reference internal" href="code-rule.html">4. Code standard</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">5. Benchmark</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">6. Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="theory.html">7. Theoretical methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="advanced.html">8. Miscellaneous</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interface.html">9. Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">10. Main modules</a></li>
 </ul>
 
             
           
         </div>
+        
       </div>
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">PySCF</a>
@@ -136,9 +118,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -159,15 +142,15 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="index.html">Docs</a> &raquo;</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
-      <li>27. Benchmark</li>
+      <li>5. Benchmark</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="_sources/benchmark.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/benchmark.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -181,141 +164,141 @@
            <div itemprop="articleBody">
             
   <div class="section" id="benchmark">
-<span id="id1"></span><h1>27. Benchmark<a class="headerlink" href="#benchmark" title="Permalink to this headline">¶</a></h1>
-<table border="1" class="docutils">
+<span id="id1"></span><h1>5. Benchmark<a class="headerlink" href="#benchmark" title="Permalink to this headline">¶</a></h1>
+<table class="docutils align-default">
 <colgroup>
-<col width="23%" />
-<col width="77%" />
+<col style="width: 23%" />
+<col style="width: 77%" />
 </colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Platform</th>
-<th class="head">&nbsp;</th>
+<thead>
+<tr class="row-odd"><th class="head"><p>Platform</p></th>
+<th class="head"></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td>CPU</td>
-<td>4 Intel E5-2670 &#64; 2.6 GB</td>
+<tbody>
+<tr class="row-even"><td><p>CPU</p></td>
+<td><p>4 Intel E5-2670 &#64; 2.6 GB</p></td>
 </tr>
-<tr class="row-odd"><td>Memory</td>
-<td>64 GB DDR3</td>
+<tr class="row-odd"><td><p>Memory</p></td>
+<td><p>64 GB DDR3</p></td>
 </tr>
-<tr class="row-even"><td>OS</td>
-<td>Custom Redhat 6.6</td>
+<tr class="row-even"><td><p>OS</p></td>
+<td><p>Custom Redhat 6.6</p></td>
 </tr>
-<tr class="row-odd"><td>BLAS</td>
-<td>MKL 11.0</td>
+<tr class="row-odd"><td><p>BLAS</p></td>
+<td><p>MKL 11.0</p></td>
 </tr>
-<tr class="row-even"><td>Compiler</td>
-<td>Intel 13.0</td>
+<tr class="row-even"><td><p>Compiler</p></td>
+<td><p>Intel 13.0</p></td>
 </tr>
 </tbody>
 </table>
 <p>Benzene, on 16 CPU cores</p>
-<table border="1" class="docutils">
+<table class="docutils align-default">
 <colgroup>
-<col width="34%" />
-<col width="19%" />
-<col width="19%" />
-<col width="28%" />
+<col style="width: 34%" />
+<col style="width: 19%" />
+<col style="width: 19%" />
+<col style="width: 28%" />
 </colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Basis</th>
-<th class="head">6-31G**</th>
-<th class="head">cc-pVTZ</th>
-<th class="head">ANO-Roos-TZ</th>
+<thead>
+<tr class="row-odd"><th class="head"><p>Basis</p></th>
+<th class="head"><p>6-31G**</p></th>
+<th class="head"><p>cc-pVTZ</p></th>
+<th class="head"><p>ANO-Roos-TZ</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td>HF</td>
-<td>0.55 s</td>
-<td>5.76 s</td>
-<td>389.1 s</td>
+<tbody>
+<tr class="row-even"><td><p>HF</p></td>
+<td><p>0.55 s</p></td>
+<td><p>5.76 s</p></td>
+<td><p>389.1 s</p></td>
 </tr>
-<tr class="row-odd"><td>density fit HF</td>
-<td>3.56 s</td>
-<td>7.61 s</td>
-<td>13.8 s</td>
+<tr class="row-odd"><td><p>density fit HF</p></td>
+<td><p>3.56 s</p></td>
+<td><p>7.61 s</p></td>
+<td><p>13.8 s</p></td>
 </tr>
-<tr class="row-even"><td>B3LYP</td>
-<td>3.84 s</td>
-<td>11.44 s</td>
-<td>360.2 s</td>
+<tr class="row-even"><td><p>B3LYP</p></td>
+<td><p>3.84 s</p></td>
+<td><p>11.44 s</p></td>
+<td><p>360.2 s</p></td>
 </tr>
-<tr class="row-odd"><td>MP2</td>
-<td>0.21 s</td>
-<td>4.66 s</td>
-<td>115.9 s</td>
+<tr class="row-odd"><td><p>MP2</p></td>
+<td><p>0.21 s</p></td>
+<td><p>4.66 s</p></td>
+<td><p>115.9 s</p></td>
 </tr>
-<tr class="row-even"><td>CASSCF(6,6)</td>
-<td>2.88 s</td>
-<td>34.73 s</td>
-<td>639.7 s</td>
+<tr class="row-even"><td><p>CASSCF(6,6)</p></td>
+<td><p>2.88 s</p></td>
+<td><p>34.73 s</p></td>
+<td><p>639.7 s</p></td>
 </tr>
-<tr class="row-odd"><td>CCSD</td>
-<td>18.24 s</td>
-<td>477.0 s</td>
-<td>6721 s</td>
+<tr class="row-odd"><td><p>CCSD</p></td>
+<td><p>18.24 s</p></td>
+<td><p>477.0 s</p></td>
+<td><p>6721 s</p></td>
 </tr>
 </tbody>
 </table>
 <p>C60, on 16 CPU cores</p>
-<table border="1" class="docutils">
+<table class="docutils align-default">
 <colgroup>
-<col width="47%" />
-<col width="26%" />
-<col width="26%" />
+<col style="width: 47%" />
+<col style="width: 26%" />
+<col style="width: 26%" />
 </colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Basis</th>
-<th class="head">6-31G**</th>
-<th class="head">cc-pVTZ</th>
+<thead>
+<tr class="row-odd"><th class="head"><p>Basis</p></th>
+<th class="head"><p>6-31G**</p></th>
+<th class="head"><p>cc-pVTZ</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td>HF</td>
-<td>1291 s</td>
-<td>189 m</td>
+<tbody>
+<tr class="row-even"><td><p>HF</p></td>
+<td><p>1291 s</p></td>
+<td><p>189 m</p></td>
 </tr>
-<tr class="row-odd"><td>SOSCF (newton)</td>
-<td>&nbsp;</td>
-<td>77 m</td>
+<tr class="row-odd"><td><p>SOSCF (newton)</p></td>
+<td></td>
+<td><p>77 m</p></td>
 </tr>
-<tr class="row-even"><td>density fit HF</td>
-<td>316.7 s</td>
-<td>43.3 m</td>
+<tr class="row-even"><td><p>density fit HF</p></td>
+<td><p>316.7 s</p></td>
+<td><p>43.3 m</p></td>
 </tr>
 </tbody>
 </table>
 <p>Fe(II)-porphyrin (FeC20H12N4), on 16 CPU cores</p>
-<table border="1" class="docutils">
+<table class="docutils align-default">
 <colgroup>
-<col width="37%" />
-<col width="21%" />
-<col width="21%" />
-<col width="21%" />
+<col style="width: 37%" />
+<col style="width: 21%" />
+<col style="width: 21%" />
+<col style="width: 21%" />
 </colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Basis</th>
-<th class="head">cc-pVDZ</th>
-<th class="head">cc-pVTZ</th>
-<th class="head">cc-pVQZ</th>
+<thead>
+<tr class="row-odd"><th class="head"><p>Basis</p></th>
+<th class="head"><p>cc-pVDZ</p></th>
+<th class="head"><p>cc-pVTZ</p></th>
+<th class="head"><p>cc-pVQZ</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td>SOSCF (newton)</td>
-<td>193.4 s</td>
-<td>20.1 m</td>
-<td>127.1 m</td>
+<tbody>
+<tr class="row-even"><td><p>SOSCF (newton)</p></td>
+<td><p>193.4 s</p></td>
+<td><p>20.1 m</p></td>
+<td><p>127.1 m</p></td>
 </tr>
-<tr class="row-odd"><td>CASSCF(10,10)</td>
-<td>1808 s</td>
-<td>241 m</td>
-<td>&nbsp;</td>
+<tr class="row-odd"><td><p>CASSCF(10,10)</p></td>
+<td><p>1808 s</p></td>
+<td><p>241 m</p></td>
+<td></td>
 </tr>
-<tr class="row-even"><td>CASSCF(11,8)</td>
-<td>763.8 s</td>
-<td>150.3 m</td>
-<td>1280 m</td>
+<tr class="row-even"><td><p>CASSCF(11,8)</p></td>
+<td><p>763.8 s</p></td>
+<td><p>150.3 m</p></td>
+<td><p>1280 m</p></td>
 </tr>
 </tbody>
 </table>
@@ -323,18 +306,16 @@
 
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="code-rule.html" class="btn btn-neutral float-right" title="28. Code standard" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="tutorial.html" class="btn btn-neutral float-right" title="6. Tutorial" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="mrpt.html" class="btn btn-neutral" title="26. mrpt — Multi-reference perturbation theory" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="code-rule.html" class="btn btn-neutral float-left" title="4. Code standard" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -343,11 +324,19 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015-, Qiming Sun &lt;osirpt.sun@gmail.com&gt;.
+        
+        &copy; Copyright 2015-2020, The PySCF Developers
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -359,38 +348,15 @@
   </div>
   
 
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'./',
-            VERSION:'1.5.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: ''
-        };
-    </script>
-      <script type="text/javascript" src="_static/jquery.js"></script>
-      <script type="text/javascript" src="_static/underscore.js"></script>
-      <script type="text/javascript" src="_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

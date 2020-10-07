@@ -1,0 +1,518 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pyscf.sgx.sgx &mdash; PySCF 1.7.5 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> PySCF
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.7
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html">1. An overview of PySCF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../version.html">2. Version history</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">3. Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../code-rule.html">4. Code standard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../benchmark.html">5. Benchmark</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">6. Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../theory.html">7. Theoretical methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../advanced.html">8. Miscellaneous</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../interface.html">9. Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">10. Main modules</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">PySCF</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>pyscf.sgx.sgx</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pyscf.sgx.sgx</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># Copyright 2018-2020 The PySCF Developers. All Rights Reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+<span class="c1">#</span>
+<span class="c1">#     http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1">#</span>
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+<span class="c1">#</span>
+<span class="c1"># Author: Qiming Sun &lt;osirpt.sun@gmail.com&gt;</span>
+<span class="c1">#</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">Pseudo-spectral methods (COSX, PS, SN-K)</span>
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">lib</span>
+<span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">gto</span>
+<span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">scf</span>
+<span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">mcscf</span>
+<span class="kn">from</span> <span class="nn">pyscf.scf</span> <span class="k">import</span> <span class="n">_vhf</span>
+<span class="kn">from</span> <span class="nn">pyscf.lib</span> <span class="k">import</span> <span class="n">logger</span>
+<span class="kn">from</span> <span class="nn">pyscf.sgx</span> <span class="k">import</span> <span class="n">sgx_jk</span>
+<span class="kn">from</span> <span class="nn">pyscf.df</span> <span class="k">import</span> <span class="n">df_jk</span>
+<span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">__config__</span>
+
+<div class="viewcode-block" id="sgx_fit"><a class="viewcode-back" href="../../../modules/sgx.html#pyscf.sgx.sgx.sgx_fit">[docs]</a><span class="k">def</span> <span class="nf">sgx_fit</span><span class="p">(</span><span class="n">mf</span><span class="p">,</span> <span class="n">auxbasis</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">with_df</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;For the given SCF object, update the J, K matrix constructor with</span>
+<span class="sd">    corresponding SGX or density fitting integrals.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        mf : an SCF object</span>
+
+<span class="sd">    Kwargs:</span>
+<span class="sd">        auxbasis : str or basis dict</span>
+<span class="sd">            Same format to the input attribute mol.basis.  If auxbasis is</span>
+<span class="sd">            None, optimal auxiliary basis based on AO basis (if possible) or</span>
+<span class="sd">            even-tempered Gaussian basis will be used.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        An SCF object with a modified J, K matrix constructor which uses density</span>
+<span class="sd">        fitting integrals to compute J and K</span>
+
+<span class="sd">    Examples:</span>
+
+<span class="sd">    &gt;&gt;&gt; mol = gto.M(atom=&#39;H 0 0 0; F 0 0 1&#39;, basis=&#39;ccpvdz&#39;, verbose=0)</span>
+<span class="sd">    &gt;&gt;&gt; mf = sgx_fit(scf.RHF(mol))</span>
+<span class="sd">    &gt;&gt;&gt; mf.scf()</span>
+<span class="sd">    -100.00978770917165</span>
+
+<span class="sd">    &gt;&gt;&gt; mol.symmetry = 1</span>
+<span class="sd">    &gt;&gt;&gt; mol.build(0, 0)</span>
+<span class="sd">    &gt;&gt;&gt; mf = sgx_fit(scf.UHF(mol))</span>
+<span class="sd">    &gt;&gt;&gt; mf.scf()</span>
+<span class="sd">    -100.00978770951018</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">assert</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">mf</span><span class="p">,</span> <span class="n">scf</span><span class="o">.</span><span class="n">hf</span><span class="o">.</span><span class="n">SCF</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">with_df</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">with_df</span> <span class="o">=</span> <span class="n">SGX</span><span class="p">(</span><span class="n">mf</span><span class="o">.</span><span class="n">mol</span><span class="p">)</span>
+        <span class="n">with_df</span><span class="o">.</span><span class="n">max_memory</span> <span class="o">=</span> <span class="n">mf</span><span class="o">.</span><span class="n">max_memory</span>
+        <span class="n">with_df</span><span class="o">.</span><span class="n">stdout</span> <span class="o">=</span> <span class="n">mf</span><span class="o">.</span><span class="n">stdout</span>
+        <span class="n">with_df</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">mf</span><span class="o">.</span><span class="n">verbose</span>
+        <span class="n">with_df</span><span class="o">.</span><span class="n">auxbasis</span> <span class="o">=</span> <span class="n">auxbasis</span>
+
+    <span class="n">mf_class</span> <span class="o">=</span> <span class="n">mf</span><span class="o">.</span><span class="vm">__class__</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mf</span><span class="p">,</span> <span class="n">_SGXHF</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">mf</span><span class="o">.</span><span class="n">with_df</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">mf</span> <span class="o">=</span> <span class="n">mf_class</span><span class="p">(</span><span class="n">mf</span><span class="p">,</span> <span class="n">with_df</span><span class="p">,</span> <span class="n">auxbasis</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">mf</span><span class="o">.</span><span class="n">with_df</span><span class="o">.</span><span class="n">auxbasis</span> <span class="o">!=</span> <span class="n">auxbasis</span><span class="p">:</span>
+            <span class="c1">#logger.warn(mf, &#39;DF might have been initialized twice.&#39;)</span>
+            <span class="n">mf</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">mf</span><span class="p">)</span>
+            <span class="n">mf</span><span class="o">.</span><span class="n">with_df</span> <span class="o">=</span> <span class="n">with_df</span>
+        <span class="k">return</span> <span class="n">mf</span>
+
+    <span class="k">class</span> <span class="nc">SGXHF</span><span class="p">(</span><span class="n">_SGXHF</span><span class="p">,</span> <span class="n">mf_class</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mf</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">auxbasis</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">mf</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_eri</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">auxbasis</span> <span class="o">=</span> <span class="n">auxbasis</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">with_df</span> <span class="o">=</span> <span class="n">df</span>
+
+            <span class="c1"># Grids/Integral quality varies during SCF. VHF cannot be</span>
+            <span class="c1"># constructed incrementally.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">direct_scf</span> <span class="o">=</span> <span class="kc">False</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_last_dm</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_in_scf</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_keys</span><span class="o">.</span><span class="n">union</span><span class="p">([</span><span class="s1">&#39;auxbasis&#39;</span><span class="p">,</span> <span class="s1">&#39;with_df&#39;</span><span class="p">])</span>
+
+        <span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mol</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">direct_scf</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">with_df</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">with_df</span><span class="o">.</span><span class="n">grids_level_f</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">with_df</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">with_df</span><span class="o">.</span><span class="n">grids_level_i</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">mf_class</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mol</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mol</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">with_df</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">mf_class</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mol</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">pre_kernel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">envs</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_in_scf</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">def</span> <span class="nf">get_jk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mol</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dm</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">hermi</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">with_j</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">with_k</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                  <span class="n">omega</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">dm</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="n">dm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_rdm1</span><span class="p">()</span>
+            <span class="n">with_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">with_df</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">with_df</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">mf_class</span><span class="o">.</span><span class="n">get_jk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mol</span><span class="p">,</span> <span class="n">dm</span><span class="p">,</span> <span class="n">hermi</span><span class="p">,</span> <span class="n">with_j</span><span class="p">,</span> <span class="n">with_k</span><span class="p">,</span> <span class="n">omega</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_in_scf</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">direct_scf</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">dm</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_dm</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">with_df</span><span class="o">.</span><span class="n">grids_switch_thrd</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;Switching SGX grids&#39;</span><span class="p">)</span>
+                    <span class="n">with_df</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">with_df</span><span class="o">.</span><span class="n">grids_level_f</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_in_scf</span> <span class="o">=</span> <span class="kc">False</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_last_dm</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_last_dm</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">dm</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">with_df</span><span class="o">.</span><span class="n">get_jk</span><span class="p">(</span><span class="n">dm</span><span class="p">,</span> <span class="n">hermi</span><span class="p">,</span> <span class="n">with_j</span><span class="p">,</span> <span class="n">with_k</span><span class="p">,</span>
+                                  <span class="bp">self</span><span class="o">.</span><span class="n">direct_scf_tol</span><span class="p">,</span> <span class="n">omega</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">post_kernel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">envs</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_in_scf</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_last_dm</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">def</span> <span class="nf">nuc_grad_method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+    <span class="k">return</span> <span class="n">SGXHF</span><span class="p">(</span><span class="n">mf</span><span class="p">,</span> <span class="n">with_df</span><span class="p">,</span> <span class="n">auxbasis</span><span class="p">)</span></div>
+
+<span class="c1"># A tag to label the derived SCF class</span>
+<span class="k">class</span> <span class="nc">_SGXHF</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">method_not_implemented</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+    <span class="n">nuc_grad_method</span> <span class="o">=</span> <span class="n">Gradients</span> <span class="o">=</span> <span class="n">method_not_implemented</span>
+    <span class="n">Hessian</span> <span class="o">=</span> <span class="n">method_not_implemented</span>
+    <span class="n">NMR</span> <span class="o">=</span> <span class="n">method_not_implemented</span>
+    <span class="n">NSR</span> <span class="o">=</span> <span class="n">method_not_implemented</span>
+    <span class="n">Polarizability</span> <span class="o">=</span> <span class="n">method_not_implemented</span>
+    <span class="n">RotationalGTensor</span> <span class="o">=</span> <span class="n">method_not_implemented</span>
+    <span class="n">MP2</span> <span class="o">=</span> <span class="n">method_not_implemented</span>
+    <span class="n">CISD</span> <span class="o">=</span> <span class="n">method_not_implemented</span>
+    <span class="n">CCSD</span> <span class="o">=</span> <span class="n">method_not_implemented</span>
+    <span class="n">CASCI</span> <span class="o">=</span> <span class="n">method_not_implemented</span>
+    <span class="n">CASSCF</span> <span class="o">=</span> <span class="n">method_not_implemented</span>
+
+<span class="n">scf</span><span class="o">.</span><span class="n">hf</span><span class="o">.</span><span class="n">SCF</span><span class="o">.</span><span class="n">COSX</span> <span class="o">=</span> <span class="n">sgx_fit</span>
+<span class="n">mcscf</span><span class="o">.</span><span class="n">casci</span><span class="o">.</span><span class="n">CASCI</span><span class="o">.</span><span class="n">COSX</span> <span class="o">=</span> <span class="n">sgx_fit</span>
+
+
+<span class="k">def</span> <span class="nf">_make_opt</span><span class="p">(</span><span class="n">mol</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Optimizer to genrate 3-center 2-electron integrals&#39;&#39;&#39;</span>
+    <span class="n">intor</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">_add_suffix</span><span class="p">(</span><span class="s1">&#39;int3c2e&#39;</span><span class="p">)</span>
+    <span class="n">cintopt</span> <span class="o">=</span> <span class="n">gto</span><span class="o">.</span><span class="n">moleintor</span><span class="o">.</span><span class="n">make_cintopt</span><span class="p">(</span><span class="n">mol</span><span class="o">.</span><span class="n">_atm</span><span class="p">,</span> <span class="n">mol</span><span class="o">.</span><span class="n">_bas</span><span class="p">,</span> <span class="n">mol</span><span class="o">.</span><span class="n">_env</span><span class="p">,</span> <span class="n">intor</span><span class="p">)</span>
+    <span class="c1"># intor &#39;int1e_ovlp&#39; is used by the prescreen method</span>
+    <span class="c1"># &#39;SGXnr_ovlp_prescreen&#39; only. Not used again in other places.</span>
+    <span class="c1"># It can be released early</span>
+    <span class="n">vhfopt</span> <span class="o">=</span> <span class="n">_vhf</span><span class="o">.</span><span class="n">VHFOpt</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="s1">&#39;int1e_ovlp&#39;</span><span class="p">,</span> <span class="s1">&#39;SGXnr_ovlp_prescreen&#39;</span><span class="p">,</span>
+                         <span class="s1">&#39;SGXsetnr_direct_scf&#39;</span><span class="p">)</span>
+    <span class="n">vhfopt</span><span class="o">.</span><span class="n">_intor</span> <span class="o">=</span> <span class="n">intor</span>
+    <span class="n">vhfopt</span><span class="o">.</span><span class="n">_cintopt</span> <span class="o">=</span> <span class="n">cintopt</span>
+    <span class="k">return</span> <span class="n">vhfopt</span>
+
+
+<div class="viewcode-block" id="SGX"><a class="viewcode-back" href="../../../modules/sgx.html#pyscf.sgx.sgx.SGX">[docs]</a><span class="k">class</span> <span class="nc">SGX</span><span class="p">(</span><span class="n">lib</span><span class="o">.</span><span class="n">StreamObject</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mol</span><span class="p">,</span> <span class="n">auxbasis</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mol</span> <span class="o">=</span> <span class="n">mol</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">stdout</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">verbose</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_memory</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">max_memory</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">grids_thrd</span> <span class="o">=</span> <span class="mf">1e-10</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">grids_level_i</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># initial grids level</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">grids_level_f</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># final grids level</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">grids_switch_thrd</span> <span class="o">=</span> <span class="mf">0.03</span>
+        <span class="c1"># compute J matrix using DF and K matrix using SGX. It&#39;s identical to</span>
+        <span class="c1"># the RIJCOSX method in ORCA</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dfj</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_auxbasis</span> <span class="o">=</span> <span class="n">auxbasis</span>
+
+        <span class="c1"># debug=True generates a dense tensor of the Coulomb integrals at each</span>
+        <span class="c1"># grids. debug=False utilizes the sparsity of the integral tensor and</span>
+        <span class="c1"># contracts the sparse tensor and density matrices on the fly.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">debug</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">grids</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">blockdim</span> <span class="o">=</span> <span class="mi">1200</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">auxmol</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_vjopt</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_opt</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_last_dm</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rsh_df</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># Range separated Coulomb DF objects</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_keys</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">auxbasis</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_auxbasis</span>
+    <span class="nd">@auxbasis</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">auxbasis</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_auxbasis</span> <span class="o">!=</span> <span class="n">x</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_auxbasis</span> <span class="o">=</span> <span class="n">x</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">auxmol</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">dump_flags</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">log</span> <span class="o">=</span> <span class="n">logger</span><span class="o">.</span><span class="n">new_logger</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;******** </span><span class="si">%s</span><span class="s1"> ********&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;max_memory = </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_memory</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;grids_level_i = </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">grids_level_i</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;grids_level_f = </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">grids_level_f</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;grids_thrd = </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">grids_thrd</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;grids_switch_thrd = </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">grids_switch_thrd</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;df_j = </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_j</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;auxbasis = </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">auxbasis</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="c1"># To mimic DF object, so that SGX can be used as in DF-SCF method by setting</span>
+    <span class="c1"># mf.with_df = SGX(mol)</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">_cderi</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">grids</span>
+
+    <span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">level</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">level</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grids_level_f</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">grids</span> <span class="o">=</span> <span class="n">sgx_jk</span><span class="o">.</span><span class="n">get_gridss</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mol</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">grids_thrd</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_opt</span> <span class="o">=</span> <span class="n">_make_opt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mol</span><span class="p">)</span>
+
+        <span class="c1"># In the RSH-integral temporary treatment, recursively rebuild SGX</span>
+        <span class="c1"># objects in _rsh_df.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rsh_df</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rsh_df</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">v</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">level</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+<div class="viewcode-block" id="SGX.kernel"><a class="viewcode-back" href="../../../modules/sgx.html#pyscf.sgx.sgx.SGX.kernel">[docs]</a>    <span class="k">def</span> <span class="nf">kernel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SGX.reset"><a class="viewcode-back" href="../../../modules/sgx.html#pyscf.sgx.sgx.SGX.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mol</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Reset mol and clean up relevant attributes for scanner mode&#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="n">mol</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mol</span> <span class="o">=</span> <span class="n">mol</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">grids</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">auxmol</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_vjopt</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_opt</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_last_dm</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rsh_df</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+    <span class="k">def</span> <span class="nf">get_jk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dm</span><span class="p">,</span> <span class="n">hermi</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">with_j</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">with_k</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+               <span class="n">direct_scf_tol</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="n">__config__</span><span class="p">,</span> <span class="s1">&#39;scf_hf_SCF_direct_scf_tol&#39;</span><span class="p">,</span> <span class="mf">1e-13</span><span class="p">),</span>
+               <span class="n">omega</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">omega</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># A temporary treatment for RSH integrals</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%.6f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">omega</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rsh_df</span><span class="p">:</span>
+                <span class="n">rsh_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rsh_df</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">rsh_df</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+                <span class="n">rsh_df</span><span class="o">.</span><span class="n">_rsh_df</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># to avoid circular reference</span>
+                <span class="c1"># Not all attributes need to be reset. Resetting _vjopt</span>
+                <span class="c1"># because it is used by get_j method of regular DF object.</span>
+                <span class="n">rsh_df</span><span class="o">.</span><span class="n">_vjopt</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_rsh_df</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">rsh_df</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;Create RSH-SGX object </span><span class="si">%s</span><span class="s1"> for omega=</span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">rsh_df</span><span class="p">,</span> <span class="n">omega</span><span class="p">)</span>
+
+            <span class="k">with</span> <span class="n">rsh_df</span><span class="o">.</span><span class="n">mol</span><span class="o">.</span><span class="n">with_range_coulomb</span><span class="p">(</span><span class="n">omega</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">rsh_df</span><span class="o">.</span><span class="n">get_jk</span><span class="p">(</span><span class="n">dm</span><span class="p">,</span> <span class="n">hermi</span><span class="p">,</span> <span class="n">with_j</span><span class="p">,</span> <span class="n">with_k</span><span class="p">,</span>
+                                     <span class="n">direct_scf_tol</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">with_j</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">dfj</span><span class="p">:</span>
+            <span class="n">vj</span> <span class="o">=</span> <span class="n">df_jk</span><span class="o">.</span><span class="n">get_j</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dm</span><span class="p">,</span> <span class="n">hermi</span><span class="p">,</span> <span class="n">direct_scf_tol</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">with_k</span><span class="p">:</span>
+                <span class="n">vk</span> <span class="o">=</span> <span class="n">sgx_jk</span><span class="o">.</span><span class="n">get_jk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dm</span><span class="p">,</span> <span class="n">hermi</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">with_k</span><span class="p">,</span> <span class="n">direct_scf_tol</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">vk</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">vj</span><span class="p">,</span> <span class="n">vk</span> <span class="o">=</span> <span class="n">sgx_jk</span><span class="o">.</span><span class="n">get_jk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dm</span><span class="p">,</span> <span class="n">hermi</span><span class="p">,</span> <span class="n">with_j</span><span class="p">,</span> <span class="n">with_k</span><span class="p">,</span> <span class="n">direct_scf_tol</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">vj</span><span class="p">,</span> <span class="n">vk</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">scf</span>
+    <span class="n">mol</span> <span class="o">=</span> <span class="n">gto</span><span class="o">.</span><span class="n">Mole</span><span class="p">()</span>
+    <span class="n">mol</span><span class="o">.</span><span class="n">build</span><span class="p">(</span>
+        <span class="n">atom</span> <span class="o">=</span> <span class="p">[[</span><span class="s2">&quot;O&quot;</span> <span class="p">,</span> <span class="p">(</span><span class="mf">0.</span> <span class="p">,</span> <span class="mf">0.</span>     <span class="p">,</span> <span class="mf">0.</span><span class="p">)],</span>
+                <span class="p">[</span><span class="mi">1</span>   <span class="p">,</span> <span class="p">(</span><span class="mf">0.</span> <span class="p">,</span> <span class="o">-</span><span class="mf">0.757</span> <span class="p">,</span> <span class="mf">0.587</span><span class="p">)],</span>
+                <span class="p">[</span><span class="mi">1</span>   <span class="p">,</span> <span class="p">(</span><span class="mf">0.</span> <span class="p">,</span> <span class="mf">0.757</span>  <span class="p">,</span> <span class="mf">0.587</span><span class="p">)]</span> <span class="p">],</span>
+        <span class="n">basis</span> <span class="o">=</span> <span class="s1">&#39;ccpvdz&#39;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">method</span> <span class="o">=</span> <span class="n">sgx_fit</span><span class="p">(</span><span class="n">scf</span><span class="o">.</span><span class="n">RHF</span><span class="p">(</span><span class="n">mol</span><span class="p">),</span> <span class="s1">&#39;weigend&#39;</span><span class="p">)</span>
+    <span class="n">energy</span> <span class="o">=</span> <span class="n">method</span><span class="o">.</span><span class="n">scf</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">energy</span> <span class="o">-</span> <span class="o">-</span><span class="mf">76.02673747045691</span><span class="p">)</span>
+
+    <span class="n">method</span><span class="o">.</span><span class="n">with_df</span><span class="o">.</span><span class="n">dfj</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">energy</span> <span class="o">=</span> <span class="n">method</span><span class="o">.</span><span class="n">scf</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">energy</span> <span class="o">-</span> <span class="o">-</span><span class="mf">76.02686422219752</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2015-2020, The PySCF Developers
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

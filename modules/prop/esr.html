@@ -1,0 +1,372 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>10.22.12. prop.esr — Electron spin-rotation coupling &mdash; PySCF 1.7.5 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="10.23. qmmm — QM/MM interface" href="../qmmm.html" />
+    <link rel="prev" title="10.22.11. prop.ssc — Spin-spin coulping" href="ssc.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> PySCF
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.7
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html">1. An overview of PySCF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../version.html">2. Version history</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">3. Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../code-rule.html">4. Code standard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../benchmark.html">5. Benchmark</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial.html">6. Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory.html">7. Theoretical methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../advanced.html">8. Miscellaneous</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../interface.html">9. Interfaces</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../modules.html">10. Main modules</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../adc.html">10.1. <code class="xref py py-mod docutils literal notranslate"><span class="pre">adc</span></code> — Algebraic diagrammatic construction (ADC) scheme</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ao2mo.html">10.2. <code class="xref py py-mod docutils literal notranslate"><span class="pre">ao2mo</span></code> — Integral transformations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cc.html">10.3. <code class="xref py py-mod docutils literal notranslate"><span class="pre">cc</span></code> — Coupled cluster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ccn.html">10.4. <code class="xref py py-mod docutils literal notranslate"><span class="pre">ccn</span></code> — Auto-generated coupled cluster of arbitrary order</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ci.html">10.5. <code class="xref py py-mod docutils literal notranslate"><span class="pre">ci</span></code> — Configuration interaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data.html">10.6. <code class="xref py py-mod docutils literal notranslate"><span class="pre">data</span></code> — Data for constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../df.html">10.7. <code class="xref py py-mod docutils literal notranslate"><span class="pre">df</span></code> — Density fitting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dft.html">10.8. <code class="xref py py-mod docutils literal notranslate"><span class="pre">dft</span></code> — Density functional theory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../doci.html">10.9. <code class="xref py py-mod docutils literal notranslate"><span class="pre">doci</span></code> — Doubly occupied configuration interaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fci.html">10.10. <code class="xref py py-mod docutils literal notranslate"><span class="pre">fci</span></code> — Full configuration interaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../grad.html">10.11. <code class="xref py py-mod docutils literal notranslate"><span class="pre">grad</span></code> — Analytical nuclear gradients</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gto.html">10.12. <code class="xref py py-mod docutils literal notranslate"><span class="pre">gto</span></code> — Molecular structure and GTO basis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gw.html">10.13. <code class="xref py py-mod docutils literal notranslate"><span class="pre">gw</span></code> — Molecular G0W0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hci.html">10.14. <code class="xref py py-mod docutils literal notranslate"><span class="pre">hci</span></code> — Heat-bath selected CI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hessian.html">10.15. <code class="xref py py-mod docutils literal notranslate"><span class="pre">hessian</span></code> — Analytical nuclear Hessian</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../lib.html">10.16. <code class="xref py py-mod docutils literal notranslate"><span class="pre">lib</span></code> — Helper functions, parameters, and C extensions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../lo.html">10.17. <code class="xref py py-mod docutils literal notranslate"><span class="pre">lo</span></code> — Orbital localization and analysis tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mcscf.html">10.18. <code class="xref py py-mod docutils literal notranslate"><span class="pre">mcscf</span></code> — Multi-configurational self-consistent field</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mp.html">10.19. <code class="xref py py-mod docutils literal notranslate"><span class="pre">mp</span></code> — MP2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mrpt.html">10.20. <code class="xref py py-mod docutils literal notranslate"><span class="pre">mrpt</span></code> — Multi-reference perturbation theory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pbc.html">10.21. <code class="xref py py-mod docutils literal notranslate"><span class="pre">pbc</span></code> — Periodic boundary conditions</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../prop.html">10.22. <code class="xref py py-mod docutils literal notranslate"><span class="pre">prop</span></code> — Molecular properties</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="efg.html">10.22.1. efg —</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gtensor.html">10.22.2. <code class="xref py py-mod docutils literal notranslate"><span class="pre">prop.gtensor</span></code> — EPR g tensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="magnetizability.html">10.22.3. magnetizability  —</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nsr.html">10.22.4. nsr —</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rotational_gtensor.html">10.22.5. rotational_gtensor —</a></li>
+<li class="toctree-l3"><a class="reference internal" href="zfs.html">10.22.6. zfs —</a></li>
+<li class="toctree-l3"><a class="reference internal" href="freq.html">10.22.7. <code class="xref py py-mod docutils literal notranslate"><span class="pre">prop.freq</span></code> — Vibrational frequencies and normal modes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hfc.html">10.22.8. <code class="xref py py-mod docutils literal notranslate"><span class="pre">prop.hfc</span></code> — Hyperfine coupling tensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nmr.html">10.22.9. <code class="xref py py-mod docutils literal notranslate"><span class="pre">prop.nmr</span></code> — NMR shielding tensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polarizability.html">10.22.10. <code class="xref py py-mod docutils literal notranslate"><span class="pre">prop.polarizability</span></code> — Polarizabilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ssc.html">10.22.11. <code class="xref py py-mod docutils literal notranslate"><span class="pre">prop.ssc</span></code> — Spin-spin coulping</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">10.22.12. <code class="xref py py-mod docutils literal notranslate"><span class="pre">prop.esr</span></code> — Electron spin-rotation coupling</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#module-pyscf.prop.esr.uhf">10.22.12.1. Program reference</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../qmmm.html">10.23. <code class="xref py py-mod docutils literal notranslate"><span class="pre">qmmm</span></code> — QM/MM interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../rt.html">10.24. <code class="xref py py-mod docutils literal notranslate"><span class="pre">rt</span></code> — Real-time time-dependent density functional theory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../scf.html">10.25. <code class="xref py py-mod docutils literal notranslate"><span class="pre">scf</span></code> — Self-consistent field methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../semiempirical.html">10.26. <code class="xref py py-mod docutils literal notranslate"><span class="pre">semiempirical</span></code> — Semiempirical methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sgx.html">10.27. <code class="xref py py-mod docutils literal notranslate"><span class="pre">sgx</span></code> — Pseudo-spectral methods (COSX, PS, SN-K)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../solvent.html">10.28. <code class="xref py py-mod docutils literal notranslate"><span class="pre">solvent</span></code> — Solvent methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../soscf.html">10.29. <code class="xref py py-mod docutils literal notranslate"><span class="pre">soscf</span></code> — Second order SCF solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../symm.html">10.30. <code class="xref py py-mod docutils literal notranslate"><span class="pre">symm</span></code> – Point group symmetry and spin symmetry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tdscf.html">10.31. <code class="xref py py-mod docutils literal notranslate"><span class="pre">tdscf</span></code> — TDHF and TDDFT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tools.html">10.32. <code class="xref py py-mod docutils literal notranslate"><span class="pre">tools</span></code> — Useful tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../x2c.html">10.33. <code class="xref py py-mod docutils literal notranslate"><span class="pre">x2c</span></code> — exact-two-component approach</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">PySCF</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../modules.html">10. Main modules</a> &raquo;</li>
+        
+          <li><a href="../prop.html">10.22. <code class="xref py py-mod docutils literal notranslate"><span class="pre">prop</span></code> — Molecular properties</a> &raquo;</li>
+        
+      <li>10.22.12. <code class="xref py py-mod docutils literal notranslate"><span class="pre">prop.esr</span></code> — Electron spin-rotation coupling</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/modules/prop/esr.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="prop-esr-electron-spin-rotation-coupling">
+<h1>10.22.12. <code class="xref py py-mod docutils literal notranslate"><span class="pre">prop.esr</span></code> — Electron spin-rotation coupling<a class="headerlink" href="#prop-esr-electron-spin-rotation-coupling" title="Permalink to this headline">¶</a></h1>
+<p>The <code class="xref py py-mod docutils literal notranslate"><span class="pre">prop.esr</span></code> module implements the electron spin-rotation coupling for
+mean-field methods.</p>
+<div class="section" id="module-pyscf.prop.esr.uhf">
+<span id="program-reference"></span><h2>10.22.12.1. Program reference<a class="headerlink" href="#module-pyscf.prop.esr.uhf" title="Permalink to this headline">¶</a></h2>
+<p>Non-relativistic unrestricted Hartree-Fock electron spin-rotation coupling
+(In testing)</p>
+<dl class="simple">
+<dt>Refs:</dt><dd><p>J. Phys. Chem. A. 114, 9246, 2010
+Mole. Phys. 9, 6, 585, 1964</p>
+</dd>
+</dl>
+<dl class="class">
+<dt id="pyscf.prop.esr.uhf.ESR">
+<em class="property">class </em><code class="sig-prename descclassname">pyscf.prop.esr.uhf.</code><code class="sig-name descname">ESR</code><span class="sig-paren">(</span><em class="sig-param">mf</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyscf/prop/esr/uhf.html#ESR"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyscf.prop.esr.uhf.ESR" title="Permalink to this definition">¶</a></dt>
+<dd><p>dE = S dot ESR_tensor dot J</p>
+<dl class="simple">
+<dt>Attributes:</dt><dd><p>koseki_charge : bool
+Whether to use Koseki effective SOC charge in 1-electron
+diamagnetic term and paramagnetic term.  Default is False.</p>
+</dd>
+</dl>
+<dl class="method">
+<dt id="pyscf.prop.esr.uhf.ESR.get_fock">
+<code class="sig-name descname">get_fock</code><span class="sig-paren">(</span><em class="sig-param">dm0=None</em>, <em class="sig-param">gauge_orig=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyscf.prop.esr.uhf.ESR.get_fock" title="Permalink to this definition">¶</a></dt>
+<dd><p>First order partial derivatives of Fock matrix wrt external magnetic
+field.  frac{partial F}{partial B}</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyscf.prop.esr.uhf.ESR.kernel">
+<code class="sig-name descname">kernel</code><span class="sig-paren">(</span><em class="sig-param">mo1=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyscf/prop/esr/uhf.html#ESR.kernel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyscf.prop.esr.uhf.ESR.kernel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Kernel function is the main driver of a method.  Every method should
+define the kernel function as the entry of the calculation.  Note the
+return value of kernel function is not strictly defined.  It can be
+anything related to the method (such as the energy, the wave-function,
+the DFT mesh grids etc.).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyscf.prop.esr.uhf.ESR.solve_mo1">
+<code class="sig-name descname">solve_mo1</code><span class="sig-paren">(</span><em class="sig-param">mo_energy=None</em>, <em class="sig-param">mo_coeff=None</em>, <em class="sig-param">mo_occ=None</em>, <em class="sig-param">h1=None</em>, <em class="sig-param">s1=None</em>, <em class="sig-param">with_cphf=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyscf.prop.esr.uhf.ESR.solve_mo1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Solve the first order equation</p>
+<dl class="simple">
+<dt>Kwargs:</dt><dd><dl class="simple">
+<dt>with_cphf<span class="classifier">boolean or  function(dm_mo) =&gt; v1_mo</span></dt><dd><p>If a boolean value is given, the value determines whether CPHF
+equation will be solved or not. The induced potential will be
+generated by the function gen_vind.
+If a function is given, CPHF equation will be solved, and the
+given function is used to compute induced potential</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="pyscf.prop.esr.uhf.align">
+<code class="sig-prename descclassname">pyscf.prop.esr.uhf.</code><code class="sig-name descname">align</code><span class="sig-paren">(</span><em class="sig-param">tensor</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyscf/prop/esr/uhf.html#align"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyscf.prop.esr.uhf.align" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform the orientation of g-tensor.
+The new orientations are the eigenvector of G matrix (G=g.gT)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyscf.prop.esr.uhf.dia">
+<code class="sig-prename descclassname">pyscf.prop.esr.uhf.</code><code class="sig-name descname">dia</code><span class="sig-paren">(</span><em class="sig-param">gobj</em>, <em class="sig-param">dm0</em>, <em class="sig-param">gauge_orig=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyscf/prop/esr/uhf.html#dia"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyscf.prop.esr.uhf.dia" title="Permalink to this definition">¶</a></dt>
+<dd><p>Note the side effects of set_common_origin</p>
+</dd></dl>
+
+<span class="target" id="module-pyscf.prop.esr.uks"></span><p>Non-relativistic unrestricted Kohn-Sham electron spin-rotation coupling
+(In testing)</p>
+<dl class="simple">
+<dt>Refs:</dt><dd><p>J. Phys. Chem. A. 114, 9246, 2010
+Mole. Phys. 9, 6, 585, 1964</p>
+</dd>
+</dl>
+<dl class="class">
+<dt id="pyscf.prop.esr.uks.ESR">
+<em class="property">class </em><code class="sig-prename descclassname">pyscf.prop.esr.uks.</code><code class="sig-name descname">ESR</code><span class="sig-paren">(</span><em class="sig-param">scf_method</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyscf/prop/esr/uks.html#ESR"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyscf.prop.esr.uks.ESR" title="Permalink to this definition">¶</a></dt>
+<dd><p>dE = B dot gtensor dot s</p>
+<dl class="method">
+<dt id="pyscf.prop.esr.uks.ESR.get_fock">
+<code class="sig-name descname">get_fock</code><span class="sig-paren">(</span><em class="sig-param">dm0=None</em>, <em class="sig-param">gauge_orig=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyscf.prop.esr.uks.ESR.get_fock" title="Permalink to this definition">¶</a></dt>
+<dd><p>First order Fock matrix wrt external magnetic field</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../qmmm.html" class="btn btn-neutral float-right" title="10.23. qmmm — QM/MM interface" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="ssc.html" class="btn btn-neutral float-left" title="10.22.11. prop.ssc — Spin-spin coulping" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2015-2020, The PySCF Developers
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

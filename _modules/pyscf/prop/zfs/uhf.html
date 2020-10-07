@@ -1,0 +1,571 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pyscf.prop.zfs.uhf &mdash; PySCF 1.7.5 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home" alt="Documentation Home"> PySCF
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.7
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../overview.html">1. An overview of PySCF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../version.html">2. Version history</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../install.html">3. Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../code-rule.html">4. Code standard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../benchmark.html">5. Benchmark</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorial.html">6. Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../theory.html">7. Theoretical methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../advanced.html">8. Miscellaneous</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../interface.html">9. Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules.html">10. Main modules</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">PySCF</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>pyscf.prop.zfs.uhf</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pyscf.prop.zfs.uhf</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># Copyright 2014-2019 The PySCF Developers. All Rights Reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+<span class="c1">#</span>
+<span class="c1">#     http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1">#</span>
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+<span class="c1">#</span>
+<span class="c1"># Author: Qiming Sun &lt;osirpt.sun@gmail.com&gt;</span>
+<span class="c1">#</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">Non-relativistic unrestricted Hartree-Fock zero-field splitting</span>
+<span class="sd">(In testing)</span>
+
+<span class="sd">Refs:</span>
+<span class="sd">    JCP 134, 194113 (2011); DOI:10.1063/1.3590362</span>
+<span class="sd">    PRB 60, 9566 (1999); DOI:10.1103/PhysRevB.60.9566</span>
+<span class="sd">    JCP 127, 164112 (2007); 10.1063/1.2772857</span>
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">reduce</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">lib</span>
+<span class="kn">from</span> <span class="nn">pyscf.lib</span> <span class="k">import</span> <span class="n">logger</span>
+<span class="kn">from</span> <span class="nn">pyscf.ao2mo</span> <span class="k">import</span> <span class="n">_ao2mo</span>
+<span class="kn">from</span> <span class="nn">pyscf.scf</span> <span class="k">import</span> <span class="n">_response_functions</span>  <span class="c1"># noqa</span>
+<span class="kn">from</span> <span class="nn">pyscf.prop.ssc.rhf</span> <span class="k">import</span> <span class="n">_dm1_mo2ao</span>
+<span class="kn">from</span> <span class="nn">pyscf.data</span> <span class="k">import</span> <span class="n">nist</span>
+
+
+<div class="viewcode-block" id="koseki_charge"><a class="viewcode-back" href="../../../../modules/prop/zfs.html#pyscf.prop.zfs.uhf.koseki_charge">[docs]</a><span class="k">def</span> <span class="nf">koseki_charge</span><span class="p">(</span><span class="n">z</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Koseki effective charge in SO correction</span>
+
+<span class="sd">    Ref:</span>
+<span class="sd">    JPC 96, 10768</span>
+<span class="sd">    JPC, 99, 12764</span>
+<span class="sd">    JPCA, 102, 10430</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="c1"># JPC 96, 10768</span>
+    <span class="k">if</span> <span class="n">z</span> <span class="o">&lt;=</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">z</span>
+    <span class="k">elif</span> <span class="n">z</span> <span class="o">&lt;=</span> <span class="mi">10</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">z</span> <span class="o">*</span> <span class="p">(</span><span class="o">.</span><span class="mi">3</span> <span class="o">+</span> <span class="n">z</span> <span class="o">*</span> <span class="o">.</span><span class="mi">05</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">z</span> <span class="o">&lt;=</span> <span class="mi">18</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">z</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.05</span> <span class="o">-</span> <span class="n">z</span> <span class="o">*</span> <span class="o">.</span><span class="mi">0125</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">z</span> <span class="o">&lt;=</span> <span class="mi">30</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">z</span> <span class="o">*</span> <span class="p">(</span> <span class="mf">0.385</span> <span class="o">+</span> <span class="mf">0.025</span> <span class="o">*</span> <span class="p">(</span><span class="n">z</span> <span class="o">-</span> <span class="mi">18</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span> <span class="p">)</span> <span class="c1"># Jia: J. Phys. Chem. A 1998, 102, 10430</span>
+    <span class="k">elif</span> <span class="n">z</span> <span class="o">&lt;</span> <span class="mi">48</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">z</span> <span class="o">*</span> <span class="p">(</span> <span class="mf">4.680</span> <span class="o">+</span> <span class="mf">0.060</span> <span class="o">*</span> <span class="p">(</span><span class="n">z</span> <span class="o">-</span> <span class="mi">36</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span> <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">z</span></div>
+
+
+<span class="k">def</span> <span class="nf">direct_spin_spin</span><span class="p">(</span><span class="n">zfsobj</span><span class="p">,</span> <span class="n">mol</span><span class="p">,</span> <span class="n">dm0</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dm0</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="ow">and</span> <span class="n">dm0</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span> <span class="c1"># RHF DM</span>
+        <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
+
+    <span class="n">dma</span><span class="p">,</span> <span class="n">dmb</span> <span class="o">=</span> <span class="n">dm0</span>
+    <span class="n">spindm</span> <span class="o">=</span> <span class="n">dma</span> <span class="o">-</span> <span class="n">dmb</span>
+    <span class="n">effspin</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">spin</span> <span class="o">*</span> <span class="o">.</span><span class="mi">5</span>
+    <span class="n">nao</span> <span class="o">=</span> <span class="n">dma</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="c1"># Use QED g-factor or Dirac g-factor</span>
+    <span class="c1">#g_fac = nist.G_ELECTRON**2/4  # QED</span>
+    <span class="n">g_fac</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">fac</span> <span class="o">=</span> <span class="n">g_fac</span> <span class="o">*</span> <span class="n">nist</span><span class="o">.</span><span class="n">ALPHA</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="mi">8</span> <span class="o">/</span> <span class="p">(</span><span class="n">effspin</span> <span class="o">*</span> <span class="p">(</span><span class="n">effspin</span> <span class="o">-</span> <span class="o">.</span><span class="mi">5</span><span class="p">))</span>
+
+    <span class="n">hss</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">intor</span><span class="p">(</span><span class="s1">&#39;int2e_ip1ip2&#39;</span><span class="p">,</span> <span class="n">comp</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="n">nao</span><span class="p">,</span><span class="n">nao</span><span class="p">,</span><span class="n">nao</span><span class="p">,</span><span class="n">nao</span><span class="p">)</span>
+    <span class="n">hss</span> <span class="o">=</span> <span class="n">hss</span> <span class="o">+</span> <span class="n">hss</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span>
+    <span class="n">hss</span> <span class="o">=</span> <span class="n">hss</span> <span class="o">+</span> <span class="n">hss</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
+    <span class="n">ej</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;xyijkl,ji,lk&#39;</span><span class="p">,</span> <span class="n">hss</span><span class="p">,</span> <span class="n">spindm</span><span class="p">,</span> <span class="n">spindm</span><span class="p">)</span>
+    <span class="n">ek</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;xyijkl,jk,li&#39;</span><span class="p">,</span> <span class="n">hss</span><span class="p">,</span> <span class="n">spindm</span><span class="p">,</span> <span class="n">spindm</span><span class="p">)</span>
+    <span class="n">dss</span> <span class="o">=</span> <span class="p">(</span><span class="n">ej</span> <span class="o">-</span> <span class="n">ek</span><span class="p">)</span> <span class="o">*</span> <span class="n">fac</span>
+
+<span class="c1"># 2-electron Fermi contact term</span>
+<span class="c1"># FC contribution is zero in mean-field calculations because of the 16-fold</span>
+<span class="c1"># symmetry of the 4-index tensor.</span>
+<span class="c1"># Generally, in a CI-like wfn, FC may have contributions to the direction</span>
+<span class="c1"># spin-spin coupling.</span>
+    <span class="k">if</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">h_fc</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">intor</span><span class="p">(</span><span class="s1">&#39;int4c1e&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">nao</span><span class="p">,</span><span class="n">nao</span><span class="p">,</span><span class="n">nao</span><span class="p">,</span><span class="n">nao</span><span class="p">)</span>
+        <span class="n">ej</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;ijkl,ji,lk&#39;</span><span class="p">,</span> <span class="n">h_fc</span><span class="p">,</span> <span class="n">spindm</span><span class="p">,</span> <span class="n">spindm</span><span class="p">)</span>
+        <span class="n">ek</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;ijkl,jk,li&#39;</span><span class="p">,</span> <span class="n">h_fc</span><span class="p">,</span> <span class="n">spindm</span><span class="p">,</span> <span class="n">spindm</span><span class="p">)</span>
+        <span class="n">e_fc</span> <span class="o">=</span> <span class="p">(</span><span class="n">ej</span> <span class="o">-</span> <span class="n">ek</span><span class="p">)</span> <span class="o">*</span> <span class="n">fac</span> <span class="o">*</span> <span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">3</span><span class="p">)</span>
+        <span class="n">dss</span> <span class="o">-=</span> <span class="n">e_fc</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">dss</span>
+
+<span class="c1"># Note mo1 is the imaginary part of MO^1</span>
+<span class="k">def</span> <span class="nf">make_soc</span><span class="p">(</span><span class="n">zfsobj</span><span class="p">,</span> <span class="n">mol</span><span class="p">,</span> <span class="n">mo_coeff</span><span class="p">,</span> <span class="n">mo_occ</span><span class="p">):</span>
+    <span class="n">h1</span> <span class="o">=</span> <span class="n">make_h1_soc</span><span class="p">(</span><span class="n">zfsobj</span><span class="p">,</span> <span class="n">mol</span><span class="p">,</span> <span class="n">mo_coeff</span><span class="p">,</span> <span class="n">mo_occ</span><span class="p">)</span>
+    <span class="n">mo1</span> <span class="o">=</span> <span class="n">solve_mo1</span><span class="p">(</span><span class="n">zfsobj</span><span class="p">,</span> <span class="n">h1</span><span class="p">)</span>
+    <span class="n">h1aa</span><span class="p">,</span> <span class="n">h1ab</span><span class="p">,</span> <span class="n">h1ba</span><span class="p">,</span> <span class="n">h1bb</span> <span class="o">=</span> <span class="n">h1</span>
+    <span class="n">mo1aa</span><span class="p">,</span> <span class="n">mo1ab</span><span class="p">,</span> <span class="n">mo1ba</span><span class="p">,</span> <span class="n">mo1bb</span> <span class="o">=</span> <span class="n">mo1</span>
+
+    <span class="n">effspin</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">spin</span> <span class="o">*</span> <span class="o">.</span><span class="mi">5</span>
+    <span class="k">if</span> <span class="mi">0</span><span class="p">:</span> <span class="c1"># Pederson-Khanna formula , PRB, 60, 9566</span>
+        <span class="n">fac</span> <span class="o">=</span> <span class="o">-.</span><span class="mi">25</span> <span class="o">/</span> <span class="n">effspin</span><span class="o">**</span><span class="mi">2</span>
+        <span class="n">dso</span>  <span class="o">=</span> <span class="n">fac</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;xij,yij-&gt;xy&#39;</span><span class="p">,</span> <span class="n">h1aa</span><span class="p">,</span> <span class="n">mo1aa</span><span class="p">)</span>
+        <span class="n">dso</span> <span class="o">+=</span> <span class="n">fac</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;xij,yij-&gt;xy&#39;</span><span class="p">,</span> <span class="n">h1bb</span><span class="p">,</span> <span class="n">mo1bb</span><span class="p">)</span>
+        <span class="n">dso</span> <span class="o">-=</span> <span class="n">fac</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;xij,yij-&gt;xy&#39;</span><span class="p">,</span> <span class="n">h1ab</span><span class="p">,</span> <span class="n">mo1ab</span><span class="p">)</span>
+        <span class="n">dso</span> <span class="o">-=</span> <span class="n">fac</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;xij,yij-&gt;xy&#39;</span><span class="p">,</span> <span class="n">h1ba</span><span class="p">,</span> <span class="n">mo1ba</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="mi">0</span><span class="p">:</span> <span class="c1"># Neese formula, see JCP, 127, 164112</span>
+        <span class="n">facy</span> <span class="o">=</span> <span class="o">-.</span><span class="mi">25</span> <span class="o">/</span> <span class="p">((</span><span class="n">effspin</span><span class="o">-.</span><span class="mi">5</span><span class="p">)</span><span class="o">*</span><span class="n">effspin</span><span class="p">)</span>
+        <span class="n">facz</span> <span class="o">=</span> <span class="o">-.</span><span class="mi">25</span> <span class="o">/</span> <span class="n">effspin</span><span class="o">**</span><span class="mi">2</span>
+        <span class="n">facx</span> <span class="o">=</span> <span class="o">-.</span><span class="mi">25</span> <span class="o">/</span> <span class="p">((</span><span class="n">effspin</span><span class="o">+.</span><span class="mi">5</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">effspin</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">dso</span>  <span class="o">=</span> <span class="n">facz</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;xij,yij-&gt;xy&#39;</span><span class="p">,</span> <span class="n">h1aa</span><span class="p">,</span> <span class="n">mo1aa</span><span class="p">)</span>
+        <span class="n">dso</span> <span class="o">+=</span> <span class="n">facz</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;xij,yij-&gt;xy&#39;</span><span class="p">,</span> <span class="n">h1bb</span><span class="p">,</span> <span class="n">mo1bb</span><span class="p">)</span>
+        <span class="n">dso</span> <span class="o">-=</span> <span class="n">facx</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;xij,yij-&gt;xy&#39;</span><span class="p">,</span> <span class="n">h1ab</span><span class="p">,</span> <span class="n">mo1ab</span><span class="p">)</span>
+        <span class="n">dso</span> <span class="o">-=</span> <span class="n">facy</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;xij,yij-&gt;xy&#39;</span><span class="p">,</span> <span class="n">h1ba</span><span class="p">,</span> <span class="n">mo1ba</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span> <span class="c1"># van Wullen formula, JCP, 134, 194113</span>
+        <span class="c1"># Note the sign difference to van Wullen&#39;s paper, due to the</span>
+        <span class="c1"># anti-symmetricity of the Hamiltonian</span>
+        <span class="n">fac</span> <span class="o">=</span> <span class="o">-.</span><span class="mi">25</span> <span class="o">/</span> <span class="p">(</span><span class="n">effspin</span><span class="o">*</span><span class="p">(</span><span class="n">effspin</span><span class="o">-.</span><span class="mi">5</span><span class="p">))</span>
+        <span class="n">dso</span>  <span class="o">=</span> <span class="n">fac</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;xij,yij-&gt;xy&#39;</span><span class="p">,</span> <span class="n">h1aa</span><span class="p">,</span> <span class="n">mo1aa</span><span class="p">)</span>
+        <span class="n">dso</span> <span class="o">+=</span> <span class="n">fac</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;xij,yij-&gt;xy&#39;</span><span class="p">,</span> <span class="n">h1bb</span><span class="p">,</span> <span class="n">mo1bb</span><span class="p">)</span>
+        <span class="n">dso</span> <span class="o">-=</span> <span class="n">fac</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;xij,yij-&gt;xy&#39;</span><span class="p">,</span> <span class="n">h1ab</span><span class="p">,</span> <span class="n">mo1ab</span><span class="p">)</span>
+        <span class="n">dso</span> <span class="o">-=</span> <span class="n">fac</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;xij,yij-&gt;xy&#39;</span><span class="p">,</span> <span class="n">h1ba</span><span class="p">,</span> <span class="n">mo1ba</span><span class="p">)</span>
+
+    <span class="n">dso</span> <span class="o">*=</span> <span class="n">nist</span><span class="o">.</span><span class="n">ALPHA</span> <span class="o">**</span> <span class="mi">4</span> <span class="o">/</span> <span class="mi">4</span>
+    <span class="k">return</span> <span class="n">dso</span>
+
+<span class="k">def</span> <span class="nf">make_h1_soc</span><span class="p">(</span><span class="n">zfsobj</span><span class="p">,</span> <span class="n">mol</span><span class="p">,</span> <span class="n">mo_coeff</span><span class="p">,</span> <span class="n">mo_occ</span><span class="p">):</span>
+    <span class="n">occidxa</span> <span class="o">=</span> <span class="n">mo_occ</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span>
+    <span class="n">occidxb</span> <span class="o">=</span> <span class="n">mo_occ</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span>
+    <span class="n">orboa</span> <span class="o">=</span> <span class="n">mo_coeff</span><span class="p">[</span><span class="mi">0</span><span class="p">][:,</span> <span class="n">occidxa</span><span class="p">]</span>
+    <span class="n">orbob</span> <span class="o">=</span> <span class="n">mo_coeff</span><span class="p">[</span><span class="mi">1</span><span class="p">][:,</span> <span class="n">occidxb</span><span class="p">]</span>
+    <span class="n">orbva</span> <span class="o">=</span> <span class="n">mo_coeff</span><span class="p">[</span><span class="mi">0</span><span class="p">][:,</span><span class="o">~</span><span class="n">occidxa</span><span class="p">]</span>
+    <span class="n">orbvb</span> <span class="o">=</span> <span class="n">mo_coeff</span><span class="p">[</span><span class="mi">1</span><span class="p">][:,</span><span class="o">~</span><span class="n">occidxb</span><span class="p">]</span>
+<span class="c1"># hso1e is the imaginary part of [i sigma dot pV x p]</span>
+<span class="c1"># JCP, 122, 034107 Eq (2) = 1/4c^2 hso1e</span>
+    <span class="k">if</span> <span class="n">zfsobj</span><span class="o">.</span><span class="n">so_eff_charge</span><span class="p">:</span>
+        <span class="n">hso1e</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">ia</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">mol</span><span class="o">.</span><span class="n">natm</span><span class="p">):</span>
+            <span class="n">mol</span><span class="o">.</span><span class="n">set_rinv_origin</span><span class="p">(</span><span class="n">mol</span><span class="o">.</span><span class="n">atom_coord</span><span class="p">(</span><span class="n">ia</span><span class="p">))</span>
+            <span class="c1">#FIXME: when ECP is enabled</span>
+            <span class="n">Z</span> <span class="o">=</span> <span class="n">koseki_charge</span><span class="p">(</span><span class="n">mol</span><span class="o">.</span><span class="n">atom_charge</span><span class="p">(</span><span class="n">ia</span><span class="p">))</span>
+            <span class="n">hso1e</span> <span class="o">+=</span> <span class="o">-</span><span class="n">Z</span> <span class="o">*</span> <span class="n">mol</span><span class="o">.</span><span class="n">intor</span><span class="p">(</span><span class="s1">&#39;int1e_prinvxp&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">hso1e</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">intor</span><span class="p">(</span><span class="s1">&#39;int1e_pnucxp&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">h1aa</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="n">reduce</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">,</span> <span class="p">(</span><span class="n">orbva</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">orboa</span><span class="p">))</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">hso1e</span><span class="p">])</span>
+    <span class="n">h1bb</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="n">reduce</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">,</span> <span class="p">(</span><span class="n">orbvb</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">orbob</span><span class="p">))</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">hso1e</span><span class="p">])</span>
+    <span class="n">h1ab</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="n">reduce</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">,</span> <span class="p">(</span><span class="n">orbva</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">orbob</span><span class="p">))</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">hso1e</span><span class="p">])</span>
+    <span class="n">h1ba</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="n">reduce</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">,</span> <span class="p">(</span><span class="n">orbvb</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">orboa</span><span class="p">))</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">hso1e</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="n">zfsobj</span><span class="o">.</span><span class="n">sso</span> <span class="ow">or</span> <span class="n">zfsobj</span><span class="o">.</span><span class="n">soo</span><span class="p">:</span>
+        <span class="n">hso2e</span> <span class="o">=</span> <span class="n">make_soc2e</span><span class="p">(</span><span class="n">zfsobj</span><span class="p">,</span> <span class="n">mo_coeff</span><span class="p">,</span> <span class="n">mo_occ</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">hso2e</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">h1aa</span> <span class="o">+=</span> <span class="n">hso2e</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">h1ab</span> <span class="o">+=</span> <span class="n">hso2e</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">h1ba</span> <span class="o">+=</span> <span class="n">hso2e</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">h1bb</span> <span class="o">+=</span> <span class="n">hso2e</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">h1aa</span><span class="p">,</span> <span class="n">h1ab</span><span class="p">,</span> <span class="n">h1ba</span><span class="p">,</span> <span class="n">h1bb</span>
+
+<span class="c1"># Using the approximation in JCP, 122, 034107</span>
+<span class="k">def</span> <span class="nf">make_soc2e</span><span class="p">(</span><span class="n">zfsobj</span><span class="p">,</span> <span class="n">mo_coeff</span><span class="p">,</span> <span class="n">mo_occ</span><span class="p">):</span>
+    <span class="n">occidxa</span> <span class="o">=</span> <span class="n">mo_occ</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span>
+    <span class="n">occidxb</span> <span class="o">=</span> <span class="n">mo_occ</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span>
+    <span class="n">orboa</span> <span class="o">=</span> <span class="n">mo_coeff</span><span class="p">[</span><span class="mi">0</span><span class="p">][:,</span><span class="n">occidxa</span><span class="p">]</span>
+    <span class="n">orbob</span> <span class="o">=</span> <span class="n">mo_coeff</span><span class="p">[</span><span class="mi">1</span><span class="p">][:,</span><span class="n">occidxb</span><span class="p">]</span>
+    <span class="n">orbva</span> <span class="o">=</span> <span class="n">mo_coeff</span><span class="p">[</span><span class="mi">0</span><span class="p">][:,</span><span class="o">~</span><span class="n">occidxa</span><span class="p">]</span>
+    <span class="n">orbvb</span> <span class="o">=</span> <span class="n">mo_coeff</span><span class="p">[</span><span class="mi">1</span><span class="p">][:,</span><span class="o">~</span><span class="n">occidxb</span><span class="p">]</span>
+    <span class="n">dma</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">orboa</span><span class="p">,</span> <span class="n">orboa</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+    <span class="n">dmb</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">orbob</span><span class="p">,</span> <span class="n">orbob</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+    <span class="n">dm1</span> <span class="o">=</span> <span class="n">dma</span> <span class="o">+</span> <span class="n">dmb</span>
+    <span class="n">nao</span> <span class="o">=</span> <span class="n">dma</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="c1"># hso2e is the imaginary part of SSO</span>
+    <span class="n">hso2e</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">intor</span><span class="p">(</span><span class="s1">&#39;int2e_p1vxp1&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">nao</span><span class="p">,</span><span class="n">nao</span><span class="p">,</span><span class="n">nao</span><span class="p">,</span><span class="n">nao</span><span class="p">)</span>
+    <span class="n">vj</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;yijkl,lk-&gt;yij&#39;</span><span class="p">,</span> <span class="n">hso2e</span><span class="p">,</span> <span class="n">dm1</span><span class="p">)</span>
+    <span class="n">vk</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;yijkl,jk-&gt;yil&#39;</span><span class="p">,</span> <span class="n">hso2e</span><span class="p">,</span> <span class="n">dm1</span><span class="p">)</span>
+    <span class="n">vk</span><span class="o">+=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;yijkl,li-&gt;ykj&#39;</span><span class="p">,</span> <span class="n">hso2e</span><span class="p">,</span> <span class="n">dm1</span><span class="p">)</span>
+    <span class="n">hso2e</span> <span class="o">=</span> <span class="n">vj</span> <span class="o">-</span> <span class="n">vk</span> <span class="o">*</span> <span class="mf">1.5</span>
+
+    <span class="n">haa</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="n">reduce</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">,</span> <span class="p">(</span><span class="n">orbva</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">orboa</span><span class="p">))</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">hso2e</span><span class="p">])</span>
+    <span class="n">hab</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="n">reduce</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">,</span> <span class="p">(</span><span class="n">orbva</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">orbob</span><span class="p">))</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">hso2e</span><span class="p">])</span>
+    <span class="n">hba</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="n">reduce</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">,</span> <span class="p">(</span><span class="n">orbvb</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">orboa</span><span class="p">))</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">hso2e</span><span class="p">])</span>
+    <span class="n">hbb</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="n">reduce</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">,</span> <span class="p">(</span><span class="n">orbvb</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">orbob</span><span class="p">))</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">hso2e</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">haa</span><span class="p">,</span> <span class="n">hab</span><span class="p">,</span> <span class="n">hba</span><span class="p">,</span> <span class="n">hbb</span>
+
+<span class="k">def</span> <span class="nf">solve_mo1</span><span class="p">(</span><span class="n">sscobj</span><span class="p">,</span> <span class="n">h1</span><span class="p">):</span>
+    <span class="n">cput1</span> <span class="o">=</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">clock</span><span class="p">(),</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span>
+    <span class="n">log</span> <span class="o">=</span> <span class="n">logger</span><span class="o">.</span><span class="n">Logger</span><span class="p">(</span><span class="n">sscobj</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="n">sscobj</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span>
+
+    <span class="n">mo_energy</span> <span class="o">=</span> <span class="n">sscobj</span><span class="o">.</span><span class="n">_scf</span><span class="o">.</span><span class="n">mo_energy</span>
+    <span class="n">mo_coeff</span> <span class="o">=</span> <span class="n">sscobj</span><span class="o">.</span><span class="n">_scf</span><span class="o">.</span><span class="n">mo_coeff</span>
+    <span class="n">mo_occ</span> <span class="o">=</span> <span class="n">sscobj</span><span class="o">.</span><span class="n">_scf</span><span class="o">.</span><span class="n">mo_occ</span>
+    <span class="n">h1aa</span><span class="p">,</span> <span class="n">h1ab</span><span class="p">,</span> <span class="n">h1ba</span><span class="p">,</span> <span class="n">h1bb</span> <span class="o">=</span> <span class="n">h1</span>
+    <span class="n">nset</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">h1aa</span><span class="p">)</span>
+    <span class="n">eai_aa</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">/</span> <span class="n">lib</span><span class="o">.</span><span class="n">direct_sum</span><span class="p">(</span><span class="s1">&#39;a-i-&gt;ai&#39;</span><span class="p">,</span> <span class="n">mo_energy</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">mo_occ</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span><span class="p">],</span> <span class="n">mo_energy</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">mo_occ</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">eai_ab</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">/</span> <span class="n">lib</span><span class="o">.</span><span class="n">direct_sum</span><span class="p">(</span><span class="s1">&#39;a-i-&gt;ai&#39;</span><span class="p">,</span> <span class="n">mo_energy</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">mo_occ</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span><span class="p">],</span> <span class="n">mo_energy</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">mo_occ</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">eai_ba</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">/</span> <span class="n">lib</span><span class="o">.</span><span class="n">direct_sum</span><span class="p">(</span><span class="s1">&#39;a-i-&gt;ai&#39;</span><span class="p">,</span> <span class="n">mo_energy</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">mo_occ</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span><span class="p">],</span> <span class="n">mo_energy</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">mo_occ</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">eai_bb</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">/</span> <span class="n">lib</span><span class="o">.</span><span class="n">direct_sum</span><span class="p">(</span><span class="s1">&#39;a-i-&gt;ai&#39;</span><span class="p">,</span> <span class="n">mo_energy</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">mo_occ</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span><span class="p">],</span> <span class="n">mo_energy</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">mo_occ</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="n">mo1</span> <span class="o">=</span> <span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">h1aa</span><span class="p">)</span> <span class="o">*</span> <span class="o">-</span><span class="n">eai_aa</span><span class="p">,</span>
+           <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">h1ab</span><span class="p">)</span> <span class="o">*</span> <span class="o">-</span><span class="n">eai_ab</span><span class="p">,</span>
+           <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">h1ba</span><span class="p">)</span> <span class="o">*</span> <span class="o">-</span><span class="n">eai_ba</span><span class="p">,</span>
+           <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">h1bb</span><span class="p">)</span> <span class="o">*</span> <span class="o">-</span><span class="n">eai_bb</span><span class="p">)</span>
+    <span class="n">h1aa</span> <span class="o">=</span> <span class="n">h1ab</span> <span class="o">=</span> <span class="n">h1ba</span> <span class="o">=</span> <span class="n">h1bb</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">sscobj</span><span class="o">.</span><span class="n">cphf</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">mo1</span>
+
+    <span class="n">orboa</span> <span class="o">=</span> <span class="n">mo_coeff</span><span class="p">[</span><span class="mi">0</span><span class="p">][:,</span><span class="n">mo_occ</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="n">orbva</span> <span class="o">=</span> <span class="n">mo_coeff</span><span class="p">[</span><span class="mi">0</span><span class="p">][:,</span><span class="n">mo_occ</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">orbob</span> <span class="o">=</span> <span class="n">mo_coeff</span><span class="p">[</span><span class="mi">1</span><span class="p">][:,</span><span class="n">mo_occ</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="n">orbvb</span> <span class="o">=</span> <span class="n">mo_coeff</span><span class="p">[</span><span class="mi">1</span><span class="p">][:,</span><span class="n">mo_occ</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">nocca</span> <span class="o">=</span> <span class="n">orboa</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">nvira</span> <span class="o">=</span> <span class="n">orbva</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">noccb</span> <span class="o">=</span> <span class="n">orbob</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">nvirb</span> <span class="o">=</span> <span class="n">orbvb</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">p1</span> <span class="o">=</span> <span class="n">nvira</span> <span class="o">*</span> <span class="n">nocca</span>
+    <span class="n">p2</span> <span class="o">=</span> <span class="n">p1</span> <span class="o">+</span> <span class="n">nvira</span> <span class="o">*</span> <span class="n">noccb</span>
+    <span class="n">p3</span> <span class="o">=</span> <span class="n">p2</span> <span class="o">+</span> <span class="n">nvirb</span> <span class="o">*</span> <span class="n">nocca</span>
+    <span class="k">def</span> <span class="nf">_split_mo1</span><span class="p">(</span><span class="n">mo1</span><span class="p">):</span>
+        <span class="n">mo1</span> <span class="o">=</span> <span class="n">mo1</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">nset</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">mo1aa</span> <span class="o">=</span> <span class="n">mo1</span><span class="p">[:,</span>  <span class="p">:</span><span class="n">p1</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">nset</span><span class="p">,</span><span class="n">nvira</span><span class="p">,</span><span class="n">nocca</span><span class="p">)</span>
+        <span class="n">mo1ab</span> <span class="o">=</span> <span class="n">mo1</span><span class="p">[:,</span><span class="n">p1</span><span class="p">:</span><span class="n">p2</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">nset</span><span class="p">,</span><span class="n">nvira</span><span class="p">,</span><span class="n">noccb</span><span class="p">)</span>
+        <span class="n">mo1ba</span> <span class="o">=</span> <span class="n">mo1</span><span class="p">[:,</span><span class="n">p2</span><span class="p">:</span><span class="n">p3</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">nset</span><span class="p">,</span><span class="n">nvirb</span><span class="p">,</span><span class="n">nocca</span><span class="p">)</span>
+        <span class="n">mo1bb</span> <span class="o">=</span> <span class="n">mo1</span><span class="p">[:,</span><span class="n">p3</span><span class="p">:</span>  <span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">nset</span><span class="p">,</span><span class="n">nvirb</span><span class="p">,</span><span class="n">noccb</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">mo1aa</span><span class="p">,</span> <span class="n">mo1ab</span><span class="p">,</span> <span class="n">mo1ba</span><span class="p">,</span> <span class="n">mo1bb</span>
+
+    <span class="n">mo1</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">mo1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">nset</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+                        <span class="n">mo1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">nset</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+                        <span class="n">mo1</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">nset</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+                        <span class="n">mo1</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">nset</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">)))</span>
+
+    <span class="n">vresp</span> <span class="o">=</span> <span class="n">mf</span><span class="o">.</span><span class="n">gen_response</span><span class="p">(</span><span class="n">with_j</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">hermi</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">mo_va_oa</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">orbva</span><span class="p">,</span><span class="n">orboa</span><span class="p">)),</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
+    <span class="n">mo_va_ob</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">orbva</span><span class="p">,</span><span class="n">orbob</span><span class="p">)),</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
+    <span class="n">mo_vb_oa</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">orbvb</span><span class="p">,</span><span class="n">orboa</span><span class="p">)),</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
+    <span class="n">mo_vb_ob</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">orbvb</span><span class="p">,</span><span class="n">orbob</span><span class="p">)),</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">vind</span><span class="p">(</span><span class="n">mo1</span><span class="p">):</span>
+        <span class="n">mo1aa</span><span class="p">,</span> <span class="n">mo1ab</span><span class="p">,</span> <span class="n">mo1ba</span><span class="p">,</span> <span class="n">mo1bb</span> <span class="o">=</span> <span class="n">_split_mo1</span><span class="p">(</span><span class="n">mo1</span><span class="p">)</span>
+        <span class="n">dm1aa</span> <span class="o">=</span> <span class="n">_dm1_mo2ao</span><span class="p">(</span><span class="n">mo1aa</span><span class="p">,</span> <span class="n">orbva</span><span class="p">,</span> <span class="n">orboa</span><span class="p">)</span>
+        <span class="n">dm1ab</span> <span class="o">=</span> <span class="n">_dm1_mo2ao</span><span class="p">(</span><span class="n">mo1ab</span><span class="p">,</span> <span class="n">orbva</span><span class="p">,</span> <span class="n">orbob</span><span class="p">)</span>
+        <span class="n">dm1ba</span> <span class="o">=</span> <span class="n">_dm1_mo2ao</span><span class="p">(</span><span class="n">mo1ba</span><span class="p">,</span> <span class="n">orbvb</span><span class="p">,</span> <span class="n">orboa</span><span class="p">)</span>
+        <span class="n">dm1bb</span> <span class="o">=</span> <span class="n">_dm1_mo2ao</span><span class="p">(</span><span class="n">mo1bb</span><span class="p">,</span> <span class="n">orbvb</span><span class="p">,</span> <span class="n">orbob</span><span class="p">)</span>
+        <span class="c1"># imaginary Hermitian</span>
+        <span class="n">dm1</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">dm1aa</span><span class="o">-</span><span class="n">dm1aa</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span>
+                            <span class="n">dm1ab</span><span class="o">-</span><span class="n">dm1ba</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span>
+                            <span class="n">dm1ba</span><span class="o">-</span><span class="n">dm1ab</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span>
+                            <span class="n">dm1bb</span><span class="o">-</span><span class="n">dm1bb</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">)])</span>
+        <span class="n">v1</span> <span class="o">=</span> <span class="n">vresp</span><span class="p">(</span><span class="n">dm1</span><span class="p">)</span>
+        <span class="n">v1aa</span> <span class="o">=</span> <span class="n">_ao2mo</span><span class="o">.</span><span class="n">nr_e2</span><span class="p">(</span><span class="n">v1</span><span class="p">[</span>      <span class="p">:</span><span class="n">nset</span>  <span class="p">],</span> <span class="n">mo_va_oa</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">nvira</span><span class="p">,</span><span class="n">nvira</span><span class="p">,</span><span class="n">nvira</span><span class="o">+</span><span class="n">nocca</span><span class="p">))</span>
+        <span class="n">v1ab</span> <span class="o">=</span> <span class="n">_ao2mo</span><span class="o">.</span><span class="n">nr_e2</span><span class="p">(</span><span class="n">v1</span><span class="p">[</span><span class="n">nset</span><span class="o">*</span><span class="mi">1</span><span class="p">:</span><span class="n">nset</span><span class="o">*</span><span class="mi">2</span><span class="p">],</span> <span class="n">mo_va_ob</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">nvira</span><span class="p">,</span><span class="n">nvira</span><span class="p">,</span><span class="n">nvira</span><span class="o">+</span><span class="n">noccb</span><span class="p">))</span>
+        <span class="n">v1ba</span> <span class="o">=</span> <span class="n">_ao2mo</span><span class="o">.</span><span class="n">nr_e2</span><span class="p">(</span><span class="n">v1</span><span class="p">[</span><span class="n">nset</span><span class="o">*</span><span class="mi">2</span><span class="p">:</span><span class="n">nset</span><span class="o">*</span><span class="mi">3</span><span class="p">],</span> <span class="n">mo_vb_oa</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">nvirb</span><span class="p">,</span><span class="n">nvirb</span><span class="p">,</span><span class="n">nvirb</span><span class="o">+</span><span class="n">nocca</span><span class="p">))</span>
+        <span class="n">v1bb</span> <span class="o">=</span> <span class="n">_ao2mo</span><span class="o">.</span><span class="n">nr_e2</span><span class="p">(</span><span class="n">v1</span><span class="p">[</span><span class="n">nset</span><span class="o">*</span><span class="mi">3</span><span class="p">:</span>      <span class="p">],</span> <span class="n">mo_vb_ob</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">nvirb</span><span class="p">,</span><span class="n">nvirb</span><span class="p">,</span><span class="n">nvirb</span><span class="o">+</span><span class="n">noccb</span><span class="p">))</span>
+        <span class="n">v1aa</span> <span class="o">=</span> <span class="n">v1aa</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">nset</span><span class="p">,</span><span class="n">nvira</span><span class="p">,</span><span class="n">nocca</span><span class="p">)</span>
+        <span class="n">v1ab</span> <span class="o">=</span> <span class="n">v1ab</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">nset</span><span class="p">,</span><span class="n">nvira</span><span class="p">,</span><span class="n">noccb</span><span class="p">)</span>
+        <span class="n">v1ba</span> <span class="o">=</span> <span class="n">v1ba</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">nset</span><span class="p">,</span><span class="n">nvirb</span><span class="p">,</span><span class="n">nocca</span><span class="p">)</span>
+        <span class="n">v1bb</span> <span class="o">=</span> <span class="n">v1bb</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">nset</span><span class="p">,</span><span class="n">nvirb</span><span class="p">,</span><span class="n">noccb</span><span class="p">)</span>
+        <span class="n">v1aa</span> <span class="o">*=</span> <span class="n">eai_aa</span>
+        <span class="n">v1ab</span> <span class="o">*=</span> <span class="n">eai_ab</span>
+        <span class="n">v1ba</span> <span class="o">*=</span> <span class="n">eai_ba</span>
+        <span class="n">v1bb</span> <span class="o">*=</span> <span class="n">eai_bb</span>
+        <span class="n">v1mo</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">v1aa</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">nset</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">v1ab</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">nset</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+                             <span class="n">v1ba</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">nset</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">v1bb</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">nset</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="n">v1mo</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+
+    <span class="n">mo1</span> <span class="o">=</span> <span class="n">lib</span><span class="o">.</span><span class="n">krylov</span><span class="p">(</span><span class="n">vind</span><span class="p">,</span> <span class="n">mo1</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-9</span><span class="p">,</span> <span class="n">max_cycle</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">log</span><span class="p">)</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">timer</span><span class="p">(</span><span class="s1">&#39;solving FC CPHF eqn&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">cput1</span><span class="p">)</span>
+    <span class="n">mo1</span> <span class="o">=</span> <span class="n">_split_mo1</span><span class="p">(</span><span class="n">mo1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">mo1</span>
+
+
+<div class="viewcode-block" id="ZeroFieldSplitting"><a class="viewcode-back" href="../../../../modules/prop/zfs.html#pyscf.prop.zfs.uhf.ZeroFieldSplitting">[docs]</a><span class="k">class</span> <span class="nc">ZeroFieldSplitting</span><span class="p">(</span><span class="n">lib</span><span class="o">.</span><span class="n">StreamObject</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;dE = I dot gtensor dot s&#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scf_method</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mol</span> <span class="o">=</span> <span class="n">scf_method</span><span class="o">.</span><span class="n">mol</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">scf_method</span><span class="o">.</span><span class="n">mol</span><span class="o">.</span><span class="n">verbose</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span> <span class="o">=</span> <span class="n">scf_method</span><span class="o">.</span><span class="n">mol</span><span class="o">.</span><span class="n">stdout</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">chkfile</span> <span class="o">=</span> <span class="n">scf_method</span><span class="o">.</span><span class="n">chkfile</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_scf</span> <span class="o">=</span> <span class="n">scf_method</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">cphf</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_cycle_cphf</span> <span class="o">=</span> <span class="mi">20</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conv_tol</span> <span class="o">=</span> <span class="mf">1e-9</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sso</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># Two-electron spin-same-orbit coupling</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">soo</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># Two-electron spin-other-orbit coupling</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">so_eff_charge</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">mo10</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mo_e10</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_keys</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;UHF-ZFS is an experimental feature. It is still in &#39;</span>
+                    <span class="s1">&#39;testing</span><span class="se">\n</span><span class="s1">Features and APIs may be changed in the future.&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">dump_flags</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">log</span> <span class="o">=</span> <span class="n">logger</span><span class="o">.</span><span class="n">new_logger</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;******** </span><span class="si">%s</span><span class="s1"> for </span><span class="si">%s</span><span class="s1"> (In testing) ********&#39;</span><span class="p">,</span>
+                 <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scf</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;with cphf = </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cphf</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cphf</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;CPHF conv_tol = </span><span class="si">%g</span><span class="s1">&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv_tol</span><span class="p">)</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;CPHF max_cycle_cphf = </span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_cycle_cphf</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;sso = </span><span class="si">%s</span><span class="s1"> (2e spin-same-orbit coupling)&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sso</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;soo = </span><span class="si">%s</span><span class="s1"> (2e spin-other-orbit coupling)&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">soo</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;so_eff_charge = </span><span class="si">%s</span><span class="s1"> (1e SO effective charge)&#39;</span><span class="p">,</span>
+                 <span class="bp">self</span><span class="o">.</span><span class="n">so_eff_charge</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+<div class="viewcode-block" id="ZeroFieldSplitting.kernel"><a class="viewcode-back" href="../../../../modules/prop/zfs.html#pyscf.prop.zfs.uhf.ZeroFieldSplitting.kernel">[docs]</a>    <span class="k">def</span> <span class="nf">kernel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mo1</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">cput0</span> <span class="o">=</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">clock</span><span class="p">(),</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_sanity</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dump_flags</span><span class="p">()</span>
+
+        <span class="n">mol</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mol</span>
+        <span class="n">dm0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scf</span><span class="o">.</span><span class="n">make_rdm1</span><span class="p">()</span>
+
+        <span class="n">zfs_ss</span> <span class="o">=</span> <span class="n">direct_spin_spin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mol</span><span class="p">,</span> <span class="n">dm0</span><span class="p">)</span>
+        <span class="n">zfs_soc</span> <span class="o">=</span> <span class="n">make_soc</span><span class="p">(</span><span class="n">zfsobj</span><span class="p">,</span> <span class="n">mol</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scf</span><span class="o">.</span><span class="n">mo_coeff</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scf</span><span class="o">.</span><span class="n">mo_occ</span><span class="p">)</span>
+        <span class="n">zfs_tensor</span> <span class="o">=</span> <span class="n">zfs_ss</span> <span class="o">+</span> <span class="n">zfs_soc</span>
+        <span class="n">zfs_diag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigh</span><span class="p">(</span><span class="n">zfs_tensor</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">dtrace</span> <span class="o">=</span> <span class="n">zfs_tensor</span><span class="o">.</span><span class="n">trace</span><span class="p">()</span>
+        <span class="n">zfs_diag</span> <span class="o">-=</span> <span class="n">dtrace</span> <span class="o">/</span> <span class="mi">3</span>
+        <span class="n">zidx</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">zfs_diag</span><span class="p">))</span>
+        <span class="n">dvalue</span> <span class="o">=</span> <span class="n">zfs_diag</span><span class="p">[</span><span class="n">zidx</span><span class="p">]</span> <span class="o">*</span> <span class="mf">1.5</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">zfs_diag</span> <span class="o">+</span> <span class="n">dvalue</span><span class="o">/</span><span class="mi">3</span>
+        <span class="n">tmp</span><span class="p">[</span><span class="n">zidx</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">evalue</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+        <span class="n">au2cm</span> <span class="o">=</span> <span class="n">nist</span><span class="o">.</span><span class="n">HARTREE2J</span> <span class="o">/</span> <span class="n">nist</span><span class="o">.</span><span class="n">PLANCK</span> <span class="o">/</span> <span class="n">nist</span><span class="o">.</span><span class="n">LIGHT_SPEED_SI</span> <span class="o">*</span> <span class="mf">1e-2</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;D trace = </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">dtrace</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">note</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;Axial   parameter D = </span><span class="si">%s</span><span class="s1"> (cm^{-1})&#39;</span><span class="p">,</span> <span class="n">dvalue</span><span class="o">*</span><span class="n">au2cm</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">note</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;Rhombic parameter E = </span><span class="si">%s</span><span class="s1"> (cm^{-1})&#39;</span><span class="p">,</span> <span class="n">evalue</span><span class="o">*</span><span class="n">au2cm</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Zero-field splitting tensor</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;S_x </span><span class="si">%s</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">zfs_tensor</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;S_y </span><span class="si">%s</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">zfs_tensor</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;S_z </span><span class="si">%s</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">zfs_tensor</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">timer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;ZFS tensor&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">cput0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">zfs_tensor</span></div></div>
+
+<span class="n">ZFS</span> <span class="o">=</span> <span class="n">ZeroFieldSplitting</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">gto</span><span class="p">,</span> <span class="n">scf</span>
+    <span class="n">mol</span> <span class="o">=</span> <span class="n">gto</span><span class="o">.</span><span class="n">M</span><span class="p">(</span><span class="n">atom</span><span class="o">=</span><span class="s1">&#39;Ne 0 0 0&#39;</span><span class="p">,</span>
+                <span class="n">basis</span><span class="o">=</span><span class="s1">&#39;ccpvdz&#39;</span><span class="p">,</span> <span class="n">spin</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">charge</span><span class="o">=-</span><span class="mi">2</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">mf</span> <span class="o">=</span> <span class="n">scf</span><span class="o">.</span><span class="n">UHF</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span>
+    <span class="n">mf</span><span class="o">.</span><span class="n">kernel</span><span class="p">()</span>
+    <span class="n">zfsobj</span> <span class="o">=</span> <span class="n">ZFS</span><span class="p">(</span><span class="n">mf</span><span class="p">)</span>
+    <span class="c1">#zfsobj.cphf = False</span>
+    <span class="c1">#zfsobj.sso = True</span>
+    <span class="c1">#zfsobj.soo = True</span>
+    <span class="c1">#zfsobj.so_eff_charge = False</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">zfsobj</span><span class="o">.</span><span class="n">kernel</span><span class="p">())</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2015-2020, The PySCF Developers
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

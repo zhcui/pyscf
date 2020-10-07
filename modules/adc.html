@@ -1,0 +1,547 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>10.1. adc — Algebraic diagrammatic construction (ADC) scheme &mdash; PySCF 1.7.5 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="10.2. ao2mo — Integral transformations" href="ao2mo.html" />
+    <link rel="prev" title="10. Main modules" href="../modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> PySCF
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.7
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">1. An overview of PySCF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../version.html">2. Version history</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">3. Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../code-rule.html">4. Code standard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../benchmark.html">5. Benchmark</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">6. Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../theory.html">7. Theoretical methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced.html">8. Miscellaneous</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../interface.html">9. Interfaces</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../modules.html">10. Main modules</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">10.1. <code class="xref py py-mod docutils literal notranslate"><span class="pre">adc</span></code> — Algebraic diagrammatic construction (ADC) scheme</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#examples">10.1.1. Examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-pyscf.adc">10.1.2. Program reference</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#algebraic-diagrammatic-construction">10.1.2.1. Algebraic Diagrammatic Construction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#adc-uadc-module-and-uadc-class">10.1.2.2. adc.uadc module and UADC class</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ao2mo.html">10.2. <code class="xref py py-mod docutils literal notranslate"><span class="pre">ao2mo</span></code> — Integral transformations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cc.html">10.3. <code class="xref py py-mod docutils literal notranslate"><span class="pre">cc</span></code> — Coupled cluster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ccn.html">10.4. <code class="xref py py-mod docutils literal notranslate"><span class="pre">ccn</span></code> — Auto-generated coupled cluster of arbitrary order</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ci.html">10.5. <code class="xref py py-mod docutils literal notranslate"><span class="pre">ci</span></code> — Configuration interaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data.html">10.6. <code class="xref py py-mod docutils literal notranslate"><span class="pre">data</span></code> — Data for constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="df.html">10.7. <code class="xref py py-mod docutils literal notranslate"><span class="pre">df</span></code> — Density fitting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dft.html">10.8. <code class="xref py py-mod docutils literal notranslate"><span class="pre">dft</span></code> — Density functional theory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="doci.html">10.9. <code class="xref py py-mod docutils literal notranslate"><span class="pre">doci</span></code> — Doubly occupied configuration interaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fci.html">10.10. <code class="xref py py-mod docutils literal notranslate"><span class="pre">fci</span></code> — Full configuration interaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="grad.html">10.11. <code class="xref py py-mod docutils literal notranslate"><span class="pre">grad</span></code> — Analytical nuclear gradients</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gto.html">10.12. <code class="xref py py-mod docutils literal notranslate"><span class="pre">gto</span></code> — Molecular structure and GTO basis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gw.html">10.13. <code class="xref py py-mod docutils literal notranslate"><span class="pre">gw</span></code> — Molecular G0W0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hci.html">10.14. <code class="xref py py-mod docutils literal notranslate"><span class="pre">hci</span></code> — Heat-bath selected CI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hessian.html">10.15. <code class="xref py py-mod docutils literal notranslate"><span class="pre">hessian</span></code> — Analytical nuclear Hessian</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lib.html">10.16. <code class="xref py py-mod docutils literal notranslate"><span class="pre">lib</span></code> — Helper functions, parameters, and C extensions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lo.html">10.17. <code class="xref py py-mod docutils literal notranslate"><span class="pre">lo</span></code> — Orbital localization and analysis tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mcscf.html">10.18. <code class="xref py py-mod docutils literal notranslate"><span class="pre">mcscf</span></code> — Multi-configurational self-consistent field</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mp.html">10.19. <code class="xref py py-mod docutils literal notranslate"><span class="pre">mp</span></code> — MP2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mrpt.html">10.20. <code class="xref py py-mod docutils literal notranslate"><span class="pre">mrpt</span></code> — Multi-reference perturbation theory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pbc.html">10.21. <code class="xref py py-mod docutils literal notranslate"><span class="pre">pbc</span></code> — Periodic boundary conditions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="prop.html">10.22. <code class="xref py py-mod docutils literal notranslate"><span class="pre">prop</span></code> — Molecular properties</a></li>
+<li class="toctree-l2"><a class="reference internal" href="qmmm.html">10.23. <code class="xref py py-mod docutils literal notranslate"><span class="pre">qmmm</span></code> — QM/MM interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rt.html">10.24. <code class="xref py py-mod docutils literal notranslate"><span class="pre">rt</span></code> — Real-time time-dependent density functional theory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scf.html">10.25. <code class="xref py py-mod docutils literal notranslate"><span class="pre">scf</span></code> — Self-consistent field methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="semiempirical.html">10.26. <code class="xref py py-mod docutils literal notranslate"><span class="pre">semiempirical</span></code> — Semiempirical methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sgx.html">10.27. <code class="xref py py-mod docutils literal notranslate"><span class="pre">sgx</span></code> — Pseudo-spectral methods (COSX, PS, SN-K)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solvent.html">10.28. <code class="xref py py-mod docutils literal notranslate"><span class="pre">solvent</span></code> — Solvent methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="soscf.html">10.29. <code class="xref py py-mod docutils literal notranslate"><span class="pre">soscf</span></code> — Second order SCF solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="symm.html">10.30. <code class="xref py py-mod docutils literal notranslate"><span class="pre">symm</span></code> – Point group symmetry and spin symmetry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tdscf.html">10.31. <code class="xref py py-mod docutils literal notranslate"><span class="pre">tdscf</span></code> — TDHF and TDDFT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html">10.32. <code class="xref py py-mod docutils literal notranslate"><span class="pre">tools</span></code> — Useful tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="x2c.html">10.33. <code class="xref py py-mod docutils literal notranslate"><span class="pre">x2c</span></code> — exact-two-component approach</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">PySCF</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../modules.html">10. Main modules</a> &raquo;</li>
+        
+      <li>10.1. <code class="xref py py-mod docutils literal notranslate"><span class="pre">adc</span></code> — Algebraic diagrammatic construction (ADC) scheme</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/modules/adc.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-adc">
+<span id="adc-algebraic-diagrammatic-construction-adc-scheme"></span><span id="adc"></span><h1>10.1. <a class="reference internal" href="#module-adc" title="adc: Algebraic diagrammatic construction energies and propties"><code class="xref py py-mod docutils literal notranslate"><span class="pre">adc</span></code></a> — Algebraic diagrammatic construction (ADC) scheme<a class="headerlink" href="#module-adc" title="Permalink to this headline">¶</a></h1>
+<p>The <a class="reference internal" href="#module-adc" title="adc: Algebraic diagrammatic construction energies and propties"><code class="xref py py-mod docutils literal notranslate"><span class="pre">adc</span></code></a> module is an implementation of algebraic diagrammatic construction theory for computation of spectroscopic properties. At the present moment the <a class="reference internal" href="#module-adc" title="adc: Algebraic diagrammatic construction energies and propties"><code class="xref py py-mod docutils literal notranslate"><span class="pre">adc</span></code></a> module supports computation of ionization potentials (IP) and electron affinties (EA) using three ADC approximations: ADC(2), ADC(2)-X, and ADC(3).</p>
+<p>Computations using the <a class="reference internal" href="#module-adc" title="adc: Algebraic diagrammatic construction energies and propties"><code class="xref py py-mod docutils literal notranslate"><span class="pre">adc</span></code></a> module should be performed in three steps:</p>
+<ol class="arabic simple">
+<li><p>Carry out a mean-field computation using the <a class="reference internal" href="scf.html#module-scf" title="scf: restricted and unrestricted, closed shell and open shell Hartree-Fock methods"><code class="xref py py-mod docutils literal notranslate"><span class="pre">scf</span></code></a> module to obtain ground-state (reference) molecular orbitals.</p></li>
+<li><p>Compute the ADC(n) ground-state energy and amplitudes. For the ADC(n) method, the ground-state energy and amplitudes
+correspond to those of the <span class="math notranslate nohighlight">\(n\)</span>-th order Møller–Plesset perturbation theory (MPn).</p></li>
+<li><p>Compute the ADC(n) spectroscopic properties (e.g., electron attachment energies
+and the corrresponding transition intensities)</p></li>
+</ol>
+<p>An example of IP and EA computation using the default ADC method (ADC(2)) is shown below:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">gto</span><span class="p">,</span> <span class="n">scf</span><span class="p">,</span> <span class="n">adc</span>
+<span class="n">mol</span> <span class="o">=</span> <span class="n">gto</span><span class="o">.</span><span class="n">M</span><span class="p">(</span><span class="n">atom</span><span class="o">=</span><span class="s1">&#39;H 0 0 0; F 0 0 1&#39;</span><span class="p">,</span> <span class="n">basis</span><span class="o">=</span><span class="s1">&#39;ccpvdz&#39;</span><span class="p">)</span>
+<span class="n">mf</span> <span class="o">=</span> <span class="n">scf</span><span class="o">.</span><span class="n">RHF</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="n">myadc</span> <span class="o">=</span> <span class="n">adc</span><span class="o">.</span><span class="n">ADC</span><span class="p">(</span><span class="n">mf</span><span class="p">)</span>
+<span class="n">myadc</span><span class="o">.</span><span class="n">kernel</span><span class="p">()</span>
+<span class="n">e_ip</span><span class="p">,</span><span class="n">v_ip</span><span class="p">,</span><span class="n">p_ip</span> <span class="o">=</span> <span class="n">myadc</span><span class="o">.</span><span class="n">ip_adc</span><span class="p">(</span><span class="n">nroots</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">e_ea</span><span class="p">,</span><span class="n">v_ea</span><span class="p">,</span><span class="n">p_ea</span> <span class="o">=</span> <span class="n">myadc</span><span class="o">.</span><span class="n">ea_adc</span><span class="p">(</span><span class="n">nroots</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Here, the kernel() function executes computation of the ADC(2) ground-state energy and amplitudes,
+which are used to perform calculation of the three lowest-energy IP and EA.
+Other methods of the ADC family can be requested by setting the method variable to <code class="docutils literal notranslate"><span class="pre">ADC(2)-X</span></code> or <code class="docutils literal notranslate"><span class="pre">ADC(3)</span></code>, e.g.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">gto</span><span class="p">,</span> <span class="n">scf</span><span class="p">,</span> <span class="n">adc</span>
+<span class="n">mol</span> <span class="o">=</span> <span class="n">gto</span><span class="o">.</span><span class="n">M</span><span class="p">(</span><span class="n">atom</span><span class="o">=</span><span class="s1">&#39;H 0 0 0; F 0 0 1&#39;</span><span class="p">,</span> <span class="n">basis</span><span class="o">=</span><span class="s1">&#39;ccpvdz&#39;</span><span class="p">)</span>
+<span class="n">mf</span> <span class="o">=</span> <span class="n">scf</span><span class="o">.</span><span class="n">RHF</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="n">myadc</span> <span class="o">=</span> <span class="n">adc</span><span class="o">.</span><span class="n">ADC</span><span class="p">(</span><span class="n">mf</span><span class="p">)</span>
+<span class="n">myadc</span><span class="o">.</span><span class="n">method</span> <span class="o">=</span> <span class="s2">&quot;adc(3)&quot;</span>
+<span class="n">myadc</span><span class="o">.</span><span class="n">kernel</span><span class="p">()</span>
+<span class="n">e_ip</span><span class="p">,</span><span class="n">v_ip</span><span class="p">,</span><span class="n">p_ip</span> <span class="o">=</span> <span class="n">myadc</span><span class="o">.</span><span class="n">ip_adc</span><span class="p">(</span><span class="n">nroots</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">e_ea</span><span class="p">,</span><span class="n">v_ea</span><span class="p">,</span><span class="n">p_ea</span> <span class="o">=</span> <span class="n">myadc</span><span class="o">.</span><span class="n">ea_adc</span><span class="p">(</span><span class="n">nroots</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>An alternative way to run ADC computations is to directly call the kernel function of the corresponding ADC classes:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">myadc</span> <span class="o">=</span> <span class="n">adc</span><span class="o">.</span><span class="n">ADC</span><span class="p">(</span><span class="n">mf</span><span class="p">)</span>
+<span class="n">myadc</span><span class="o">.</span><span class="n">kernel</span><span class="p">()</span>
+<span class="n">myadcip</span> <span class="o">=</span> <span class="n">adc</span><span class="o">.</span><span class="n">uadc</span><span class="o">.</span><span class="n">UADCIP</span><span class="p">(</span><span class="n">myadc</span><span class="p">)</span>
+<span class="n">myadcea</span> <span class="o">=</span> <span class="n">adc</span><span class="o">.</span><span class="n">uadc</span><span class="o">.</span><span class="n">UADCEA</span><span class="p">(</span><span class="n">myadc</span><span class="p">)</span>
+<span class="n">e_ip</span><span class="p">,</span><span class="n">v_ip</span><span class="p">,</span><span class="n">p_ip</span> <span class="o">=</span> <span class="n">myadcip</span><span class="o">.</span><span class="n">kernel</span><span class="p">(</span><span class="n">nroots</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">e_ea</span><span class="p">,</span><span class="n">v_ea</span><span class="p">,</span><span class="n">p_ea</span> <span class="o">=</span> <span class="n">myadcea</span><span class="o">.</span><span class="n">kernel</span><span class="p">(</span><span class="n">nroots</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The ADC implementation in Pyscf can be used to perform calculations of electron affinities (EA) and ionization potentials (IP) for closed- and open-shell molecules starting with the RHF, ROHF, or UHF reference SCF wavefunctions, e.g.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">gto</span><span class="p">,</span> <span class="n">scf</span><span class="p">,</span> <span class="n">adc</span>
+<span class="n">mol</span> <span class="o">=</span> <span class="n">gto</span><span class="o">.</span><span class="n">M</span><span class="p">(</span><span class="n">atom</span><span class="o">=</span><span class="s1">&#39;H 0 0 0; F 0 0 1&#39;</span><span class="p">,</span> <span class="n">basis</span><span class="o">=</span><span class="s1">&#39;ccpvdz&#39;</span><span class="p">,</span> <span class="n">charge</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">spin</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">mf</span> <span class="o">=</span> <span class="n">scf</span><span class="o">.</span><span class="n">UHF</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="n">myadc</span> <span class="o">=</span> <span class="n">adc</span><span class="o">.</span><span class="n">ADC</span><span class="p">(</span><span class="n">mf</span><span class="p">)</span>
+<span class="n">myadc</span><span class="o">.</span><span class="n">method</span> <span class="o">=</span> <span class="s2">&quot;adc(3)&quot;</span>
+<span class="n">myadc</span><span class="o">.</span><span class="n">kernel</span><span class="p">()</span>
+<span class="n">e_ip</span><span class="p">,</span><span class="n">v_ip</span><span class="p">,</span><span class="n">p_ip</span> <span class="o">=</span> <span class="n">myadc</span><span class="o">.</span><span class="n">ip_adc</span><span class="p">(</span><span class="n">nroots</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">e_ea</span><span class="p">,</span><span class="n">v_ea</span><span class="p">,</span><span class="n">p_ea</span> <span class="o">=</span> <span class="n">myadc</span><span class="o">.</span><span class="n">ea_adc</span><span class="p">(</span><span class="n">nroots</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>When using results of this code for publications, please cite the following paper: “Third-order algebraic diagrammatic construction theory for electron attachment and ionization energies: Conventional and Green’s function implementation”, S. Banerjee and A.Y. Sokolov, J. Chem. Phys. 151, 224112 (2019).</p>
+<div class="section" id="examples">
+<h2>10.1.1. Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<p><code class="xref download docutils literal notranslate"><span class="pre">examples/adc/01-closed_shell.py</span></code>
+<code class="xref download docutils literal notranslate"><span class="pre">examples/adc/02-open_shell.py</span></code>
+<code class="xref download docutils literal notranslate"><span class="pre">examples/adc/03-closed_shell_different_setup.py</span></code></p>
+</div>
+<div class="section" id="module-pyscf.adc">
+<span id="program-reference"></span><h2>10.1.2. Program reference<a class="headerlink" href="#module-pyscf.adc" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="algebraic-diagrammatic-construction">
+<h3>10.1.2.1. Algebraic Diagrammatic Construction<a class="headerlink" href="#algebraic-diagrammatic-construction" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt id="pyscf.adc.ADC">
+<code class="sig-prename descclassname">pyscf.adc.</code><code class="sig-name descname">ADC</code><span class="sig-paren">(</span><em class="sig-param">mf</em>, <em class="sig-param">frozen=None</em>, <em class="sig-param">mo_coeff=None</em>, <em class="sig-param">mo_occ=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyscf/adc.html#ADC"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyscf.adc.ADC" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ground state calculations</p>
+<dl>
+<dt>Attributes:</dt><dd><dl>
+<dt>verbose<span class="classifier">int</span></dt><dd><p>Print level.  Default value equals to <code class="xref py py-class docutils literal notranslate"><span class="pre">Mole.verbose</span></code></p>
+</dd>
+<dt>max_memory<span class="classifier">float or int</span></dt><dd><p>Allowed memory in MB.  Default value equals to <code class="xref py py-class docutils literal notranslate"><span class="pre">Mole.max_memory</span></code></p>
+</dd>
+<dt>incore_complete<span class="classifier">bool</span></dt><dd><p>Avoid all I/O. Default is False.</p>
+</dd>
+<dt>method<span class="classifier">string</span></dt><dd><p>nth-order ADC method. Options are : ADC(2), ADC(2)-X, ADC(3). Default is ADC(2).</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mol</span> <span class="o">=</span> <span class="n">gto</span><span class="o">.</span><span class="n">M</span><span class="p">(</span><span class="n">atom</span> <span class="o">=</span> <span class="s1">&#39;H 0 0 0; F 0 0 1.1&#39;</span><span class="p">,</span> <span class="n">basis</span> <span class="o">=</span> <span class="s1">&#39;ccpvdz&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mf</span> <span class="o">=</span> <span class="n">scf</span><span class="o">.</span><span class="n">RHF</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myadc</span> <span class="o">=</span> <span class="n">adc</span><span class="o">.</span><span class="n">UADC</span><span class="p">(</span><span class="n">mf</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>Saved results</p>
+<blockquote>
+<div><dl class="simple">
+<dt>e_corr<span class="classifier">float</span></dt><dd><p>MPn correlation correction</p>
+</dd>
+<dt>e_tot<span class="classifier">float</span></dt><dd><p>Total energy (HF + correlation)</p>
+</dd>
+<dt>t1, t2 :</dt><dd><p>T amplitudes t1[i,a], t2[i,j,a,b]  (i,j in occ, a,b in virt)</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyscf.adc.UADC">
+<code class="sig-prename descclassname">pyscf.adc.</code><code class="sig-name descname">UADC</code><span class="sig-paren">(</span><em class="sig-param">mf</em>, <em class="sig-param">frozen=None</em>, <em class="sig-param">mo_coeff=None</em>, <em class="sig-param">mo_occ=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyscf/adc.html#UADC"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyscf.adc.UADC" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ground state calculations</p>
+<dl>
+<dt>Attributes:</dt><dd><dl>
+<dt>verbose<span class="classifier">int</span></dt><dd><p>Print level.  Default value equals to <code class="xref py py-class docutils literal notranslate"><span class="pre">Mole.verbose</span></code></p>
+</dd>
+<dt>max_memory<span class="classifier">float or int</span></dt><dd><p>Allowed memory in MB.  Default value equals to <code class="xref py py-class docutils literal notranslate"><span class="pre">Mole.max_memory</span></code></p>
+</dd>
+<dt>incore_complete<span class="classifier">bool</span></dt><dd><p>Avoid all I/O. Default is False.</p>
+</dd>
+<dt>method<span class="classifier">string</span></dt><dd><p>nth-order ADC method. Options are : ADC(2), ADC(2)-X, ADC(3). Default is ADC(2).</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mol</span> <span class="o">=</span> <span class="n">gto</span><span class="o">.</span><span class="n">M</span><span class="p">(</span><span class="n">atom</span> <span class="o">=</span> <span class="s1">&#39;H 0 0 0; F 0 0 1.1&#39;</span><span class="p">,</span> <span class="n">basis</span> <span class="o">=</span> <span class="s1">&#39;ccpvdz&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mf</span> <span class="o">=</span> <span class="n">scf</span><span class="o">.</span><span class="n">RHF</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myadc</span> <span class="o">=</span> <span class="n">adc</span><span class="o">.</span><span class="n">UADC</span><span class="p">(</span><span class="n">mf</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>Saved results</p>
+<blockquote>
+<div><dl class="simple">
+<dt>e_corr<span class="classifier">float</span></dt><dd><p>MPn correlation correction</p>
+</dd>
+<dt>e_tot<span class="classifier">float</span></dt><dd><p>Total energy (HF + correlation)</p>
+</dd>
+<dt>t1, t2 :</dt><dd><p>T amplitudes t1[i,a], t2[i,j,a,b]  (i,j in occ, a,b in virt)</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+</div>
+<div class="section" id="adc-uadc-module-and-uadc-class">
+<h3>10.1.2.2. adc.uadc module and UADC class<a class="headerlink" href="#adc-uadc-module-and-uadc-class" title="Permalink to this headline">¶</a></h3>
+<p>The <a class="reference internal" href="#pyscf.adc.uadc.UADC" title="pyscf.adc.uadc.UADC"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyscf.adc.uadc.UADC</span></code></a> class is the object to hold the unrestricted ADC environment
+attributes and results. The environment attributes are the parameters for the ground state as well as the excited state calculations.</p>
+<span class="target" id="module-pyscf.adc.uadc"></span><p>Unrestricted algebraic diagrammatic construction</p>
+<dl class="class">
+<dt id="pyscf.adc.uadc.UADC">
+<em class="property">class </em><code class="sig-prename descclassname">pyscf.adc.uadc.</code><code class="sig-name descname">UADC</code><span class="sig-paren">(</span><em class="sig-param">mf</em>, <em class="sig-param">frozen=None</em>, <em class="sig-param">mo_coeff=None</em>, <em class="sig-param">mo_occ=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyscf/adc/uadc.html#UADC"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyscf.adc.uadc.UADC" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ground state calculations</p>
+<dl>
+<dt>Attributes:</dt><dd><dl>
+<dt>verbose<span class="classifier">int</span></dt><dd><p>Print level.  Default value equals to <code class="xref py py-class docutils literal notranslate"><span class="pre">Mole.verbose</span></code></p>
+</dd>
+<dt>max_memory<span class="classifier">float or int</span></dt><dd><p>Allowed memory in MB.  Default value equals to <code class="xref py py-class docutils literal notranslate"><span class="pre">Mole.max_memory</span></code></p>
+</dd>
+<dt>incore_complete<span class="classifier">bool</span></dt><dd><p>Avoid all I/O. Default is False.</p>
+</dd>
+<dt>method<span class="classifier">string</span></dt><dd><p>nth-order ADC method. Options are : ADC(2), ADC(2)-X, ADC(3). Default is ADC(2).</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mol</span> <span class="o">=</span> <span class="n">gto</span><span class="o">.</span><span class="n">M</span><span class="p">(</span><span class="n">atom</span> <span class="o">=</span> <span class="s1">&#39;H 0 0 0; F 0 0 1.1&#39;</span><span class="p">,</span> <span class="n">basis</span> <span class="o">=</span> <span class="s1">&#39;ccpvdz&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mf</span> <span class="o">=</span> <span class="n">scf</span><span class="o">.</span><span class="n">RHF</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myadc</span> <span class="o">=</span> <span class="n">adc</span><span class="o">.</span><span class="n">UADC</span><span class="p">(</span><span class="n">mf</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>Saved results</p>
+<blockquote>
+<div><dl class="simple">
+<dt>e_corr<span class="classifier">float</span></dt><dd><p>MPn correlation correction</p>
+</dd>
+<dt>e_tot<span class="classifier">float</span></dt><dd><p>Total energy (HF + correlation)</p>
+</dd>
+<dt>t1, t2 :</dt><dd><p>T amplitudes t1[i,a], t2[i,j,a,b]  (i,j in occ, a,b in virt)</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="method">
+<dt id="pyscf.adc.uadc.UADC.kernel">
+<code class="sig-name descname">kernel</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyscf/adc/uadc.html#UADC.kernel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyscf.adc.uadc.UADC.kernel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Kernel function is the main driver of a method.  Every method should
+define the kernel function as the entry of the calculation.  Note the
+return value of kernel function is not strictly defined.  It can be
+anything related to the method (such as the energy, the wave-function,
+the DFT mesh grids etc.).</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pyscf.adc.uadc.UADCEA">
+<em class="property">class </em><code class="sig-prename descclassname">pyscf.adc.uadc.</code><code class="sig-name descname">UADCEA</code><span class="sig-paren">(</span><em class="sig-param">adc</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyscf/adc/uadc.html#UADCEA"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyscf.adc.uadc.UADCEA" title="Permalink to this definition">¶</a></dt>
+<dd><p>unrestricted ADC for EA energies and spectroscopic amplitudes</p>
+<dl>
+<dt>Attributes:</dt><dd><dl class="simple">
+<dt>verbose<span class="classifier">int</span></dt><dd><p>Print level.  Default value equals to <code class="xref py py-class docutils literal notranslate"><span class="pre">Mole.verbose</span></code></p>
+</dd>
+<dt>max_memory<span class="classifier">float or int</span></dt><dd><p>Allowed memory in MB.  Default value equals to <code class="xref py py-class docutils literal notranslate"><span class="pre">Mole.max_memory</span></code></p>
+</dd>
+<dt>incore_complete<span class="classifier">bool</span></dt><dd><p>Avoid all I/O. Default is False.</p>
+</dd>
+<dt>method<span class="classifier">string</span></dt><dd><p>nth-order ADC method. Options are : ADC(2), ADC(2)-X, ADC(3). Default is ADC(2).</p>
+</dd>
+<dt>conv_tol<span class="classifier">float</span></dt><dd><p>Convergence threshold for Davidson iterations.  Default is 1e-12.</p>
+</dd>
+<dt>max_cycle<span class="classifier">int</span></dt><dd><p>Number of Davidson iterations.  Default is 50.</p>
+</dd>
+<dt>max_space<span class="classifier">int</span></dt><dd><p>Space size to hold trial vectors for Davidson iterative diagonalization.  Default is 12.</p>
+</dd>
+</dl>
+</dd>
+<dt>Kwargs:</dt><dd><dl>
+<dt>nroots<span class="classifier">int</span></dt><dd><p>Number of roots (eigenvalues) requested. Default value is 1.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myadc</span> <span class="o">=</span> <span class="n">adc</span><span class="o">.</span><span class="n">UADC</span><span class="p">(</span><span class="n">mf</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myadcea</span> <span class="o">=</span> <span class="n">adc</span><span class="o">.</span><span class="n">UADC</span><span class="p">(</span><span class="n">myadc</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>Saved results</p>
+<blockquote>
+<div><dl class="simple">
+<dt>e_ea<span class="classifier">float or list of floats</span></dt><dd><p>EA energy (eigenvalue). For nroots = 1, it is a single float number. If nroots &gt; 1, it is a list of floats for the lowest nroots eigenvalues.</p>
+</dd>
+<dt>v_ip<span class="classifier">array</span></dt><dd><p>Eigenvectors for each EA transition.</p>
+</dd>
+<dt>p_ea<span class="classifier">float</span></dt><dd><p>Spectroscopic amplitudes for each EA transition.</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="class">
+<dt id="pyscf.adc.uadc.UADCIP">
+<em class="property">class </em><code class="sig-prename descclassname">pyscf.adc.uadc.</code><code class="sig-name descname">UADCIP</code><span class="sig-paren">(</span><em class="sig-param">adc</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyscf/adc/uadc.html#UADCIP"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyscf.adc.uadc.UADCIP" title="Permalink to this definition">¶</a></dt>
+<dd><p>unrestricted ADC for IP energies and spectroscopic amplitudes</p>
+<dl>
+<dt>Attributes:</dt><dd><dl class="simple">
+<dt>verbose<span class="classifier">int</span></dt><dd><p>Print level.  Default value equals to <code class="xref py py-class docutils literal notranslate"><span class="pre">Mole.verbose</span></code></p>
+</dd>
+<dt>max_memory<span class="classifier">float or int</span></dt><dd><p>Allowed memory in MB.  Default value equals to <code class="xref py py-class docutils literal notranslate"><span class="pre">Mole.max_memory</span></code></p>
+</dd>
+<dt>incore_complete<span class="classifier">bool</span></dt><dd><p>Avoid all I/O. Default is False.</p>
+</dd>
+<dt>method<span class="classifier">string</span></dt><dd><p>nth-order ADC method. Options are : ADC(2), ADC(2)-X, ADC(3). Default is ADC(2).</p>
+</dd>
+<dt>conv_tol<span class="classifier">float</span></dt><dd><p>Convergence threshold for Davidson iterations.  Default is 1e-12.</p>
+</dd>
+<dt>max_cycle<span class="classifier">int</span></dt><dd><p>Number of Davidson iterations.  Default is 50.</p>
+</dd>
+<dt>max_space<span class="classifier">int</span></dt><dd><p>Space size to hold trial vectors for Davidson iterative diagonalization.  Default is 12.</p>
+</dd>
+</dl>
+</dd>
+<dt>Kwargs:</dt><dd><dl>
+<dt>nroots<span class="classifier">int</span></dt><dd><p>Number of roots (eigenvalues) requested. Default value is 1.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myadc</span> <span class="o">=</span> <span class="n">adc</span><span class="o">.</span><span class="n">UADC</span><span class="p">(</span><span class="n">mf</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myadcip</span> <span class="o">=</span> <span class="n">adc</span><span class="o">.</span><span class="n">UADC</span><span class="p">(</span><span class="n">myadc</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>Saved results</p>
+<blockquote>
+<div><dl class="simple">
+<dt>e_ip<span class="classifier">float or list of floats</span></dt><dd><p>IP energy (eigenvalue). For nroots = 1, it is a single float number. If nroots &gt; 1, it is a list of floats for the lowest nroots eigenvalues.</p>
+</dd>
+<dt>v_ip<span class="classifier">array</span></dt><dd><p>Eigenvectors for each IP transition.</p>
+</dd>
+<dt>p_ip<span class="classifier">float</span></dt><dd><p>Spectroscopic amplitudes for each IP transition.</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="ao2mo.html" class="btn btn-neutral float-right" title="10.2. ao2mo — Integral transformations" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../modules.html" class="btn btn-neutral float-left" title="10. Main modules" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2015-2020, The PySCF Developers
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

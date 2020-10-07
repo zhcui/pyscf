@@ -1,15 +1,18 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>1. An overview of PySCF &mdash; PySCF 1.5.0 documentation</title>
+  <title>1. An overview of PySCF &mdash; PySCF 1.7.5 documentation</title>
   
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
 
   
   
@@ -17,43 +20,39 @@
   
 
   
-
-  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
 
-  
-
-  
-  
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-    <link rel="top" title="PySCF 1.5.0 documentation" href="index.html"/>
-        <link rel="next" title="2. Tutorial" href="tutorial.html"/>
-        <link rel="prev" title="Welcome to PySCF documentation!" href="index.html"/> 
-
-  
-  <script src="_static/js/modernizr.min.js"></script>
-
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="2. Version history" href="version.html" />
+    <link rel="prev" title="Welcome to PySCF documentation!" href="index.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
-            <a href="index.html" class="icon icon-home"> PySCF
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> PySCF
           
 
           
@@ -63,7 +62,7 @@
             
             
               <div class="version">
-                1.5
+                1.7
               </div>
             
           
@@ -80,6 +79,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -100,46 +100,28 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial.html">2. Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="version.html">2. Version history</a></li>
 <li class="toctree-l1"><a class="reference internal" href="install.html">3. Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="gto.html">4. gto &#8212; Molecular structure and GTO basis</a></li>
-<li class="toctree-l1"><a class="reference internal" href="lib.html">5. <code class="docutils literal"><span class="pre">lib</span></code> &#8212; Helper functions, parameters, and C extensions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="scf.html">6. scf &#8212; Mean-field methods</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ao2mo.html">7. ao2mo &#8212; Integral transformations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="mcscf.html">8. mcscf &#8212; Multi-configurational self-consistent field</a></li>
-<li class="toctree-l1"><a class="reference internal" href="fci.html">9. fci &#8212; Full configuration interaction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="symm.html">10. symm &#8211; Point group symmetry and spin symmetry</a></li>
-<li class="toctree-l1"><a class="reference internal" href="df.html">11. df &#8212; Density fitting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="dft.html">12. dft &#8212; Density functional theory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tddft.html">13. tddft &#8212; Time dependent density functional theory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cc.html">14. cc &#8212; Coupled cluster</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ci.html">15. ci &#8212; Configuration interaction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="dmrgscf.html">16. dmrgscf</a></li>
-<li class="toctree-l1"><a class="reference internal" href="fciqmcscf.html">17. fciqmcscf</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tools.html">18. tools</a></li>
-<li class="toctree-l1"><a class="reference internal" href="grad.html">19. grad &#8212; Analytical nuclear gradients</a></li>
-<li class="toctree-l1"><a class="reference internal" href="hessian.html">20. hessian &#8212; Analytical nuclear Hessian</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pbc.html">21. pbc &#8212; Periodic boundary conditions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="nao.html">22. nao &#8212; Numerical Atomic Orbitals</a></li>
-<li class="toctree-l1"><a class="reference internal" href="lo.html">23. lo &#8212; Orbital localization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="advanced.html">24. Miscellaneous</a></li>
-<li class="toctree-l1"><a class="reference internal" href="qmmm.html">25. qmmm &#8212; QM/MM interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="mrpt.html">26. mrpt &#8212; Multi-reference perturbation theory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="benchmark.html">27. Benchmark</a></li>
-<li class="toctree-l1"><a class="reference internal" href="code-rule.html">28. Code standard</a></li>
-<li class="toctree-l1"><a class="reference internal" href="version.html">29. Version history</a></li>
+<li class="toctree-l1"><a class="reference internal" href="code-rule.html">4. Code standard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="benchmark.html">5. Benchmark</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">6. Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="theory.html">7. Theoretical methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="advanced.html">8. Miscellaneous</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interface.html">9. Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">10. Main modules</a></li>
 </ul>
 
             
           
         </div>
+        
       </div>
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">PySCF</a>
@@ -147,9 +129,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -170,7 +153,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="index.html">Docs</a> &raquo;</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
       <li>1. An overview of PySCF</li>
     
@@ -178,7 +161,7 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="_sources/overview.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/overview.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -207,8 +190,8 @@ implementation, the package is as efficient as the best existing C or Fortran-
 based quantum chemistry programs.</p>
 <div class="section" id="how-to-cite">
 <h2>1.1. How to cite<a class="headerlink" href="#how-to-cite" title="Permalink to this headline">¶</a></h2>
-<p>Bibtex entry:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>@Misc{PYSCF,
+<p>Bibtex entries:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>@article{PYSCF,
   title = {PySCF: the Python‐based simulations of chemistry framework},
   author = {Qiming Sun and Timothy C. Berkelbach and Nick S. Blunt and George H. Booth and Sheng Guo and Zhendong Li and Junzi Liu and James D. McClain and Elvira R. Sayfutyarova and Sandeep Sharma and Sebastian Wouters and Garnet Kin‐Lic Chan},
   year = {2017},
@@ -220,289 +203,325 @@ based quantum chemistry programs.</p>
   url = {https://onlinelibrary.wiley.com/doi/abs/10.1002/wcms.1340},
   eprint = {https://onlinelibrary.wiley.com/doi/pdf/10.1002/wcms.1340},
 }
+
+@article{PYSCF,
+  title = {Recent developments in the PySCF program package},
+  author = {Sun,Qiming  and Zhang,Xing  and Banerjee,Samragni  and Bao,Peng  and Barbry,Marc  and Blunt,Nick S.  and Bogdanov,Nikolay A.  and Booth,George H.  and Chen,Jia  and Cui,Zhi-Hao  and Eriksen,Janus J.  and Gao,Yang  and Guo,Sheng  and Hermann,Jan  and Hermes,Matthew R.  and Koh,Kevin  and Koval,Peter  and Lehtola,Susi  and Li,Zhendong  and Liu,Junzi  and Mardirossian,Narbe  and McClain,James D.  and Motta,Mario  and Mussard,Bastien  and Pham,Hung Q.  and Pulkin,Artem  and Purwanto,Wirawan  and Robinson,Paul J.  and Ronca,Enrico  and Sayfutyarova,Elvira R.  and Scheurer,Maximilian  and Schurkus,Henry F.  and Smith,James E. T.  and Sun,Chong  and Sun,Shi-Ning  and Upadhyay,Shiv  and Wagner,Lucas K.  and Wang,Xiao  and White,Alec  and Whitfield,James Daniel  and Williamson,Mark J.  and Wouters,Sebastian  and Yang,Jun  and Yu,Jason M.  and Zhu,Tianyu  and Berkelbach,Timothy C.  and Sharma,Sandeep  and Sokolov,Alexander Yu.  and Chan,Garnet Kin-Lic},
+  journal = {The Journal of Chemical Physics},
+  volume = {153},
+  number = {2},
+  pages = {024109},
+  year = {2020},
+  doi = {10.1063/5.0006074},
+  URL = {https://doi.org/10.1063/5.0006074},
+  eprint = {https://doi.org/10.1063/5.0006074},
+}
 </pre></div>
 </div>
+<p>In addition, if you use Libcint to compute integrals, please cite the following paper:</p>
+<p>“Libcint: An efficient general integral library for Gaussian basis functions”, Q. Sun, J. Comp. Chem. 36, 1664 (2015).</p>
 </div>
 <div class="section" id="features">
 <h2>1.2. Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li>Hartree-Fock<ul>
-<li>Non-relativistic restricted open-shell, unrestricted HF (~5000 basis for
-serial version, ~30000 basis in MPI mode)</li>
-<li>Scalar relativistic HF</li>
-<li>2-component relativistic HF</li>
-<li>4-component relativistic Dirac-Hartree-Fock</li>
-<li>Density fitting HF</li>
-<li>Second order SCF</li>
-<li>General J/K build function</li>
-<li>DIIS, EDIIS, ADIIS and second order solver</li>
-<li>SCF wavefunction (RHF, UHF, GHF) stability analysis</li>
-<li>Generalized Hartree-Fock (GHF)</li>
+<li><p>Hartree-Fock</p>
+<ul>
+<li><p>Non-relativistic restricted open-shell, unrestricted HF (~5000 basis for
+serial version, ~30000 basis in MPI mode)</p></li>
+<li><p>Scalar relativistic HF</p></li>
+<li><p>2-component relativistic HF</p></li>
+<li><p>4-component relativistic Dirac-Hartree-Fock</p></li>
+<li><p>Density fitting HF</p></li>
+<li><p>Second order SCF</p></li>
+<li><p>General J/K build function</p></li>
+<li><p>DIIS, EDIIS, ADIIS and second order solver</p></li>
+<li><p>SCF wavefunction (RHF, UHF, GHF) stability analysis</p></li>
+<li><p>Generalized Hartree-Fock (GHF)</p></li>
 </ul>
 </li>
-<li>DFT<ul>
-<li>Non-relativistic restricted, restricted open-shell, unrestricted Kohn-Sham
-(~5000 basis for serial version, ~30000 basis in MPI mode)</li>
-<li>Scalar relativistic DFT</li>
-<li>Density fitting DFT</li>
-<li>General XC functional evaluator (for Libxc or XcFun)</li>
-<li>General AO evaluator</li>
-<li>VV10 NLC functional for finite size systems</li>
-<li>range-separated hybrid features for RKS and UKS, including
+<li><p>DFT</p>
+<ul>
+<li><p>Non-relativistic restricted, restricted open-shell, unrestricted Kohn-Sham
+(~5000 basis for serial version, ~30000 basis in MPI mode)</p></li>
+<li><p>Scalar relativistic DFT</p></li>
+<li><p>Density fitting DFT</p></li>
+<li><p>General XC functional evaluator (for Libxc or XcFun)</p></li>
+<li><p>General AO evaluator</p></li>
+<li><p>VV10 NLC functional for finite size systems</p></li>
+<li><p>range-separated hybrid features for RKS and UKS, including
 &gt; Analytical nuclear gradients
 &gt; Second order SCF
 &gt; Hessian and frequency
 &gt; TDDFT
 &gt; TDDFT nuclear gradients
-&gt; NMR</li>
+&gt; NMR</p></li>
 </ul>
 </li>
-<li>TDSCF/TDDFT<ul>
-<li>TDA (and density-fitting TDA) for RHF, UHF, RKS and UKS methods</li>
-<li>TDHF (and density-fitting TDHF) for RHF and UHF methods</li>
-<li>TDDFT (and density-fitting TDDFT) for RKS and UKS methods</li>
-<li>TDA nuclear gradients for RHF, UHF, RKS and UKS methods</li>
-<li>TDHF nuclear gradients for RHF and UHF methods</li>
-<li>TDDFT nuclear gradients for RKS and UKS methods</li>
-<li>Natural transition orbital analysis</li>
-<li>direct-RPA (no exchange, aka TDH)</li>
-<li>direct-TDA (TDA without exchange)</li>
+<li><p>TDSCF/TDDFT</p>
+<ul>
+<li><p>TDA (and density-fitting TDA) for RHF, UHF, RKS and UKS methods</p></li>
+<li><p>TDHF (and density-fitting TDHF) for RHF and UHF methods</p></li>
+<li><p>TDDFT (and density-fitting TDDFT) for RKS and UKS methods</p></li>
+<li><p>TDA nuclear gradients for RHF, UHF, RKS and UKS methods</p></li>
+<li><p>TDHF nuclear gradients for RHF and UHF methods</p></li>
+<li><p>TDDFT nuclear gradients for RKS and UKS methods</p></li>
+<li><p>Natural transition orbital analysis</p></li>
+<li><p>direct-RPA (no exchange, aka TDH)</p></li>
+<li><p>direct-TDA (TDA without exchange)</p></li>
 </ul>
 </li>
-<li>GW methods
-- G0W0 approximation</li>
-<li>General CASCI/CASSCF solver (up to ~3000 basis)<ul>
-<li>State-average CASCI/CASSCF</li>
-<li>State-specific CASCI/CASSCF for excited states</li>
-<li>Multiple roots CASCI</li>
-<li>Support DMRG as plugin FCI solver to do DMRG-CASSCF</li>
-<li>Support FCIQMC as plugin FCI solver to do FCIQMC-CASSCF</li>
-<li>Support Selected CI algorithm as plugin FCI solver to do SHCI-CASSCF</li>
-<li>UCASSCF</li>
-<li>Density-fitting CASSCF</li>
-<li>DMET-CAS and AVAS active space constructor</li>
-<li>CASCI and CASSCF analytical nuclear gradients</li>
+<li><p>GW methods
+- G0W0 approximation</p></li>
+<li><p>General CASCI/CASSCF solver (up to ~3000 basis)</p>
+<ul>
+<li><p>State-average CASCI/CASSCF</p></li>
+<li><p>State-specific CASCI/CASSCF for excited states</p></li>
+<li><p>Multiple roots CASCI</p></li>
+<li><p>Support DMRG as plugin FCI solver to do DMRG-CASSCF</p></li>
+<li><p>Support FCIQMC as plugin FCI solver to do FCIQMC-CASSCF</p></li>
+<li><p>Support Selected CI algorithm as plugin FCI solver to do SHCI-CASSCF</p></li>
+<li><p>UCASSCF</p></li>
+<li><p>Density-fitting CASSCF</p></li>
+<li><p>DMET-CAS and AVAS active space constructor</p></li>
+<li><p>CASCI and CASSCF analytical nuclear gradients</p></li>
 </ul>
 </li>
-<li>MP2 (up to ~200 occupied, ~2000 virtual orbitals)<ul>
-<li>Canonical RMP2, UMP2, GMP2</li>
-<li>Density-fitting RMP2</li>
-<li>RMP2, UMP2 and GMP2 1-particle and 2-particle density matrices</li>
-<li>RMP2 and UMP2 nuclear gradients</li>
+<li><p>MP2 (up to ~200 occupied, ~2000 virtual orbitals)</p>
+<ul>
+<li><p>Canonical RMP2, UMP2, GMP2</p></li>
+<li><p>Density-fitting RMP2</p></li>
+<li><p>RMP2, UMP2 and GMP2 1-particle and 2-particle density matrices</p></li>
+<li><p>RMP2 and UMP2 nuclear gradients</p></li>
 </ul>
 </li>
-<li>CCSD (up to ~100 occupied, ~1500 virtual orbitals)<ul>
-<li>canonical RCCSD, UCCSD</li>
-<li>canonical RCCSD, UCCSD lambda solver</li>
-<li>RCCSD, UCCSD and GCCSD 1-particle and 2-particle density matrices</li>
-<li>RCCSD and UCCSD nuclear gradients</li>
-<li>EOM-IP/EA/EE-RCCSD and EOM-IP/EA/EE-UCCSD</li>
-<li>RCC2</li>
-<li>Density-fitting RCCSD</li>
+<li><p>CCSD (up to ~100 occupied, ~1500 virtual orbitals)</p>
+<ul>
+<li><p>canonical RCCSD, UCCSD</p></li>
+<li><p>canonical RCCSD, UCCSD lambda solver</p></li>
+<li><p>RCCSD, UCCSD and GCCSD 1-particle and 2-particle density matrices</p></li>
+<li><p>RCCSD and UCCSD nuclear gradients</p></li>
+<li><p>EOM-IP/EA/EE-RCCSD and EOM-IP/EA/EE-UCCSD</p></li>
+<li><p>RCC2</p></li>
+<li><p>Density-fitting RCCSD</p></li>
 </ul>
 </li>
-<li>CCSD(T)<ul>
-<li>RCCSD(T) and UCCSD(T)</li>
-<li>RCCSD(T), UCCSD(T) and GCCSD(T) 1- and 2-particle density matrices</li>
-<li>RCCSD(T) and UCCSD(T) analytical nuclear gradients</li>
+<li><p>CCSD(T)</p>
+<ul>
+<li><p>RCCSD(T) and UCCSD(T)</p></li>
+<li><p>RCCSD(T), UCCSD(T) and GCCSD(T) 1- and 2-particle density matrices</p></li>
+<li><p>RCCSD(T) and UCCSD(T) analytical nuclear gradients</p></li>
 </ul>
 </li>
-<li>CI<ul>
-<li>RCISD, UCISD and GCISD</li>
-<li>RCISD, UCISD and GCISD 1, 2-particle density matrices</li>
-<li>Selected-CI</li>
-<li>Selected-CI 1, 2-particle density matrices</li>
-<li>RCISD, UCISD and GCISD 1-particle transition density matrices</li>
+<li><p>CI</p>
+<ul>
+<li><p>RCISD, UCISD and GCISD</p></li>
+<li><p>RCISD, UCISD and GCISD 1, 2-particle density matrices</p></li>
+<li><p>Selected-CI</p></li>
+<li><p>Selected-CI 1, 2-particle density matrices</p></li>
+<li><p>RCISD, UCISD and GCISD 1-particle transition density matrices</p></li>
 </ul>
 </li>
-<li>Full CI<ul>
-<li>Direct-CI solver for spin degenerated Hamiltonian (RHF-FCI)</li>
-<li>Direct-CI solver for spin non-degenerated Hamiltonian (UHF-FCI)</li>
-<li>1, and 2-particle transition density matrices</li>
-<li>1, 2, 3, and 4-particle density matrices</li>
-<li>CI wavefunction overlap</li>
+<li><p>Full CI</p>
+<ul>
+<li><p>Direct-CI solver for spin degenerated Hamiltonian (RHF-FCI)</p></li>
+<li><p>Direct-CI solver for spin non-degenerated Hamiltonian (UHF-FCI)</p></li>
+<li><p>1, and 2-particle transition density matrices</p></li>
+<li><p>1, 2, 3, and 4-particle density matrices</p></li>
+<li><p>CI wavefunction overlap</p></li>
 </ul>
 </li>
-<li>Analytical Nuclear Gradients<ul>
-<li>Non-relativistic HF nuclear gradients</li>
-<li>4-component DHF nuclear gradients</li>
-<li>Non-relativistic DFT nuclear gradients</li>
-<li>Non-relativistic CISD nuclear gradients</li>
-<li>Non-relativistic CCSD and CCSD(T) nuclear gradients</li>
-<li>Non-relativistic CASCI and CASSCF nuclear gradients</li>
-<li>Non-relativistic TDA, TDHF and TDDFT nuclear gradients</li>
-<li>Non-relativistic nuclear gradients with SF-X2C-1e correction</li>
-<li>ECP nuclear gradients</li>
-<li>nuclear gradients for solvent model ddCOSMO</li>
-<li>Frozen orbitals for MP2, CISD, CCSD, CCSD(T), CASCI, CASSCF nuclear gradients</li>
+<li><p>Analytical Nuclear Gradients</p>
+<ul>
+<li><p>Non-relativistic HF nuclear gradients</p></li>
+<li><p>4-component DHF nuclear gradients</p></li>
+<li><p>Non-relativistic DFT nuclear gradients</p></li>
+<li><p>Non-relativistic CISD nuclear gradients</p></li>
+<li><p>Non-relativistic CCSD and CCSD(T) nuclear gradients</p></li>
+<li><p>Non-relativistic CASCI and CASSCF nuclear gradients</p></li>
+<li><p>Non-relativistic TDA, TDHF and TDDFT nuclear gradients</p></li>
+<li><p>Non-relativistic nuclear gradients with SF-X2C-1e correction</p></li>
+<li><p>ECP nuclear gradients</p></li>
+<li><p>nuclear gradients for solvent model ddCOSMO</p></li>
+<li><p>Frozen orbitals for MP2, CISD, CCSD, CCSD(T), CASCI, CASSCF nuclear gradients</p></li>
 </ul>
 </li>
-<li>Nuclear Hessian<ul>
-<li>Non-relativistic HF nuclear hessian</li>
-<li>Non-relativistic DFT nuclear hessian</li>
-<li>Non-relativistic nuclear hessian with SF-X2C-1e correction</li>
-<li>ECP nuclear hessian</li>
+<li><p>Nuclear Hessian</p>
+<ul>
+<li><p>Non-relativistic HF nuclear hessian</p></li>
+<li><p>Non-relativistic DFT nuclear hessian</p></li>
+<li><p>Non-relativistic nuclear hessian with SF-X2C-1e correction</p></li>
+<li><p>ECP nuclear hessian</p></li>
 </ul>
 </li>
-<li>Properties<ul>
-<li>Non-relativistic RHF, UHF, RKS, UKS NMR shielding</li>
-<li>4-component DHF NMR shielding</li>
-<li>Non-relativistic RHF, UHF spin-spin coupling</li>
-<li>4-component DHF spin-spin coupling</li>
-<li>Non-relativistic UHF, UKS hyperfine coupling</li>
-<li>4-component DHF hyperfine coupling</li>
-<li>Non-relativistic UHF, UKS g-tensor</li>
-<li>4-component DHF g-tensor</li>
-<li>Non-relativistic UHF zero-field splitting</li>
-<li>Molecular electrostatic potential (MEP)</li>
-<li>EFG and Mossbauer spectroscopy</li>
-<li>Non-relativistic RHF, UHF, RKS, UKS magnetizability</li>
+<li><p>Properties</p>
+<ul>
+<li><p>Non-relativistic RHF, UHF, RKS, UKS NMR shielding</p></li>
+<li><p>4-component DHF NMR shielding</p></li>
+<li><p>Non-relativistic RHF, UHF spin-spin coupling</p></li>
+<li><p>4-component DHF spin-spin coupling</p></li>
+<li><p>Non-relativistic UHF, UKS hyperfine coupling</p></li>
+<li><p>4-component DHF hyperfine coupling</p></li>
+<li><p>Non-relativistic UHF, UKS g-tensor</p></li>
+<li><p>4-component DHF g-tensor</p></li>
+<li><p>Non-relativistic UHF zero-field splitting</p></li>
+<li><p>Molecular electrostatic potential (MEP)</p></li>
+<li><p>EFG and Mossbauer spectroscopy</p></li>
+<li><p>Non-relativistic RHF, UHF, RKS, UKS magnetizability</p></li>
 </ul>
 </li>
-<li>MRPT<ul>
-<li>Strongly contracted NEVPT2 (SC-NEVPT2)</li>
-<li>DMRG-NEVPT2</li>
-<li>IC-MPS-PT2</li>
+<li><p>MRPT</p>
+<ul>
+<li><p>Strongly contracted NEVPT2 (SC-NEVPT2)</p></li>
+<li><p>DMRG-NEVPT2</p></li>
+<li><p>IC-MPS-PT2</p></li>
 </ul>
 </li>
-<li>Extended systems with periodic boundary condition<ul>
-<li>gamma point RHF, ROHF, UHF, RKS, ROKS, UKS</li>
-<li>gamma point TDDFT, MP2, CCSD</li>
-<li>RHF, ROHF, UHF, GHF, RKS, ROKS, UKS with k-point sampling</li>
-<li>Restricted MP2 with k-point sampling</li>
-<li>KRCCSD (RCCSD with k-point sampling)</li>
-<li>KUCCSD</li>
-<li>KGCCSD (Generalized CCSD with k-point sampling)</li>
-<li>k-point GCCSD(T) and RCCSD(T)</li>
-<li>k-point EOM-IP/EA-CCSD</li>
-<li>PBC AO integrals</li>
-<li>PBC MO integral transformation</li>
-<li>PBC density fitting and mixed-density fitting methods</li>
-<li>Smearing for mean-field methods</li>
-<li>Low-dimensional (0D, 1D, 2D) PBC systems</li>
-<li>(restricted and unrestricted) TDA, TDHF and TDDFT with k-point sampling</li>
-<li>Multigrid DFT</li>
-<li>EFG and Mossbauer spectroscopy</li>
+<li><p>Extended systems with periodic boundary condition</p>
+<ul>
+<li><p>gamma point RHF, ROHF, UHF, RKS, ROKS, UKS</p></li>
+<li><p>gamma point TDDFT, MP2, CCSD</p></li>
+<li><p>RHF, ROHF, UHF, GHF, RKS, ROKS, UKS with k-point sampling</p></li>
+<li><p>Restricted MP2 with k-point sampling</p></li>
+<li><p>KRCCSD (RCCSD with k-point sampling)</p></li>
+<li><p>KUCCSD</p></li>
+<li><p>KGCCSD (Generalized CCSD with k-point sampling)</p></li>
+<li><p>k-point GCCSD(T) and RCCSD(T)</p></li>
+<li><p>k-point EOM-IP/EA-CCSD</p></li>
+<li><p>PBC AO integrals</p></li>
+<li><p>PBC MO integral transformation</p></li>
+<li><p>PBC density fitting and mixed-density fitting methods</p></li>
+<li><p>Smearing for mean-field methods</p></li>
+<li><p>Low-dimensional (0D, 1D, 2D) PBC systems</p></li>
+<li><p>(restricted and unrestricted) TDA, TDHF and TDDFT with k-point sampling</p></li>
+<li><p>Multigrid DFT</p></li>
+<li><p>EFG and Mossbauer spectroscopy</p></li>
 </ul>
 </li>
-<li>Relativistic effects<ul>
-<li>4-component HF with Dirac-Coulomb Hamiltonian (DHF)</li>
-<li>4-component DHF with Gaunt and Breit corrections</li>
-<li>2-component X2C HF</li>
-<li>4-component and 2-component Kohn-Sham DFT (LDA only)</li>
+<li><p>Relativistic effects</p>
+<ul>
+<li><p>4-component HF with Dirac-Coulomb Hamiltonian (DHF)</p></li>
+<li><p>4-component DHF with Gaunt and Breit corrections</p></li>
+<li><p>2-component X2C HF</p></li>
+<li><p>4-component and 2-component Kohn-Sham DFT (LDA only)</p></li>
 </ul>
 </li>
-<li>AO integrals<ul>
-<li>Interface to access all AO integrals of Libcint library</li>
-<li>1-electron real-GTO and spinor-GTO integrals</li>
-<li>2-electron real-GTO and spinor-GTO integrals</li>
-<li>3-center 1-electron real-GTO and spinor-GTO integrals</li>
-<li>3-center 2-electron real-GTO and spinor-GTO integrals</li>
-<li>General basis value evaluator (for numeric integration)</li>
-<li>PBC 1-electron integrals</li>
-<li>PBC 2-electron integrals</li>
-<li>F12 integrals</li>
+<li><p>AO integrals</p>
+<ul>
+<li><p>Interface to access all AO integrals of Libcint library</p></li>
+<li><p>1-electron real-GTO and spinor-GTO integrals</p></li>
+<li><p>2-electron real-GTO and spinor-GTO integrals</p></li>
+<li><p>3-center 1-electron real-GTO and spinor-GTO integrals</p></li>
+<li><p>3-center 2-electron real-GTO and spinor-GTO integrals</p></li>
+<li><p>General basis value evaluator (for numeric integration)</p></li>
+<li><p>PBC 1-electron integrals</p></li>
+<li><p>PBC 2-electron integrals</p></li>
+<li><p>F12 integrals</p></li>
 </ul>
 </li>
-<li>MO integrals<ul>
-<li>2-electron integral transformation for any integrals provided by
-Libcint library</li>
-<li>Support for 4-index integral transformation with 4 different orbitals</li>
-<li>PBC 2-electron MO integrals</li>
-<li>Integral transformation for (4-component and 2-compoent relativistic) spinor
-integrals</li>
+<li><p>MO integrals</p>
+<ul>
+<li><p>2-electron integral transformation for any integrals provided by
+Libcint library</p></li>
+<li><p>Support for 4-index integral transformation with 4 different orbitals</p></li>
+<li><p>PBC 2-electron MO integrals</p></li>
+<li><p>Integral transformation for (4-component and 2-compoent relativistic) spinor
+integrals</p></li>
 </ul>
 </li>
-<li>Localizer<ul>
-<li>Boys</li>
-<li>Edmiston</li>
-<li>Meta-Lowdin for both finite size and PBC systems</li>
-<li>Natural atomic orbital (NAO) for both finite size and PBC systems</li>
-<li>Intrinsic atomic orbital (IAO) for both finite size and PBC systems</li>
-<li>Pipek-Mezey for both finite size and PBC systems</li>
-<li>Intrinsic bond orbital (IBO) for both finite size and PBC systems</li>
+<li><p>Localizer</p>
+<ul>
+<li><p>Boys</p></li>
+<li><p>Edmiston</p></li>
+<li><p>Meta-Lowdin for both finite size and PBC systems</p></li>
+<li><p>Natural atomic orbital (NAO) for both finite size and PBC systems</p></li>
+<li><p>Intrinsic atomic orbital (IAO) for both finite size and PBC systems</p></li>
+<li><p>Pipek-Mezey for both finite size and PBC systems</p></li>
+<li><p>Intrinsic bond orbital (IBO) for both finite size and PBC systems</p></li>
 </ul>
 </li>
-<li>Geometry optimization<ul>
-<li>HF, DFT, CCSD, CCSD(T), CISD, CASCI, CASSCF and TDSCF/TDDFT with pyberny
-geometry optimizer</li>
+<li><p>Geometry optimization</p>
+<ul>
+<li><p>HF, DFT, CCSD, CCSD(T), CISD, CASCI, CASSCF and TDSCF/TDDFT with pyberny
+geometry optimizer</p></li>
 </ul>
 </li>
-<li>D2h symmetry and linear molecule symmetry<ul>
-<li>Molecule symmetry detection</li>
-<li>Symmetry adapted basis</li>
-<li>Label orbital symmetry on the fly</li>
-<li>Hot update symmetry information</li>
-<li>Function to symmetrize given orbital space</li>
+<li><p>D2h symmetry and linear molecule symmetry</p>
+<ul>
+<li><p>Molecule symmetry detection</p></li>
+<li><p>Symmetry adapted basis</p></li>
+<li><p>Label orbital symmetry on the fly</p></li>
+<li><p>Hot update symmetry information</p></li>
+<li><p>Function to symmetrize given orbital space</p></li>
 </ul>
 </li>
-<li>Solvent model
+<li><p>Solvent model
 - ddCOSMO
 - ddPCM
-- ddCOSMO analytical nuclear gradients</li>
-<li>Tools<ul>
-<li>fcidump writer</li>
-<li>molden writer and reader</li>
-<li>cubegen writer</li>
-<li>Molpro XML reader</li>
-<li>(GAMESS-format) wfn writer</li>
-<li>Vasp CHGCAR-format writer</li>
+- ddCOSMO analytical nuclear gradients</p></li>
+<li><p>Tools</p>
+<ul>
+<li><p>fcidump writer</p></li>
+<li><p>molden writer and reader</p></li>
+<li><p>cubegen writer</p></li>
+<li><p>Molpro XML reader</p></li>
+<li><p>(GAMESS-format) wfn writer</p></li>
+<li><p>Vasp CHGCAR-format writer</p></li>
 </ul>
 </li>
-<li>Interface to integral package <a class="reference external" href="https://github.com/sunqm/libcint">Libcint</a></li>
-<li>Interface to DMRG <a class="reference external" href="https://github.com/SebWouters/CheMPS2">CheMPS2</a></li>
-<li>Interface to DMRG <a class="reference external" href="https://github.com/sanshar/Block">Block</a></li>
-<li>Interface to FCIQMC <a class="reference external" href="https://github.com/ghb24/NECI_STABLE">NECI</a></li>
-<li>Interface to XC functional library <a class="reference external" href="https://github.com/dftlibs/xcfun">XCFun</a></li>
-<li>Interface to XC functional library <a class="reference external" href="http://www.tddft.org/programs/octopus/wiki/index.php/Libxc">Libxc</a></li>
-<li>Interface to tensor contraction library <a class="reference external" href="https://github.com/devinamatthews/tblis">TBLIS</a></li>
-<li>Interface to Heat-bath Selected CI program <a class="reference external" href="https://sanshar.github.io/Dice/">Dice</a></li>
-<li>Interface to geometry optimizer <a class="reference external" href="https://github.com/azag0/pyberny">Pyberny</a></li>
+<li><p>Interface to integral package <a class="reference external" href="https://github.com/sunqm/libcint">Libcint</a></p></li>
+<li><p>Interface to DMRG <a class="reference external" href="https://github.com/SebWouters/CheMPS2">CheMPS2</a></p></li>
+<li><p>Interface to DMRG <a class="reference external" href="https://github.com/sanshar/Block">Block</a></p></li>
+<li><p>Interface to FCIQMC <a class="reference external" href="https://github.com/ghb24/NECI_STABLE">NECI</a></p></li>
+<li><p>Interface to XC functional library <a class="reference external" href="https://github.com/dftlibs/xcfun">XCFun</a></p></li>
+<li><p>Interface to XC functional library <a class="reference external" href="http://www.tddft.org/programs/octopus/wiki/index.php/Libxc">Libxc</a></p></li>
+<li><p>Interface to tensor contraction library <a class="reference external" href="https://github.com/devinamatthews/tblis">TBLIS</a></p></li>
+<li><p>Interface to Heat-bath Selected CI program <a class="reference external" href="https://sanshar.github.io/Dice/">Dice</a></p></li>
+<li><p>Interface to geometry optimizer <a class="reference external" href="https://github.com/jhrmnn/pyberny">Pyberny</a></p></li>
 </ul>
 </div>
 <div class="section" id="designs">
 <h2>1.3. Designs<a class="headerlink" href="#designs" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="kernel-and-stream-functions">
 <h3>1.3.1. Kernel and Stream functions<a class="headerlink" href="#kernel-and-stream-functions" title="Permalink to this headline">¶</a></h3>
-<p>Every class has the <code class="docutils literal"><span class="pre">kernel</span></code> method which serves as the entry or the driver of
+<p>Every class has the <code class="docutils literal notranslate"><span class="pre">kernel</span></code> method which serves as the entry or the driver of
 the method. Once an object of one method was created, you can always call
-<code class="docutils literal"><span class="pre">.kernel()</span></code> to start or restart a calculation.</p>
+<code class="docutils literal notranslate"><span class="pre">.kernel()</span></code> to start or restart a calculation.</p>
 <p>The return value of kernel method is different for different class. To unify the
 return value, the package introduces the stream methods to pipe the computing
 stream.  A stream method of an object only return the object itself.  There are
 three general stream methods available for most method classes. They are:</p>
-<p>1 <code class="docutils literal"><span class="pre">.set</span></code> method to update object attributes, for example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mf</span> <span class="o">=</span> <span class="n">scf</span><span class="o">.</span><span class="n">RHF</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">conv_tol</span><span class="o">=</span><span class="mi">1</span><span class="n">e</span><span class="o">-</span><span class="mi">5</span><span class="p">)</span>
+<p>1 <code class="docutils literal notranslate"><span class="pre">.set</span></code> method to update object attributes, for example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mf</span> <span class="o">=</span> <span class="n">scf</span><span class="o">.</span><span class="n">RHF</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">conv_tol</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>is identical to two lines of statements:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mf</span> <span class="o">=</span> <span class="n">scf</span><span class="o">.</span><span class="n">RHF</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span>
-<span class="n">mf</span><span class="o">.</span><span class="n">conv_tol</span> <span class="o">=</span> <span class="mi">1</span><span class="n">e</span><span class="o">-</span><span class="mi">5</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mf</span> <span class="o">=</span> <span class="n">scf</span><span class="o">.</span><span class="n">RHF</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span>
+<span class="n">mf</span><span class="o">.</span><span class="n">conv_tol</span> <span class="o">=</span> <span class="mf">1e-5</span>
 </pre></div>
 </div>
-<p>2 <code class="docutils literal"><span class="pre">.run</span></code> method to pass the call to the <code class="docutils literal"><span class="pre">.kernel</span></code> method.  If arguments are
-presented in <code class="docutils literal"><span class="pre">.run</span></code> method, the arguments will be passed to the kernel
-function.  If keyword arguments are given, <code class="docutils literal"><span class="pre">.run</span></code> method will first
-call <code class="docutils literal"><span class="pre">.set</span></code> method to update the attributes then execute the <code class="docutils literal"><span class="pre">.kernel</span></code>
+<p>2 <code class="docutils literal notranslate"><span class="pre">.run</span></code> method to pass the call to the <code class="docutils literal notranslate"><span class="pre">.kernel</span></code> method.  If arguments are
+presented in <code class="docutils literal notranslate"><span class="pre">.run</span></code> method, the arguments will be passed to the kernel
+function.  If keyword arguments are given, <code class="docutils literal notranslate"><span class="pre">.run</span></code> method will first
+call <code class="docutils literal notranslate"><span class="pre">.set</span></code> method to update the attributes then execute the <code class="docutils literal notranslate"><span class="pre">.kernel</span></code>
 method.  For example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mf</span> <span class="o">=</span> <span class="n">scf</span><span class="o">.</span><span class="n">RHF</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">dm_init</span><span class="p">,</span> <span class="n">conv_tol</span><span class="o">=</span><span class="mi">1</span><span class="n">e</span><span class="o">-</span><span class="mi">5</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mf</span> <span class="o">=</span> <span class="n">scf</span><span class="o">.</span><span class="n">RHF</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">dm_init</span><span class="p">,</span> <span class="n">conv_tol</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>is identical to three lines of statements:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mf</span> <span class="o">=</span> <span class="n">scf</span><span class="o">.</span><span class="n">RHF</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span>
-<span class="n">mf</span><span class="o">.</span><span class="n">conv_tol</span> <span class="o">=</span> <span class="mi">1</span><span class="n">e</span><span class="o">-</span><span class="mi">5</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mf</span> <span class="o">=</span> <span class="n">scf</span><span class="o">.</span><span class="n">RHF</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span>
+<span class="n">mf</span><span class="o">.</span><span class="n">conv_tol</span> <span class="o">=</span> <span class="mf">1e-5</span>
 <span class="n">mf</span><span class="o">.</span><span class="n">kernel</span><span class="p">(</span><span class="n">dm_init</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>3 <code class="docutils literal"><span class="pre">.apply</span></code> method to pass the current object (as the first argument) to the
+<p>3 <code class="docutils literal notranslate"><span class="pre">.apply</span></code> method to pass the current object (as the first argument) to the
 given function/class and return a new object.  If arguments and keyword
 arguments are presented, they will all be passed to the function/class. For
 example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mc</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">scf</span><span class="o">.</span><span class="n">RHF</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">()</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">mcscf</span><span class="o">.</span><span class="n">CASSCF</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">frozen</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mc</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">scf</span><span class="o">.</span><span class="n">RHF</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">()</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">mcscf</span><span class="o">.</span><span class="n">CASSCF</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">frozen</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>is identical to:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mf</span> <span class="o">=</span> <span class="n">scf</span><span class="o">.</span><span class="n">RHF</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mf</span> <span class="o">=</span> <span class="n">scf</span><span class="o">.</span><span class="n">RHF</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span>
 <span class="n">mf</span><span class="o">.</span><span class="n">kernel</span><span class="p">()</span>
 <span class="n">mc</span> <span class="o">=</span> <span class="n">mcscf</span><span class="o">.</span><span class="n">CASSCF</span><span class="p">(</span><span class="n">mf</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">frozen</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
 </pre></div>
@@ -511,7 +530,7 @@ example:</p>
 return the objects as well when the methods do not have particular value to
 return.  Using the stream methods, you can evaluate certain quantities with one
 line of code:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">dm</span> <span class="o">=</span> <span class="n">gto</span><span class="o">.</span><span class="n">M</span><span class="p">(</span><span class="n">atom</span><span class="o">=</span><span class="s1">&#39;H 0 0 0; H 0 0 1&#39;</span><span class="p">)</span> \
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dm</span> <span class="o">=</span> <span class="n">gto</span><span class="o">.</span><span class="n">M</span><span class="p">(</span><span class="n">atom</span><span class="o">=</span><span class="s1">&#39;H 0 0 0; H 0 0 1&#39;</span><span class="p">)</span> \
 <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">scf</span><span class="o">.</span><span class="n">RHF</span><span class="p">)</span> \
 <span class="o">.</span><span class="n">dump_flags</span><span class="p">()</span> \
 <span class="o">.</span><span class="n">run</span><span class="p">()</span> \
@@ -523,10 +542,10 @@ line of code:</p>
 <h3>1.3.2. Pure function and Class<a class="headerlink" href="#pure-function-and-class" title="Permalink to this headline">¶</a></h3>
 <p>Class are designed to hold only the final results and the control parameters
 such as maximum number of iterations, convergence threshold, etc.
-Intermediates are NOT saved in the class.  After calling the <code class="docutils literal"><span class="pre">.kernel()</span></code> or
-<code class="docutils literal"><span class="pre">.run()</span></code> method, results will be generated and saved in the object. For
+Intermediates are NOT saved in the class.  After calling the <code class="docutils literal notranslate"><span class="pre">.kernel()</span></code> or
+<code class="docutils literal notranslate"><span class="pre">.run()</span></code> method, results will be generated and saved in the object. For
 example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">gto</span><span class="p">,</span> <span class="n">scf</span><span class="p">,</span> <span class="n">ccsd</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">gto</span><span class="p">,</span> <span class="n">scf</span><span class="p">,</span> <span class="n">ccsd</span>
 <span class="n">mol</span> <span class="o">=</span> <span class="n">gto</span><span class="o">.</span><span class="n">M</span><span class="p">(</span><span class="n">atom</span><span class="o">=</span><span class="s1">&#39;H 0 0 0; H 0 0 1.1&#39;</span><span class="p">,</span> <span class="n">basis</span><span class="o">=</span><span class="s1">&#39;ccpvtz&#39;</span><span class="p">)</span>
 <span class="n">mf</span> <span class="o">=</span> <span class="n">scf</span><span class="o">.</span><span class="n">RHF</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 <span class="n">mycc</span> <span class="o">=</span> <span class="n">ccsd</span><span class="o">.</span><span class="n">CCSD</span><span class="p">(</span><span class="n">mf</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
@@ -539,7 +558,7 @@ example:</p>
 <p>Many useful functions are defined at both the module level and class level. They
 can be accessed from either the module functions or the class methods and the
 return values should be the same:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">vj</span><span class="p">,</span> <span class="n">vk</span> <span class="o">=</span> <span class="n">scf</span><span class="o">.</span><span class="n">hf</span><span class="o">.</span><span class="n">get_jk</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">dm</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">vj</span><span class="p">,</span> <span class="n">vk</span> <span class="o">=</span> <span class="n">scf</span><span class="o">.</span><span class="n">hf</span><span class="o">.</span><span class="n">get_jk</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">dm</span><span class="p">)</span>
 <span class="n">vj</span><span class="p">,</span> <span class="n">vk</span> <span class="o">=</span> <span class="n">SCF</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span><span class="o">.</span><span class="n">get_jk</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">dm</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -549,44 +568,44 @@ within the classes, and the argument of the methods and functions are immutable
 during calculations.  These functions can be called arbitrary times in
 arbitrary order and their returns should be always the same.</p>
 <p>Exceptions are often suffixed with underscore in the function name, e.g.
-<code class="docutils literal"><span class="pre">mcscf.state_average_(mc)</span></code> where the attributes of <code class="docutils literal"><span class="pre">mc</span></code> object may be
-changed or overwritten by the <code class="docutils literal"><span class="pre">state_average_</span></code> method.  Cautious should be
+<code class="docutils literal notranslate"><span class="pre">mcscf.state_average_(mc)</span></code> where the attributes of <code class="docutils literal notranslate"><span class="pre">mc</span></code> object may be
+changed or overwritten by the <code class="docutils literal notranslate"><span class="pre">state_average_</span></code> method.  Cautious should be
 taken when you see the functions or methods with ugly suffices.</p>
 </div>
 <div class="section" id="global-configurations">
 <span id="global-config"></span><h3>1.3.3. Global configurations<a class="headerlink" href="#global-configurations" title="Permalink to this headline">¶</a></h3>
 <p>Global configuration file is a Python script that contains PySCF configurations.
-When importing <code class="docutils literal"><span class="pre">pyscf</span></code> module in a Python program (or Python interpreter), the
+When importing <code class="docutils literal notranslate"><span class="pre">pyscf</span></code> module in a Python program (or Python interpreter), the
 package will preload the global configuration file and take the configurations
 as the default values of the parameters of functions or attributes of classes
 during initialization.  For example, the configuration file below detects the
 available memory in the operate system at the runtime and set the maximum memory
 for PySCF:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>$ cat ~/.pyscf_conf.py
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cat ~/.pyscf_conf.py
 import psutil
 total, available, percent, used, free, active, inactive, buffers, cached, shared = psutil.virtual_memory()
 MAX_MEMORY = available
 </pre></div>
 </div>
-<p>By setting <code class="docutils literal"><span class="pre">MAX_MEMORY</span></code> in the global configuration file, you don&#8217;t need the
-statement to set the <code class="docutils literal"><span class="pre">max_memory</span></code> attribute in every script. The dynamically
-determined <code class="docutils literal"><span class="pre">max_memory</span></code> will be loaded during the program initialization step
+<p>By setting <code class="docutils literal notranslate"><span class="pre">MAX_MEMORY</span></code> in the global configuration file, you don’t need the
+statement to set the <code class="docutils literal notranslate"><span class="pre">max_memory</span></code> attribute in every script. The dynamically
+determined <code class="docutils literal notranslate"><span class="pre">max_memory</span></code> will be loaded during the program initialization step
 automatically.</p>
 <p>There are two methods to let the PySCF package load the global configurations.
-One is to create a configuration file <code class="docutils literal"><span class="pre">.pyscf_conf.py</span></code> in home directory or
+One is to create a configuration file <code class="docutils literal notranslate"><span class="pre">.pyscf_conf.py</span></code> in home directory or
 in work directory.  Another is to set the environment variable
-<code class="docutils literal"><span class="pre">PYSCF_CONFIG_FILE</span></code> which points to the configuration file (with the absolute
-path).  The environment variable <code class="docutils literal"><span class="pre">PYSCF_CONFIG_FILE</span></code> has high priority than
+<code class="docutils literal notranslate"><span class="pre">PYSCF_CONFIG_FILE</span></code> which points to the configuration file (with the absolute
+path).  The environment variable <code class="docutils literal notranslate"><span class="pre">PYSCF_CONFIG_FILE</span></code> has high priority than
 the configuration file in default locations (home directory or work directory).
-If environment variable <code class="docutils literal"><span class="pre">PYSCF_CONFIG_FILE</span></code> is available, the program will
-read the configurations from the <code class="docutils literal"><span class="pre">$PYSCF_CONFIG_FILE</span></code>. If
-<code class="docutils literal"><span class="pre">PYSCF_CONFIG_FILE</span></code> is not set or the file it points to does not exist, the
-program will turn to the default location for the file <code class="docutils literal"><span class="pre">.pyscf_conf.py</span></code>.  If
+If environment variable <code class="docutils literal notranslate"><span class="pre">PYSCF_CONFIG_FILE</span></code> is available, the program will
+read the configurations from the <code class="docutils literal notranslate"><span class="pre">$PYSCF_CONFIG_FILE</span></code>. If
+<code class="docutils literal notranslate"><span class="pre">PYSCF_CONFIG_FILE</span></code> is not set or the file it points to does not exist, the
+program will turn to the default location for the file <code class="docutils literal notranslate"><span class="pre">.pyscf_conf.py</span></code>.  If
 none of the configuration file exists, the program will use the built-in
 configurations which are generally conservative settings.</p>
 <p>In the source code, global configurations are loaded by importing
-<code class="xref py py-mod docutils literal"><span class="pre">pyscf.__config__</span></code> module:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">__config__</span>
+<code class="xref py py-mod docutils literal notranslate"><span class="pre">pyscf.__config__</span></code> module:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">__config__</span>
 <span class="n">MAX_MEMORY</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">__config__</span><span class="p">,</span> <span class="s1">&#39;MAX_MEMORY&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -594,20 +613,20 @@ configurations which are generally conservative settings.</p>
 </div>
 <div class="section" id="scanner">
 <span id="id1"></span><h3>1.3.4. Scanner<a class="headerlink" href="#scanner" title="Permalink to this headline">¶</a></h3>
-<p>Scanner is a function that takes an <code class="docutils literal"><span class="pre">Mole</span></code> (or <code class="docutils literal"><span class="pre">Cell</span></code>) object as input and
-return the energy or nuclear gradients of the given <code class="docutils literal"><span class="pre">Mole</span></code> (or <code class="docutils literal"><span class="pre">Cell</span></code>)
+<p>Scanner is a function that takes an <code class="docutils literal notranslate"><span class="pre">Mole</span></code> (or <code class="docutils literal notranslate"><span class="pre">Cell</span></code>) object as input and
+return the energy or nuclear gradients of the given <code class="docutils literal notranslate"><span class="pre">Mole</span></code> (or <code class="docutils literal notranslate"><span class="pre">Cell</span></code>)
 object.  Scanner can be considered as a shortcut function for a sequence of
 statements which includes the initialization of a required calculation model
 with necessary precomputing, next updating the attributes based on the settings
 of the referred object, then calling kernel function and finally returning
 results.  For example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cc_scanner</span> <span class="o">=</span> <span class="n">gto</span><span class="o">.</span><span class="n">M</span><span class="p">()</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">scf</span><span class="o">.</span><span class="n">RHF</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">cc</span><span class="o">.</span><span class="n">CCSD</span><span class="p">)</span><span class="o">.</span><span class="n">as_scanner</span><span class="p">()</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cc_scanner</span> <span class="o">=</span> <span class="n">gto</span><span class="o">.</span><span class="n">M</span><span class="p">()</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">scf</span><span class="o">.</span><span class="n">RHF</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">cc</span><span class="o">.</span><span class="n">CCSD</span><span class="p">)</span><span class="o">.</span><span class="n">as_scanner</span><span class="p">()</span>
 <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">):</span>
   <span class="nb">print</span><span class="p">(</span><span class="n">cc_scanner</span><span class="p">(</span><span class="n">gto</span><span class="o">.</span><span class="n">M</span><span class="p">(</span><span class="n">atom</span><span class="o">=</span><span class="s1">&#39;H 0 0 0; H 0 0 </span><span class="si">%g</span><span class="s1">&#39;</span><span class="o">%</span><span class="n">r</span><span class="p">)))</span>
 </pre></div>
 </div>
 <p>An equivalent but slightly complicated code is:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">):</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">):</span>
   <span class="n">mol</span> <span class="o">=</span> <span class="n">gto</span><span class="o">.</span><span class="n">M</span><span class="p">(</span><span class="n">atom</span><span class="o">=</span><span class="s1">&#39;H 0 0 0; H 0 0 </span><span class="si">%g</span><span class="s1">&#39;</span><span class="o">%</span><span class="n">r</span><span class="p">)</span>
   <span class="n">mf</span> <span class="o">=</span> <span class="n">scf</span><span class="o">.</span><span class="n">RHF</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
   <span class="n">mycc</span> <span class="o">=</span> <span class="n">cc</span><span class="o">.</span><span class="n">CCSD</span><span class="p">(</span><span class="n">mf</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
@@ -621,7 +640,7 @@ structure while the nuclear gradients scanner returns the nuclear gradients in
 addition.</p>
 <p>Scanner is a special derived object of the caller.  Most methods which are
 defined in the caller class can be used with the scanner object. For example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mf_scanner</span> <span class="o">=</span> <span class="n">gto</span><span class="o">.</span><span class="n">M</span><span class="p">()</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">scf</span><span class="o">.</span><span class="n">RHF</span><span class="p">)</span><span class="o">.</span><span class="n">as_scanner</span><span class="p">()</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mf_scanner</span> <span class="o">=</span> <span class="n">gto</span><span class="o">.</span><span class="n">M</span><span class="p">()</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">scf</span><span class="o">.</span><span class="n">RHF</span><span class="p">)</span><span class="o">.</span><span class="n">as_scanner</span><span class="p">()</span>
 <span class="n">mf_scanner</span><span class="p">(</span><span class="n">gto</span><span class="o">.</span><span class="n">M</span><span class="p">(</span><span class="n">atom</span><span class="o">=</span><span class="s1">&#39;H 0 0 0; H 0 0 1.2&#39;</span><span class="p">))</span>
 <span class="n">mf_scanner</span><span class="o">.</span><span class="n">analyze</span><span class="p">()</span>
 <span class="n">dm1</span> <span class="o">=</span> <span class="n">mf_scanner</span><span class="o">.</span><span class="n">make_rdm1</span><span class="p">()</span>
@@ -631,14 +650,14 @@ defined in the caller class can be used with the scanner object. For example:</p
 </pre></div>
 </div>
 <p>As shown in the example above, the scanner works pretty close to the relevant
-class object except that the scanner does not need the <code class="docutils literal"><span class="pre">kernel</span></code> or <code class="docutils literal"><span class="pre">run</span></code>
+class object except that the scanner does not need the <code class="docutils literal notranslate"><span class="pre">kernel</span></code> or <code class="docutils literal notranslate"><span class="pre">run</span></code>
 methods to run a calculation.  Given molecule structure, the scanner
 automatically checks and updates the necessary object dependence and passes the
-work flow to the <code class="docutils literal"><span class="pre">kernel</span></code> method.  The computational results are held in the
+work flow to the <code class="docutils literal notranslate"><span class="pre">kernel</span></code> method.  The computational results are held in the
 scanner object as the regular class object does.</p>
 <p>To make structure of scanner object uniform for all methods, two attributes
-(<code class="docutils literal"><span class="pre">.e_tot</span></code> and <code class="docutils literal"><span class="pre">.converged</span></code>) are defined for all energy scanner
-and three attributes (<code class="docutils literal"><span class="pre">.e_tot</span></code>, <code class="docutils literal"><span class="pre">.de</span></code> and <code class="docutils literal"><span class="pre">.converged</span></code>) are defined for
+(<code class="docutils literal notranslate"><span class="pre">.e_tot</span></code> and <code class="docutils literal notranslate"><span class="pre">.converged</span></code>) are defined for all energy scanner
+and three attributes (<code class="docutils literal notranslate"><span class="pre">.e_tot</span></code>, <code class="docutils literal notranslate"><span class="pre">.de</span></code> and <code class="docutils literal notranslate"><span class="pre">.converged</span></code>) are defined for
 all nuclear gradients scanner.</p>
 </div>
 </div>
@@ -646,18 +665,16 @@ all nuclear gradients scanner.</p>
 
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="tutorial.html" class="btn btn-neutral float-right" title="2. Tutorial" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="version.html" class="btn btn-neutral float-right" title="2. Version history" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="index.html" class="btn btn-neutral" title="Welcome to PySCF documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to PySCF documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -666,11 +683,19 @@ all nuclear gradients scanner.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015-, Qiming Sun &lt;osirpt.sun@gmail.com&gt;.
+        
+        &copy; Copyright 2015-2020, The PySCF Developers
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -682,38 +707,15 @@ all nuclear gradients scanner.</p>
   </div>
   
 
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'./',
-            VERSION:'1.5.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: ''
-        };
-    </script>
-      <script type="text/javascript" src="_static/jquery.js"></script>
-      <script type="text/javascript" src="_static/underscore.js"></script>
-      <script type="text/javascript" src="_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

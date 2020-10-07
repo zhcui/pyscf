@@ -1,0 +1,518 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>10.22.11. prop.ssc — Spin-spin coulping &mdash; PySCF 1.7.5 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="10.22.12. prop.esr — Electron spin-rotation coupling" href="esr.html" />
+    <link rel="prev" title="10.22.10. prop.polarizability — Polarizabilities" href="polarizability.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> PySCF
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.7
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html">1. An overview of PySCF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../version.html">2. Version history</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">3. Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../code-rule.html">4. Code standard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../benchmark.html">5. Benchmark</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial.html">6. Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory.html">7. Theoretical methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../advanced.html">8. Miscellaneous</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../interface.html">9. Interfaces</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../modules.html">10. Main modules</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../adc.html">10.1. <code class="xref py py-mod docutils literal notranslate"><span class="pre">adc</span></code> — Algebraic diagrammatic construction (ADC) scheme</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ao2mo.html">10.2. <code class="xref py py-mod docutils literal notranslate"><span class="pre">ao2mo</span></code> — Integral transformations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cc.html">10.3. <code class="xref py py-mod docutils literal notranslate"><span class="pre">cc</span></code> — Coupled cluster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ccn.html">10.4. <code class="xref py py-mod docutils literal notranslate"><span class="pre">ccn</span></code> — Auto-generated coupled cluster of arbitrary order</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ci.html">10.5. <code class="xref py py-mod docutils literal notranslate"><span class="pre">ci</span></code> — Configuration interaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data.html">10.6. <code class="xref py py-mod docutils literal notranslate"><span class="pre">data</span></code> — Data for constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../df.html">10.7. <code class="xref py py-mod docutils literal notranslate"><span class="pre">df</span></code> — Density fitting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dft.html">10.8. <code class="xref py py-mod docutils literal notranslate"><span class="pre">dft</span></code> — Density functional theory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../doci.html">10.9. <code class="xref py py-mod docutils literal notranslate"><span class="pre">doci</span></code> — Doubly occupied configuration interaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fci.html">10.10. <code class="xref py py-mod docutils literal notranslate"><span class="pre">fci</span></code> — Full configuration interaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../grad.html">10.11. <code class="xref py py-mod docutils literal notranslate"><span class="pre">grad</span></code> — Analytical nuclear gradients</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gto.html">10.12. <code class="xref py py-mod docutils literal notranslate"><span class="pre">gto</span></code> — Molecular structure and GTO basis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gw.html">10.13. <code class="xref py py-mod docutils literal notranslate"><span class="pre">gw</span></code> — Molecular G0W0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hci.html">10.14. <code class="xref py py-mod docutils literal notranslate"><span class="pre">hci</span></code> — Heat-bath selected CI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hessian.html">10.15. <code class="xref py py-mod docutils literal notranslate"><span class="pre">hessian</span></code> — Analytical nuclear Hessian</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../lib.html">10.16. <code class="xref py py-mod docutils literal notranslate"><span class="pre">lib</span></code> — Helper functions, parameters, and C extensions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../lo.html">10.17. <code class="xref py py-mod docutils literal notranslate"><span class="pre">lo</span></code> — Orbital localization and analysis tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mcscf.html">10.18. <code class="xref py py-mod docutils literal notranslate"><span class="pre">mcscf</span></code> — Multi-configurational self-consistent field</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mp.html">10.19. <code class="xref py py-mod docutils literal notranslate"><span class="pre">mp</span></code> — MP2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mrpt.html">10.20. <code class="xref py py-mod docutils literal notranslate"><span class="pre">mrpt</span></code> — Multi-reference perturbation theory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pbc.html">10.21. <code class="xref py py-mod docutils literal notranslate"><span class="pre">pbc</span></code> — Periodic boundary conditions</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../prop.html">10.22. <code class="xref py py-mod docutils literal notranslate"><span class="pre">prop</span></code> — Molecular properties</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="efg.html">10.22.1. efg —</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gtensor.html">10.22.2. <code class="xref py py-mod docutils literal notranslate"><span class="pre">prop.gtensor</span></code> — EPR g tensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="magnetizability.html">10.22.3. magnetizability  —</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nsr.html">10.22.4. nsr —</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rotational_gtensor.html">10.22.5. rotational_gtensor —</a></li>
+<li class="toctree-l3"><a class="reference internal" href="zfs.html">10.22.6. zfs —</a></li>
+<li class="toctree-l3"><a class="reference internal" href="freq.html">10.22.7. <code class="xref py py-mod docutils literal notranslate"><span class="pre">prop.freq</span></code> — Vibrational frequencies and normal modes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hfc.html">10.22.8. <code class="xref py py-mod docutils literal notranslate"><span class="pre">prop.hfc</span></code> — Hyperfine coupling tensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nmr.html">10.22.9. <code class="xref py py-mod docutils literal notranslate"><span class="pre">prop.nmr</span></code> — NMR shielding tensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polarizability.html">10.22.10. <code class="xref py py-mod docutils literal notranslate"><span class="pre">prop.polarizability</span></code> — Polarizabilities</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">10.22.11. <code class="xref py py-mod docutils literal notranslate"><span class="pre">prop.ssc</span></code> — Spin-spin coulping</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#examples">10.22.11.1. Examples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-pyscf.prop.ssc.rhf">10.22.11.2. Program reference</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="esr.html">10.22.12. <code class="xref py py-mod docutils literal notranslate"><span class="pre">prop.esr</span></code> — Electron spin-rotation coupling</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../qmmm.html">10.23. <code class="xref py py-mod docutils literal notranslate"><span class="pre">qmmm</span></code> — QM/MM interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../rt.html">10.24. <code class="xref py py-mod docutils literal notranslate"><span class="pre">rt</span></code> — Real-time time-dependent density functional theory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../scf.html">10.25. <code class="xref py py-mod docutils literal notranslate"><span class="pre">scf</span></code> — Self-consistent field methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../semiempirical.html">10.26. <code class="xref py py-mod docutils literal notranslate"><span class="pre">semiempirical</span></code> — Semiempirical methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sgx.html">10.27. <code class="xref py py-mod docutils literal notranslate"><span class="pre">sgx</span></code> — Pseudo-spectral methods (COSX, PS, SN-K)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../solvent.html">10.28. <code class="xref py py-mod docutils literal notranslate"><span class="pre">solvent</span></code> — Solvent methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../soscf.html">10.29. <code class="xref py py-mod docutils literal notranslate"><span class="pre">soscf</span></code> — Second order SCF solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../symm.html">10.30. <code class="xref py py-mod docutils literal notranslate"><span class="pre">symm</span></code> – Point group symmetry and spin symmetry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tdscf.html">10.31. <code class="xref py py-mod docutils literal notranslate"><span class="pre">tdscf</span></code> — TDHF and TDDFT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tools.html">10.32. <code class="xref py py-mod docutils literal notranslate"><span class="pre">tools</span></code> — Useful tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../x2c.html">10.33. <code class="xref py py-mod docutils literal notranslate"><span class="pre">x2c</span></code> — exact-two-component approach</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">PySCF</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../modules.html">10. Main modules</a> &raquo;</li>
+        
+          <li><a href="../prop.html">10.22. <code class="xref py py-mod docutils literal notranslate"><span class="pre">prop</span></code> — Molecular properties</a> &raquo;</li>
+        
+      <li>10.22.11. <code class="xref py py-mod docutils literal notranslate"><span class="pre">prop.ssc</span></code> — Spin-spin coulping</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/modules/prop/ssc.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="prop-ssc-spin-spin-coulping">
+<h1>10.22.11. <code class="xref py py-mod docutils literal notranslate"><span class="pre">prop.ssc</span></code> — Spin-spin coulping<a class="headerlink" href="#prop-ssc-spin-spin-coulping" title="Permalink to this headline">¶</a></h1>
+<p>The <code class="xref py py-mod docutils literal notranslate"><span class="pre">prop.ssc</span></code> module implements the nuclear spin-spin coupling for mean-field methods.</p>
+<div class="section" id="examples">
+<h2>10.22.11.1. Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference download internal" download="" href="../../_downloads/1575b03eeff5898ad407035ff8e55533/05-ssc.py"><code class="xref download docutils literal notranslate"><span class="pre">examples/prop/05-ssc.py</span></code></a></p>
+</div>
+<div class="section" id="module-pyscf.prop.ssc.rhf">
+<span id="program-reference"></span><h2>10.22.11.2. Program reference<a class="headerlink" href="#module-pyscf.prop.ssc.rhf" title="Permalink to this headline">¶</a></h2>
+<p>Non-relativistic RHF spin-spin coupling (SSC) constants</p>
+<p>Ref.
+Chem. Rev. 99, 293 (1999); DOI:10.1021/cr960017t
+JCP 113, 3530 (2000); DOI:10.1063/1.1286806
+JCP 113, 9402 (2000); DOI:10.1063/1.1321296</p>
+<dl class="attribute">
+<dt id="pyscf.prop.ssc.rhf.SSC">
+<code class="sig-prename descclassname">pyscf.prop.ssc.rhf.</code><code class="sig-name descname">SSC</code><a class="headerlink" href="#pyscf.prop.ssc.rhf.SSC" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pyscf.prop.ssc.rhf.SpinSpinCoupling" title="pyscf.prop.ssc.rhf.SpinSpinCoupling"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyscf.prop.ssc.rhf.SpinSpinCoupling</span></code></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="pyscf.prop.ssc.rhf.SpinSpinCoupling">
+<em class="property">class </em><code class="sig-prename descclassname">pyscf.prop.ssc.rhf.</code><code class="sig-name descname">SpinSpinCoupling</code><span class="sig-paren">(</span><em class="sig-param">scf_method</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyscf/prop/ssc/rhf.html#SpinSpinCoupling"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyscf.prop.ssc.rhf.SpinSpinCoupling" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="pyscf.prop.ssc.rhf.SpinSpinCoupling.dia">
+<code class="sig-name descname">dia</code><span class="sig-paren">(</span><em class="sig-param">mol</em>, <em class="sig-param">dm0</em>, <em class="sig-param">nuc_pair=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyscf.prop.ssc.rhf.SpinSpinCoupling.dia" title="Permalink to this definition">¶</a></dt>
+<dd><p>orbital diamagnetic term</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyscf.prop.ssc.rhf.SpinSpinCoupling.kernel">
+<code class="sig-name descname">kernel</code><span class="sig-paren">(</span><em class="sig-param">mo1=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyscf/prop/ssc/rhf.html#SpinSpinCoupling.kernel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyscf.prop.ssc.rhf.SpinSpinCoupling.kernel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Kernel function is the main driver of a method.  Every method should
+define the kernel function as the entry of the calculation.  Note the
+return value of kernel function is not strictly defined.  It can be
+anything related to the method (such as the energy, the wave-function,
+the DFT mesh grids etc.).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyscf.prop.ssc.rhf.SpinSpinCoupling.make_dso">
+<code class="sig-name descname">make_dso</code><span class="sig-paren">(</span><em class="sig-param">mol</em>, <em class="sig-param">dm0</em>, <em class="sig-param">nuc_pair=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyscf.prop.ssc.rhf.SpinSpinCoupling.make_dso" title="Permalink to this definition">¶</a></dt>
+<dd><p>orbital diamagnetic term</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyscf.prop.ssc.rhf.SpinSpinCoupling.make_fc">
+<code class="sig-name descname">make_fc</code><span class="sig-paren">(</span><em class="sig-param">nuc_pair=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyscf.prop.ssc.rhf.SpinSpinCoupling.make_fc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Only Fermi-contact</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyscf.prop.ssc.rhf.SpinSpinCoupling.make_fcsd">
+<code class="sig-name descname">make_fcsd</code><span class="sig-paren">(</span><em class="sig-param">nuc_pair=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyscf.prop.ssc.rhf.SpinSpinCoupling.make_fcsd" title="Permalink to this definition">¶</a></dt>
+<dd><p>FC + SD contributions to 2nd order energy</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="pyscf.prop.ssc.rhf.dso_integral">
+<code class="sig-prename descclassname">pyscf.prop.ssc.rhf.</code><code class="sig-name descname">dso_integral</code><span class="sig-paren">(</span><em class="sig-param">mol</em>, <em class="sig-param">orig1</em>, <em class="sig-param">orig2</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyscf/prop/ssc/rhf.html#dso_integral"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyscf.prop.ssc.rhf.dso_integral" title="Permalink to this definition">¶</a></dt>
+<dd><p>Integral of vec{r}vec{r}/(<a href="#id1"><span class="problematic" id="id2">|</span></a>r-orig1|^3 <a href="#id3"><span class="problematic" id="id4">|</span></a>r-orig2|^3)
+Ref. JCP, 73, 5718</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyscf.prop.ssc.rhf.gen_vind">
+<code class="sig-prename descclassname">pyscf.prop.ssc.rhf.</code><code class="sig-name descname">gen_vind</code><span class="sig-paren">(</span><em class="sig-param">mf</em>, <em class="sig-param">mo_coeff</em>, <em class="sig-param">mo_occ</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyscf/prop/ssc/rhf.html#gen_vind"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyscf.prop.ssc.rhf.gen_vind" title="Permalink to this definition">¶</a></dt>
+<dd><p>Induced potential associated with h1_PSO</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyscf.prop.ssc.rhf.make_dso">
+<code class="sig-prename descclassname">pyscf.prop.ssc.rhf.</code><code class="sig-name descname">make_dso</code><span class="sig-paren">(</span><em class="sig-param">sscobj</em>, <em class="sig-param">mol</em>, <em class="sig-param">dm0</em>, <em class="sig-param">nuc_pair=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyscf/prop/ssc/rhf.html#make_dso"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyscf.prop.ssc.rhf.make_dso" title="Permalink to this definition">¶</a></dt>
+<dd><p>orbital diamagnetic term</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyscf.prop.ssc.rhf.make_fc">
+<code class="sig-prename descclassname">pyscf.prop.ssc.rhf.</code><code class="sig-name descname">make_fc</code><span class="sig-paren">(</span><em class="sig-param">sscobj</em>, <em class="sig-param">nuc_pair=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyscf/prop/ssc/rhf.html#make_fc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyscf.prop.ssc.rhf.make_fc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Only Fermi-contact</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyscf.prop.ssc.rhf.make_fcsd">
+<code class="sig-prename descclassname">pyscf.prop.ssc.rhf.</code><code class="sig-name descname">make_fcsd</code><span class="sig-paren">(</span><em class="sig-param">sscobj</em>, <em class="sig-param">nuc_pair=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyscf/prop/ssc/rhf.html#make_fcsd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyscf.prop.ssc.rhf.make_fcsd" title="Permalink to this definition">¶</a></dt>
+<dd><p>FC + SD contributions to 2nd order energy</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyscf.prop.ssc.rhf.make_h1_fcsd">
+<code class="sig-prename descclassname">pyscf.prop.ssc.rhf.</code><code class="sig-name descname">make_h1_fcsd</code><span class="sig-paren">(</span><em class="sig-param">mol</em>, <em class="sig-param">mo_coeff</em>, <em class="sig-param">mo_occ</em>, <em class="sig-param">atmlst</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyscf/prop/ssc/rhf.html#make_h1_fcsd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyscf.prop.ssc.rhf.make_h1_fcsd" title="Permalink to this definition">¶</a></dt>
+<dd><p>MO integrals for FC + SD</p>
+</dd></dl>
+
+<span class="target" id="module-pyscf.prop.ssc.uhf"></span><p>Non-relativistic UHF spin-spin coupling (SSC) constants</p>
+<dl class="attribute">
+<dt id="pyscf.prop.ssc.uhf.SSC">
+<code class="sig-prename descclassname">pyscf.prop.ssc.uhf.</code><code class="sig-name descname">SSC</code><a class="headerlink" href="#pyscf.prop.ssc.uhf.SSC" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pyscf.prop.ssc.uhf.SpinSpinCoupling" title="pyscf.prop.ssc.uhf.SpinSpinCoupling"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyscf.prop.ssc.uhf.SpinSpinCoupling</span></code></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="pyscf.prop.ssc.uhf.SpinSpinCoupling">
+<em class="property">class </em><code class="sig-prename descclassname">pyscf.prop.ssc.uhf.</code><code class="sig-name descname">SpinSpinCoupling</code><span class="sig-paren">(</span><em class="sig-param">scf_method</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyscf/prop/ssc/uhf.html#SpinSpinCoupling"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyscf.prop.ssc.uhf.SpinSpinCoupling" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="pyscf.prop.ssc.uhf.SpinSpinCoupling.dia">
+<code class="sig-name descname">dia</code><span class="sig-paren">(</span><em class="sig-param">mol</em>, <em class="sig-param">dm0</em>, <em class="sig-param">nuc_pair=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyscf.prop.ssc.uhf.SpinSpinCoupling.dia" title="Permalink to this definition">¶</a></dt>
+<dd><p>orbital diamagnetic term</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyscf.prop.ssc.uhf.SpinSpinCoupling.kernel">
+<code class="sig-name descname">kernel</code><span class="sig-paren">(</span><em class="sig-param">mo1=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyscf/prop/ssc/uhf.html#SpinSpinCoupling.kernel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyscf.prop.ssc.uhf.SpinSpinCoupling.kernel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Kernel function is the main driver of a method.  Every method should
+define the kernel function as the entry of the calculation.  Note the
+return value of kernel function is not strictly defined.  It can be
+anything related to the method (such as the energy, the wave-function,
+the DFT mesh grids etc.).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyscf.prop.ssc.uhf.SpinSpinCoupling.make_dso">
+<code class="sig-name descname">make_dso</code><span class="sig-paren">(</span><em class="sig-param">mol</em>, <em class="sig-param">dm0</em>, <em class="sig-param">nuc_pair=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyscf.prop.ssc.uhf.SpinSpinCoupling.make_dso" title="Permalink to this definition">¶</a></dt>
+<dd><p>orbital diamagnetic term</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyscf.prop.ssc.uhf.SpinSpinCoupling.make_fc">
+<code class="sig-name descname">make_fc</code><span class="sig-paren">(</span><em class="sig-param">nuc_pair=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyscf.prop.ssc.uhf.SpinSpinCoupling.make_fc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Only Fermi-contact</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyscf.prop.ssc.uhf.SpinSpinCoupling.make_fcsd">
+<code class="sig-name descname">make_fcsd</code><span class="sig-paren">(</span><em class="sig-param">nuc_pair=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyscf.prop.ssc.uhf.SpinSpinCoupling.make_fcsd" title="Permalink to this definition">¶</a></dt>
+<dd><p>FC + SD contributions to 2nd order energy</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="pyscf.prop.ssc.uhf.gen_vind">
+<code class="sig-prename descclassname">pyscf.prop.ssc.uhf.</code><code class="sig-name descname">gen_vind</code><span class="sig-paren">(</span><em class="sig-param">mf</em>, <em class="sig-param">mo_coeff</em>, <em class="sig-param">mo_occ</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyscf/prop/ssc/uhf.html#gen_vind"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyscf.prop.ssc.uhf.gen_vind" title="Permalink to this definition">¶</a></dt>
+<dd><p>Induced potential associated with h1_PSO</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyscf.prop.ssc.uhf.make_dso">
+<code class="sig-prename descclassname">pyscf.prop.ssc.uhf.</code><code class="sig-name descname">make_dso</code><span class="sig-paren">(</span><em class="sig-param">sscobj</em>, <em class="sig-param">mol</em>, <em class="sig-param">dm0</em>, <em class="sig-param">nuc_pair=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyscf/prop/ssc/uhf.html#make_dso"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyscf.prop.ssc.uhf.make_dso" title="Permalink to this definition">¶</a></dt>
+<dd><p>orbital diamagnetic term</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyscf.prop.ssc.uhf.make_fc">
+<code class="sig-prename descclassname">pyscf.prop.ssc.uhf.</code><code class="sig-name descname">make_fc</code><span class="sig-paren">(</span><em class="sig-param">sscobj</em>, <em class="sig-param">nuc_pair=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyscf/prop/ssc/uhf.html#make_fc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyscf.prop.ssc.uhf.make_fc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Only Fermi-contact</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyscf.prop.ssc.uhf.make_fcsd">
+<code class="sig-prename descclassname">pyscf.prop.ssc.uhf.</code><code class="sig-name descname">make_fcsd</code><span class="sig-paren">(</span><em class="sig-param">sscobj</em>, <em class="sig-param">nuc_pair=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyscf/prop/ssc/uhf.html#make_fcsd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyscf.prop.ssc.uhf.make_fcsd" title="Permalink to this definition">¶</a></dt>
+<dd><p>FC + SD contributions to 2nd order energy</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyscf.prop.ssc.uhf.make_h1_fcsd">
+<code class="sig-prename descclassname">pyscf.prop.ssc.uhf.</code><code class="sig-name descname">make_h1_fcsd</code><span class="sig-paren">(</span><em class="sig-param">mol</em>, <em class="sig-param">mo_coeff</em>, <em class="sig-param">mo_occ</em>, <em class="sig-param">atmlst</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyscf/prop/ssc/uhf.html#make_h1_fcsd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyscf.prop.ssc.uhf.make_h1_fcsd" title="Permalink to this definition">¶</a></dt>
+<dd><p>FC + SD</p>
+</dd></dl>
+
+<span class="target" id="module-pyscf.prop.ssc.rks"></span><p>Non-relativistic RKS spin-spin coupling (SSC) constants</p>
+<span class="target" id="module-pyscf.prop.ssc.uks"></span><p>Non-relativistic UKS spin-spin coupling (SSC) constants
+(In testing)</p>
+<dl class="attribute">
+<dt id="pyscf.prop.ssc.uks.SSC">
+<code class="sig-prename descclassname">pyscf.prop.ssc.uks.</code><code class="sig-name descname">SSC</code><a class="headerlink" href="#pyscf.prop.ssc.uks.SSC" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pyscf.prop.ssc.uks.SpinSpinCoupling" title="pyscf.prop.ssc.uks.SpinSpinCoupling"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyscf.prop.ssc.uks.SpinSpinCoupling</span></code></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="pyscf.prop.ssc.uks.SpinSpinCoupling">
+<em class="property">class </em><code class="sig-prename descclassname">pyscf.prop.ssc.uks.</code><code class="sig-name descname">SpinSpinCoupling</code><span class="sig-paren">(</span><em class="sig-param">scf_method</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyscf/prop/ssc/uks.html#SpinSpinCoupling"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyscf.prop.ssc.uks.SpinSpinCoupling" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="pyscf.prop.ssc.uks.SpinSpinCoupling.kernel">
+<code class="sig-name descname">kernel</code><span class="sig-paren">(</span><em class="sig-param">mo1=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyscf/prop/ssc/uks.html#SpinSpinCoupling.kernel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyscf.prop.ssc.uks.SpinSpinCoupling.kernel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Kernel function is the main driver of a method.  Every method should
+define the kernel function as the entry of the calculation.  Note the
+return value of kernel function is not strictly defined.  It can be
+anything related to the method (such as the energy, the wave-function,
+the DFT mesh grids etc.).</p>
+</dd></dl>
+
+</dd></dl>
+
+<span class="target" id="module-pyscf.prop.ssc.dhf"></span><p>4-component Dirac-Hartree-Fock spin-spin coupling (SSC) constants</p>
+<dl class="attribute">
+<dt id="pyscf.prop.ssc.dhf.SSC">
+<code class="sig-prename descclassname">pyscf.prop.ssc.dhf.</code><code class="sig-name descname">SSC</code><a class="headerlink" href="#pyscf.prop.ssc.dhf.SSC" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pyscf.prop.ssc.dhf.SpinSpinCoupling" title="pyscf.prop.ssc.dhf.SpinSpinCoupling"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyscf.prop.ssc.dhf.SpinSpinCoupling</span></code></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="pyscf.prop.ssc.dhf.SpinSpinCoupling">
+<em class="property">class </em><code class="sig-prename descclassname">pyscf.prop.ssc.dhf.</code><code class="sig-name descname">SpinSpinCoupling</code><span class="sig-paren">(</span><em class="sig-param">scf_method</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyscf/prop/ssc/dhf.html#SpinSpinCoupling"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyscf.prop.ssc.dhf.SpinSpinCoupling" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="pyscf.prop.ssc.dhf.SpinSpinCoupling.kernel">
+<code class="sig-name descname">kernel</code><span class="sig-paren">(</span><em class="sig-param">mo1=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyscf/prop/ssc/dhf.html#SpinSpinCoupling.kernel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyscf.prop.ssc.dhf.SpinSpinCoupling.kernel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Kernel function is the main driver of a method.  Every method should
+define the kernel function as the entry of the calculation.  Note the
+return value of kernel function is not strictly defined.  It can be
+anything related to the method (such as the energy, the wave-function,
+the DFT mesh grids etc.).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyscf.prop.ssc.dhf.SpinSpinCoupling.make_dia">
+<code class="sig-name descname">make_dia</code><span class="sig-paren">(</span><em class="sig-param">mol</em>, <em class="sig-param">dm0</em>, <em class="sig-param">nuc_pair=None</em>, <em class="sig-param">mb='RMB'</em><span class="sig-paren">)</span><a class="headerlink" href="#pyscf.prop.ssc.dhf.SpinSpinCoupling.make_dia" title="Permalink to this definition">¶</a></dt>
+<dd><p>orbital diamagnetic term</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="pyscf.prop.ssc.dhf.make_dia">
+<code class="sig-prename descclassname">pyscf.prop.ssc.dhf.</code><code class="sig-name descname">make_dia</code><span class="sig-paren">(</span><em class="sig-param">sscobj</em>, <em class="sig-param">mol</em>, <em class="sig-param">dm0</em>, <em class="sig-param">nuc_pair=None</em>, <em class="sig-param">mb='RMB'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyscf/prop/ssc/dhf.html#make_dia"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyscf.prop.ssc.dhf.make_dia" title="Permalink to this definition">¶</a></dt>
+<dd><p>orbital diamagnetic term</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyscf.prop.ssc.dhf.sa01sa01_integral">
+<code class="sig-prename descclassname">pyscf.prop.ssc.dhf.</code><code class="sig-name descname">sa01sa01_integral</code><span class="sig-paren">(</span><em class="sig-param">mol</em>, <em class="sig-param">orig1</em>, <em class="sig-param">orig2</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyscf/prop/ssc/dhf.html#sa01sa01_integral"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyscf.prop.ssc.dhf.sa01sa01_integral" title="Permalink to this definition">¶</a></dt>
+<dd><p>vec{r}_A/r_A^3 times sigma vec{r}_B/r_B^3 times sigma</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="esr.html" class="btn btn-neutral float-right" title="10.22.12. prop.esr — Electron spin-rotation coupling" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="polarizability.html" class="btn btn-neutral float-left" title="10.22.10. prop.polarizability — Polarizabilities" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2015-2020, The PySCF Developers
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

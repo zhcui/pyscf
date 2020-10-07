@@ -1,15 +1,18 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Welcome to PySCF documentation! &mdash; PySCF 1.5.0 documentation</title>
+  <title>Welcome to PySCF documentation! &mdash; PySCF 1.7.5 documentation</title>
   
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
 
   
   
@@ -17,42 +20,38 @@
   
 
   
-
-  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
 
-  
-
-  
-  
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-    <link rel="top" title="PySCF 1.5.0 documentation" href="#"/>
-        <link rel="next" title="1. An overview of PySCF" href="overview.html"/> 
-
-  
-  <script src="_static/js/modernizr.min.js"></script>
-
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="1. An overview of PySCF" href="overview.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
-            <a href="#" class="icon icon-home"> PySCF
+            <a href="#" class="icon icon-home" alt="Documentation Home"> PySCF
           
 
           
@@ -62,7 +61,7 @@
             
             
               <div class="version">
-                1.5
+                1.7
               </div>
             
           
@@ -79,6 +78,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -88,46 +88,28 @@
             
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="overview.html">1. An overview of PySCF</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial.html">2. Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="version.html">2. Version history</a></li>
 <li class="toctree-l1"><a class="reference internal" href="install.html">3. Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="gto.html">4. gto &#8212; Molecular structure and GTO basis</a></li>
-<li class="toctree-l1"><a class="reference internal" href="lib.html">5. <code class="docutils literal"><span class="pre">lib</span></code> &#8212; Helper functions, parameters, and C extensions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="scf.html">6. scf &#8212; Mean-field methods</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ao2mo.html">7. ao2mo &#8212; Integral transformations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="mcscf.html">8. mcscf &#8212; Multi-configurational self-consistent field</a></li>
-<li class="toctree-l1"><a class="reference internal" href="fci.html">9. fci &#8212; Full configuration interaction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="symm.html">10. symm &#8211; Point group symmetry and spin symmetry</a></li>
-<li class="toctree-l1"><a class="reference internal" href="df.html">11. df &#8212; Density fitting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="dft.html">12. dft &#8212; Density functional theory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tddft.html">13. tddft &#8212; Time dependent density functional theory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cc.html">14. cc &#8212; Coupled cluster</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ci.html">15. ci &#8212; Configuration interaction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="dmrgscf.html">16. dmrgscf</a></li>
-<li class="toctree-l1"><a class="reference internal" href="fciqmcscf.html">17. fciqmcscf</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tools.html">18. tools</a></li>
-<li class="toctree-l1"><a class="reference internal" href="grad.html">19. grad &#8212; Analytical nuclear gradients</a></li>
-<li class="toctree-l1"><a class="reference internal" href="hessian.html">20. hessian &#8212; Analytical nuclear Hessian</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pbc.html">21. pbc &#8212; Periodic boundary conditions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="nao.html">22. nao &#8212; Numerical Atomic Orbitals</a></li>
-<li class="toctree-l1"><a class="reference internal" href="lo.html">23. lo &#8212; Orbital localization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="advanced.html">24. Miscellaneous</a></li>
-<li class="toctree-l1"><a class="reference internal" href="qmmm.html">25. qmmm &#8212; QM/MM interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="mrpt.html">26. mrpt &#8212; Multi-reference perturbation theory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="benchmark.html">27. Benchmark</a></li>
-<li class="toctree-l1"><a class="reference internal" href="code-rule.html">28. Code standard</a></li>
-<li class="toctree-l1"><a class="reference internal" href="version.html">29. Version history</a></li>
+<li class="toctree-l1"><a class="reference internal" href="code-rule.html">4. Code standard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="benchmark.html">5. Benchmark</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">6. Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="theory.html">7. Theoretical methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="advanced.html">8. Miscellaneous</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interface.html">9. Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">10. Main modules</a></li>
 </ul>
 
             
           
         </div>
+        
       </div>
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="#">PySCF</a>
@@ -135,9 +117,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -158,7 +141,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="#">Docs</a> &raquo;</li>
+      <li><a href="#" class="icon icon-home"></a> &raquo;</li>
         
       <li>Welcome to PySCF documentation!</li>
     
@@ -166,7 +149,7 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="_sources/index.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -186,14 +169,16 @@ The package aims to provide a simple, light-weight, and efficient platform for
 quantum chemistry calculations and code development.  The program is developed
 with the following principles:</p>
 <ul class="simple">
-<li>Easy to install, to use, to extend and to be embedded;</li>
-<li>Minimal requirements on libraries (no Boost or MPI) and computing
-resources (perhaps sacrificing efficiency to reduce I/O);</li>
-<li>90/10 Python/C (only computational hot spots are written in C);</li>
-<li>90/10 functional/OOP (unless performance critical, functions are pure).</li>
+<li><p>Easy to install, to use, to extend and to be embedded;</p></li>
+<li><p>Minimal requirements on libraries (no Boost or MPI) and computing
+resources (perhaps sacrificing efficiency to reduce I/O);</p></li>
+<li><p>90/10 Python/C (only computational hot spots are written in C);</p></li>
+<li><p>90/10 functional/OOP (unless performance critical, functions are pure).</p></li>
 </ul>
-<div class="section" id="contents">
-<h2>Contents<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h2>
+<p>In addition to the core libraries, PySCF supports a rich
+ecosystem of plugins and external modules that, for example, provide
+MPI versions of some routines, additional quantum chemistry methods and analysis, interface with quantum computing toolkits <em>etc</em>.
+See <a class="reference internal" href="install.html#installing-plugin"><span class="std std-ref">Plugins</span></a>.</p>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="overview.html">1. An overview of PySCF</a><ul>
@@ -202,17 +187,7 @@ resources (perhaps sacrificing efficiency to reduce I/O);</li>
 <li class="toctree-l2"><a class="reference internal" href="overview.html#designs">1.3. Designs</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial.html">2. Tutorial</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="tutorial.html#quick-setup">2.1. Quick setup</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorial.html#a-simple-example">2.2. A simple example</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorial.html#initializing-a-molecule">2.3. Initializing a molecule</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorial.html#initializing-a-crystal">2.4. Initializing a crystal</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorial.html#hf-mp2-mcscf">2.5. HF, MP2, MCSCF</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorial.html#restore-an-old-calculation">2.6. Restore an old calculation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorial.html#access-ao-integrals">2.7. Access AO integrals</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorial.html#other-features">2.8. Other features</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="version.html">2. Version history</a></li>
 <li class="toctree-l1"><a class="reference internal" href="install.html">3. Installation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="install.html#installation-with-pip">3.1. Installation with pip</a></li>
 <li class="toctree-l2"><a class="reference internal" href="install.html#installation-with-conda">3.2. Installation with conda</a></li>
@@ -225,152 +200,98 @@ resources (perhaps sacrificing efficiency to reduce I/O);</li>
 <li class="toctree-l2"><a class="reference internal" href="install.html#plugins">3.9. Plugins</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="gto.html">4. gto &#8212; Molecular structure and GTO basis</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="gto.html#input">4.1. Input</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gto.html#program-reference">4.2. Program reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="code-rule.html">4. Code standard</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="code-rule.html#name-convention">4.1. Name convention</a></li>
+<li class="toctree-l2"><a class="reference internal" href="code-rule.html#api-convention">4.2. API convention</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="lib.html">5. <code class="docutils literal"><span class="pre">lib</span></code> &#8212; Helper functions, parameters, and C extensions</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="lib.html#module-lib.parameters">5.1. <code class="docutils literal"><span class="pre">lib.parameters</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="lib.html#module-lib.logger">5.2. <code class="docutils literal"><span class="pre">lib.logger</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="lib.html#module-lib.numpy_helper">5.3. numpy extensions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lib.html#module-lib.linalg_helper">5.4. scipy extensions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lib.html#lib-chkfile">5.5. <code class="docutils literal"><span class="pre">lib.chkfile</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="lib.html#module-lib.diis">5.6. <code class="docutils literal"><span class="pre">lib.diis</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="lib.html#other-helper-functions">5.7. Other helper functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="benchmark.html">5. Benchmark</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">6. Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#quick-setup">6.1. Quick setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#a-simple-example">6.2. A simple example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#initializing-a-molecule">6.3. Initializing a molecule</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#initializing-a-crystal">6.4. Initializing a crystal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#hf-mp2-mcscf">6.5. HF, MP2, MCSCF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#restore-an-old-calculation">6.6. Restore an old calculation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#access-ao-integrals">6.7. Access AO integrals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#other-features">6.8. Other features</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="scf.html">6. scf &#8212; Mean-field methods</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="scf.html#stability-analysis">6.1. Stability analysis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="scf.html#addons">6.2. Addons</a></li>
-<li class="toctree-l2"><a class="reference internal" href="scf.html#caching-two-electron-integrals">6.3. Caching two-electron integrals</a></li>
-<li class="toctree-l2"><a class="reference internal" href="scf.html#customizing-hamiltonian">6.4. Customizing Hamiltonian</a></li>
-<li class="toctree-l2"><a class="reference internal" href="scf.html#module-pyscf.scf">6.5. Program reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="theory.html">7. Theoretical methods</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="theory/scf.html">7.1. Self-consistent field (SCF) methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="theory/dft.html">7.2. Density functional theory (DFT)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="theory/mp.html">7.3. Møller-Plesset perturbation theory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="theory/gw.html">7.4. GW method</a></li>
+<li class="toctree-l2"><a class="reference internal" href="theory/ci.html">7.5. Configuration interaction (CI)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="theory/cc.html">7.6. Coupled cluster (CC)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="theory/adc.html">7.7. Algebraic diagrammatic construction (ADC) scheme</a></li>
+<li class="toctree-l2"><a class="reference internal" href="theory/mcscf.html">7.8. Multi-configurational self-consistent field (MCSCF)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="theory/tddft.html">7.9. Time-dependent density functional theory (TDDFT)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="theory/rt.html">7.10. Real-time time-dependent density functional theory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="theory/eomcc.html">7.11. Equation-of-motion coupled cluster (EOM-CC)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="theory/pbc.html">7.12. Periodic boundary conditions</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="ao2mo.html">7. ao2mo &#8212; Integral transformations</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="ao2mo.html#general-integral-transformation-module">7.1. General Integral transformation module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ao2mo.html#module-pyscf.ao2mo.incore">7.2. incore</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ao2mo.html#module-pyscf.ao2mo.outcore">7.3. outcore</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ao2mo.html#module-pyscf.ao2mo.addons">7.4. addons</a></li>
+<li class="toctree-l1"><a class="reference internal" href="advanced.html">8. Miscellaneous</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="advanced.html#decoration-pipe">8.1. Decoration pipe</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advanced.html#customizing-hamiltonian">8.2. Customizing Hamiltonian</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="mcscf.html">8. mcscf &#8212; Multi-configurational self-consistent field</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="mcscf.html#casscf-active-space-solver">8.1. CASSCF active space solver</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mcscf.html#symmetry-broken">8.2. Symmetry broken</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mcscf.html#initial-guess">8.3. Initial guess</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mcscf.html#canonical-orbitals">8.4. Canonical orbitals</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mcscf.html#program-reference">8.5. Program reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interface.html">9. Interfaces</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="interface/dftd3.html">9.1. <code class="xref py py-mod docutils literal notranslate"><span class="pre">dftd3</span></code> — DFT with D3 dispersion correction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interface/geomopt.html">9.2. <code class="xref py py-mod docutils literal notranslate"><span class="pre">geomopt</span></code> — Geometry optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interface/dmrgscf.html">9.3. <code class="xref py py-mod docutils literal notranslate"><span class="pre">dmrgscf</span></code> — DMRG and DMRG-SCF/CASSCF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interface/fciqmcscf.html">9.4. <code class="xref py py-mod docutils literal notranslate"><span class="pre">fciqmcscf</span></code> — Full configuration interaction quantum Monte Carlo (FCIQMC)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interface/cornell_shci.html">9.5. <code class="xref py py-mod docutils literal notranslate"><span class="pre">cornell_shci</span></code> — Semistochastic heat-bath configuration interaction (SHCI)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interface/shciscf.html">9.6. <code class="xref py py-mod docutils literal notranslate"><span class="pre">shciscf</span></code> — Semistochastic heat bath configuration interaction (SHCI)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interface/icmpspt.html">9.7. <code class="xref py py-mod docutils literal notranslate"><span class="pre">icmpspt</span></code> — Internal-contracted MPS perturbation method</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interface/nao.html">9.8. <code class="xref py py-mod docutils literal notranslate"><span class="pre">nao</span></code> — Numerical Atomic Orbitals</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="fci.html">9. fci &#8212; Full configuration interaction</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="fci.html#module-pyscf.fci.direct_spin1">9.1. direct CI</a></li>
-<li class="toctree-l2"><a class="reference internal" href="fci.html#module-pyscf.fci.cistring">9.2. cistring</a></li>
-<li class="toctree-l2"><a class="reference internal" href="fci.html#module-pyscf.fci.spin_op">9.3. spin operator</a></li>
-<li class="toctree-l2"><a class="reference internal" href="fci.html#module-pyscf.fci.rdm">9.4. rdm</a></li>
-<li class="toctree-l2"><a class="reference internal" href="fci.html#module-pyscf.fci.addons">9.5. addons</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">10. Main modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="modules/adc.html">10.1. <code class="xref py py-mod docutils literal notranslate"><span class="pre">adc</span></code> — Algebraic diagrammatic construction (ADC) scheme</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/ao2mo.html">10.2. <code class="xref py py-mod docutils literal notranslate"><span class="pre">ao2mo</span></code> — Integral transformations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/cc.html">10.3. <code class="xref py py-mod docutils literal notranslate"><span class="pre">cc</span></code> — Coupled cluster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/ccn.html">10.4. <code class="xref py py-mod docutils literal notranslate"><span class="pre">ccn</span></code> — Auto-generated coupled cluster of arbitrary order</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/ci.html">10.5. <code class="xref py py-mod docutils literal notranslate"><span class="pre">ci</span></code> — Configuration interaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/data.html">10.6. <code class="xref py py-mod docutils literal notranslate"><span class="pre">data</span></code> — Data for constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/df.html">10.7. <code class="xref py py-mod docutils literal notranslate"><span class="pre">df</span></code> — Density fitting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/dft.html">10.8. <code class="xref py py-mod docutils literal notranslate"><span class="pre">dft</span></code> — Density functional theory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/doci.html">10.9. <code class="xref py py-mod docutils literal notranslate"><span class="pre">doci</span></code> — Doubly occupied configuration interaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/fci.html">10.10. <code class="xref py py-mod docutils literal notranslate"><span class="pre">fci</span></code> — Full configuration interaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/grad.html">10.11. <code class="xref py py-mod docutils literal notranslate"><span class="pre">grad</span></code> — Analytical nuclear gradients</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/gto.html">10.12. <code class="xref py py-mod docutils literal notranslate"><span class="pre">gto</span></code> — Molecular structure and GTO basis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/gw.html">10.13. <code class="xref py py-mod docutils literal notranslate"><span class="pre">gw</span></code> — Molecular G0W0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/hci.html">10.14. <code class="xref py py-mod docutils literal notranslate"><span class="pre">hci</span></code> — Heat-bath selected CI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/hessian.html">10.15. <code class="xref py py-mod docutils literal notranslate"><span class="pre">hessian</span></code> — Analytical nuclear Hessian</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/lib.html">10.16. <code class="xref py py-mod docutils literal notranslate"><span class="pre">lib</span></code> — Helper functions, parameters, and C extensions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/lo.html">10.17. <code class="xref py py-mod docutils literal notranslate"><span class="pre">lo</span></code> — Orbital localization and analysis tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/mcscf.html">10.18. <code class="xref py py-mod docutils literal notranslate"><span class="pre">mcscf</span></code> — Multi-configurational self-consistent field</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/mp.html">10.19. <code class="xref py py-mod docutils literal notranslate"><span class="pre">mp</span></code> — MP2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/mrpt.html">10.20. <code class="xref py py-mod docutils literal notranslate"><span class="pre">mrpt</span></code> — Multi-reference perturbation theory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/pbc.html">10.21. <code class="xref py py-mod docutils literal notranslate"><span class="pre">pbc</span></code> — Periodic boundary conditions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/prop.html">10.22. <code class="xref py py-mod docutils literal notranslate"><span class="pre">prop</span></code> — Molecular properties</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/qmmm.html">10.23. <code class="xref py py-mod docutils literal notranslate"><span class="pre">qmmm</span></code> — QM/MM interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/rt.html">10.24. <code class="xref py py-mod docutils literal notranslate"><span class="pre">rt</span></code> — Real-time time-dependent density functional theory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/scf.html">10.25. <code class="xref py py-mod docutils literal notranslate"><span class="pre">scf</span></code> — Self-consistent field methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/semiempirical.html">10.26. <code class="xref py py-mod docutils literal notranslate"><span class="pre">semiempirical</span></code> — Semiempirical methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/sgx.html">10.27. <code class="xref py py-mod docutils literal notranslate"><span class="pre">sgx</span></code> — Pseudo-spectral methods (COSX, PS, SN-K)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/solvent.html">10.28. <code class="xref py py-mod docutils literal notranslate"><span class="pre">solvent</span></code> — Solvent methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/soscf.html">10.29. <code class="xref py py-mod docutils literal notranslate"><span class="pre">soscf</span></code> — Second order SCF solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/symm.html">10.30. <code class="xref py py-mod docutils literal notranslate"><span class="pre">symm</span></code> – Point group symmetry and spin symmetry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/tdscf.html">10.31. <code class="xref py py-mod docutils literal notranslate"><span class="pre">tdscf</span></code> — TDHF and TDDFT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/tools.html">10.32. <code class="xref py py-mod docutils literal notranslate"><span class="pre">tools</span></code> — Useful tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/x2c.html">10.33. <code class="xref py py-mod docutils literal notranslate"><span class="pre">x2c</span></code> — exact-two-component approach</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="symm.html">10. symm &#8211; Point group symmetry and spin symmetry</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="symm.html#enabling-symmetry-in-other-module">10.1. Enabling symmetry in other module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="symm.html#module-pyscf.symm.geom">10.2. geom</a></li>
-<li class="toctree-l2"><a class="reference internal" href="symm.html#module-pyscf.symm.basis">10.3. basis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="symm.html#module-pyscf.symm.addons">10.4. addons</a></li>
-<li class="toctree-l2"><a class="reference internal" href="symm.html#module-pyscf.symm.cg">10.5. Clebsch Gordon coefficients</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="df.html">11. df &#8212; Density fitting</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="df.html#introduction">11.1. Introduction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="df.html#program-reference">11.2. Program reference</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="dft.html">12. dft &#8212; Density functional theory</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="dft.html#customizing-xc-functional">12.1. Customizing XC functional</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dft.html#module-pyscf.dft.rks">12.2. Program reference</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="tddft.html">13. tddft &#8212; Time dependent density functional theory</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="tddft.html#module-pyscf.tdscf.rhf">13.1. TDHF</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tddft.html#module-pyscf.tdscf.rks">13.2. TDDFT</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="cc.html">14. cc &#8212; Coupled cluster</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="cc.html#examples">14.1. Examples</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cc.html#program-reference">14.2. Program reference</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="ci.html">15. ci &#8212; Configuration interaction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="dmrgscf.html">16. dmrgscf</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="dmrgscf.html#id1">16.1. Block</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dmrgscf.html#id2">16.2. CheMPS2</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="fciqmcscf.html">17. fciqmcscf</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tools.html">18. tools</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="tools.html#module-pyscf.tools.fcidump">18.1. FCIDUMP</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tools.html#module-pyscf.tools.molden">18.2. Molden</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tools.html#module-pyscf.tools.wfn_format">18.3. GAMESS WFN</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tools.html#module-pyscf.tools.cubegen">18.4. Cubegen</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tools.html#module-pyscf.tools.dump_mat">18.5. Print Matrix</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="grad.html">19. grad &#8212; Analytical nuclear gradients</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="grad.html#analytical-nuclear-gradients">19.1. Analytical nuclear gradients</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="hessian.html">20. hessian &#8212; Analytical nuclear Hessian</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pbc.html">21. pbc &#8212; Periodic boundary conditions</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="pbc/gto.html">21.1. pbc.gto &#8212; Crystal cell structure</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pbc/scf.html">21.2. pbc.scf &#8212; Mean-field with periodic boundary condition</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pbc/dft.html">21.3. pbc.dft</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pbc/df.html">21.4. pbc.df &#8212; PBC denisty fitting</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pbc/cc.html">21.5. pbc.cc &#8212; PBC coupled cluster</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pbc/tools.html">21.6. pbc.tools &#8212; PBC tools</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pbc/mix_mol.html">21.7. Mixing PBC and molecular modules</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="nao.html">22. nao &#8212; Numerical Atomic Orbitals</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="nao/tddft_iter.html">22.1. nao.tddft_iter &#8212; NAO: Iterative Time Dependent Density Functional Theory</a></li>
-<li class="toctree-l2"><a class="reference internal" href="nao/tddft_tem.html">22.2. nao.tddft_tem &#8212; NAO: Electron Energy Loss Spectroscopy Within TDDFT</a></li>
-<li class="toctree-l2"><a class="reference internal" href="nao/comp_spatial_dens.html">22.3. nao.comp_spatial_distributions &#8212; NAO: Spatial Distribution Density change</a></li>
-<li class="toctree-l2"><a class="reference internal" href="nao/examples.html">22.4. nao.examples &#8212; NAO Examples</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="lo.html">23. lo &#8212; Orbital localization</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="lo.html#module-pyscf.lo.boys">23.1. Foster-Boys, Edmiston-Ruedenberg, Pipek-Mezey localization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lo.html#meta-lowdin">23.2. Meta-Lowdin</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lo.html#module-pyscf.lo.nao">23.3. Natural atomic orbitals</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lo.html#module-pyscf.lo.iao">23.4. Intrinsic Atomic Orbitals</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="advanced.html">24. Miscellaneous</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="advanced.html#decoration-pipe">24.1. Decoration pipe</a></li>
-<li class="toctree-l2"><a class="reference internal" href="advanced.html#customizing-hamiltonian">24.2. Customizing Hamiltonian</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="qmmm.html">25. qmmm &#8212; QM/MM interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="mrpt.html">26. mrpt &#8212; Multi-reference perturbation theory</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="mrpt.html#module-pyscf.mrpt.nevpt2">26.1. N-electron valance perturbation theory (NEVPT2)</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="benchmark.html">27. Benchmark</a></li>
-<li class="toctree-l1"><a class="reference internal" href="code-rule.html">28. Code standard</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="code-rule.html#name-convention">28.1. Name convention</a></li>
-<li class="toctree-l2"><a class="reference internal" href="code-rule.html#api-convention">28.2. API convention</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="version.html">29. Version history</a></li>
 </ul>
 </div>
-<p>You can also download the <a class="reference external" href="http://www.sunqm.net/pyscf/files/pdf/PySCF-1.4.pdf">PDF version</a> of this manual.</p>
-</div>
+<p>You can also download the <a class="reference external" href="http://www.sunqm.net/pyscf/files/pdf/PySCF-1.7.pdf">PDF version</a> of this manual.</p>
 </div>
 
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -386,11 +307,19 @@ resources (perhaps sacrificing efficiency to reduce I/O);</li>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015-, Qiming Sun &lt;osirpt.sun@gmail.com&gt;.
+        
+        &copy; Copyright 2015-2020, The PySCF Developers
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -402,38 +331,15 @@ resources (perhaps sacrificing efficiency to reduce I/O);</li>
   </div>
   
 
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'./',
-            VERSION:'1.5.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: ''
-        };
-    </script>
-      <script type="text/javascript" src="_static/jquery.js"></script>
-      <script type="text/javascript" src="_static/underscore.js"></script>
-      <script type="text/javascript" src="_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

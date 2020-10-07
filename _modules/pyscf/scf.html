@@ -1,0 +1,437 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pyscf.scf &mdash; PySCF 1.7.5 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> PySCF
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.7
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html">1. An overview of PySCF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../version.html">2. Version history</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">3. Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../code-rule.html">4. Code standard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../benchmark.html">5. Benchmark</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial.html">6. Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory.html">7. Theoretical methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../advanced.html">8. Miscellaneous</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../interface.html">9. Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">10. Main modules</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">PySCF</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>pyscf.scf</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pyscf.scf</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># Copyright 2014-2020 The PySCF Developers. All Rights Reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+<span class="c1">#</span>
+<span class="c1">#     http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1">#</span>
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+<span class="c1">#</span>
+<span class="c1"># Author: Qiming Sun &lt;osirpt.sun@gmail.com&gt;</span>
+<span class="c1">#</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">Hartree-Fock</span>
+<span class="sd">============</span>
+
+<span class="sd">Simple usage::</span>
+
+<span class="sd">    &gt;&gt;&gt; from pyscf import gto, scf</span>
+<span class="sd">    &gt;&gt;&gt; mol = gto.M(atom=&#39;H 0 0 0; H 0 0 1&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; mf = scf.RHF(mol).run()</span>
+
+<span class="sd">:func:`scf.RHF` returns an instance of SCF class.  There are some parameters</span>
+<span class="sd">to control the SCF method.</span>
+
+<span class="sd">    verbose : int</span>
+<span class="sd">        Print level.  Default value equals to :class:`Mole.verbose`</span>
+<span class="sd">    max_memory : float or int</span>
+<span class="sd">        Allowed memory in MB.  Default value equals to :class:`Mole.max_memory`</span>
+<span class="sd">    chkfile : str</span>
+<span class="sd">        checkpoint file to save MOs, orbital energies etc.</span>
+<span class="sd">    conv_tol : float</span>
+<span class="sd">        converge threshold.  Default is 1e-10</span>
+<span class="sd">    max_cycle : int</span>
+<span class="sd">        max number of iterations.  Default is 50</span>
+<span class="sd">    init_guess : str</span>
+<span class="sd">        initial guess method.  It can be one of &#39;minao&#39;, &#39;atom&#39;, &#39;1e&#39;, &#39;chkfile&#39;.</span>
+<span class="sd">        Default is &#39;minao&#39;</span>
+<span class="sd">    DIIS : class listed in :mod:`scf.diis`</span>
+<span class="sd">        Default is :class:`diis.SCF_DIIS`. Set it to None/False to turn off DIIS.</span>
+<span class="sd">    diis : bool</span>
+<span class="sd">        whether to do DIIS.  Default is True.</span>
+<span class="sd">    diis_space : int</span>
+<span class="sd">        DIIS space size.  By default, 8 Fock matrices and errors vector are stored.</span>
+<span class="sd">    diis_start_cycle : int</span>
+<span class="sd">        The step to start DIIS.  Default is 0.</span>
+<span class="sd">    level_shift_factor : float or int</span>
+<span class="sd">        Level shift (in AU) for virtual space.  Default is 0.</span>
+<span class="sd">    direct_scf : bool</span>
+<span class="sd">        Direct SCF is used by default.</span>
+<span class="sd">    direct_scf_tol : float</span>
+<span class="sd">        Direct SCF cutoff threshold.  Default is 1e-13.</span>
+<span class="sd">    callback : function</span>
+<span class="sd">        callback function takes one dict as the argument which is</span>
+<span class="sd">        generated by the builtin function :func:`locals`, so that the</span>
+<span class="sd">        callback function can access all local variables in the current</span>
+<span class="sd">        envrionment.</span>
+<span class="sd">    conv_check : bool</span>
+<span class="sd">        An extra cycle to check convergence after SCF iterations.</span>
+
+<span class="sd">    nelec : (int,int), for UHF/ROHF class</span>
+<span class="sd">        freeze the number of (alpha,beta) electrons.</span>
+
+<span class="sd">    irrep_nelec : dict, for symmetry- RHF/ROHF/UHF class only</span>
+<span class="sd">        to indicate the number of electrons for each irreps.</span>
+<span class="sd">        In RHF, give {&#39;ir_name&#39;:int, ...} ;</span>
+<span class="sd">        In ROHF/UHF, give {&#39;ir_name&#39;:(int,int), ...} .</span>
+<span class="sd">        It is effective when :attr:`Mole.symmetry` is set ``True``.</span>
+
+<span class="sd">    auxbasis : str, for density fitting SCF only</span>
+<span class="sd">        Auxiliary basis for density fitting.</span>
+
+<span class="sd">        &gt;&gt;&gt; mf = scf.density_fit(scf.UHF(mol))</span>
+<span class="sd">        &gt;&gt;&gt; mf.scf()</span>
+
+<span class="sd">        Density fitting can be applied to all non-relativistic HF class.</span>
+
+<span class="sd">    with_ssss : bool, for Dirac-Hartree-Fock only</span>
+<span class="sd">        If False, ignore small component integrals (SS|SS).  Default is True.</span>
+<span class="sd">    with_gaunt : bool, for Dirac-Hartree-Fock only</span>
+<span class="sd">        If False, ignore Gaunt interaction.  Default is False.</span>
+
+<span class="sd">Saved results</span>
+
+<span class="sd">    converged : bool</span>
+<span class="sd">        SCF converged or not</span>
+<span class="sd">    e_tot : float</span>
+<span class="sd">        Total HF energy (electronic energy plus nuclear repulsion)</span>
+<span class="sd">    mo_energy : </span>
+<span class="sd">        Orbital energies</span>
+<span class="sd">    mo_occ</span>
+<span class="sd">        Orbital occupancy</span>
+<span class="sd">    mo_coeff</span>
+<span class="sd">        Orbital coefficients</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="kn">from</span> <span class="nn">pyscf.scf</span> <span class="k">import</span> <span class="n">hf</span>
+<span class="n">rhf</span> <span class="o">=</span> <span class="n">hf</span>
+<span class="kn">from</span> <span class="nn">pyscf.scf</span> <span class="k">import</span> <span class="n">rohf</span>
+<span class="kn">from</span> <span class="nn">pyscf.scf</span> <span class="k">import</span> <span class="n">hf_symm</span>
+<span class="n">rhf_symm</span> <span class="o">=</span> <span class="n">hf_symm</span>
+<span class="kn">from</span> <span class="nn">pyscf.scf</span> <span class="k">import</span> <span class="n">uhf</span>
+<span class="kn">from</span> <span class="nn">pyscf.scf</span> <span class="k">import</span> <span class="n">uhf_symm</span>
+<span class="kn">from</span> <span class="nn">pyscf.scf</span> <span class="k">import</span> <span class="n">ghf</span>
+<span class="kn">from</span> <span class="nn">pyscf.scf</span> <span class="k">import</span> <span class="n">ghf_symm</span>
+<span class="kn">from</span> <span class="nn">pyscf.scf</span> <span class="k">import</span> <span class="n">dhf</span>
+<span class="kn">from</span> <span class="nn">pyscf.scf</span> <span class="k">import</span> <span class="n">chkfile</span>
+<span class="kn">from</span> <span class="nn">pyscf.scf</span> <span class="k">import</span> <span class="n">addons</span>
+<span class="kn">from</span> <span class="nn">pyscf.scf</span> <span class="k">import</span> <span class="n">diis</span>
+<span class="kn">from</span> <span class="nn">pyscf.scf.diis</span> <span class="k">import</span> <span class="n">DIIS</span><span class="p">,</span> <span class="n">CDIIS</span><span class="p">,</span> <span class="n">EDIIS</span><span class="p">,</span> <span class="n">ADIIS</span>
+<span class="kn">from</span> <span class="nn">pyscf.scf.uhf</span> <span class="k">import</span> <span class="n">spin_square</span>
+<span class="kn">from</span> <span class="nn">pyscf.scf.hf</span> <span class="k">import</span> <span class="n">get_init_guess</span>
+<span class="kn">from</span> <span class="nn">pyscf.scf.addons</span> <span class="k">import</span> <span class="o">*</span>
+
+
+<div class="viewcode-block" id="HF"><a class="viewcode-back" href="../../modules/scf.html#pyscf.scf.HF">[docs]</a><span class="k">def</span> <span class="nf">HF</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">mol</span><span class="o">.</span><span class="n">nelectron</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">mol</span><span class="o">.</span><span class="n">spin</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">RHF</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">UHF</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span></div>
+<span class="n">HF</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">A wrap function to create SCF class (RHF or UHF).</span><span class="se">\n</span><span class="s1"></span>
+<span class="s1">&#39;&#39;&#39;</span> <span class="o">+</span> <span class="n">hf</span><span class="o">.</span><span class="n">SCF</span><span class="o">.</span><span class="vm">__doc__</span>
+
+<div class="viewcode-block" id="RHF"><a class="viewcode-back" href="../../modules/scf.html#pyscf.scf.RHF">[docs]</a><span class="k">def</span> <span class="nf">RHF</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">mol</span><span class="o">.</span><span class="n">nelectron</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">mol</span><span class="o">.</span><span class="n">symmetry</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">rhf_symm</span><span class="o">.</span><span class="n">HF1e</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">rohf</span><span class="o">.</span><span class="n">HF1e</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="ow">not</span> <span class="n">mol</span><span class="o">.</span><span class="n">symmetry</span> <span class="ow">or</span> <span class="n">mol</span><span class="o">.</span><span class="n">groupname</span> <span class="o">==</span> <span class="s1">&#39;C1&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">mol</span><span class="o">.</span><span class="n">spin</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">rohf</span><span class="o">.</span><span class="n">ROHF</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">rhf</span><span class="o">.</span><span class="n">RHF</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">mol</span><span class="o">.</span><span class="n">spin</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">rhf_symm</span><span class="o">.</span><span class="n">ROHF</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">rhf_symm</span><span class="o">.</span><span class="n">RHF</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span></div>
+<span class="n">RHF</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="n">hf</span><span class="o">.</span><span class="n">RHF</span><span class="o">.</span><span class="vm">__doc__</span>
+
+<div class="viewcode-block" id="ROHF"><a class="viewcode-back" href="../../modules/scf.html#pyscf.scf.ROHF">[docs]</a><span class="k">def</span> <span class="nf">ROHF</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">mol</span><span class="o">.</span><span class="n">symmetry</span> <span class="ow">or</span> <span class="n">mol</span><span class="o">.</span><span class="n">groupname</span> <span class="o">==</span> <span class="s1">&#39;C1&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">rohf</span><span class="o">.</span><span class="n">ROHF</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">hf_symm</span><span class="o">.</span><span class="n">ROHF</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span></div>
+<span class="n">ROHF</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="n">rohf</span><span class="o">.</span><span class="n">ROHF</span><span class="o">.</span><span class="vm">__doc__</span>
+
+<div class="viewcode-block" id="UHF"><a class="viewcode-back" href="../../modules/scf.html#pyscf.scf.UHF">[docs]</a><span class="k">def</span> <span class="nf">UHF</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">mol</span><span class="o">.</span><span class="n">nelectron</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">mol</span><span class="o">.</span><span class="n">symmetry</span> <span class="ow">or</span> <span class="n">mol</span><span class="o">.</span><span class="n">groupname</span> <span class="o">==</span> <span class="s1">&#39;C1&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">uhf</span><span class="o">.</span><span class="n">HF1e</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">uhf_symm</span><span class="o">.</span><span class="n">HF1e</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="ow">not</span> <span class="n">mol</span><span class="o">.</span><span class="n">symmetry</span> <span class="ow">or</span> <span class="n">mol</span><span class="o">.</span><span class="n">groupname</span> <span class="o">==</span> <span class="s1">&#39;C1&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">uhf</span><span class="o">.</span><span class="n">UHF</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">uhf_symm</span><span class="o">.</span><span class="n">UHF</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span></div>
+<span class="n">UHF</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="n">uhf</span><span class="o">.</span><span class="n">UHF</span><span class="o">.</span><span class="vm">__doc__</span>
+
+<div class="viewcode-block" id="GHF"><a class="viewcode-back" href="../../modules/scf.html#pyscf.scf.GHF">[docs]</a><span class="k">def</span> <span class="nf">GHF</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">mol</span><span class="o">.</span><span class="n">symmetry</span> <span class="ow">or</span> <span class="n">mol</span><span class="o">.</span><span class="n">groupname</span> <span class="o">==</span> <span class="s1">&#39;C1&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">ghf</span><span class="o">.</span><span class="n">GHF</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">ghf_symm</span><span class="o">.</span><span class="n">GHF</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span></div>
+<span class="n">GHF</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="n">ghf</span><span class="o">.</span><span class="n">GHF</span><span class="o">.</span><span class="vm">__doc__</span>
+
+<div class="viewcode-block" id="DHF"><a class="viewcode-back" href="../../modules/scf.html#pyscf.scf.DHF">[docs]</a><span class="k">def</span> <span class="nf">DHF</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">mol</span><span class="o">.</span><span class="n">nelectron</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">dhf</span><span class="o">.</span><span class="n">HF1e</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">dhf</span><span class="o">.</span><span class="n">zquatev</span> <span class="ow">and</span> <span class="n">mol</span><span class="o">.</span><span class="n">spin</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">dhf</span><span class="o">.</span><span class="n">RDHF</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">dhf</span><span class="o">.</span><span class="n">DHF</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span></div>
+<span class="n">DHF</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="n">dhf</span><span class="o">.</span><span class="n">DHF</span><span class="o">.</span><span class="vm">__doc__</span>
+
+
+<div class="viewcode-block" id="X2C"><a class="viewcode-back" href="../../modules/scf.html#pyscf.scf.X2C">[docs]</a><span class="k">def</span> <span class="nf">X2C</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;X2C UHF (in testing)&#39;&#39;&#39;</span>
+    <span class="kn">from</span> <span class="nn">pyscf.x2c</span> <span class="k">import</span> <span class="n">x2c</span>
+    <span class="k">return</span> <span class="n">x2c</span><span class="o">.</span><span class="n">UHF</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span></div>
+
+<span class="k">def</span> <span class="nf">sfx2c1e</span><span class="p">(</span><span class="n">mf</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">mf</span><span class="o">.</span><span class="n">sfx2c1e</span><span class="p">()</span>
+<span class="n">sfx2c</span> <span class="o">=</span> <span class="n">sfx2c1e</span>
+
+<span class="k">def</span> <span class="nf">density_fit</span><span class="p">(</span><span class="n">mf</span><span class="p">,</span> <span class="n">auxbasis</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">with_df</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">only_dfj</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">mf</span><span class="o">.</span><span class="n">density_fit</span><span class="p">(</span><span class="n">auxbasis</span><span class="p">,</span> <span class="n">with_df</span><span class="p">,</span> <span class="n">only_dfj</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">newton</span><span class="p">(</span><span class="n">mf</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">pyscf.soscf</span> <span class="k">import</span> <span class="n">newton_ah</span>
+    <span class="k">return</span> <span class="n">newton_ah</span><span class="o">.</span><span class="n">newton</span><span class="p">(</span><span class="n">mf</span><span class="p">)</span>
+
+<span class="n">fast_newton</span> <span class="o">=</span> <span class="n">addons</span><span class="o">.</span><span class="n">fast_newton</span>
+
+<span class="k">def</span> <span class="nf">KS</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">dft</span>
+    <span class="k">return</span> <span class="n">dft</span><span class="o">.</span><span class="n">KS</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">RKS</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">dft</span>
+    <span class="k">return</span> <span class="n">dft</span><span class="o">.</span><span class="n">RKS</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">ROKS</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">dft</span>
+    <span class="k">return</span> <span class="n">dft</span><span class="o">.</span><span class="n">ROKS</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">UKS</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">dft</span>
+    <span class="k">return</span> <span class="n">dft</span><span class="o">.</span><span class="n">UKS</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">GKS</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">dft</span>
+    <span class="k">return</span> <span class="n">dft</span><span class="o">.</span><span class="n">GKS</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">DKS</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">dft</span>
+    <span class="k">return</span> <span class="n">dft</span><span class="o">.</span><span class="n">DKS</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2015-2020, The PySCF Developers
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

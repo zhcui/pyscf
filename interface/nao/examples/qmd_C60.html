@@ -1,0 +1,629 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>9.8.4.2.1. nao.examples.qmd_C60 — NAO Examples: QMD C60 &mdash; PySCF 1.7.5 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="10. Main modules" href="../../../modules.html" />
+    <link rel="prev" title="9.8.4.1.1. Interfacing with ASE and Siesta" href="ase.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> PySCF
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.7
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html">1. An overview of PySCF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../version.html">2. Version history</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">3. Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../code-rule.html">4. Code standard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../benchmark.html">5. Benchmark</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">6. Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../theory.html">7. Theoretical methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../advanced.html">8. Miscellaneous</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../interface.html">9. Interfaces</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../dftd3.html">9.1. <code class="xref py py-mod docutils literal notranslate"><span class="pre">dftd3</span></code> — DFT with D3 dispersion correction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../geomopt.html">9.2. <code class="xref py py-mod docutils literal notranslate"><span class="pre">geomopt</span></code> — Geometry optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dmrgscf.html">9.3. <code class="xref py py-mod docutils literal notranslate"><span class="pre">dmrgscf</span></code> — DMRG and DMRG-SCF/CASSCF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../fciqmcscf.html">9.4. <code class="xref py py-mod docutils literal notranslate"><span class="pre">fciqmcscf</span></code> — Full configuration interaction quantum Monte Carlo (FCIQMC)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cornell_shci.html">9.5. <code class="xref py py-mod docutils literal notranslate"><span class="pre">cornell_shci</span></code> — Semistochastic heat-bath configuration interaction (SHCI)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../shciscf.html">9.6. <code class="xref py py-mod docutils literal notranslate"><span class="pre">shciscf</span></code> — Semistochastic heat bath configuration interaction (SHCI)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../icmpspt.html">9.7. <code class="xref py py-mod docutils literal notranslate"><span class="pre">icmpspt</span></code> — Internal-contracted MPS perturbation method</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../../nao.html">9.8. <code class="xref py py-mod docutils literal notranslate"><span class="pre">nao</span></code> — Numerical Atomic Orbitals</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../tddft_iter.html">9.8.1. nao.tddft_iter — NAO: Iterative Time Dependent Density Functional Theory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../tddft_tem.html">9.8.2. nao.tddft_tem — NAO: Electron Energy Loss Spectroscopy Within TDDFT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../comp_spatial_dens.html">9.8.3. nao.comp_spatial_distributions — NAO: Spatial Distribution Density change</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../examples.html">9.8.4. nao.examples — NAO Examples</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../examples.html#interfacing-with-ase-and-siesta">9.8.4.1. Interfacing with ASE and Siesta</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="../examples.html#advanced-examples">9.8.4.2. Advanced Examples</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">10. Main modules</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">PySCF</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../interface.html">9. Interfaces</a> &raquo;</li>
+        
+          <li><a href="../../nao.html">9.8. <code class="xref py py-mod docutils literal notranslate"><span class="pre">nao</span></code> — Numerical Atomic Orbitals</a> &raquo;</li>
+        
+          <li><a href="../examples.html">9.8.4. nao.examples — NAO Examples</a> &raquo;</li>
+        
+      <li>9.8.4.2.1. nao.examples.qmd_C60 — NAO Examples: QMD C60</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../_sources/interface/nao/examples/qmd_C60.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="nao-examples-qmd-c60-nao-examples-qmd-c60">
+<span id="nao-examples-qmd-c60"></span><h1>9.8.4.2.1. nao.examples.qmd_C60 — NAO Examples: QMD C60<a class="headerlink" href="#nao-examples-qmd-c60-nao-examples-qmd-c60" title="Permalink to this headline">¶</a></h1>
+<p>A demonstration of the Nao module used to calculate the polarizability
+of C60 at rooms temperature using Quantum Molecular Dynamic (QMD).
+The relaxation and the ground state calculations are done using the Siesta
+program. This example will calculate the geometries of 5000 steps of C60 using Siesta
+and the polarizability will be obtained by calculating 200 steps. This example MUST be
+done on a server because it will perform 200 calculations. This example has been done
+for the <a class="reference external" href="https://wiki.archlinux.org/index.php/TORQUE">Torque</a> resources manager and will
+need to be adapted to your case before to run.</p>
+<p>To start the calculations, we first need to generate the 5000 geometries using Molecular
+Dynamic (MD) with temperature controlled by means of a Nosé thermostat. For this we use
+the following <a class="reference external" href="siesta_C60_thermal.fdf">siesta</a> input file,</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">SystemLabel</span>                <span class="n">siesta</span>
+<span class="n">PAO</span><span class="o">.</span><span class="n">EnergyShift</span>            <span class="mi">50</span> <span class="n">meV</span>
+<span class="n">PAO</span><span class="o">.</span><span class="n">BasisSize</span>              <span class="n">DZP</span>
+<span class="n">PAO</span><span class="o">.</span><span class="n">SoftDefault</span>            <span class="o">.</span><span class="n">true</span><span class="o">.</span>
+<span class="n">PAO</span><span class="o">.</span><span class="n">BasisType</span>              <span class="n">split</span>
+
+
+<span class="n">XC</span><span class="o">.</span><span class="n">functional</span>     <span class="n">GGA</span> 
+<span class="n">XC</span><span class="o">.</span><span class="n">authors</span>        <span class="n">PBE</span> 
+
+<span class="n">WriteIonPlotFiles</span> <span class="o">.</span><span class="n">false</span><span class="o">.</span>
+<span class="n">WriteCoorXmol</span>    <span class="o">.</span><span class="n">true</span><span class="o">.</span>
+<span class="n">WriteMDXmol</span>      <span class="o">.</span><span class="n">true</span><span class="o">.</span>
+
+<span class="o">%</span><span class="n">include</span> <span class="s2">&quot;C60_org.fdf&quot;</span>
+
+<span class="n">AtomCoorFormatOut</span>  <span class="n">Ang</span>
+
+<span class="n">DM</span><span class="o">.</span><span class="n">UseSaveDM</span>               <span class="o">.</span><span class="n">true</span><span class="o">.</span>
+<span class="n">DM</span><span class="o">.</span><span class="n">Tolerance</span>               <span class="mf">0.0001</span>
+<span class="n">DM</span><span class="o">.</span><span class="n">MixingWeight</span>            <span class="mf">0.25</span>
+<span class="n">MaxSCFIterations</span>           <span class="mi">400</span>
+<span class="n">DM</span><span class="o">.</span><span class="n">NumberPulay</span>             <span class="mi">4</span>
+
+<span class="n">MD</span><span class="o">.</span><span class="n">TypeOfRun</span>               <span class="n">Nose</span> 
+<span class="n">MD</span><span class="o">.</span><span class="n">InitialTemperature</span>      <span class="mi">300</span> <span class="n">K</span>
+<span class="n">MD</span><span class="o">.</span><span class="n">TargetTemperature</span>       <span class="mi">300</span> <span class="n">K</span>
+<span class="n">MD</span><span class="o">.</span><span class="n">NumCGsteps</span>              <span class="mi">5000</span>
+<span class="n">MD</span><span class="o">.</span><span class="n">FinalTimeStep</span>           <span class="mi">5000</span>
+<span class="n">UseSaveData</span>               <span class="o">.</span><span class="n">true</span><span class="o">.</span>
+
+<span class="n">MeshCutOff</span>                <span class="mi">250</span> <span class="n">Ry</span>
+<span class="n">MD</span><span class="o">.</span><span class="n">UseSaveXV</span>             <span class="o">.</span><span class="n">true</span><span class="o">.</span>
+
+<span class="n">SaveRho</span>                  <span class="o">.</span><span class="n">false</span><span class="o">.</span>
+<span class="n">COOP</span><span class="o">.</span><span class="n">Write</span>               <span class="o">.</span><span class="n">false</span><span class="o">.</span>
+<span class="n">WriteDenchar</span>             <span class="o">.</span><span class="n">false</span><span class="o">.</span>
+
+</pre></div>
+</div>
+<p>The file containing the position of the atoms can be downloaded with the following
+<a class="reference external" href="C60_org.fdf">link</a>.</p>
+<dl class="simple">
+<dt>You run this calculation with the normal siesta command (don’t forget the <em>C.psf</em> file)::</dt><dd><p>siesta &lt; siesta_C60_thermal.fdf &gt; siesta.out</p>
+</dd>
+</dl>
+<p>or with a bash script if you run on a server.
+Once, this first calculation finish you will be left with a siesta.ANI file containing the
+geometry at each time step. We will first generate the xyz files corresponding to the
+geometries for comomdity,</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>#!/bin/bash
+
+fname=${1:-siesta.ANI}
+suffi=${2:-0}
+echo &quot;.ANI file with MM geometries            : &quot; $fname
+echo &quot;Suffix to choose geometries for QM part : &quot; $suffi
+
+mkdir -p xyz
+echo &quot;cp $fname xyz/&quot;
+cp $fname xyz/
+echo &quot;cd xyz&quot;
+cd xyz
+LIT=`head -n1 $fname` 
+NLINES_PER_FILE=$(expr $LIT + 2)
+echo &quot;rm x*&quot;
+rm x*
+echo &quot;split -l $NLINES_PER_FILE -d -a 6 $fname&quot;
+split -l $NLINES_PER_FILE -d -a 6 $fname
+echo &quot;xyz2fdf.py x0*$suffi &gt; xyz2fdf.py.out&quot;
+xyz2fdf.py x0*$suffi &amp;&gt; xyz2fdf.py.out
+cd ..
+ls xyz/*.fdf
+</pre></div>
+</div>
+<p>This will create a folder xyz containing the 5000 generated geometries. We need then to
+generate the fdf geometries file for siesta:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">cyz</span>
+<span class="n">python</span> <span class="n">xyz2fdf</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+<p><a class="reference external" href="xyz2fdf.py">xyz2fdf.py</a> is a small python script that will generate the geometries for 200 calculations
+from the 5000 previous geometries because 5000 is a bit too much. The script look like,</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">ase.io</span> <span class="k">as</span> <span class="nn">io</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+
+<span class="k">def</span> <span class="nf">write_geofdf</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">fname</span><span class="o">=</span><span class="s2">&quot;geo.fdf&quot;</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">ase.data</span> <span class="k">import</span> <span class="n">chemical_symbols</span>
+
+    <span class="n">f</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;NumberOfAtoms   </span><span class="si">{0}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">atoms</span><span class="p">)))</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;NumberOfSpecies </span><span class="si">{0}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">numbers</span><span class="p">))))</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;%block ChemicalSpeciesLabel</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">species_label</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">nb</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">numbers</span><span class="p">)):</span>
+        <span class="n">species_label</span><span class="p">[</span><span class="n">chemical_symbols</span><span class="p">[</span><span class="n">nb</span><span class="p">]]</span> <span class="o">=</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;  </span><span class="si">{0}</span><span class="s1">  </span><span class="si">{1}</span><span class="s1">  &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">nb</span><span class="p">)</span><span class="o">+</span> <span class="n">chemical_symbols</span><span class="p">[</span><span class="n">nb</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%e</span><span class="s2">ndblock ChemicalSpeciesLabel</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;AtomicCoordinatesFormat  Ang</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;%block AtomicCoordinatesAndAtomicSpecies</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">ia</span><span class="p">,</span> <span class="n">atm</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">atoms</span><span class="p">):</span>
+        <span class="n">pos</span> <span class="o">=</span> <span class="n">atm</span><span class="o">.</span><span class="n">position</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{0:.6f}</span><span class="s2">  </span><span class="si">{1:.6f}</span><span class="s2">  </span><span class="si">{2:.6f}</span><span class="s2">  </span><span class="si">{3}</span><span class="s2"> </span><span class="si">{4}</span><span class="s2">  &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pos</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">pos</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">pos</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+            <span class="n">species_label</span><span class="p">[</span><span class="n">atm</span><span class="o">.</span><span class="n">symbol</span><span class="p">],</span> <span class="n">ia</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">atm</span><span class="o">.</span><span class="n">symbol</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%e</span><span class="s2">ndblock AtomicCoordinatesAndAtomicSpecies&quot;</span><span class="p">)</span>
+
+    <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="n">xyz_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5000</span><span class="p">,</span> <span class="mi">25</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">xyz</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">xyz_range</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">xyz</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">:</span>
+        <span class="n">num</span> <span class="o">=</span> <span class="s2">&quot;00000</span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">xyz</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">xyz</span> <span class="o">&lt;</span> <span class="mi">100</span><span class="p">:</span>
+        <span class="n">num</span> <span class="o">=</span> <span class="s2">&quot;0000</span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">xyz</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">xyz</span> <span class="o">&lt;</span> <span class="mi">1000</span><span class="p">:</span>
+        <span class="n">num</span> <span class="o">=</span> <span class="s2">&quot;000</span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">xyz</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">xyz</span> <span class="o">&lt;</span> <span class="mi">10000</span><span class="p">:</span>
+        <span class="n">num</span> <span class="o">=</span> <span class="s2">&quot;00</span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">xyz</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;xyz too large?? </span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">xyz</span><span class="p">))</span>
+
+    <span class="n">path</span> <span class="o">=</span> <span class="s2">&quot;calc_&quot;</span> <span class="o">+</span> <span class="n">num</span>
+    <span class="n">atoms</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="o">+</span><span class="n">num</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;xyz&quot;</span><span class="p">)</span>
+    <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s2">&quot;mkdir &quot;</span> <span class="o">+</span> <span class="n">path</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">write_geofdf</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">fname</span><span class="o">=</span><span class="n">path</span><span class="o">+</span><span class="s2">&quot;/geo.fdf&quot;</span><span class="p">)</span>
+    <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s2">&quot;cp siesta_C60.fdf &quot;</span> <span class="o">+</span> <span class="n">path</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s2">&quot;cp C.psf &quot;</span> <span class="o">+</span> <span class="n">path</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The script will generate the siesta input files in different trajectory, don’t forget to add in
+the xyz directory the <a class="reference external" href="siesta_C60.fdf">siesta input</a></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">SystemLabel</span>                <span class="n">siesta</span>
+<span class="n">PAO</span><span class="o">.</span><span class="n">EnergyShift</span>            <span class="mi">50</span> <span class="n">meV</span>
+<span class="n">PAO</span><span class="o">.</span><span class="n">BasisSize</span>              <span class="n">DZP</span>
+<span class="n">PAO</span><span class="o">.</span><span class="n">SoftDefault</span>            <span class="o">.</span><span class="n">true</span><span class="o">.</span>
+<span class="n">PAO</span><span class="o">.</span><span class="n">BasisType</span>              <span class="n">split</span>
+
+
+<span class="n">XC</span><span class="o">.</span><span class="n">functional</span>     <span class="n">GGA</span> 
+<span class="n">XC</span><span class="o">.</span><span class="n">authors</span>        <span class="n">PBE</span> 
+
+<span class="o">%</span><span class="n">include</span> <span class="s2">&quot;geo.fdf&quot;</span>
+
+<span class="n">AtomCoorFormatOut</span>  <span class="n">Ang</span>
+
+<span class="n">DM</span><span class="o">.</span><span class="n">MixingWeight</span>            <span class="mf">0.01</span>
+<span class="n">DM</span><span class="o">.</span><span class="n">Tolerance</span>               <span class="mf">0.0001</span>
+<span class="n">DM</span><span class="o">.</span><span class="n">MixingWeight</span>            <span class="mf">0.25</span>
+<span class="n">DM</span><span class="o">.</span><span class="n">NumberPulay</span>             <span class="mi">4</span>
+<span class="n">MaxSCFIterations</span>           <span class="mi">400</span>
+
+<span class="n">MD</span><span class="o">.</span><span class="n">TypeOfRun</span>               <span class="n">CG</span> 
+<span class="n">MD</span><span class="o">.</span><span class="n">NumCGsteps</span>              <span class="mi">0</span>
+<span class="n">MD</span><span class="o">.</span><span class="n">MaxForceTol</span>     <span class="mf">0.02</span>   <span class="n">eV</span><span class="o">/</span><span class="n">Ang</span>
+
+<span class="n">SolutionMethod</span>     <span class="n">Diagon</span>
+
+<span class="n">MeshCutOff</span>                <span class="mi">250</span> <span class="n">Ry</span>
+
+<span class="n">WriteCoorXmol</span>     <span class="o">.</span><span class="kc">True</span><span class="o">.</span>
+<span class="n">WriteDenchar</span>      <span class="o">.</span><span class="kc">True</span><span class="o">.</span>
+<span class="n">COOP</span><span class="o">.</span><span class="n">Write</span>        <span class="o">.</span><span class="kc">True</span><span class="o">.</span>
+<span class="n">XML</span><span class="o">.</span><span class="n">Write</span>         <span class="o">.</span><span class="kc">True</span><span class="o">.</span>
+</pre></div>
+</div>
+<dl class="simple">
+<dt>After running the xyz2fdf.py script you should have 200 folders containing the 3 input files,</dt><dd><ul class="simple">
+<li><p>siesta_C60.fdf</p></li>
+<li><p>geo.fdf</p></li>
+<li><p>C.psf</p></li>
+</ul>
+</dd>
+</dl>
+<p>I advise you to create a new folder, and to copy all the calculations input into this new folder:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">..</span>
+<span class="n">mkdir</span> <span class="n">calculations</span>
+<span class="n">cp</span> <span class="o">-</span><span class="n">r</span> <span class="n">xyz</span><span class="o">/</span><span class="n">calc_</span><span class="o">*</span> <span class="n">calculations</span>
+<span class="n">cd</span> <span class="n">calculations</span>
+</pre></div>
+</div>
+<p>Now we will need script to perform the siesta and nao calculations. Here, I will perform in total 50
+jobs, each running 4 calculations. Each jobs will be using 6 cpus. I’m assuming that you are using
+the Torque managing system. We will use two python script to perform the calculations,</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference external" href="submit_jobs.py">submit_jobs.py</a></p></li>
+<li><p><a class="reference external" href="calc_polarizability.py">calc_polarizability.py</a></p></li>
+</ul>
+</div></blockquote>
+<p>The first one is the script that you call in order to submit the 200 jobs and it call the second
+script <em>calc_polarizability.py</em>. This second script will perform the siesta and nao calculations
+for each configurations.</p>
+<p>submit_jobs.py:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+
+<span class="c1"># The bash script for Torque</span>
+<span class="n">script</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;#!/bin/bash  </span>
+<span class="s2">#PBS -q parallel</span>
+<span class="s2">#PBS -l nodes=1:ppn=6</span>
+<span class="s2">#PBS -l mem=5gb</span>
+<span class="s2">#PBS -l cput=400:00:00</span>
+<span class="s2">#PBS -N calc_C60</span>
+
+
+<span class="s2">ulimit -s unlimited</span>
+
+<span class="s2">export NPROCS=`wc -l &lt; $PBS_NODEFILE`</span>
+<span class="s2">export OMP_NUM_THREADS=$</span><span class="si">{NPROCS}</span><span class="s2"></span>
+<span class="s2">export PATH=&quot;/Path/To/Python/binary:$PATH&quot; </span>
+<span class="s2">export LD_LIBRARY_PATH=&quot;/Path/To/Needed/Library:$LD_LIBRARY_PATH&quot; # libxc, libcint, libxcfun</span>
+<span class="s2">export PYTHONPATH=&quot;/Path/To/Pyscf:$PYTHONPATH&quot;</span>
+
+<span class="s2"># ASE necessay for using ase.units</span>
+<span class="s2">#ASE</span>
+<span class="s2">export ASE_HOME=/Path/To/ASE</span>
+<span class="s2">export PYTHONPATH=&quot;$</span><span class="si">{ASE_HOME}</span><span class="s2">:$PYTHONPATH&quot;</span>
+<span class="s2">export PATH=&quot;$</span><span class="si">{ASE_HOME}</span><span class="s2">/tools:$PATH&quot;</span>
+
+<span class="s2"># you may need to change the job directory</span>
+<span class="s2">export LSCRATCH_DIR=/scratch/$USER/jobs/$PBS_JOBID</span>
+<span class="s2">mkdir -p $LSCRATCH_DIR</span>
+<span class="s2">cd $PBS_O_WORKDIR</span>
+
+<span class="s2"># load the right module depending your pyscfi/siesta compilation</span>
+<span class="s2"># you better to use the same compiler for both program to avoid problems</span>
+<span class="s2">ml purge</span>
+<span class="s2">ml load intel/2015b FFTW/3.3.4-intel-2015b</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="c1"># the range of our 200 calculations</span>
+<span class="n">xyz_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5000</span><span class="p">,</span> <span class="mi">25</span><span class="p">)</span>
+
+<span class="n">start</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">step</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">end</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="k">while</span> <span class="n">end</span> <span class="o">&lt;</span> <span class="n">xyz_range</span><span class="o">.</span><span class="n">size</span><span class="p">:</span>
+    
+    <span class="n">end</span> <span class="o">=</span> <span class="n">start</span> <span class="o">+</span> <span class="n">step</span>
+    <span class="k">if</span> <span class="n">end</span> <span class="o">&gt;</span> <span class="n">xyz_range</span><span class="o">.</span><span class="n">size</span><span class="p">:</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="n">xyz_range</span><span class="o">.</span><span class="n">size</span> <span class="o">+</span> <span class="mi">1</span>
+
+    <span class="n">calcs</span> <span class="o">=</span> <span class="n">xyz_range</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span>
+    <span class="n">include</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;calc_polarizability.py&quot;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">xyz</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">calcs</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">calcs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]]):</span>
+        <span class="k">if</span> <span class="n">xyz</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">:</span>
+            <span class="n">num</span> <span class="o">=</span> <span class="s2">&quot;00000</span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">xyz</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">xyz</span> <span class="o">&lt;</span> <span class="mi">100</span><span class="p">:</span>
+            <span class="n">num</span> <span class="o">=</span> <span class="s2">&quot;0000</span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">xyz</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">xyz</span> <span class="o">&lt;</span> <span class="mi">1000</span><span class="p">:</span>
+            <span class="n">num</span> <span class="o">=</span> <span class="s2">&quot;000</span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">xyz</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">xyz</span> <span class="o">&lt;</span> <span class="mi">10000</span><span class="p">:</span>
+            <span class="n">num</span> <span class="o">=</span> <span class="s2">&quot;00</span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">xyz</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;xyz too large?? </span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">xyz</span><span class="p">))</span>
+        <span class="n">include</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;calc_&quot;</span><span class="o">+</span><span class="n">num</span><span class="p">)</span>
+
+    <span class="n">fcalc</span> <span class="o">=</span> <span class="n">calcs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">ecalc</span> <span class="o">=</span> <span class="n">calcs</span><span class="p">[</span><span class="n">calcs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="mi">25</span>
+
+    <span class="n">lines</span> <span class="o">=</span> <span class="n">script</span>
+    <span class="k">for</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">include</span><span class="p">:</span>
+        <span class="n">lines</span> <span class="o">+=</span> <span class="s2">&quot;cp -r &quot;</span> <span class="o">+</span> <span class="n">files</span> <span class="o">+</span> <span class="s2">&quot; $LSCRATCH_DIR</span><span class="se">\n</span><span class="s2">&quot;</span>
+        
+    <span class="n">lines</span> <span class="o">+=</span> <span class="s2">&quot;cd $LSCRATCH_DIR</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="n">lines</span> <span class="o">+=</span> <span class="s2">&quot;./calc_polarizability.py --np $</span><span class="si">{NPROCS}</span><span class="s2"> &quot;</span> <span class="o">+</span> <span class="s2">&quot;--start </span><span class="si">{0}</span><span class="s2"> --end </span><span class="si">{1}</span><span class="s2"> &gt;&amp; calc_</span><span class="si">{0}</span><span class="s2">to</span><span class="si">{1}</span><span class="s2">.out</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fcalc</span><span class="p">,</span> <span class="n">ecalc</span><span class="p">)</span>
+
+    <span class="n">lines</span> <span class="o">+=</span> <span class="s2">&quot;export RESULTS_DIR=$PBS_O_WORKDIR</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="n">lines</span> <span class="o">+=</span> <span class="s2">&quot;mkdir -p $RESULTS_DIR</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="n">lines</span> <span class="o">+=</span> <span class="s2">&quot;cp -r * $RESULTS_DIR</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="n">fname</span> <span class="o">=</span> <span class="s2">&quot;run.calc_C60_</span><span class="si">{0}</span><span class="s2">to_</span><span class="si">{1}</span><span class="s2">.sh&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fcalc</span><span class="p">,</span> <span class="n">ecalc</span><span class="p">)</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span> <span class="c1"># write bash script</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">end</span>
+    
+    <span class="c1"># submit job to Torque</span>
+    <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s2">&quot;qsub &quot;</span> <span class="o">+</span> <span class="n">fname</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>calc_polarizability.py</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/Path/To/Python/binary</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span>
+<span class="kn">import</span> <span class="nn">os</span><span class="o">,</span><span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">pyscf.nao</span> <span class="k">import</span> <span class="n">tddft_iter</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">from</span> <span class="nn">ase.units</span> <span class="k">import</span> <span class="n">Ry</span><span class="p">,</span> <span class="n">eV</span><span class="p">,</span> <span class="n">Ha</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">from</span> <span class="nn">timeit</span> <span class="k">import</span> <span class="n">default_timer</span> <span class="k">as</span> <span class="n">timer</span>
+
+<span class="k">def</span> <span class="nf">run_tddft_iter</span><span class="p">():</span>
+  <span class="n">t1</span> <span class="o">=</span> <span class="n">timer</span><span class="p">()</span>
+  <span class="n">td</span> <span class="o">=</span> <span class="n">tddft_iter</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;siesta&quot;</span><span class="p">,</span> <span class="n">iter_broadening</span><span class="o">=</span><span class="mf">0.0035</span><span class="o">/</span><span class="n">Ha</span><span class="p">,</span> <span class="n">xc_code</span><span class="o">=</span><span class="s1">&#39;LDA,PZ&#39;</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">tddft_iter_tol</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span> <span class="n">tol_loc</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span> <span class="n">tol_biloc</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>
+  <span class="n">t2</span> <span class="o">=</span> <span class="n">timer</span><span class="p">()</span>
+  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;time tddft_iter = &quot;</span><span class="p">,</span> <span class="n">t2</span><span class="o">-</span><span class="n">t1</span><span class="p">)</span>
+  <span class="n">omegas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">8.0</span><span class="p">,</span> <span class="mf">2.5E-3</span><span class="p">)</span><span class="o">/</span><span class="n">Ha</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">td</span><span class="o">.</span><span class="n">eps</span>
+  <span class="n">t3</span> <span class="o">=</span> <span class="n">timer</span><span class="p">()</span>
+  <span class="n">pxx</span> <span class="o">=</span> <span class="o">-</span><span class="n">td</span><span class="o">.</span><span class="n">comp_polariz_nonin_ave</span><span class="p">(</span><span class="n">omegas</span><span class="p">)</span>
+  <span class="n">t4</span> <span class="o">=</span> <span class="n">timer</span><span class="p">()</span>
+  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;time chi0 = &quot;</span><span class="p">,</span> <span class="n">t4</span><span class="o">-</span><span class="n">t3</span><span class="p">)</span>
+
+  <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">omegas</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">3</span><span class="p">))</span>
+  <span class="n">data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">omegas</span><span class="o">.</span><span class="n">real</span><span class="o">*</span><span class="n">Ha</span>
+  <span class="n">data</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">pxx</span><span class="o">.</span><span class="n">real</span>
+  <span class="n">data</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">pxx</span><span class="o">.</span><span class="n">imag</span>
+  <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="s1">&#39;polarizability_nonin_siesta.avg.txt&#39;</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+
+  <span class="n">t5</span> <span class="o">=</span> <span class="n">timer</span><span class="p">()</span>
+  <span class="n">pxx</span> <span class="o">=</span> <span class="o">-</span><span class="n">td</span><span class="o">.</span><span class="n">comp_polariz_inter_ave</span><span class="p">(</span><span class="n">omegas</span><span class="p">)</span>
+  <span class="n">t6</span> <span class="o">=</span> <span class="n">timer</span><span class="p">()</span>
+  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;time chi = &quot;</span><span class="p">,</span> <span class="n">t6</span><span class="o">-</span><span class="n">t5</span><span class="p">)</span>
+  <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">omegas</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">3</span><span class="p">))</span>
+  <span class="n">data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">omegas</span><span class="o">.</span><span class="n">real</span><span class="o">*</span><span class="n">Ha</span>
+  <span class="n">data</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">pxx</span><span class="o">.</span><span class="n">real</span>
+  <span class="n">data</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">pxx</span><span class="o">.</span><span class="n">imag</span>
+  <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="s1">&#39;polarizability_inter_siesta.avg.txt&#39;</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;nb call:&quot;</span><span class="p">)</span>
+  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;rf0_ncalls = </span><span class="si">{0}</span><span class="s2">, matvec_ncalls =</span><span class="si">{1}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">td</span><span class="o">.</span><span class="n">rf0_ncalls</span><span class="p">,</span> <span class="n">td</span><span class="o">.</span><span class="n">matvec_ncalls</span><span class="p">))</span>
+  <span class="n">t7</span> <span class="o">=</span> <span class="n">timer</span><span class="p">()</span>
+  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;total time = &quot;</span><span class="p">,</span> <span class="n">t7</span><span class="o">-</span><span class="n">t1</span><span class="p">)</span>
+
+<span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
+<span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--np&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;number of processor to use&quot;</span><span class="p">)</span>
+<span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--start&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;starting calc&quot;</span><span class="p">)</span>
+<span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--end&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;end calculation&quot;</span><span class="p">)</span>
+
+<span class="n">args_par</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+
+
+<span class="n">xyz_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">args_par</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">args_par</span><span class="o">.</span><span class="n">end</span><span class="p">,</span> <span class="mi">25</span><span class="p">)</span>
+<span class="n">mpi_exe</span><span class="o">=</span><span class="s2">&quot;/scratch/mbarbry/intel/intelpython2/bin/mpirun&quot;</span>
+<span class="n">siesta_path</span><span class="o">=</span><span class="s2">&quot;/scratch/software/SIESTA/4.0b-485-intel-2015b/siesta&quot;</span>
+
+<span class="n">siesta_exe</span> <span class="o">=</span> <span class="n">mpi_exe</span> <span class="o">+</span> <span class="s2">&quot; -np </span><span class="si">{0}</span><span class="s2"> &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">args_par</span><span class="o">.</span><span class="n">np</span><span class="p">)</span> <span class="o">+</span> <span class="n">siesta_path</span> <span class="o">+</span> <span class="s2">&quot; &lt; siesta.fdf &gt; siesta.out&quot;</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">xyz</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">xyz_range</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">xyz</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">:</span>
+        <span class="n">num</span> <span class="o">=</span> <span class="s2">&quot;00000</span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">xyz</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">xyz</span> <span class="o">&lt;</span> <span class="mi">100</span><span class="p">:</span>
+        <span class="n">num</span> <span class="o">=</span> <span class="s2">&quot;0000</span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">xyz</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">xyz</span> <span class="o">&lt;</span> <span class="mi">1000</span><span class="p">:</span>
+        <span class="n">num</span> <span class="o">=</span> <span class="s2">&quot;000</span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">xyz</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">xyz</span> <span class="o">&lt;</span> <span class="mi">10000</span><span class="p">:</span>
+        <span class="n">num</span> <span class="o">=</span> <span class="s2">&quot;00</span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">xyz</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;xyz too large?? </span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">xyz</span><span class="p">))</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="s2">&quot;calc_&quot;</span> <span class="o">+</span> <span class="n">num</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="c1"># Run siesta</span>
+    <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s2">&quot;export OMP_NUM_THREADS=1&quot;</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">siesta_exe</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Run pyscf.nao</span>
+    <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s2">&quot;export OMP_NUM_THREADS=</span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">args_par</span><span class="o">.</span><span class="n">np</span><span class="p">),</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">run_tddft_iter</span><span class="p">()</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="s2">&quot;../&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../../../modules.html" class="btn btn-neutral float-right" title="10. Main modules" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="ase.html" class="btn btn-neutral float-left" title="9.8.4.1.1. Interfacing with ASE and Siesta" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2015-2020, The PySCF Developers
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

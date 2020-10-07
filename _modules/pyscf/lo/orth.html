@@ -1,0 +1,544 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pyscf.lo.orth &mdash; PySCF 1.7.5 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> PySCF
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.7
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html">1. An overview of PySCF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../version.html">2. Version history</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">3. Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../code-rule.html">4. Code standard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../benchmark.html">5. Benchmark</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">6. Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../theory.html">7. Theoretical methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../advanced.html">8. Miscellaneous</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../interface.html">9. Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">10. Main modules</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">PySCF</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>pyscf.lo.orth</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pyscf.lo.orth</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># Copyright 2014-2020 The PySCF Developers. All Rights Reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+<span class="c1">#</span>
+<span class="c1">#     http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1">#</span>
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+<span class="c1">#</span>
+<span class="c1"># Author: Qiming Sun &lt;osirpt.sun@gmail.com&gt;</span>
+<span class="c1">#</span>
+
+<span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">reduce</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">import</span> <span class="nn">scipy.linalg</span>
+<span class="kn">from</span> <span class="nn">pyscf.lib</span> <span class="k">import</span> <span class="n">param</span>
+<span class="kn">from</span> <span class="nn">pyscf.lib</span> <span class="k">import</span> <span class="n">logger</span>
+<span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">gto</span>
+<span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">__config__</span>
+
+<span class="n">REF_BASIS</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">__config__</span><span class="p">,</span> <span class="s1">&#39;lo_orth_pre_orth_ao_method&#39;</span><span class="p">,</span> <span class="s1">&#39;ANO&#39;</span><span class="p">)</span>
+<span class="n">ORTH_METHOD</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">__config__</span><span class="p">,</span> <span class="s1">&#39;lo_orth_orth_ao_method&#39;</span><span class="p">,</span> <span class="s1">&#39;meta_lowdin&#39;</span><span class="p">)</span>
+<span class="n">PROJECT_ECP_BASIS</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">__config__</span><span class="p">,</span> <span class="s1">&#39;lo_orth_project_ecp_basis&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="lowdin"><a class="viewcode-back" href="../../../modules/lo.html#pyscf.lo.orth.lowdin">[docs]</a><span class="k">def</span> <span class="nf">lowdin</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39; new basis is |mu&gt; c^{lowdin}_{mu i} &#39;&#39;&#39;</span>
+    <span class="n">e</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigh</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+    <span class="n">idx</span> <span class="o">=</span> <span class="n">e</span> <span class="o">&gt;</span> <span class="mf">1e-15</span>
+    <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">v</span><span class="p">[:,</span><span class="n">idx</span><span class="p">]</span><span class="o">/</span><span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">e</span><span class="p">[</span><span class="n">idx</span><span class="p">]),</span> <span class="n">v</span><span class="p">[:,</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">conj</span><span class="p">()</span><span class="o">.</span><span class="n">T</span><span class="p">)</span></div>
+
+<span class="k">def</span> <span class="nf">schmidt</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">cholesky</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">scipy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">solve_triangular</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">lower</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                         <span class="n">overwrite_b</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">conj</span><span class="p">()</span><span class="o">.</span><span class="n">T</span>
+
+<div class="viewcode-block" id="vec_lowdin"><a class="viewcode-back" href="../../../modules/lo.html#pyscf.lo.orth.vec_lowdin">[docs]</a><span class="k">def</span> <span class="nf">vec_lowdin</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39; lowdin orth for the metric c.T*s*c and get x, then c*x&#39;&#39;&#39;</span>
+    <span class="c1">#u, w, vh = numpy.linalg.svd(c)</span>
+    <span class="c1">#return numpy.dot(u, vh)</span>
+    <span class="c1"># svd is slower than eigh</span>
+    <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">lowdin</span><span class="p">(</span><span class="n">reduce</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">,</span> <span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">conj</span><span class="p">()</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">s</span><span class="p">,</span><span class="n">c</span><span class="p">))))</span></div>
+
+<div class="viewcode-block" id="vec_schmidt"><a class="viewcode-back" href="../../../modules/lo.html#pyscf.lo.orth.vec_schmidt">[docs]</a><span class="k">def</span> <span class="nf">vec_schmidt</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39; schmidt orth for the metric c.T*s*c and get x, then c*x&#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">schmidt</span><span class="p">(</span><span class="n">reduce</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">,</span> <span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">conj</span><span class="p">()</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">s</span><span class="p">,</span><span class="n">c</span><span class="p">))))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">qr</span><span class="p">(</span><span class="n">c</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="weight_orth"><a class="viewcode-back" href="../../../modules/lo.html#pyscf.lo.orth.weight_orth">[docs]</a><span class="k">def</span> <span class="nf">weight_orth</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">weight</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39; new basis is |mu&gt; c_{mu i}, c = w[(wsw)^{-1/2}]&#39;&#39;&#39;</span>
+    <span class="n">s1</span> <span class="o">=</span> <span class="n">weight</span><span class="p">[:,</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">s</span> <span class="o">*</span> <span class="n">weight</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">lowdin</span><span class="p">(</span><span class="n">s1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">weight</span><span class="p">[:,</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">c</span></div>
+
+
+<div class="viewcode-block" id="pre_orth_ao"><a class="viewcode-back" href="../../../modules/lo.html#pyscf.lo.orth.pre_orth_ao">[docs]</a><span class="k">def</span> <span class="nf">pre_orth_ao</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">REF_BASIS</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Restore AO characters.  Possible methods include the ANO/MINAO</span>
+<span class="sd">    projection or fraction-averaged atomic RHF calculation&#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">method</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;ANO&#39;</span><span class="p">,</span> <span class="s1">&#39;MINAO&#39;</span><span class="p">):</span>
+        <span class="c1"># Use ANO/MINAO basis to define the strongly occupied set</span>
+        <span class="k">return</span> <span class="n">project_to_atomic_orbitals</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">method</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">pre_orth_ao_atm_scf</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span></div>
+<span class="n">restore_ao_character</span> <span class="o">=</span> <span class="n">pre_orth_ao</span>
+
+<div class="viewcode-block" id="project_to_atomic_orbitals"><a class="viewcode-back" href="../../../modules/lo.html#pyscf.lo.orth.project_to_atomic_orbitals">[docs]</a><span class="k">def</span> <span class="nf">project_to_atomic_orbitals</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">basname</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;projected AO = |bas&gt;&lt;bas|ANO&gt;</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="kn">from</span> <span class="nn">pyscf.scf.addons</span> <span class="k">import</span> <span class="n">project_mo_nr2nr</span>
+    <span class="kn">from</span> <span class="nn">pyscf.scf</span> <span class="k">import</span> <span class="n">atom_hf</span>
+    <span class="kn">from</span> <span class="nn">pyscf.gto.ecp</span> <span class="k">import</span> <span class="n">core_configuration</span>
+
+    <span class="k">def</span> <span class="nf">search_atm_l</span><span class="p">(</span><span class="n">atm</span><span class="p">,</span> <span class="n">l</span><span class="p">):</span>
+        <span class="n">bas_ang</span> <span class="o">=</span> <span class="n">atm</span><span class="o">.</span><span class="n">_bas</span><span class="p">[:,</span><span class="n">gto</span><span class="o">.</span><span class="n">ANG_OF</span><span class="p">]</span>
+        <span class="n">ao_loc</span> <span class="o">=</span> <span class="n">atm</span><span class="o">.</span><span class="n">ao_loc_nr</span><span class="p">()</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">ib</span> <span class="ow">in</span> <span class="n">numpy</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">bas_ang</span> <span class="o">==</span> <span class="n">l</span><span class="p">)[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">idx</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">ao_loc</span><span class="p">[</span><span class="n">ib</span><span class="p">],</span> <span class="n">ao_loc</span><span class="p">[</span><span class="n">ib</span><span class="o">+</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="k">return</span> <span class="n">idx</span>
+
+    <span class="c1"># Overlap of ANO and ECP basis</span>
+    <span class="k">def</span> <span class="nf">ecp_ano_det_ovlp</span><span class="p">(</span><span class="n">atm_ecp</span><span class="p">,</span> <span class="n">atm_ano</span><span class="p">,</span> <span class="n">ecpcore</span><span class="p">):</span>
+        <span class="n">ecp_ao_loc</span> <span class="o">=</span> <span class="n">atm_ecp</span><span class="o">.</span><span class="n">ao_loc_nr</span><span class="p">()</span>
+        <span class="n">ano_ao_loc</span> <span class="o">=</span> <span class="n">atm_ano</span><span class="o">.</span><span class="n">ao_loc_nr</span><span class="p">()</span>
+        <span class="n">ecp_ao_dim</span> <span class="o">=</span> <span class="n">ecp_ao_loc</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">-</span> <span class="n">ecp_ao_loc</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">ano_ao_dim</span> <span class="o">=</span> <span class="n">ano_ao_loc</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">-</span> <span class="n">ano_ao_loc</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">ecp_bas_l</span> <span class="o">=</span> <span class="p">[[</span><span class="n">atm_ecp</span><span class="o">.</span><span class="n">bas_angular</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span><span class="o">*</span><span class="n">d</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">d</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ecp_ao_dim</span><span class="p">)]</span>
+        <span class="n">ano_bas_l</span> <span class="o">=</span> <span class="p">[[</span><span class="n">atm_ano</span><span class="o">.</span><span class="n">bas_angular</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span><span class="o">*</span><span class="n">d</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">d</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ano_ao_dim</span><span class="p">)]</span>
+        <span class="n">ecp_bas_l</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">hstack</span><span class="p">(</span><span class="n">ecp_bas_l</span><span class="p">)</span>
+        <span class="n">ano_bas_l</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">hstack</span><span class="p">(</span><span class="n">ano_bas_l</span><span class="p">)</span>
+
+        <span class="n">nelec_core</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">ecp_occ_tmp</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">ecp_idx</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">ano_idx</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+            <span class="n">nocc</span><span class="p">,</span> <span class="n">frac</span> <span class="o">=</span> <span class="n">atom_hf</span><span class="o">.</span><span class="n">frac_occ</span><span class="p">(</span><span class="n">stdsymb</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span>
+            <span class="n">l_occ</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="p">((</span><span class="n">nocc</span><span class="o">-</span><span class="n">ecpcore</span><span class="p">[</span><span class="n">l</span><span class="p">])</span><span class="o">*</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">l</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">frac</span> <span class="o">&gt;</span> <span class="mf">1e-15</span><span class="p">:</span>
+                <span class="n">l_occ</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">frac</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">l</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+                <span class="n">nocc</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">nocc</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">break</span>
+            <span class="n">nelec_core</span> <span class="o">+=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">ecpcore</span><span class="p">[</span><span class="n">l</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">l</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">i0</span> <span class="o">=</span> <span class="n">ecpcore</span><span class="p">[</span><span class="n">l</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">l</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">i1</span> <span class="o">=</span> <span class="n">nocc</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">l</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">ecp_idx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">ecp_bas_l</span><span class="o">==</span><span class="n">l</span><span class="p">)[</span><span class="mi">0</span><span class="p">][:</span><span class="n">i1</span><span class="o">-</span><span class="n">i0</span><span class="p">])</span>
+            <span class="n">ano_idx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">ano_bas_l</span><span class="o">==</span><span class="n">l</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="n">i0</span><span class="p">:</span><span class="n">i1</span><span class="p">])</span>
+            <span class="n">ecp_occ_tmp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">l_occ</span><span class="p">[:</span><span class="n">i1</span><span class="o">-</span><span class="n">i0</span><span class="p">])</span>
+        <span class="n">ecp_idx</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">hstack</span><span class="p">(</span><span class="n">ecp_idx</span><span class="p">)</span>
+        <span class="n">ano_idx</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">hstack</span><span class="p">(</span><span class="n">ano_idx</span><span class="p">)</span>
+        <span class="n">ecp_occ</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">atm_ecp</span><span class="o">.</span><span class="n">nao_nr</span><span class="p">())</span>
+        <span class="n">ecp_occ</span><span class="p">[</span><span class="n">ecp_idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">hstack</span><span class="p">(</span><span class="n">ecp_occ_tmp</span><span class="p">)</span>
+        <span class="n">nelec_valence_left</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">gto</span><span class="o">.</span><span class="n">charge</span><span class="p">(</span><span class="n">stdsymb</span><span class="p">)</span> <span class="o">-</span> <span class="n">nelec_core</span>
+                                 <span class="o">-</span> <span class="nb">sum</span><span class="p">(</span><span class="n">ecp_occ</span><span class="p">[</span><span class="n">ecp_idx</span><span class="p">]))</span>
+        <span class="k">if</span> <span class="n">nelec_valence_left</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="s1">&#39;Characters of </span><span class="si">%d</span><span class="s1"> valence electrons are not identified.</span><span class="se">\n</span><span class="s1">&#39;</span>
+                        <span class="s1">&#39;It can affect the &quot;meta-lowdin&quot; localization method &#39;</span>
+                        <span class="s1">&#39;and the population analysis of SCF method.</span><span class="se">\n</span><span class="s1">&#39;</span>
+                        <span class="s1">&#39;Adjustment to the core/valence partition may be needed &#39;</span>
+                        <span class="s1">&#39;(see function lo.nao.set_atom_conf)</span><span class="se">\n</span><span class="s1">to get reasonable &#39;</span>
+                        <span class="s1">&#39;local orbitals or Mulliken population.</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span>
+                        <span class="n">nelec_valence_left</span><span class="p">)</span>
+            <span class="c1"># Return 0 to force the projection to ANO basis</span>
+            <span class="k">return</span> <span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">s12</span> <span class="o">=</span> <span class="n">gto</span><span class="o">.</span><span class="n">intor_cross</span><span class="p">(</span><span class="s1">&#39;int1e_ovlp&#39;</span><span class="p">,</span> <span class="n">atm_ecp</span><span class="p">,</span> <span class="n">atm_ano</span><span class="p">)[</span><span class="n">ecp_idx</span><span class="p">][:,</span><span class="n">ano_idx</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">det</span><span class="p">(</span><span class="n">s12</span><span class="p">)</span>
+
+    <span class="n">nelec_ecp_dic</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">ia</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">mol</span><span class="o">.</span><span class="n">natm</span><span class="p">):</span>
+        <span class="n">symb</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">atom_symbol</span><span class="p">(</span><span class="n">ia</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">symb</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">nelec_ecp_dic</span><span class="p">:</span>
+            <span class="n">nelec_ecp_dic</span><span class="p">[</span><span class="n">symb</span><span class="p">]</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">atom_nelec_core</span><span class="p">(</span><span class="n">ia</span><span class="p">)</span>
+
+    <span class="n">aos</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">atm</span> <span class="o">=</span> <span class="n">gto</span><span class="o">.</span><span class="n">Mole</span><span class="p">()</span>
+    <span class="n">atmp</span> <span class="o">=</span> <span class="n">gto</span><span class="o">.</span><span class="n">Mole</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">symb</span> <span class="ow">in</span> <span class="n">mol</span><span class="o">.</span><span class="n">_basis</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">stdsymb</span> <span class="o">=</span> <span class="n">gto</span><span class="o">.</span><span class="n">mole</span><span class="o">.</span><span class="n">_std_symbol</span><span class="p">(</span><span class="n">symb</span><span class="p">)</span>
+        <span class="n">atm</span><span class="o">.</span><span class="n">_atm</span><span class="p">,</span> <span class="n">atm</span><span class="o">.</span><span class="n">_bas</span><span class="p">,</span> <span class="n">atm</span><span class="o">.</span><span class="n">_env</span> <span class="o">=</span> \
+                <span class="n">atm</span><span class="o">.</span><span class="n">make_env</span><span class="p">([[</span><span class="n">stdsymb</span><span class="p">,(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)]],</span> <span class="p">{</span><span class="n">stdsymb</span><span class="p">:</span><span class="n">mol</span><span class="o">.</span><span class="n">_basis</span><span class="p">[</span><span class="n">symb</span><span class="p">]},</span> <span class="p">[])</span>
+        <span class="n">atm</span><span class="o">.</span><span class="n">cart</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">cart</span>
+        <span class="n">atm</span><span class="o">.</span><span class="n">_built</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">s0</span> <span class="o">=</span> <span class="n">atm</span><span class="o">.</span><span class="n">intor_symmetric</span><span class="p">(</span><span class="s1">&#39;int1e_ovlp&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">gto</span><span class="o">.</span><span class="n">is_ghost_atom</span><span class="p">(</span><span class="n">symb</span><span class="p">):</span>
+            <span class="n">aos</span><span class="p">[</span><span class="n">symb</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="mf">1.</span><span class="o">/</span><span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">s0</span><span class="o">.</span><span class="n">diagonal</span><span class="p">()))</span>
+            <span class="k">continue</span>
+
+        <span class="n">basis_add</span> <span class="o">=</span> <span class="n">gto</span><span class="o">.</span><span class="n">basis</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">basname</span><span class="p">,</span> <span class="n">stdsymb</span><span class="p">)</span>
+        <span class="n">atmp</span><span class="o">.</span><span class="n">_atm</span><span class="p">,</span> <span class="n">atmp</span><span class="o">.</span><span class="n">_bas</span><span class="p">,</span> <span class="n">atmp</span><span class="o">.</span><span class="n">_env</span> <span class="o">=</span> \
+                <span class="n">atmp</span><span class="o">.</span><span class="n">make_env</span><span class="p">([[</span><span class="n">stdsymb</span><span class="p">,(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)]],</span> <span class="p">{</span><span class="n">stdsymb</span><span class="p">:</span><span class="n">basis_add</span><span class="p">},</span> <span class="p">[])</span>
+        <span class="n">atmp</span><span class="o">.</span><span class="n">cart</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">cart</span>
+        <span class="n">atmp</span><span class="o">.</span><span class="n">_built</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">if</span> <span class="n">symb</span> <span class="ow">in</span> <span class="n">nelec_ecp_dic</span> <span class="ow">and</span> <span class="n">nelec_ecp_dic</span><span class="p">[</span><span class="n">symb</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># If ECP basis has good atomic character, ECP basis can be used in the</span>
+            <span class="c1"># localization/population analysis directly. Otherwise project ECP</span>
+            <span class="c1"># basis to ANO basis.</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">PROJECT_ECP_BASIS</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="n">ecpcore</span> <span class="o">=</span> <span class="n">core_configuration</span><span class="p">(</span><span class="n">nelec_ecp_dic</span><span class="p">[</span><span class="n">symb</span><span class="p">])</span>
+            <span class="c1"># Comparing to ANO valence basis, to check whether the ECP basis set has</span>
+            <span class="c1"># reasonable AO-character contraction.  The ANO valence AO should have</span>
+            <span class="c1"># significant overlap to ECP basis if the ECP basis has AO-character.</span>
+            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">ecp_ano_det_ovlp</span><span class="p">(</span><span class="n">atm</span><span class="p">,</span> <span class="n">atmp</span><span class="p">,</span> <span class="n">ecpcore</span><span class="p">))</span> <span class="o">&gt;</span> <span class="o">.</span><span class="mi">1</span><span class="p">:</span>
+                <span class="n">aos</span><span class="p">[</span><span class="n">symb</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="mf">1.</span><span class="o">/</span><span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">s0</span><span class="o">.</span><span class="n">diagonal</span><span class="p">()))</span>
+                <span class="k">continue</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ecpcore</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">4</span>
+
+        <span class="c1"># MINAO for heavier elements needs to be used with pseudo potential</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">basname</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;MINAO&#39;</span> <span class="ow">and</span>
+            <span class="n">gto</span><span class="o">.</span><span class="n">charge</span><span class="p">(</span><span class="n">stdsymb</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">36</span> <span class="ow">and</span> <span class="n">symb</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">nelec_ecp_dic</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Basis MINAO has to be used with ecp for heavy elements&#39;</span><span class="p">)</span>
+
+        <span class="n">ano</span> <span class="o">=</span> <span class="n">project_mo_nr2nr</span><span class="p">(</span><span class="n">atmp</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">atmp</span><span class="o">.</span><span class="n">nao_nr</span><span class="p">()),</span> <span class="n">atm</span><span class="p">)</span>
+        <span class="n">rm_ano</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">ano</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">-</span> <span class="n">reduce</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">,</span> <span class="p">(</span><span class="n">ano</span><span class="p">,</span> <span class="n">ano</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">s0</span><span class="p">))</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">rm_ano</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">L_MAX</span><span class="p">):</span>
+            <span class="n">idx</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">search_atm_l</span><span class="p">(</span><span class="n">atm</span><span class="p">,</span> <span class="n">l</span><span class="p">))</span>
+            <span class="n">nbf_atm_l</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">nbf_atm_l</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">break</span>
+
+            <span class="n">idxp</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">search_atm_l</span><span class="p">(</span><span class="n">atmp</span><span class="p">,</span> <span class="n">l</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">l</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">:</span>
+                <span class="n">idxp</span> <span class="o">=</span> <span class="n">idxp</span><span class="p">[</span><span class="n">ecpcore</span><span class="p">[</span><span class="n">l</span><span class="p">]:]</span>
+            <span class="n">nbf_ano_l</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">idxp</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">mol</span><span class="o">.</span><span class="n">cart</span><span class="p">:</span>
+                <span class="n">degen</span> <span class="o">=</span> <span class="p">(</span><span class="n">l</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">l</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">degen</span> <span class="o">=</span> <span class="n">l</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span>
+
+            <span class="k">if</span> <span class="n">nbf_atm_l</span> <span class="o">&gt;</span> <span class="n">nbf_ano_l</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="c1"># For angular l, first place the projected ANO, then the rest AOs.</span>
+                <span class="n">sdiag</span> <span class="o">=</span> <span class="n">reduce</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">,</span> <span class="p">(</span><span class="n">rm_ano</span><span class="p">[:,</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">s0</span><span class="p">,</span> <span class="n">rm_ano</span><span class="p">[:,</span><span class="n">idx</span><span class="p">]))</span><span class="o">.</span><span class="n">diagonal</span><span class="p">()</span>
+                <span class="n">nleft</span> <span class="o">=</span> <span class="p">(</span><span class="n">nbf_atm_l</span> <span class="o">-</span> <span class="n">nbf_ano_l</span><span class="p">)</span> <span class="o">//</span> <span class="n">degen</span>
+                <span class="n">shell_average</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;ij-&gt;i&#39;</span><span class="p">,</span> <span class="n">sdiag</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">degen</span><span class="p">))</span>
+                <span class="n">shell_rest</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="o">-</span><span class="n">shell_average</span><span class="p">)[:</span><span class="n">nleft</span><span class="p">]</span>
+                <span class="n">idx_rest</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">shell_rest</span><span class="p">:</span>
+                    <span class="n">idx_rest</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">idx</span><span class="p">[</span><span class="n">k</span><span class="o">*</span><span class="n">degen</span><span class="p">:(</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">degen</span><span class="p">])</span>
+                <span class="n">c</span><span class="p">[:,</span><span class="n">idx</span><span class="p">[:</span><span class="n">nbf_ano_l</span><span class="p">]]</span> <span class="o">=</span> <span class="n">ano</span><span class="p">[:,</span><span class="n">idxp</span><span class="p">]</span>
+                <span class="n">c</span><span class="p">[:,</span><span class="n">idx</span><span class="p">[</span><span class="n">nbf_ano_l</span><span class="p">:]]</span> <span class="o">=</span> <span class="n">rm_ano</span><span class="p">[:,</span><span class="n">idx_rest</span><span class="p">]</span>
+            <span class="k">elif</span> <span class="n">nbf_ano_l</span> <span class="o">&gt;=</span> <span class="n">nbf_atm_l</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># More ANOs than the mol basis functions</span>
+                <span class="n">c</span><span class="p">[:,</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">ano</span><span class="p">[:,</span><span class="n">idxp</span><span class="p">[:</span><span class="n">nbf_atm_l</span><span class="p">]]</span>
+        <span class="n">sdiag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;pi,pq,qi-&gt;i&#39;</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">s0</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+        <span class="n">c</span> <span class="o">*=</span> <span class="mf">1.</span><span class="o">/</span><span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">sdiag</span><span class="p">)</span>
+        <span class="n">aos</span><span class="p">[</span><span class="n">symb</span><span class="p">]</span> <span class="o">=</span> <span class="n">c</span>
+
+    <span class="n">nao</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">nao_nr</span><span class="p">()</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nao</span><span class="p">,</span><span class="n">nao</span><span class="p">))</span>
+    <span class="n">p1</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">ia</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">mol</span><span class="o">.</span><span class="n">natm</span><span class="p">):</span>
+        <span class="n">symb</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">atom_symbol</span><span class="p">(</span><span class="n">ia</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">symb</span> <span class="ow">in</span> <span class="n">mol</span><span class="o">.</span><span class="n">_basis</span><span class="p">:</span>
+            <span class="n">ano</span> <span class="o">=</span> <span class="n">aos</span><span class="p">[</span><span class="n">symb</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ano</span> <span class="o">=</span> <span class="n">aos</span><span class="p">[</span><span class="n">mol</span><span class="o">.</span><span class="n">atom_pure_symbol</span><span class="p">(</span><span class="n">ia</span><span class="p">)]</span>
+        <span class="n">p0</span><span class="p">,</span> <span class="n">p1</span> <span class="o">=</span> <span class="n">p1</span><span class="p">,</span> <span class="n">p1</span> <span class="o">+</span> <span class="n">ano</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">c</span><span class="p">[</span><span class="n">p0</span><span class="p">:</span><span class="n">p1</span><span class="p">,</span><span class="n">p0</span><span class="p">:</span><span class="n">p1</span><span class="p">]</span> <span class="o">=</span> <span class="n">ano</span>
+    <span class="k">return</span> <span class="n">c</span></div>
+<span class="n">pre_orth_project_ano</span> <span class="o">=</span> <span class="n">project_to_atomic_orbitals</span>
+
+<span class="k">def</span> <span class="nf">pre_orth_ao_atm_scf</span><span class="p">(</span><span class="n">mol</span><span class="p">):</span>
+    <span class="k">assert</span><span class="p">(</span><span class="ow">not</span> <span class="n">mol</span><span class="o">.</span><span class="n">cart</span><span class="p">)</span>
+    <span class="kn">from</span> <span class="nn">pyscf.scf</span> <span class="k">import</span> <span class="n">atom_hf</span>
+    <span class="n">atm_scf</span> <span class="o">=</span> <span class="n">atom_hf</span><span class="o">.</span><span class="n">get_atm_nrhf</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span>
+    <span class="n">aoslice</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">aoslice_by_atom</span><span class="p">()</span>
+    <span class="n">coeff</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">ia</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">mol</span><span class="o">.</span><span class="n">natm</span><span class="p">):</span>
+        <span class="n">symb</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">atom_symbol</span><span class="p">(</span><span class="n">ia</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">symb</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">atm_scf</span><span class="p">:</span>
+            <span class="n">symb</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">atom_pure_symbol</span><span class="p">(</span><span class="n">ia</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">symb</span> <span class="ow">in</span> <span class="n">atm_scf</span><span class="p">:</span>
+            <span class="n">e_hf</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">occ</span> <span class="o">=</span> <span class="n">atm_scf</span><span class="p">[</span><span class="n">symb</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># symb&#39;s basis is not specified in the input</span>
+            <span class="n">nao_atm</span> <span class="o">=</span> <span class="n">aoslice</span><span class="p">[</span><span class="n">ia</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span> <span class="o">-</span> <span class="n">aoslice</span><span class="p">[</span><span class="n">ia</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nao_atm</span><span class="p">,</span> <span class="n">nao_atm</span><span class="p">))</span>
+        <span class="n">coeff</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">scipy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">block_diag</span><span class="p">(</span><span class="o">*</span><span class="n">coeff</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="orth_ao"><a class="viewcode-back" href="../../../modules/lo.html#pyscf.lo.orth.orth_ao">[docs]</a><span class="k">def</span> <span class="nf">orth_ao</span><span class="p">(</span><span class="n">mf_or_mol</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">ORTH_METHOD</span><span class="p">,</span> <span class="n">pre_orth_ao</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">scf_method</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">s</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Orthogonalize AOs</span>
+
+<span class="sd">    Kwargs:</span>
+<span class="sd">        method : str</span>
+<span class="sd">            One of</span>
+<span class="sd">            | lowdin : Symmetric orthogonalization</span>
+<span class="sd">            | meta-lowdin : Lowdin orth within core, valence, virtual space separately (JCTC, 10, 3784)</span>
+<span class="sd">            | NAO</span>
+
+<span class="sd">        pre_orth_ao: numpy.ndarray</span>
+<span class="sd">            Coefficients to restore AO characters for arbitrary basis. If not</span>
+<span class="sd">            given, the coefficients are generated based on ANO basis. You can</span>
+<span class="sd">            skip this by setting pre_orth_ao to identity matrix, e.g.  np.eye(mol.nao).</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="kn">from</span> <span class="nn">pyscf.lo</span> <span class="k">import</span> <span class="n">nao</span>
+    <span class="n">mf</span> <span class="o">=</span> <span class="n">scf_method</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mf_or_mol</span><span class="p">,</span> <span class="n">gto</span><span class="o">.</span><span class="n">Mole</span><span class="p">):</span>
+        <span class="n">mol</span> <span class="o">=</span> <span class="n">mf_or_mol</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">mol</span> <span class="o">=</span> <span class="n">mf_or_mol</span><span class="o">.</span><span class="n">mol</span>
+        <span class="k">if</span> <span class="n">mf</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">mf</span> <span class="o">=</span> <span class="n">mf_or_mol</span>
+
+    <span class="k">if</span> <span class="n">s</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="s1">&#39;pbc_intor&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>  <span class="c1"># whether mol object is a cell</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">pbc_intor</span><span class="p">(</span><span class="s1">&#39;int1e_ovlp&#39;</span><span class="p">,</span> <span class="n">hermi</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">intor_symmetric</span><span class="p">(</span><span class="s1">&#39;int1e_ovlp&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">pre_orth_ao</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">pre_orth_ao</span> <span class="o">=</span> <span class="n">project_to_atomic_orbitals</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">REF_BASIS</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">method</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;lowdin&#39;</span><span class="p">:</span>
+        <span class="n">s1</span> <span class="o">=</span> <span class="n">reduce</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">,</span> <span class="p">(</span><span class="n">pre_orth_ao</span><span class="o">.</span><span class="n">conj</span><span class="p">()</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">pre_orth_ao</span><span class="p">))</span>
+        <span class="n">c_orth</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">pre_orth_ao</span><span class="p">,</span> <span class="n">lowdin</span><span class="p">(</span><span class="n">s1</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="n">method</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;nao&#39;</span><span class="p">:</span>
+        <span class="k">assert</span><span class="p">(</span><span class="n">mf</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">c_orth</span> <span class="o">=</span> <span class="n">nao</span><span class="o">.</span><span class="n">nao</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">mf</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># meta_lowdin: partition AOs into core, valence and Rydberg sets,</span>
+        <span class="c1"># orthogonalizing within each set</span>
+        <span class="n">weight</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">pre_orth_ao</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">c_orth</span> <span class="o">=</span> <span class="n">nao</span><span class="o">.</span><span class="n">_nao_sub</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">weight</span><span class="p">,</span> <span class="n">pre_orth_ao</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+    <span class="c1"># adjust phase</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">c_orth</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+        <span class="k">if</span> <span class="n">c_orth</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">c_orth</span><span class="p">[:,</span><span class="n">i</span><span class="p">]</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="k">return</span> <span class="n">c_orth</span></div>
+
+<span class="k">del</span><span class="p">(</span><span class="n">ORTH_METHOD</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">scf</span>
+    <span class="kn">from</span> <span class="nn">pyscf.lo</span> <span class="k">import</span> <span class="n">nao</span>
+    <span class="n">mol</span> <span class="o">=</span> <span class="n">gto</span><span class="o">.</span><span class="n">Mole</span><span class="p">()</span>
+    <span class="n">mol</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">mol</span><span class="o">.</span><span class="n">output</span> <span class="o">=</span> <span class="s1">&#39;out_orth&#39;</span>
+    <span class="n">mol</span><span class="o">.</span><span class="n">atom</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span>
+        <span class="p">[</span><span class="s1">&#39;O&#39;</span> <span class="p">,</span> <span class="p">(</span><span class="mf">0.</span> <span class="p">,</span> <span class="mf">0.</span>     <span class="p">,</span> <span class="mf">0.</span><span class="p">)],</span>
+        <span class="p">[</span><span class="mi">1</span>   <span class="p">,</span> <span class="p">(</span><span class="mf">0.</span> <span class="p">,</span> <span class="o">-</span><span class="mf">0.757</span> <span class="p">,</span> <span class="mf">0.587</span><span class="p">)],</span>
+        <span class="p">[</span><span class="mi">1</span>   <span class="p">,</span> <span class="p">(</span><span class="mf">0.</span> <span class="p">,</span> <span class="mf">0.757</span>  <span class="p">,</span> <span class="mf">0.587</span><span class="p">)]</span> <span class="p">])</span>
+    <span class="n">mol</span><span class="o">.</span><span class="n">basis</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;H&#39;</span><span class="p">:</span> <span class="s1">&#39;6-31g&#39;</span><span class="p">,</span>
+                 <span class="s1">&#39;O&#39;</span><span class="p">:</span> <span class="s1">&#39;6-31g&#39;</span><span class="p">,}</span>
+    <span class="n">mol</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+
+    <span class="n">mf</span> <span class="o">=</span> <span class="n">scf</span><span class="o">.</span><span class="n">RHF</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span>
+    <span class="n">mf</span><span class="o">.</span><span class="n">scf</span><span class="p">()</span>
+
+    <span class="n">c0</span> <span class="o">=</span> <span class="n">nao</span><span class="o">.</span><span class="n">prenao</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">mf</span><span class="o">.</span><span class="n">make_rdm1</span><span class="p">())</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">orth_ao</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="s1">&#39;meta_lowdin&#39;</span><span class="p">,</span> <span class="n">c0</span><span class="p">)</span>
+
+    <span class="n">s</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">intor_symmetric</span><span class="p">(</span><span class="s1">&#39;int1e_ovlp_sph&#39;</span><span class="p">)</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">reduce</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">,</span> <span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">mf</span><span class="o">.</span><span class="n">make_rdm1</span><span class="p">(),</span> <span class="n">s</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">reduce</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">,</span> <span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">c</span><span class="p">))</span><span class="o">.</span><span class="n">diagonal</span><span class="p">())</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2015-2020, The PySCF Developers
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

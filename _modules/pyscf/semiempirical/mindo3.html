@@ -1,0 +1,613 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pyscf.semiempirical.mindo3 &mdash; PySCF 1.7.5 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> PySCF
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.7
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html">1. An overview of PySCF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../version.html">2. Version history</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">3. Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../code-rule.html">4. Code standard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../benchmark.html">5. Benchmark</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">6. Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../theory.html">7. Theoretical methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../advanced.html">8. Miscellaneous</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../interface.html">9. Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">10. Main modules</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">PySCF</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>pyscf.semiempirical.mindo3</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pyscf.semiempirical.mindo3</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1">#</span>
+<span class="c1"># Modified based on MINDO/3 implementation in PyQuante-1.6</span>
+<span class="c1">#</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">MINDO/3</span>
+
+<span class="sd">Ref:</span>
+<span class="sd">[1] R. C. Bingham, M. J. Dewar, D. H. Lo, J. Am. Chem. Soc., 97, 1285 (1975)</span>
+<span class="sd">[2] D. F. Lewis, Chem. Rev. 86, 1111 (1986).</span>
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">lib</span>
+<span class="kn">from</span> <span class="nn">pyscf.lib</span> <span class="k">import</span> <span class="n">logger</span>
+<span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">gto</span>
+<span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">scf</span>
+<span class="kn">from</span> <span class="nn">pyscf.data.elements</span> <span class="k">import</span> <span class="n">_symbol</span>
+<span class="kn">from</span> <span class="nn">pyscf.semiempirical</span> <span class="k">import</span> <span class="n">mopac_param</span>
+
+
+<div class="viewcode-block" id="get_hcore"><a class="viewcode-back" href="../../../modules/semiempirical.html#pyscf.semiempirical.mindo3.get_hcore">[docs]</a><span class="nd">@lib</span><span class="o">.</span><span class="n">with_doc</span><span class="p">(</span><span class="n">scf</span><span class="o">.</span><span class="n">hf</span><span class="o">.</span><span class="n">get_hcore</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">get_hcore</span><span class="p">(</span><span class="n">mol</span><span class="p">):</span>
+    <span class="k">assert</span><span class="p">(</span><span class="ow">not</span> <span class="n">mol</span><span class="o">.</span><span class="n">has_ecp</span><span class="p">())</span>
+    <span class="n">nao</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">nao</span>
+
+    <span class="n">atom_charges</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">atom_charges</span><span class="p">()</span>
+    <span class="n">basis_atom_charges</span> <span class="o">=</span> <span class="n">atom_charges</span><span class="p">[</span><span class="n">mol</span><span class="o">.</span><span class="n">_bas</span><span class="p">[:,</span><span class="n">gto</span><span class="o">.</span><span class="n">ATOM_OF</span><span class="p">]]</span>
+
+    <span class="n">basis_ip</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">basis_u</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">z</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">basis_atom_charges</span><span class="p">):</span>
+        <span class="n">l</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">bas_angular</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">l</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">basis_ip</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mopac_param</span><span class="o">.</span><span class="n">VS</span><span class="p">[</span><span class="n">z</span><span class="p">])</span>
+            <span class="n">basis_u</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mopac_param</span><span class="o">.</span><span class="n">USS3</span><span class="p">[</span><span class="n">z</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">basis_ip</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mopac_param</span><span class="o">.</span><span class="n">VP</span><span class="p">[</span><span class="n">z</span><span class="p">])</span>
+            <span class="n">basis_u</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mopac_param</span><span class="o">.</span><span class="n">UPP3</span><span class="p">[</span><span class="n">z</span><span class="p">])</span>
+
+    <span class="n">ao_atom_charges</span> <span class="o">=</span> <span class="n">_to_ao_labels</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">basis_atom_charges</span><span class="p">)</span>
+    <span class="n">ao_ip</span> <span class="o">=</span> <span class="n">_to_ao_labels</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">basis_ip</span><span class="p">)</span>
+
+    <span class="c1"># Off-diagonal terms</span>
+    <span class="n">hcore</span>  <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">intor</span><span class="p">(</span><span class="s1">&#39;int1e_ovlp&#39;</span><span class="p">)</span>
+    <span class="n">hcore</span> <span class="o">*=</span> <span class="n">ao_ip</span><span class="p">[:,</span><span class="kc">None</span><span class="p">]</span> <span class="o">+</span> <span class="n">ao_ip</span>
+    <span class="n">hcore</span> <span class="o">*=</span> <span class="n">_get_beta0</span><span class="p">(</span><span class="n">ao_atom_charges</span><span class="p">[:,</span><span class="kc">None</span><span class="p">],</span> <span class="n">ao_atom_charges</span><span class="p">)</span>
+
+    <span class="c1"># U term </span>
+    <span class="n">hcore</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">diag_indices</span><span class="p">(</span><span class="n">nao</span><span class="p">)]</span> <span class="o">=</span> <span class="n">_to_ao_labels</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">basis_u</span><span class="p">)</span>
+
+    <span class="c1"># Nuclear attraction</span>
+    <span class="n">gamma</span> <span class="o">=</span> <span class="n">_get_gamma</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span>
+    <span class="n">z_eff</span> <span class="o">=</span> <span class="n">mopac_param</span><span class="o">.</span><span class="n">CORE</span><span class="p">[</span><span class="n">atom_charges</span><span class="p">]</span>
+    <span class="n">vnuc</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;ij,j-&gt;i&#39;</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">z_eff</span><span class="p">)</span>
+
+    <span class="n">aoslices</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">aoslice_by_atom</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">ia</span><span class="p">,</span> <span class="p">(</span><span class="n">p0</span><span class="p">,</span> <span class="n">p1</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">aoslices</span><span class="p">[:,</span><span class="mi">2</span><span class="p">:]):</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">p0</span><span class="p">,</span> <span class="n">p1</span><span class="p">)</span>
+        <span class="n">hcore</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span><span class="n">idx</span><span class="p">]</span> <span class="o">-=</span> <span class="n">vnuc</span><span class="p">[</span><span class="n">ia</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">hcore</span></div>
+
+
+<div class="viewcode-block" id="get_jk"><a class="viewcode-back" href="../../../modules/semiempirical.html#pyscf.semiempirical.mindo3.get_jk">[docs]</a><span class="nd">@lib</span><span class="o">.</span><span class="n">with_doc</span><span class="p">(</span><span class="n">scf</span><span class="o">.</span><span class="n">hf</span><span class="o">.</span><span class="n">get_jk</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">get_jk</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">dm</span><span class="p">):</span>
+    <span class="n">dm</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">dm</span><span class="p">)</span>
+    <span class="n">dm_shape</span> <span class="o">=</span> <span class="n">dm</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">nao</span> <span class="o">=</span> <span class="n">dm_shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">dm</span> <span class="o">=</span> <span class="n">dm</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">nao</span><span class="p">,</span><span class="n">nao</span><span class="p">)</span>
+    <span class="n">vj</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">dm</span><span class="p">)</span>
+    <span class="n">vk</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">dm</span><span class="p">)</span>
+
+    <span class="c1"># One-center contributions to the J/K matrices</span>
+    <span class="n">atom_charges</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">atom_charges</span><span class="p">()</span>
+    <span class="n">jk_ints</span> <span class="o">=</span> <span class="p">{</span><span class="n">z</span><span class="p">:</span> <span class="n">_get_jk_1c_ints</span><span class="p">(</span><span class="n">z</span><span class="p">)</span> <span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">atom_charges</span><span class="p">)}</span>
+
+    <span class="n">aoslices</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">aoslice_by_atom</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">ia</span><span class="p">,</span> <span class="p">(</span><span class="n">p0</span><span class="p">,</span> <span class="n">p1</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">aoslices</span><span class="p">[:,</span><span class="mi">2</span><span class="p">:]):</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">atom_charges</span><span class="p">[</span><span class="n">ia</span><span class="p">]</span>
+        <span class="n">j_ints</span><span class="p">,</span> <span class="n">k_ints</span> <span class="o">=</span> <span class="n">jk_ints</span><span class="p">[</span><span class="n">z</span><span class="p">]</span>
+
+        <span class="n">dm_blk</span> <span class="o">=</span> <span class="n">dm</span><span class="p">[:,</span><span class="n">p0</span><span class="p">:</span><span class="n">p1</span><span class="p">,</span><span class="n">p0</span><span class="p">:</span><span class="n">p1</span><span class="p">]</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">p0</span><span class="p">,</span> <span class="n">p1</span><span class="p">)</span>
+
+        <span class="c1"># J[i,i] = (ii|jj)*dm_jj</span>
+        <span class="n">vj</span><span class="p">[:,</span><span class="n">idx</span><span class="p">,</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;ij,xjj-&gt;xi&#39;</span><span class="p">,</span> <span class="n">j_ints</span><span class="p">,</span> <span class="n">dm_blk</span><span class="p">)</span>
+        <span class="c1"># J[i,j] = (ij|ij)*dm_ji +  (ij|ji)*dm_ij</span>
+        <span class="n">vj</span><span class="p">[:,</span><span class="n">p0</span><span class="p">:</span><span class="n">p1</span><span class="p">,</span><span class="n">p0</span><span class="p">:</span><span class="n">p1</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">2</span><span class="o">*</span><span class="n">k_ints</span> <span class="o">*</span> <span class="n">dm_blk</span>
+
+        <span class="c1"># K[i,i] = (ij|ji)*dm_jj</span>
+        <span class="n">vk</span><span class="p">[:,</span><span class="n">idx</span><span class="p">,</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;ij,xjj-&gt;xi&#39;</span><span class="p">,</span> <span class="n">k_ints</span><span class="p">,</span> <span class="n">dm_blk</span><span class="p">)</span>
+        <span class="c1"># K[i,j] = (ii|jj)*dm_ij + (ij|ij)*dm_ji</span>
+        <span class="n">vk</span><span class="p">[:,</span><span class="n">p0</span><span class="p">:</span><span class="n">p1</span><span class="p">,</span><span class="n">p0</span><span class="p">:</span><span class="n">p1</span><span class="p">]</span> <span class="o">+=</span> <span class="p">(</span><span class="n">j_ints</span><span class="o">+</span><span class="n">k_ints</span><span class="p">)</span> <span class="o">*</span> <span class="n">dm_blk</span>
+
+    <span class="c1"># Two-center contributions to the J/K matrices</span>
+    <span class="n">gamma</span> <span class="o">=</span> <span class="n">_get_gamma</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span>
+    <span class="n">pop_atom</span> <span class="o">=</span> <span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;tii-&gt;t&#39;</span><span class="p">,</span> <span class="n">dm</span><span class="p">[:,</span><span class="n">p0</span><span class="p">:</span><span class="n">p1</span><span class="p">,</span><span class="n">p0</span><span class="p">:</span><span class="n">p1</span><span class="p">])</span>
+                <span class="k">for</span> <span class="n">p0</span><span class="p">,</span> <span class="n">p1</span> <span class="ow">in</span> <span class="n">aoslices</span><span class="p">[:,</span><span class="mi">2</span><span class="p">:]]</span>
+    <span class="n">vj_diag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;ij,jt-&gt;ti&#39;</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">pop_atom</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">ia</span><span class="p">,</span> <span class="p">(</span><span class="n">p0</span><span class="p">,</span> <span class="n">p1</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">aoslices</span><span class="p">[:,</span><span class="mi">2</span><span class="p">:]):</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">p0</span><span class="p">,</span> <span class="n">p1</span><span class="p">)</span>
+        <span class="n">vj</span><span class="p">[:,</span><span class="n">idx</span><span class="p">,</span><span class="n">idx</span><span class="p">]</span> <span class="o">+=</span> <span class="n">vj_diag</span><span class="p">[:,</span><span class="n">ia</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">ja</span><span class="p">,</span> <span class="p">(</span><span class="n">q0</span><span class="p">,</span> <span class="n">q1</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">aoslices</span><span class="p">[:,</span><span class="mi">2</span><span class="p">:]):</span>
+            <span class="n">vk</span><span class="p">[:,</span><span class="n">p0</span><span class="p">:</span><span class="n">p1</span><span class="p">,</span><span class="n">q0</span><span class="p">:</span><span class="n">q1</span><span class="p">]</span> <span class="o">+=</span> <span class="n">gamma</span><span class="p">[</span><span class="n">ia</span><span class="p">,</span><span class="n">ja</span><span class="p">]</span> <span class="o">*</span> <span class="n">dm</span><span class="p">[:,</span><span class="n">p0</span><span class="p">:</span><span class="n">p1</span><span class="p">,</span><span class="n">q0</span><span class="p">:</span><span class="n">q1</span><span class="p">]</span>
+
+    <span class="n">vj</span> <span class="o">=</span> <span class="n">vj</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">dm_shape</span><span class="p">)</span>
+    <span class="n">vk</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">dm_shape</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">vj</span><span class="p">,</span> <span class="n">vk</span></div>
+
+
+<span class="k">def</span> <span class="nf">energy_nuc</span><span class="p">(</span><span class="n">mol</span><span class="p">):</span>
+    <span class="n">atom_charges</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">atom_charges</span><span class="p">()</span>
+    <span class="n">atom_coords</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">atom_coords</span><span class="p">()</span>
+
+    <span class="n">distances</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">atom_coords</span><span class="p">[:,</span><span class="kc">None</span><span class="p">,:]</span> <span class="o">-</span> <span class="n">atom_coords</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">distances_in_AA</span> <span class="o">=</span> <span class="n">distances</span> <span class="o">*</span> <span class="n">lib</span><span class="o">.</span><span class="n">param</span><span class="o">.</span><span class="n">BOHR</span>
+    <span class="c1"># numerically exclude atomic self-interaction terms</span>
+    <span class="n">distances_in_AA</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">diag_indices</span><span class="p">(</span><span class="n">mol</span><span class="o">.</span><span class="n">natm</span><span class="p">)]</span> <span class="o">=</span> <span class="mf">1e60</span>
+
+    <span class="c1"># one atom is H, another atom is N or O</span>
+    <span class="n">where_NO</span> <span class="o">=</span> <span class="p">(</span><span class="n">atom_charges</span> <span class="o">==</span> <span class="mi">7</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">atom_charges</span> <span class="o">==</span> <span class="mi">8</span><span class="p">)</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">atom_charges</span><span class="p">[:,</span><span class="kc">None</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">where_NO</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">mask</span> <span class="o">|</span> <span class="n">mask</span><span class="o">.</span><span class="n">T</span>
+    <span class="n">scale</span> <span class="o">=</span> <span class="n">alpha</span> <span class="o">=</span> <span class="n">_get_alpha</span><span class="p">(</span><span class="n">atom_charges</span><span class="p">[:,</span><span class="kc">None</span><span class="p">],</span> <span class="n">atom_charges</span><span class="p">)</span>
+    <span class="n">scale</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">*=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">distances_in_AA</span><span class="p">[</span><span class="n">mask</span><span class="p">])</span>
+    <span class="n">scale</span><span class="p">[</span><span class="o">~</span><span class="n">mask</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">alpha</span><span class="p">[</span><span class="o">~</span><span class="n">mask</span><span class="p">]</span> <span class="o">*</span> <span class="n">distances_in_AA</span><span class="p">[</span><span class="o">~</span><span class="n">mask</span><span class="p">])</span>
+
+    <span class="n">gamma</span> <span class="o">=</span> <span class="n">_get_gamma</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span>
+    <span class="n">z_eff</span> <span class="o">=</span> <span class="n">mopac_param</span><span class="o">.</span><span class="n">CORE</span><span class="p">[</span><span class="n">atom_charges</span><span class="p">]</span>
+    <span class="n">e_nuc</span> <span class="o">=</span> <span class="o">.</span><span class="mi">5</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;i,ij,j-&gt;&#39;</span><span class="p">,</span> <span class="n">z_eff</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">z_eff</span><span class="p">)</span>
+    <span class="n">e_nuc</span> <span class="o">+=</span> <span class="o">.</span><span class="mi">5</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;i,j,ij,ij-&gt;&#39;</span><span class="p">,</span> <span class="n">z_eff</span><span class="p">,</span> <span class="n">z_eff</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span>
+                               <span class="n">mopac_param</span><span class="o">.</span><span class="n">E2</span><span class="o">/</span><span class="n">distances_in_AA</span> <span class="o">-</span> <span class="n">gamma</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">e_nuc</span>
+
+
+<div class="viewcode-block" id="get_init_guess"><a class="viewcode-back" href="../../../modules/semiempirical.html#pyscf.semiempirical.mindo3.get_init_guess">[docs]</a><span class="k">def</span> <span class="nf">get_init_guess</span><span class="p">(</span><span class="n">mol</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Average occupation density matrix&#39;&#39;&#39;</span>
+    <span class="n">aoslices</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">aoslice_by_atom</span><span class="p">()</span>
+    <span class="n">dm_diag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">mol</span><span class="o">.</span><span class="n">nao</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">ia</span><span class="p">,</span> <span class="p">(</span><span class="n">p0</span><span class="p">,</span> <span class="n">p1</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">aoslices</span><span class="p">[:,</span><span class="mi">2</span><span class="p">:]):</span>
+        <span class="n">z_eff</span> <span class="o">=</span> <span class="n">mopac_param</span><span class="o">.</span><span class="n">CORE</span><span class="p">[</span><span class="n">mol</span><span class="o">.</span><span class="n">atom_charge</span><span class="p">(</span><span class="n">ia</span><span class="p">)]</span>
+        <span class="n">dm_diag</span><span class="p">[</span><span class="n">p0</span><span class="p">:</span><span class="n">p1</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">z_eff</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">p1</span><span class="o">-</span><span class="n">p0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">dm_diag</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">energy_tot</span><span class="p">(</span><span class="n">mf</span><span class="p">,</span> <span class="n">dm</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">h1e</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vhf</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">mol</span> <span class="o">=</span> <span class="n">mf</span><span class="o">.</span><span class="n">_mindo_mol</span>
+    <span class="n">e_tot</span> <span class="o">=</span> <span class="n">mf</span><span class="o">.</span><span class="n">energy_elec</span><span class="p">(</span><span class="n">dm</span><span class="p">,</span> <span class="n">h1e</span><span class="p">,</span> <span class="n">vhf</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">mf</span><span class="o">.</span><span class="n">energy_nuc</span><span class="p">()</span>
+    <span class="n">e_ref</span> <span class="o">=</span> <span class="n">_get_reference_energy</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span>
+
+    <span class="n">mf</span><span class="o">.</span><span class="n">e_heat_formation</span> <span class="o">=</span> <span class="n">e_tot</span> <span class="o">*</span> <span class="n">mopac_param</span><span class="o">.</span><span class="n">HARTREE2KCAL</span> <span class="o">+</span> <span class="n">e_ref</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">mf</span><span class="p">,</span> <span class="s1">&#39;E(ref) = </span><span class="si">%.15g</span><span class="s1">  Heat of Formation = </span><span class="si">%.15g</span><span class="s1"> kcal/mol&#39;</span><span class="p">,</span>
+                 <span class="n">e_ref</span><span class="p">,</span> <span class="n">mf</span><span class="o">.</span><span class="n">e_heat_formation</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">e_tot</span><span class="o">.</span><span class="n">real</span>
+
+
+<div class="viewcode-block" id="RMINDO3"><a class="viewcode-back" href="../../../modules/semiempirical.html#pyscf.semiempirical.mindo3.RMINDO3">[docs]</a><span class="k">class</span> <span class="nc">RMINDO3</span><span class="p">(</span><span class="n">scf</span><span class="o">.</span><span class="n">hf</span><span class="o">.</span><span class="n">RHF</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;RHF-MINDO/3 for closed-shell systems&#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mol</span><span class="p">):</span>
+        <span class="n">scf</span><span class="o">.</span><span class="n">hf</span><span class="o">.</span><span class="n">RHF</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mol</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conv_tol</span> <span class="o">=</span> <span class="mf">1e-5</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">e_heat_formation</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_mindo_mol</span> <span class="o">=</span> <span class="n">_make_mindo_mol</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_keys</span><span class="o">.</span><span class="n">update</span><span class="p">([</span><span class="s1">&#39;e_heat_formation&#39;</span><span class="p">])</span>
+
+<div class="viewcode-block" id="RMINDO3.reset"><a class="viewcode-back" href="../../../modules/semiempirical.html#pyscf.semiempirical.mindo3.RMINDO3.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mol</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">mol</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mol</span> <span class="o">=</span> <span class="n">mol</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_mindo_mol</span> <span class="o">=</span> <span class="n">_make_mindo_mol</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+    <span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mol</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">mol</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="n">mol</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mol</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;=</span> <span class="n">logger</span><span class="o">.</span><span class="n">WARN</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">check_sanity</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_mindo_mol</span> <span class="o">=</span> <span class="n">_make_mindo_mol</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">get_ovlp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mol</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mindo_mol</span><span class="o">.</span><span class="n">nao</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_hcore</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mol</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">get_hcore</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mindo_mol</span><span class="p">)</span>
+
+<div class="viewcode-block" id="RMINDO3.get_jk"><a class="viewcode-back" href="../../../modules/semiempirical.html#pyscf.semiempirical.mindo3.RMINDO3.get_jk">[docs]</a>    <span class="nd">@lib</span><span class="o">.</span><span class="n">with_doc</span><span class="p">(</span><span class="n">get_jk</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">get_jk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mol</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dm</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">hermi</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">with_j</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">with_k</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">dm</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="n">dm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_rdm1</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">get_jk</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mindo_mol</span><span class="p">,</span> <span class="n">dm</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RMINDO3.get_occ"><a class="viewcode-back" href="../../../modules/semiempirical.html#pyscf.semiempirical.mindo3.RMINDO3.get_occ">[docs]</a>    <span class="k">def</span> <span class="nf">get_occ</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mo_energy</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mo_coeff</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">with</span> <span class="n">lib</span><span class="o">.</span><span class="n">temporary_env</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mol</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_mindo_mol</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">scf</span><span class="o">.</span><span class="n">hf</span><span class="o">.</span><span class="n">get_occ</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mo_energy</span><span class="p">,</span> <span class="n">mo_coeff</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">get_init_guess</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mol</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;minao&#39;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">get_init_guess</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mindo_mol</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">energy_nuc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">energy_nuc</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mindo_mol</span><span class="p">)</span>
+
+    <span class="n">energy_tot</span> <span class="o">=</span> <span class="n">energy_tot</span>
+
+    <span class="k">def</span> <span class="nf">_finalize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Hook for dumping results and clearing up the object.&#39;&#39;&#39;</span>
+        <span class="n">scf</span><span class="o">.</span><span class="n">hf</span><span class="o">.</span><span class="n">RHF</span><span class="o">.</span><span class="n">_finalize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="c1"># e_heat_formation was generated in SOSCF object.</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_scf&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span>
+            <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_scf</span><span class="p">,</span> <span class="s1">&#39;e_heat_formation&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">e_heat_formation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scf</span><span class="o">.</span><span class="n">e_heat_formation</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">note</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;Heat of formation = </span><span class="si">%.15g</span><span class="s1"> kcal/mol, </span><span class="si">%.15g</span><span class="s1"> Eh&#39;</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">e_heat_formation</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">e_heat_formation</span><span class="o">/</span><span class="n">mopac_param</span><span class="o">.</span><span class="n">HARTREE2KCAL</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="n">density_fit</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">x2c</span> <span class="o">=</span> <span class="n">x2c1e</span> <span class="o">=</span> <span class="n">sfx2c1e</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="RMINDO3.nuc_grad_method"><a class="viewcode-back" href="../../../modules/semiempirical.html#pyscf.semiempirical.mindo3.RMINDO3.nuc_grad_method">[docs]</a>    <span class="k">def</span> <span class="nf">nuc_grad_method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">rmindo3_grad</span>
+        <span class="k">return</span> <span class="n">rmindo3_grad</span><span class="o">.</span><span class="n">Gradients</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="UMINDO3"><a class="viewcode-back" href="../../../modules/semiempirical.html#pyscf.semiempirical.mindo3.UMINDO3">[docs]</a><span class="k">class</span> <span class="nc">UMINDO3</span><span class="p">(</span><span class="n">scf</span><span class="o">.</span><span class="n">uhf</span><span class="o">.</span><span class="n">UHF</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;UHF-MINDO/3 for open-shell systems&#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mol</span><span class="p">):</span>
+        <span class="n">scf</span><span class="o">.</span><span class="n">uhf</span><span class="o">.</span><span class="n">UHF</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mol</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conv_tol</span> <span class="o">=</span> <span class="mf">1e-5</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">e_heat_formation</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_mindo_mol</span> <span class="o">=</span> <span class="n">_make_mindo_mol</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_keys</span><span class="o">.</span><span class="n">update</span><span class="p">([</span><span class="s1">&#39;e_heat_formation&#39;</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mol</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">mol</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="n">mol</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mol</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;=</span> <span class="n">logger</span><span class="o">.</span><span class="n">WARN</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">check_sanity</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_mindo_mol</span> <span class="o">=</span> <span class="n">_make_mindo_mol</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nelec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mindo_mol</span><span class="o">.</span><span class="n">nelec</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">get_ovlp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mol</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mindo_mol</span><span class="o">.</span><span class="n">nao</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_hcore</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mol</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">get_hcore</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mindo_mol</span><span class="p">)</span>
+
+<div class="viewcode-block" id="UMINDO3.get_jk"><a class="viewcode-back" href="../../../modules/semiempirical.html#pyscf.semiempirical.mindo3.UMINDO3.get_jk">[docs]</a>    <span class="nd">@lib</span><span class="o">.</span><span class="n">with_doc</span><span class="p">(</span><span class="n">get_jk</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">get_jk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mol</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dm</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">hermi</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">with_j</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">with_k</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">dm</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="n">dm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_rdm1</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">get_jk</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mindo_mol</span><span class="p">,</span> <span class="n">dm</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="UMINDO3.get_occ"><a class="viewcode-back" href="../../../modules/semiempirical.html#pyscf.semiempirical.mindo3.UMINDO3.get_occ">[docs]</a>    <span class="k">def</span> <span class="nf">get_occ</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mo_energy</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mo_coeff</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">with</span> <span class="n">lib</span><span class="o">.</span><span class="n">temporary_env</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mol</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_mindo_mol</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">scf</span><span class="o">.</span><span class="n">uhf</span><span class="o">.</span><span class="n">get_occ</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mo_energy</span><span class="p">,</span> <span class="n">mo_coeff</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">get_init_guess</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mol</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;minao&#39;</span><span class="p">):</span>
+        <span class="n">dm</span> <span class="o">=</span> <span class="n">get_init_guess</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mindo_mol</span><span class="p">)</span> <span class="o">*</span> <span class="o">.</span><span class="mi">5</span>
+        <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">stack</span><span class="p">((</span><span class="n">dm</span><span class="p">,</span><span class="n">dm</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">energy_nuc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">energy_nuc</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mindo_mol</span><span class="p">)</span>
+
+    <span class="n">energy_tot</span> <span class="o">=</span> <span class="n">energy_tot</span>
+
+    <span class="k">def</span> <span class="nf">_finalize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Hook for dumping results and clearing up the object.&#39;&#39;&#39;</span>
+        <span class="n">scf</span><span class="o">.</span><span class="n">uhf</span><span class="o">.</span><span class="n">UHF</span><span class="o">.</span><span class="n">_finalize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="c1"># e_heat_formation was generated in SOSCF object.</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_scf&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span>
+            <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_scf</span><span class="p">,</span> <span class="s1">&#39;e_heat_formation&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">e_heat_formation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scf</span><span class="o">.</span><span class="n">e_heat_formation</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">note</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;Heat of formation = </span><span class="si">%.15g</span><span class="s1"> kcal/mol, </span><span class="si">%.15g</span><span class="s1"> Eh&#39;</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">e_heat_formation</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">e_heat_formation</span><span class="o">/</span><span class="n">mopac_param</span><span class="o">.</span><span class="n">HARTREE2KCAL</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="n">density_fit</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">x2c</span> <span class="o">=</span> <span class="n">x2c1e</span> <span class="o">=</span> <span class="n">sfx2c1e</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="UMINDO3.nuc_grad_method"><a class="viewcode-back" href="../../../modules/semiempirical.html#pyscf.semiempirical.mindo3.UMINDO3.nuc_grad_method">[docs]</a>    <span class="k">def</span> <span class="nf">nuc_grad_method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">umindo3_grad</span>
+        <span class="k">return</span> <span class="n">umindo3_grad</span><span class="o">.</span><span class="n">Gradients</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div></div>
+
+
+<span class="k">def</span> <span class="nf">_make_mindo_mol</span><span class="p">(</span><span class="n">mol</span><span class="p">):</span>
+    <span class="k">assert</span><span class="p">(</span><span class="ow">not</span> <span class="n">mol</span><span class="o">.</span><span class="n">has_ecp</span><span class="p">())</span>
+    <span class="k">def</span> <span class="nf">make_sto_6g</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">zeta</span><span class="p">):</span>
+        <span class="n">es</span> <span class="o">=</span> <span class="n">mopac_param</span><span class="o">.</span><span class="n">gexps</span><span class="p">[(</span><span class="n">n</span><span class="p">,</span> <span class="n">l</span><span class="p">)]</span>
+        <span class="n">cs</span> <span class="o">=</span> <span class="n">mopac_param</span><span class="o">.</span><span class="n">gcoefs</span><span class="p">[(</span><span class="n">n</span><span class="p">,</span> <span class="n">l</span><span class="p">)]</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">l</span><span class="p">]</span> <span class="o">+</span> <span class="p">[(</span><span class="n">e</span><span class="o">*</span><span class="n">zeta</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">es</span><span class="p">,</span> <span class="n">cs</span><span class="p">)]</span>
+
+    <span class="k">def</span> <span class="nf">principle_quantum_number</span><span class="p">(</span><span class="n">charge</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">charge</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">1</span>
+        <span class="k">elif</span> <span class="n">charge</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">2</span>
+        <span class="k">elif</span> <span class="n">charge</span> <span class="o">&lt;</span> <span class="mi">18</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">3</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">4</span>
+
+    <span class="n">mindo_mol</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span>
+    <span class="n">atom_charges</span> <span class="o">=</span> <span class="n">mindo_mol</span><span class="o">.</span><span class="n">atom_charges</span><span class="p">()</span>
+    <span class="n">atom_types</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">atom_charges</span><span class="p">)</span>
+    <span class="n">basis_set</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">charge</span> <span class="ow">in</span> <span class="n">atom_types</span><span class="p">:</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">principle_quantum_number</span><span class="p">(</span><span class="n">charge</span><span class="p">)</span>
+        <span class="n">l</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">sto_6g_function</span> <span class="o">=</span> <span class="n">make_sto_6g</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">mopac_param</span><span class="o">.</span><span class="n">ZS3</span><span class="p">[</span><span class="n">charge</span><span class="p">])</span>
+        <span class="n">basis</span> <span class="o">=</span> <span class="p">[</span><span class="n">sto_6g_function</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">charge</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>  <span class="c1"># include p functions</span>
+            <span class="n">l</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">sto_6g_function</span> <span class="o">=</span> <span class="n">make_sto_6g</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">mopac_param</span><span class="o">.</span><span class="n">ZP3</span><span class="p">[</span><span class="n">charge</span><span class="p">])</span>
+            <span class="n">basis</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sto_6g_function</span><span class="p">)</span>
+
+        <span class="n">basis_set</span><span class="p">[</span><span class="n">_symbol</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">charge</span><span class="p">))]</span> <span class="o">=</span> <span class="n">basis</span>
+    <span class="n">mindo_mol</span><span class="o">.</span><span class="n">basis</span> <span class="o">=</span> <span class="n">basis_set</span>
+
+    <span class="n">z_eff</span> <span class="o">=</span> <span class="n">mopac_param</span><span class="o">.</span><span class="n">CORE</span><span class="p">[</span><span class="n">atom_charges</span><span class="p">]</span>
+    <span class="n">mindo_mol</span><span class="o">.</span><span class="n">nelectron</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">z_eff</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">-</span> <span class="n">mol</span><span class="o">.</span><span class="n">charge</span><span class="p">)</span>
+
+    <span class="n">mindo_mol</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">mindo_mol</span>
+
+
+<span class="k">def</span> <span class="nf">_to_ao_labels</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">labels</span><span class="p">):</span>
+    <span class="n">ao_loc</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">ao_loc</span>
+    <span class="n">degen</span> <span class="o">=</span> <span class="n">ao_loc</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">-</span> <span class="n">ao_loc</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">ao_labels</span> <span class="o">=</span> <span class="p">[[</span><span class="n">label</span><span class="p">]</span><span class="o">*</span><span class="n">n</span> <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">degen</span><span class="p">)]</span>
+    <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">hstack</span><span class="p">(</span><span class="n">ao_labels</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">_get_beta0</span><span class="p">(</span><span class="n">atnoi</span><span class="p">,</span><span class="n">atnoj</span><span class="p">):</span>
+    <span class="s2">&quot;Resonanace integral for coupling between different atoms&quot;</span>
+    <span class="k">return</span> <span class="n">mopac_param</span><span class="o">.</span><span class="n">BETA3</span><span class="p">[</span><span class="n">atnoi</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">atnoj</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="k">def</span> <span class="nf">_get_alpha</span><span class="p">(</span><span class="n">atnoi</span><span class="p">,</span><span class="n">atnoj</span><span class="p">):</span>
+    <span class="s2">&quot;Part of the scale factor for the nuclear repulsion&quot;</span>
+    <span class="k">return</span> <span class="n">mopac_param</span><span class="o">.</span><span class="n">ALP3</span><span class="p">[</span><span class="n">atnoi</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">atnoj</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="k">def</span> <span class="nf">_get_jk_1c_ints</span><span class="p">(</span><span class="n">z</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">z</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>  <span class="c1"># H, He</span>
+        <span class="n">j_ints</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">k_ints</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">j_ints</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">mopac_param</span><span class="o">.</span><span class="n">GSSM</span><span class="p">[</span><span class="n">z</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">j_ints</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+        <span class="n">k_ints</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+        <span class="n">p_diag_idx</span> <span class="o">=</span> <span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+        <span class="c1"># px,py,pz cross terms</span>
+        <span class="n">p_off_idx</span> <span class="o">=</span> <span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+
+        <span class="n">j_ints</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">mopac_param</span><span class="o">.</span><span class="n">GSSM</span><span class="p">[</span><span class="n">z</span><span class="p">]</span>
+        <span class="n">j_ints</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="n">j_ints</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">mopac_param</span><span class="o">.</span><span class="n">GSPM</span><span class="p">[</span><span class="n">z</span><span class="p">]</span>
+        <span class="n">j_ints</span><span class="p">[</span><span class="n">p_off_idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">mopac_param</span><span class="o">.</span><span class="n">GP2M</span><span class="p">[</span><span class="n">z</span><span class="p">]</span>
+        <span class="n">j_ints</span><span class="p">[</span><span class="n">p_diag_idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">mopac_param</span><span class="o">.</span><span class="n">GPPM</span><span class="p">[</span><span class="n">z</span><span class="p">]</span>
+
+        <span class="n">k_ints</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="n">k_ints</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">mopac_param</span><span class="o">.</span><span class="n">HSPM</span><span class="p">[</span><span class="n">z</span><span class="p">]</span>
+        <span class="n">k_ints</span><span class="p">[</span><span class="n">p_off_idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">mopac_param</span><span class="o">.</span><span class="n">HP2M</span><span class="p">[</span><span class="n">z</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">j_ints</span><span class="p">,</span> <span class="n">k_ints</span>
+
+<span class="k">def</span> <span class="nf">_get_gamma</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">F03</span><span class="o">=</span><span class="n">mopac_param</span><span class="o">.</span><span class="n">F03</span><span class="p">):</span>
+    <span class="n">atom_charges</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">atom_charges</span><span class="p">()</span>
+    <span class="n">atom_coords</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">atom_coords</span><span class="p">()</span>
+    <span class="n">distances</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">atom_coords</span><span class="p">[:,</span><span class="kc">None</span><span class="p">,:]</span> <span class="o">-</span> <span class="n">atom_coords</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">distances_in_AA</span> <span class="o">=</span> <span class="n">distances</span> <span class="o">*</span> <span class="n">lib</span><span class="o">.</span><span class="n">param</span><span class="o">.</span><span class="n">BOHR</span>
+
+    <span class="n">rho</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">mopac_param</span><span class="o">.</span><span class="n">E2</span><span class="o">/</span><span class="n">F03</span><span class="p">[</span><span class="n">z</span><span class="p">]</span> <span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">atom_charges</span><span class="p">])</span>
+    <span class="n">gamma</span> <span class="o">=</span> <span class="n">mopac_param</span><span class="o">.</span><span class="n">E2</span> <span class="o">/</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">distances_in_AA</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span>
+                                        <span class="p">(</span><span class="n">rho</span><span class="p">[:,</span><span class="kc">None</span><span class="p">]</span> <span class="o">+</span> <span class="n">rho</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="o">.</span><span class="mi">25</span><span class="p">)</span>
+    <span class="n">gamma</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">diag_indices</span><span class="p">(</span><span class="n">mol</span><span class="o">.</span><span class="n">natm</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># remove self-interaction terms</span>
+    <span class="k">return</span> <span class="n">gamma</span>
+
+
+<span class="k">def</span> <span class="nf">_get_reference_energy</span><span class="p">(</span><span class="n">mol</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;E(Ref) = heat of formation - energy of atomization (kcal/mol)&#39;&#39;&#39;</span>
+    <span class="n">atom_charges</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">atom_charges</span><span class="p">()</span>
+    <span class="n">Hf</span> <span class="o">=</span>  <span class="n">mopac_param</span><span class="o">.</span><span class="n">EHEAT3</span><span class="p">[</span><span class="n">atom_charges</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="n">Eat</span> <span class="o">=</span> <span class="n">mopac_param</span><span class="o">.</span><span class="n">EISOL3</span><span class="p">[</span><span class="n">atom_charges</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">Hf</span> <span class="o">-</span> <span class="n">Eat</span> <span class="o">*</span> <span class="n">mopac_param</span><span class="o">.</span><span class="n">EV2KCAL</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">mol</span> <span class="o">=</span> <span class="n">gto</span><span class="o">.</span><span class="n">M</span><span class="p">(</span><span class="n">atom</span><span class="o">=</span><span class="p">[(</span><span class="mi">8</span><span class="p">,(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)),(</span><span class="mi">1</span><span class="p">,(</span><span class="mf">1.</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)),(</span><span class="mi">1</span><span class="p">,(</span><span class="mi">0</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mi">0</span><span class="p">))])</span>
+    <span class="n">mf</span> <span class="o">=</span> <span class="n">RMINDO3</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">conv_tol</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">mf</span><span class="o">.</span><span class="n">e_heat_formation</span> <span class="o">-</span> <span class="o">-</span><span class="mf">48.82621264564841</span><span class="p">)</span>
+
+    <span class="n">mol</span> <span class="o">=</span> <span class="n">gto</span><span class="o">.</span><span class="n">M</span><span class="p">(</span><span class="n">atom</span><span class="o">=</span><span class="p">[(</span><span class="mi">8</span><span class="p">,(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)),(</span><span class="mi">1</span><span class="p">,(</span><span class="mf">1.</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">))],</span> <span class="n">spin</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">mf</span> <span class="o">=</span> <span class="n">UMINDO3</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">conv_tol</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">mf</span><span class="o">.</span><span class="n">e_heat_formation</span> <span class="o">-</span> <span class="mf">18.08247965492137</span><span class="p">)</span>
+
+    <span class="n">mol</span> <span class="o">=</span> <span class="n">gto</span><span class="o">.</span><span class="n">M</span><span class="p">(</span><span class="n">atom</span><span class="o">=</span><span class="p">[(</span><span class="mi">6</span><span class="p">,(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)),(</span><span class="mi">1</span><span class="p">,(</span><span class="mf">1.</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)),(</span><span class="mi">1</span><span class="p">,(</span><span class="mi">0</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mi">0</span><span class="p">)),</span>
+                      <span class="p">(</span><span class="mi">1</span><span class="p">,(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">1.</span><span class="p">)),(</span><span class="mi">1</span><span class="p">,(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mf">1.</span><span class="p">))])</span>
+    <span class="n">mf</span> <span class="o">=</span> <span class="n">RMINDO3</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">conv_tol</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">mf</span><span class="o">.</span><span class="n">e_heat_formation</span> <span class="o">-</span> <span class="mf">75.76019731515225</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2015-2020, The PySCF Developers
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

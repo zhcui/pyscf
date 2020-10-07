@@ -1,0 +1,574 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>7.1. Self-consistent field (SCF) methods &mdash; PySCF 1.7.5 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="7.2. Density functional theory (DFT)" href="dft.html" />
+    <link rel="prev" title="7. Theoretical methods" href="../theory.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> PySCF
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.7
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">1. An overview of PySCF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../version.html">2. Version history</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">3. Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../code-rule.html">4. Code standard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../benchmark.html">5. Benchmark</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">6. Tutorial</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../theory.html">7. Theoretical methods</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">7.1. Self-consistent field (SCF) methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#introduction">7.1.1. Introduction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#theory">7.1.2. Theory</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#periodic-boundary-conditions">7.1.2.1. Periodic boundary conditions</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#initial-guess">7.1.3. Initial guess</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#accelerating-scf-convergence">7.1.4. Accelerating SCF convergence</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#direct-inversion-in-the-iterative-subspace-diis">7.1.4.1. Direct Inversion in the Iterative Subspace (DIIS)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#co-iterative-augmented-hessian-ciah-second-order-scf-solver-sun2016co">7.1.4.2. Co-iterative augmented hessian (CIAH) second order SCF solver <span>[sun2016co]</span></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#level-shifting-and-smearing">7.1.5. Level shifting and smearing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#stability-analysis">7.1.6. Stability analysis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#references">7.1.7. References</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="dft.html">7.2. Density functional theory (DFT)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mp.html">7.3. Møller-Plesset perturbation theory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gw.html">7.4. GW method</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ci.html">7.5. Configuration interaction (CI)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cc.html">7.6. Coupled cluster (CC)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adc.html">7.7. Algebraic diagrammatic construction (ADC) scheme</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mcscf.html">7.8. Multi-configurational self-consistent field (MCSCF)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tddft.html">7.9. Time-dependent density functional theory (TDDFT)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rt.html">7.10. Real-time time-dependent density functional theory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eomcc.html">7.11. Equation-of-motion coupled cluster (EOM-CC)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pbc.html">7.12. Periodic boundary conditions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced.html">8. Miscellaneous</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../interface.html">9. Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">10. Main modules</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">PySCF</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../theory.html">7. Theoretical methods</a> &raquo;</li>
+        
+      <li>7.1. Self-consistent field (SCF) methods</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/theory/scf.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="self-consistent-field-scf-methods">
+<span id="theory-scf"></span><h1>7.1. Self-consistent field (SCF) methods<a class="headerlink" href="#self-consistent-field-scf-methods" title="Permalink to this headline">¶</a></h1>
+<p><em>Modules</em>: <a class="reference internal" href="../modules/scf.html#scf"><span class="std std-ref">scf</span></a>, <a class="reference internal" href="../modules/pbc/scf.html#pbc-scf"><span class="std std-ref">pbc.scf</span></a>, <a class="reference internal" href="../modules/soscf.html#soscf"><span class="std std-ref">soscf</span></a></p>
+<div class="section" id="introduction">
+<h2>7.1.1. Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>In self-consistent field (SCF) methods, the electron interactions are treated in a mean-field way.
+Here, the SCF methods include both Hartree-Fock (HF) theory and Kohn-Sham (KS) density functional theory (DFT).
+This Chapter summarizes the general SCF capabilities of PySCF.
+For more details specific to DFT, see <a class="reference internal" href="dft.html#theory-dft"><span class="std std-numref">Section 7.2</span></a>.</p>
+<p>A minimal example of using the SCF module is as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">gto</span><span class="p">,</span> <span class="n">scf</span>
+<span class="n">mol</span> <span class="o">=</span> <span class="n">gto</span><span class="o">.</span><span class="n">M</span><span class="p">(</span>
+    <span class="n">atom</span> <span class="o">=</span> <span class="s1">&#39;H 0 0 0; F 0 0 1.1&#39;</span><span class="p">,</span>  <span class="c1"># in Angstrom</span>
+    <span class="n">basis</span> <span class="o">=</span> <span class="s1">&#39;ccpvdz&#39;</span><span class="p">,</span>
+    <span class="n">symmetry</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">mf</span> <span class="o">=</span> <span class="n">scf</span><span class="o">.</span><span class="n">HF</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span>
+<span class="n">mf</span><span class="o">.</span><span class="n">kernel</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>This will run a HF calculation for the hydrogen fluoride molecule using the default SCF settings.</p>
+</div>
+<div class="section" id="theory">
+<h2>7.1.2. Theory<a class="headerlink" href="#theory" title="Permalink to this headline">¶</a></h2>
+<p>In HF and KS-DFT methods, the ground-state wavefunction is approximated by a single Slater determinant,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}|\Phi_0\rangle = \frac{1}{\sqrt{N!}}
+\begin{vmatrix}
+\psi_1(\mathbf{r}_1) &amp;\psi_2(\mathbf{r}_1) &amp;\dots  &amp;\psi_N(\mathbf{r}_1)\\
+\psi_1(\mathbf{r}_2) &amp;\psi_2(\mathbf{r}_2) &amp;\dots  &amp;\psi_N(\mathbf{r}_2)\\
+\vdots               &amp;\vdots               &amp;\ddots &amp;\vdots\\
+\psi_1(\mathbf{r}_N) &amp;\psi_2(\mathbf{r}_N) &amp;\dots  &amp;\psi_N(\mathbf{r}_N)
+\end{vmatrix} \;,\end{split}\]</div>
+<p>where the molecular orbitals (MO) <span class="math notranslate nohighlight">\(|\psi_i\rangle\)</span> are obtained by solving the Hartree-Fock equtions:</p>
+<div class="math notranslate nohighlight">
+\[\hat{F}|\psi_i\rangle = \varepsilon_i |\psi_i\rangle \;.\]</div>
+<p>The Fock operator <span class="math notranslate nohighlight">\(\hat{F}\)</span>, when represented within the atomic orbital (AO) basis, has the following form
+(in a spin unrestricted formalism):</p>
+<div class="math notranslate nohighlight">
+\[F_{\mu\nu}^{\alpha} = h_{\mu\nu} + J_{\mu\nu} - K_{\mu\nu}^{\alpha} \;,\]</div>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[h_{\mu\nu} = \left( \mu | \hat{T} |\nu \right) + \left( \mu | \hat{V}_{nuc} |\nu \right) \;,\]</div>
+<p>usually called the core Hamiltonian, is the sum of kinetic energy operator and nuclear attraction operator, and</p>
+<div class="math notranslate nohighlight">
+\[J_{\mu\nu} = \sum_{\lambda\sigma} \left(\mu\nu|\lambda\sigma\right) \left(P_{\lambda\sigma}^{\alpha}+P_{\lambda\sigma}^{\beta}\right)\]</div>
+<p>and</p>
+<div class="math notranslate nohighlight">
+\[K_{\mu\nu}^{\alpha} = \sum_{\lambda\sigma} \left(\mu\lambda|\nu\sigma\right) P_{\lambda\sigma}^{\alpha}\]</div>
+<p>define the Coulomb and exchange operators, respectively.
+In the equations above, <span class="math notranslate nohighlight">\(\mathbf{P}\)</span> labels the density matrix:</p>
+<div class="math notranslate nohighlight">
+\[P_{\mu\nu}^{\alpha} = \sum_{i\in occ} C_{\mu i}^{\alpha} C_{i\nu}^{\alpha\dagger} \;,\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathbf{C}\)</span> represents the MO coefficients:</p>
+<div class="math notranslate nohighlight">
+\[|\psi^{\alpha}\rangle  = \sum_{\mu} |\mu\rangle C_{\mu i}^{\alpha} \;.\]</div>
+<p>Within the AO representation, the Hartree-Fock equations reduce to the Roothaan-Hall or Pople-Nesbet <a class="bibtex reference internal" href="#pople1954self" id="id1">[1]</a> equations:</p>
+<div class="math notranslate nohighlight">
+\[\mathbf{F}^{\alpha} \mathbf{C}^{\alpha} = \boldsymbol{\varepsilon}^{\alpha} \mathbf{S} \mathbf{C}^{\alpha} \;,\]</div>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[S_{\mu\nu} = \left( \mu | \nu \right)\]</div>
+<p>is the AO overlap matrix.
+Note that as the Coulomb and exchange operators depend on the electron density,
+solving the Hartree-Fock equation is a nonlinear procedure,
+which requires iteratively updating the MOs and the Fock operator until reaching self-consistency.
+Finally, with the converged MOs or density matrix, one may compute various ground-state properties.
+For example, the ground-state electronic energy is expressed as</p>
+<div class="math notranslate nohighlight">
+\[E_{\rm HF} = \frac{1}{2} \left\{{\rm Tr}[\mathbf{h}(\mathbf{P}^{\alpha}+\mathbf{P}^{\beta})]
+           + {\rm Tr}(\mathbf{F}^{\alpha}\mathbf{P}^{\alpha}) + {\rm Tr}(\mathbf{F}^{\beta}\mathbf{P}^{\beta}) \right\} \;.\]</div>
+<div class="section" id="periodic-boundary-conditions">
+<h3>7.1.2.1. Periodic boundary conditions<a class="headerlink" href="#periodic-boundary-conditions" title="Permalink to this headline">¶</a></h3>
+<p>PySCF also alows the user to perform SCF calculations for solids.
+With crystalline Gaussian-type AOs as the underlying single-partial basis (see <a class="reference internal" href="pbc/gto.html#theory-pbc-gto"><span class="std std-numref">Section 7.12.1</span></a>),
+the molecular SCF code can be easily adapted to the cases where periodic boundary conditions (PBCs)
+are applied. Instead of solving only one set of Roothaan-Hall or Pople-Nesbet equtions for molecules,
+it is now necessary to solve them for each k point for solids:</p>
+<div class="math notranslate nohighlight">
+\[\mathbf{F}(\mathbf{k}) \mathbf{C}(\mathbf{k}) = \boldsymbol{\varepsilon}(\mathbf{k}) \mathbf{S}(\mathbf{k}) \mathbf{C}(\mathbf{k}) \;,\]</div>
+<p>where the Fock matrix is defined (within the restricted formalism) as</p>
+<div class="math notranslate nohighlight">
+\[\mathbf{F}(\mathbf{k}) = \mathbf{T}(\mathbf{k}) + \mathbf{V}^{\rm PP}(\mathbf{k})
++\mathbf{J}(\mathbf{k}) - \frac{1}{2} \mathbf{K}(\mathbf{k}) + \mathbf{V}^{L+J}(\mathbf{k}) \;.\]</div>
+<p>Here, <span class="math notranslate nohighlight">\(\mathbf{V}^{\rm PP}\)</span> denotes the pseudopotential contribution and
+<span class="math notranslate nohighlight">\(\mathbf{V}^{L+J}\)</span> deals with the divergence of local pseudopotential and Hartree potential (see below).</p>
+<p>The one-electron overlap, kinetic energy, and local pseudopotential integrals
+are evaluated through numerical integrations on the real-space grid according to</p>
+<div class="math notranslate nohighlight">
+\[S_{\mu\nu}(\mathbf{k}) = \int_\Omega d\mathbf{r} \phi_{\mu\mathbf{k}}^{*}(\mathbf{r}) \phi_{\nu\mathbf{k}}(\mathbf{r}) \;,\]</div>
+<div class="math notranslate nohighlight">
+\[T_{\mu\nu}(\mathbf{k}) = -\frac{1}{2} \int_\Omega d\mathbf{r} \phi_{\mu\mathbf{k}}^{*}(\mathbf{r})
+\boldsymbol{\nabla}_{\mathbf{r}}^2 \phi_{\nu\mathbf{k}}(\mathbf{r}) \;,\]</div>
+<p>and</p>
+<div class="math notranslate nohighlight">
+\[V_{\mu\nu}^{\rm L-PP}(\mathbf{k}) = \int_\Omega d\mathbf{r} \phi_{\mu\mathbf{k}}^{*}(\mathbf{r})
+v^{\rm L-PP}(\mathbf{r}) \phi_{\nu\mathbf{k}}(\mathbf{r}) \;,\]</div>
+<p>where <span class="math notranslate nohighlight">\(\Omega\)</span> labels the unit cell volume.
+The non-local part of the pseudopotential is computed in the reciprocal space:</p>
+<div class="math notranslate nohighlight">
+\[V_{\mu\nu}^{\rm NL-PP}(\mathbf{k}) = \Omega \sum_{\mathbf{G},\mathbf{G}'} \phi_{\mu\mathbf{k}}^{*}(\mathbf{G})
+v^{\rm NL-PP}(\mathbf{k}+\mathbf{G}, \mathbf{k}+\mathbf{G}') \phi_{\nu\mathbf{k}}(\mathbf{G}') \;,\]</div>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[v^{\rm NL-PP}(\mathbf{k}+\mathbf{G}, \mathbf{k}+\mathbf{G}') = \frac{1}{\Omega} \int d\mathbf{r} \int d\mathbf{r}'
+e^{-i(\mathbf{k}+\mathbf{G})\cdot\mathbf{r}} v^{\rm NL-PP}(\mathbf{r},\mathbf{r}')
+e^{ i(\mathbf{k}+\mathbf{G}^{'})\cdot\mathbf{r}'} \;.\]</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The way that the pseudopotential integrals are computed differs in different density fitting schemes and for different
+pseudopotentials. Interested readers should refer to <a class="reference internal" href="pbc/df.html#theory-pbc-df"><span class="std std-numref">Section 7.12.2</span></a> and <a class="reference internal" href="pbc/pp.html#theory-pbc-pp"><span class="std std-numref">Section 7.12.3</span></a>.</p>
+</div>
+<p>The Coulomb and exchange matrices are defined similarly as</p>
+<div class="math notranslate nohighlight">
+\[J_{\mu\nu}(\mathbf{k}) = \int_{\Omega} d\mathbf{r} \phi_{\mu\mathbf{k}}^{*}(\mathbf{r}) v_{\rm H}(\mathbf{r}) \phi_{\nu\mathbf{k}}(\mathbf{r}) \;,\]</div>
+<p>and</p>
+<div class="math notranslate nohighlight">
+\[K_{\mu\nu}(\mathbf{k}) = \int_{\Omega} d\mathbf{r} \int d\mathbf{r}' \phi_{\mu\mathbf{k}}^{*}(\mathbf{r})
+\frac{\rho(\mathbf{r}, \mathbf{r}')}{|\mathbf{r}-\mathbf{r}'|} \phi_{\nu\mathbf{k}}(\mathbf{r}') \;.\]</div>
+<p>Here <span class="math notranslate nohighlight">\(v_{\rm H}\)</span> is the Hartree potential</p>
+<div class="math notranslate nohighlight">
+\[v_{\rm H}(\mathbf{r}) = \frac{4\pi}{\Omega} \sum_{\mathbf{G}\neq \mathbf{0}} \frac{\rho(\mathbf{G})}{G^2} e^{i\mathbf{G}\cdot\mathbf{r}} \;,\]</div>
+<p>and <span class="math notranslate nohighlight">\(\rho(\mathbf{r}, \mathbf{r}')\)</span> is the density matrix</p>
+<div class="math notranslate nohighlight">
+\[\rho(\mathbf{r}, \mathbf{r}') =  \sum_{\mathbf{k}} w_{\mathbf{k}} \sum_{\lambda\sigma} P_{\lambda\sigma}(\mathbf{k})
+\phi_{\lambda\mathbf{k}}(\mathbf{r}) \phi_{\sigma\mathbf{k}}^{*}(\mathbf{r}') \;,\]</div>
+<p>where <span class="math notranslate nohighlight">\(w_{\mathbf{k}}\)</span> represents the weight of each k point.</p>
+<p>Note that the local part of the pseudopotential and the Hartree potential diverge at <span class="math notranslate nohighlight">\(G=0\)</span>;
+however, their sum is not, which leads to the <span class="math notranslate nohighlight">\(V^{\rm L+J}\)</span> term (for charge neutral unit cell):</p>
+<div class="math notranslate nohighlight">
+\[V_{\mu\nu}^{\rm L+J} (\mathbf{k})  = \frac{S_{\mu\nu}}{\Omega}
+\int d\mathbf{r} \left(v^{\rm L-PP}(\mathbf{r}) + \sum_{\alpha} \frac{Z_{\alpha}e^2}{r} \right) \;,\]</div>
+<p>where <span class="math notranslate nohighlight">\(Z_{\alpha}\)</span> denotes the nuclear charge of the <span class="math notranslate nohighlight">\(\alpha\)</span>-th atom.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For details about how to compute the Coulomb (J)
+and exchange (K) integrals, see <a class="reference internal" href="pbc/df.html#theory-pbc-df"><span class="std std-numref">Section 7.12.2</span></a>.</p>
+</div>
+<p>Finally, the total electronic energy differs from the molecular case only by a k-point summation:</p>
+<div class="math notranslate nohighlight">
+\[E_{\rm HF} = \sum_{\mathbf{k}} w_{\mathbf{k}} E_{\rm HF}(\mathbf{k}) \;,\]</div>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[E_{\rm HF}(\mathbf{k}) = \frac{1}{2} \left\{ {\rm Tr}\left[\mathbf{h}(\mathbf{k}) (\mathbf{P}^{\alpha}(\mathbf{k})+\mathbf{P}^{\beta}(\mathbf{k}))\right]
+           + {\rm Tr}\left[\mathbf{F}^{\alpha}(\mathbf{k}) \mathbf{P}^{\alpha}(\mathbf{k})\right]
+           + {\rm Tr}\left[\mathbf{F}^{\beta}(\mathbf{k}) \mathbf{P}^{\beta}(\mathbf{k})\right] \right\} \;.\]</div>
+</div>
+</div>
+<div class="section" id="initial-guess">
+<h2>7.1.3. Initial guess<a class="headerlink" href="#initial-guess" title="Permalink to this headline">¶</a></h2>
+<p>As the Roothaan-Hall and Pople-Nesbet equations are solved iteratively,
+an initial guess for the MOs or the density matrices must be supplied.
+Poor initial guess may cause slow convergence or even divergence of the procedure.
+Furthermore, when treating magnetic or open-shell systems,
+the initial guess must be carefully chosen in order to get the correct state.</p>
+<p>There are several options available in PySCF for selecting the initial guess to solve the
+SCF problem. One can set the attribute <code class="xref py py-attr docutils literal notranslate"><span class="pre">mf.init_guess</span></code>
+to the following values to generate the initial guess in different ways:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">'minao'</span></code> (default)</p>
+<blockquote>
+<div><p>The initial guess density matrix is first generated based on the atomic natural orbital (ANO) basis
+<a class="bibtex reference internal" href="#widmark1990density" id="id2">[2]</a><a class="bibtex reference internal" href="#roos2004relativistic" id="id3">[3]</a><a class="bibtex reference internal" href="#roos2004main" id="id4">[4]</a><a class="bibtex reference internal" href="#roos2005new" id="id5">[5]</a><a class="bibtex reference internal" href="#roos2005new-a" id="id6">[6]</a><a class="bibtex reference internal" href="#roos2008new" id="id7">[7]</a>,
+then projected onto the basis set used for the SCF calculation.</p>
+</div></blockquote>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'hcore'</span></code></p>
+<blockquote>
+<div><p>The core Hamiltonian is diagonalized to get the initial MOs.</p>
+</div></blockquote>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'atom'</span></code></p>
+<blockquote>
+<div><p>The initial guess density matrix is from the superposition of atomic HF
+density matrix. Commonly know as the ‘SAD’ method.</p>
+</div></blockquote>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'chk'</span></code></p>
+<blockquote>
+<div><p>Read the existing SCF results from the checkpoint file, then the density matrix is projected onto the
+basis set used for the new SCF calculation.</p>
+</div></blockquote>
+</li>
+</ul>
+<p>Alternatively, the user could manually set the initial guess density matrix for an SCF calculation
+by using the <code class="docutils literal notranslate"><span class="pre">'dm0'</span></code> argument.
+For example, the followings script first computes the HF density matrix for <span class="math notranslate nohighlight">\(\rm Cr^{6+}\)</span> cation,
+which is then used as the initial guess for the HF calculation of <span class="math notranslate nohighlight">\(\rm Cr\)</span> atom.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#</span>
+<span class="c1"># use cation to produce initial guess</span>
+<span class="c1">#</span>
+<span class="n">mol</span> <span class="o">=</span> <span class="n">gto</span><span class="o">.</span><span class="n">Mole</span><span class="p">()</span>
+<span class="n">mol</span><span class="o">.</span><span class="n">build</span><span class="p">(</span>
+    <span class="n">symmetry</span> <span class="o">=</span> <span class="s1">&#39;D2h&#39;</span><span class="p">,</span>
+    <span class="n">atom</span> <span class="o">=</span> <span class="p">[[</span><span class="s1">&#39;Cr&#39;</span><span class="p">,(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)],</span> <span class="p">],</span>
+    <span class="n">basis</span> <span class="o">=</span> <span class="s1">&#39;cc-pvdz&#39;</span><span class="p">,</span>
+    <span class="n">charge</span> <span class="o">=</span> <span class="mi">6</span><span class="p">,</span>
+    <span class="n">spin</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">mf</span> <span class="o">=</span> <span class="n">scf</span><span class="o">.</span><span class="n">RHF</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span>
+<span class="n">mf</span><span class="o">.</span><span class="n">kernel</span><span class="p">()</span>
+<span class="n">dm1</span> <span class="o">=</span> <span class="n">mf</span><span class="o">.</span><span class="n">make_rdm1</span><span class="p">()</span>
+
+<span class="n">mol</span><span class="o">.</span><span class="n">charge</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">mol</span><span class="o">.</span><span class="n">spin</span> <span class="o">=</span> <span class="mi">6</span>
+<span class="n">mol</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="n">mf</span> <span class="o">=</span> <span class="n">scf</span><span class="o">.</span><span class="n">RHF</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span>
+<span class="n">mf</span><span class="o">.</span><span class="n">kernel</span><span class="p">(</span><span class="n">dm0</span><span class="o">=</span><span class="n">dm1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>More examples can be found in
+<a class="reference download internal" download="" href="../_downloads/7db983b4c7af0e0965fd71eaf5e9c8b2/15-initial_guess.py"><code class="xref download docutils literal notranslate"><span class="pre">examples/scf/15-initial_guess.py</span></code></a>.</p>
+</div>
+<div class="section" id="accelerating-scf-convergence">
+<h2>7.1.4. Accelerating SCF convergence<a class="headerlink" href="#accelerating-scf-convergence" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="direct-inversion-in-the-iterative-subspace-diis">
+<h3>7.1.4.1. Direct Inversion in the Iterative Subspace (DIIS)<a class="headerlink" href="#direct-inversion-in-the-iterative-subspace-diis" title="Permalink to this headline">¶</a></h3>
+<p>At convergence of an SCF calcuation, one should expect the density matrix commute with
+the Fock matrix:</p>
+<div class="math notranslate nohighlight">
+\[\mathbf{SPF} - \mathbf{FPS} = \mathbf{0} \;.\]</div>
+<p>Prior to convergence, it is possible to define an error vector as</p>
+<div class="math notranslate nohighlight">
+\[\mathbf{e}_i \equiv \mathbf{S}\mathbf{P}_i\mathbf{F}_i - \mathbf{F}_i\mathbf{P}_i\mathbf{S} \;,\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathbf{F}_i\)</span> is a linear combination of the Fock matrices in the previous SCF cycles:</p>
+<div class="math notranslate nohighlight">
+\[\mathbf{F}_i = \sum_{k=i-L}^{i-1} c_k \mathbf{F}_k \;,\]</div>
+<p><span class="math notranslate nohighlight">\(\mathbf{P}_i\)</span> is obtained by diagonalizing <span class="math notranslate nohighlight">\(\mathbf{F}_i\)</span>, and
+<span class="math notranslate nohighlight">\(L\)</span> is the size of the DIIS subspace, which can be modified by setting the <code class="xref py py-attr docutils literal notranslate"><span class="pre">mf.diis_space</span></code> attribute
+(the default size is 8).
+The DIIS method <a class="bibtex reference internal" href="#pulay1980convergence" id="id8">[8]</a><a class="bibtex reference internal" href="#pulay1982improved" id="id9">[9]</a>
+minimizes the square of the error vector
+with respect to the DIIS coefficients <span class="math notranslate nohighlight">\(c_k\)</span>
+under the constraint that <span class="math notranslate nohighlight">\(\sum_k c_k = 1\)</span>.
+The Euler–Lagrange equation of such a constrained minimization problem reads:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\left(
+\begin{array}{cccc}
+\mathbf{e}_1\cdot\mathbf{e}_1  &amp;\dots  &amp;\mathbf{e}_1\cdot\mathbf{e}_L  &amp;1      \\
+\vdots                         &amp;\ddots &amp;\vdots                         &amp;\vdots \\
+\mathbf{e}_L\cdot\mathbf{e}_1  &amp;\dots  &amp;\mathbf{e}_L\cdot\mathbf{e}_L  &amp;1      \\
+1                              &amp;\dots  &amp;1                              &amp;0
+\end{array}
+\right) \left(
+\begin{array}{c}
+c_1    \\
+\vdots \\
+c_{L}  \\
+\lambda
+\end{array}
+\right) = \left(
+\begin{array}{c}
+0       \\
+\vdots  \\
+0       \\
+1
+\end{array}
+\right)\end{split}\]</div>
+<p>PySCF also implements two other similar DIIS algorithms,
+namely, EDIIS <a class="bibtex reference internal" href="#kudin2002black" id="id10">[10]</a> and ADIIS <a class="bibtex reference internal" href="#hu2010accelerating" id="id11">[11]</a>.
+Interested readers should refer to the reference.
+An example of selecting different DIIS schemes can be found in
+<a class="reference download internal" download="" href="../_downloads/9e2c5975983ce36d128ffe4f431d1c93/24-tune_diis.py"><code class="xref download docutils literal notranslate"><span class="pre">examples/scf/24-tune_diis.py</span></code></a></p>
+</div>
+<div class="section" id="co-iterative-augmented-hessian-ciah-second-order-scf-solver-sun2016co">
+<h3>7.1.4.2. Co-iterative augmented hessian (CIAH) second order SCF solver <a class="bibtex reference internal" href="#sun2016co" id="id12">[12]</a><a class="headerlink" href="#co-iterative-augmented-hessian-ciah-second-order-scf-solver-sun2016co" title="Permalink to this headline">¶</a></h3>
+</div>
+</div>
+<div class="section" id="level-shifting-and-smearing">
+<h2>7.1.5. Level shifting and smearing<a class="headerlink" href="#level-shifting-and-smearing" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="stability-analysis">
+<h2>7.1.6. Stability analysis<a class="headerlink" href="#stability-analysis" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="references">
+<h2>7.1.7. References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<p id="bibtex-bibliography-theory/scf-0"><dl class="citation">
+<dt class="bibtex label" id="pople1954self"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<dd><p>JA Pople and R_K Nesbet. Self-consistent orbitals for radicals. <em>The Journal of Chemical Physics</em>, 22(3):571–572, 1954.</p>
+</dd>
+<dt class="bibtex label" id="widmark1990density"><span class="brackets"><a class="fn-backref" href="#id2">2</a></span></dt>
+<dd><p>Per-Olof Widmark, Per-Åke Malmqvist, and Björn O Roos. Density matrix averaged atomic natural orbital (ano) basis sets for correlated molecular wave functions. <em>Theoretica chimica acta</em>, 77(5):291–306, 1990.</p>
+</dd>
+<dt class="bibtex label" id="roos2004relativistic"><span class="brackets"><a class="fn-backref" href="#id3">3</a></span></dt>
+<dd><p>Björn O Roos, Valera Veryazov, and Per-Olof Widmark. Relativistic atomic natural orbital type basis sets for the alkaline and alkaline-earth atoms applied to the ground-state potentials for the corresponding dimers. <em>Theoretical Chemistry Accounts</em>, 111(2-6):345–351, 2004.</p>
+</dd>
+<dt class="bibtex label" id="roos2004main"><span class="brackets"><a class="fn-backref" href="#id4">4</a></span></dt>
+<dd><p>Björn O Roos, Roland Lindh, Per-Åke Malmqvist, Valera Veryazov, and Per-Olof Widmark. Main group atoms and dimers studied with a new relativistic ano basis set. <em>The Journal of Physical Chemistry A</em>, 108(15):2851–2858, 2004.</p>
+</dd>
+<dt class="bibtex label" id="roos2005new"><span class="brackets"><a class="fn-backref" href="#id5">5</a></span></dt>
+<dd><p>Björn O Roos, Roland Lindh, Per-Åke Malmqvist, Valera Veryazov, and Per-Olof Widmark. New relativistic ano basis sets for transition metal atoms. <em>The Journal of Physical Chemistry A</em>, 109(29):6575–6579, 2005.</p>
+</dd>
+<dt class="bibtex label" id="roos2005new-a"><span class="brackets"><a class="fn-backref" href="#id6">6</a></span></dt>
+<dd><p>Björn O Roos, Roland Lindh, Per-Åke Malmqvist, Valera Veryazov, and Per-Olof Widmark. New relativistic ano basis sets for actinide atoms. <em>Chemical physics letters</em>, 409(4-6):295–299, 2005.</p>
+</dd>
+<dt class="bibtex label" id="roos2008new"><span class="brackets"><a class="fn-backref" href="#id7">7</a></span></dt>
+<dd><p>Björn O Roos, Roland Lindh, Per-Åke Malmqvist, Valera Veryazov, Per-Olof Widmark, and Antonio Carlos Borin. New relativistic atomic natural orbital basis sets for lanthanide atoms with applications to the ce diatom and luf3. <em>The Journal of Physical Chemistry A</em>, 112(45):11431–11435, 2008.</p>
+</dd>
+<dt class="bibtex label" id="pulay1980convergence"><span class="brackets"><a class="fn-backref" href="#id8">8</a></span></dt>
+<dd><p>Péter Pulay. Convergence acceleration of iterative sequences. the case of scf iteration. <em>Chemical Physics Letters</em>, 73(2):393–398, 1980.</p>
+</dd>
+<dt class="bibtex label" id="pulay1982improved"><span class="brackets"><a class="fn-backref" href="#id9">9</a></span></dt>
+<dd><p>Peter Pulay. Improved scf convergence acceleration. <em>Journal of Computational Chemistry</em>, 3(4):556–560, 1982.</p>
+</dd>
+<dt class="bibtex label" id="kudin2002black"><span class="brackets"><a class="fn-backref" href="#id10">10</a></span></dt>
+<dd><p>Konstantin N Kudin, Gustavo E Scuseria, and Eric Cances. A black-box self-consistent field convergence algorithm: one step closer. <em>The Journal of chemical physics</em>, 116(19):8255–8261, 2002.</p>
+</dd>
+<dt class="bibtex label" id="hu2010accelerating"><span class="brackets"><a class="fn-backref" href="#id11">11</a></span></dt>
+<dd><p>Xiangqian Hu and Weitao Yang. Accelerating self-consistent field convergence with the augmented roothaan–hall energy function. <em>The Journal of chemical physics</em>, 132(5):054109, 2010.</p>
+</dd>
+<dt class="bibtex label" id="sun2016co"><span class="brackets"><a class="fn-backref" href="#id12">12</a></span></dt>
+<dd><p>Qiming Sun. Co-iterative augmented hessian method for orbital optimization. <em>arXiv preprint arXiv:1610.08423</em>, 2016.</p>
+</dd>
+</dl>
+</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="dft.html" class="btn btn-neutral float-right" title="7.2. Density functional theory (DFT)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../theory.html" class="btn btn-neutral float-left" title="7. Theoretical methods" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2015-2020, The PySCF Developers
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,490 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>10.23. qmmm — QM/MM interface &mdash; PySCF 1.7.5 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="10.24. rt — Real-time time-dependent density functional theory" href="rt.html" />
+    <link rel="prev" title="10.22.12. prop.esr — Electron spin-rotation coupling" href="prop/esr.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> PySCF
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.7
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">1. An overview of PySCF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../version.html">2. Version history</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">3. Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../code-rule.html">4. Code standard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../benchmark.html">5. Benchmark</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">6. Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../theory.html">7. Theoretical methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced.html">8. Miscellaneous</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../interface.html">9. Interfaces</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../modules.html">10. Main modules</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="adc.html">10.1. <code class="xref py py-mod docutils literal notranslate"><span class="pre">adc</span></code> — Algebraic diagrammatic construction (ADC) scheme</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ao2mo.html">10.2. <code class="xref py py-mod docutils literal notranslate"><span class="pre">ao2mo</span></code> — Integral transformations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cc.html">10.3. <code class="xref py py-mod docutils literal notranslate"><span class="pre">cc</span></code> — Coupled cluster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ccn.html">10.4. <code class="xref py py-mod docutils literal notranslate"><span class="pre">ccn</span></code> — Auto-generated coupled cluster of arbitrary order</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ci.html">10.5. <code class="xref py py-mod docutils literal notranslate"><span class="pre">ci</span></code> — Configuration interaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data.html">10.6. <code class="xref py py-mod docutils literal notranslate"><span class="pre">data</span></code> — Data for constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="df.html">10.7. <code class="xref py py-mod docutils literal notranslate"><span class="pre">df</span></code> — Density fitting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dft.html">10.8. <code class="xref py py-mod docutils literal notranslate"><span class="pre">dft</span></code> — Density functional theory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="doci.html">10.9. <code class="xref py py-mod docutils literal notranslate"><span class="pre">doci</span></code> — Doubly occupied configuration interaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fci.html">10.10. <code class="xref py py-mod docutils literal notranslate"><span class="pre">fci</span></code> — Full configuration interaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="grad.html">10.11. <code class="xref py py-mod docutils literal notranslate"><span class="pre">grad</span></code> — Analytical nuclear gradients</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gto.html">10.12. <code class="xref py py-mod docutils literal notranslate"><span class="pre">gto</span></code> — Molecular structure and GTO basis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gw.html">10.13. <code class="xref py py-mod docutils literal notranslate"><span class="pre">gw</span></code> — Molecular G0W0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hci.html">10.14. <code class="xref py py-mod docutils literal notranslate"><span class="pre">hci</span></code> — Heat-bath selected CI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hessian.html">10.15. <code class="xref py py-mod docutils literal notranslate"><span class="pre">hessian</span></code> — Analytical nuclear Hessian</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lib.html">10.16. <code class="xref py py-mod docutils literal notranslate"><span class="pre">lib</span></code> — Helper functions, parameters, and C extensions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lo.html">10.17. <code class="xref py py-mod docutils literal notranslate"><span class="pre">lo</span></code> — Orbital localization and analysis tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mcscf.html">10.18. <code class="xref py py-mod docutils literal notranslate"><span class="pre">mcscf</span></code> — Multi-configurational self-consistent field</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mp.html">10.19. <code class="xref py py-mod docutils literal notranslate"><span class="pre">mp</span></code> — MP2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mrpt.html">10.20. <code class="xref py py-mod docutils literal notranslate"><span class="pre">mrpt</span></code> — Multi-reference perturbation theory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pbc.html">10.21. <code class="xref py py-mod docutils literal notranslate"><span class="pre">pbc</span></code> — Periodic boundary conditions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="prop.html">10.22. <code class="xref py py-mod docutils literal notranslate"><span class="pre">prop</span></code> — Molecular properties</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">10.23. <code class="xref py py-mod docutils literal notranslate"><span class="pre">qmmm</span></code> — QM/MM interface</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#examples">10.23.1. Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rt.html">10.24. <code class="xref py py-mod docutils literal notranslate"><span class="pre">rt</span></code> — Real-time time-dependent density functional theory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scf.html">10.25. <code class="xref py py-mod docutils literal notranslate"><span class="pre">scf</span></code> — Self-consistent field methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="semiempirical.html">10.26. <code class="xref py py-mod docutils literal notranslate"><span class="pre">semiempirical</span></code> — Semiempirical methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sgx.html">10.27. <code class="xref py py-mod docutils literal notranslate"><span class="pre">sgx</span></code> — Pseudo-spectral methods (COSX, PS, SN-K)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solvent.html">10.28. <code class="xref py py-mod docutils literal notranslate"><span class="pre">solvent</span></code> — Solvent methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="soscf.html">10.29. <code class="xref py py-mod docutils literal notranslate"><span class="pre">soscf</span></code> — Second order SCF solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="symm.html">10.30. <code class="xref py py-mod docutils literal notranslate"><span class="pre">symm</span></code> – Point group symmetry and spin symmetry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tdscf.html">10.31. <code class="xref py py-mod docutils literal notranslate"><span class="pre">tdscf</span></code> — TDHF and TDDFT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html">10.32. <code class="xref py py-mod docutils literal notranslate"><span class="pre">tools</span></code> — Useful tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="x2c.html">10.33. <code class="xref py py-mod docutils literal notranslate"><span class="pre">x2c</span></code> — exact-two-component approach</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">PySCF</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../modules.html">10. Main modules</a> &raquo;</li>
+        
+      <li>10.23. <code class="xref py py-mod docutils literal notranslate"><span class="pre">qmmm</span></code> — QM/MM interface</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/modules/qmmm.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="qmmm-qm-mm-interface">
+<span id="qmmm"></span><h1>10.23. <code class="xref py py-mod docutils literal notranslate"><span class="pre">qmmm</span></code> — QM/MM interface<a class="headerlink" href="#qmmm-qm-mm-interface" title="Permalink to this headline">¶</a></h1>
+<p>To run HF with background charges, one could follow the following example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">gto</span><span class="p">,</span> <span class="n">scf</span><span class="p">,</span> <span class="n">qmmm</span>
+<span class="n">mol</span> <span class="o">=</span> <span class="n">gto</span><span class="o">.</span><span class="n">M</span><span class="p">(</span><span class="n">atom</span><span class="o">=</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">C       1.1879  -0.3829 0.0000</span>
+<span class="s1">C       0.0000  0.5526  0.0000</span>
+<span class="s1">O       -1.1867 -0.2472 0.0000</span>
+<span class="s1">H       -1.9237 0.3850  0.0000</span>
+<span class="s1">H       2.0985  0.2306  0.0000</span>
+<span class="s1">H       1.1184  -1.0093 0.8869</span>
+<span class="s1">H       1.1184  -1.0093 -0.8869</span>
+<span class="s1">H       -0.0227 1.1812  0.8852</span>
+<span class="s1">H       -0.0227 1.1812  -0.8852</span>
+<span class="s1">            &#39;&#39;&#39;</span><span class="p">,</span>
+            <span class="n">basis</span><span class="o">=</span><span class="s1">&#39;3-21g&#39;</span><span class="p">,</span>
+            <span class="n">verbose</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">coords</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="mi">5</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span> <span class="o">*</span> <span class="mi">10</span>
+<span class="n">charges</span> <span class="o">=</span> <span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span> <span class="o">+</span> <span class="mf">1.</span><span class="p">)</span> <span class="o">*</span> <span class="o">-.</span><span class="mi">1</span>
+<span class="n">mf</span> <span class="o">=</span> <span class="n">scf</span><span class="o">.</span><span class="n">UHF</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span>
+<span class="n">mf</span> <span class="o">=</span> <span class="n">qmmm</span><span class="o">.</span><span class="n">mm_charge</span><span class="p">(</span><span class="n">mf</span><span class="p">,</span> <span class="n">coords</span><span class="p">,</span> <span class="n">charges</span><span class="p">)</span>
+<span class="n">mf</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="section" id="examples">
+<h2>10.23.1. Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<p>Relevant examples
+<code class="file docutils literal notranslate"><span class="pre">examples/qmmm/00-hf.py</span></code>
+<code class="file docutils literal notranslate"><span class="pre">examples/qmmm/01-dft.py</span></code>
+<code class="file docutils literal notranslate"><span class="pre">examples/qmmm/02-mcscf.py</span></code>
+<code class="file docutils literal notranslate"><span class="pre">examples/qmmm/03-ccsd.py</span></code>
+<code class="file docutils literal notranslate"><span class="pre">examples/qmmm/04-cisd.py</span></code>
+<code class="file docutils literal notranslate"><span class="pre">examples/qmmm/05-mp2.py</span></code>
+<code class="file docutils literal notranslate"><span class="pre">examples/qmmm/06-tddft.py</span></code>
+<code class="file docutils literal notranslate"><span class="pre">examples/qmmm/10-x2c.py</span></code>
+<code class="file docutils literal notranslate"><span class="pre">examples/qmmm/11-newton.py</span></code>
+<code class="file docutils literal notranslate"><span class="pre">examples/qmmm/11-soscf.py</span></code>
+<code class="file docutils literal notranslate"><span class="pre">examples/qmmm/20-grad.py</span></code>
+<code class="file docutils literal notranslate"><span class="pre">examples/qmmm/21-geom_opt.py</span></code>
+<code class="file docutils literal notranslate"><span class="pre">examples/qmmm/30-force_on_mm_particles.py</span></code></p>
+<span class="target" id="module-pyscf.qmmm.itrf"></span><p>QM/MM helper functions that modify the QM methods.</p>
+<dl class="function">
+<dt id="pyscf.qmmm.itrf.add_mm_charges">
+<code class="sig-prename descclassname">pyscf.qmmm.itrf.</code><code class="sig-name descname">add_mm_charges</code><span class="sig-paren">(</span><em class="sig-param">scf_method</em>, <em class="sig-param">atoms_or_coords</em>, <em class="sig-param">charges</em>, <em class="sig-param">unit=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyscf/qmmm/itrf.html#add_mm_charges"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyscf.qmmm.itrf.add_mm_charges" title="Permalink to this definition">¶</a></dt>
+<dd><p>Embedding the one-electron (non-relativistic) potential generated by MM
+point charges into QM Hamiltonian.</p>
+<p>The total energy includes the regular QM energy, the interaction between
+the nuclei in QM region and the MM charges, and the static Coulomb
+interaction between the electron density and the MM charges. It does not
+include the static Coulomb interactions of the MM point charges, the MM
+energy, the vdw interaction or other bonding/non-bonding effects between
+QM region and MM particles.</p>
+<dl>
+<dt>Args:</dt><dd><p>scf_method : a HF or DFT object</p>
+<dl class="simple">
+<dt>atoms_or_coords<span class="classifier">2D array, shape (N,3)</span></dt><dd><p>MM particle coordinates</p>
+</dd>
+<dt>charges<span class="classifier">1D array</span></dt><dd><p>MM particle charges</p>
+</dd>
+</dl>
+</dd>
+<dt>Kwargs:</dt><dd><dl class="simple">
+<dt>unit<span class="classifier">str</span></dt><dd><p>Bohr, AU, Ang (case insensitive). Default is the same to mol.unit</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><p>Same method object as the input scf_method with modified 1e Hamiltonian</p>
+</dd>
+<dt>Note:</dt><dd><p>1. if MM charge and X2C correction are used together, function mm_charge
+needs to be applied after X2C decoration (.x2c method), eg
+mf = mm_charge(scf.RHF(mol).x2c()), [(0.5,0.6,0.8)], [-0.5]).
+2. Once mm_charge function is applied on the SCF object, it
+affects all the post-HF calculations eg MP2, CCSD, MCSCF etc</p>
+</dd>
+</dl>
+<p>Examples:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mol</span> <span class="o">=</span> <span class="n">gto</span><span class="o">.</span><span class="n">M</span><span class="p">(</span><span class="n">atom</span><span class="o">=</span><span class="s1">&#39;H 0 0 0; F 0 0 1&#39;</span><span class="p">,</span> <span class="n">basis</span><span class="o">=</span><span class="s1">&#39;ccpvdz&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mf</span> <span class="o">=</span> <span class="n">mm_charge</span><span class="p">(</span><span class="n">dft</span><span class="o">.</span><span class="n">RKS</span><span class="p">(</span><span class="n">mol</span><span class="p">),</span> <span class="p">[(</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.6</span><span class="p">,</span><span class="mf">0.8</span><span class="p">)],</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mf</span><span class="o">.</span><span class="n">kernel</span><span class="p">()</span>
+<span class="go">-101.940495711284</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyscf.qmmm.itrf.add_mm_charges_grad">
+<code class="sig-prename descclassname">pyscf.qmmm.itrf.</code><code class="sig-name descname">add_mm_charges_grad</code><span class="sig-paren">(</span><em class="sig-param">scf_grad</em>, <em class="sig-param">atoms_or_coords</em>, <em class="sig-param">charges</em>, <em class="sig-param">unit=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyscf/qmmm/itrf.html#add_mm_charges_grad"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyscf.qmmm.itrf.add_mm_charges_grad" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply the MM charges in the QM gradients’ method.  It affects both the
+electronic and nuclear parts of the QM fragment.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>scf_grad<span class="classifier">a HF or DFT gradient object (grad.HF or grad.RKS etc)</span></dt><dd><p>Once the add_mm_charges_grad was applied, it affects all post-HF
+calculations eg MP2, CCSD, MCSCF etc</p>
+</dd>
+<dt>coords<span class="classifier">2D array, shape (N,3)</span></dt><dd><p>MM particle coordinates</p>
+</dd>
+<dt>charges<span class="classifier">1D array</span></dt><dd><p>MM particle charges</p>
+</dd>
+</dl>
+</dd>
+<dt>Kwargs:</dt><dd><dl class="simple">
+<dt>unit<span class="classifier">str</span></dt><dd><p>Bohr, AU, Ang (case insensitive). Default is the same to mol.unit</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><p>Same gradeints method object as the input scf_grad method</p>
+</dd>
+</dl>
+<p>Examples:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">gto</span><span class="p">,</span> <span class="n">scf</span><span class="p">,</span> <span class="n">grad</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mol</span> <span class="o">=</span> <span class="n">gto</span><span class="o">.</span><span class="n">M</span><span class="p">(</span><span class="n">atom</span><span class="o">=</span><span class="s1">&#39;H 0 0 0; F 0 0 1&#39;</span><span class="p">,</span> <span class="n">basis</span><span class="o">=</span><span class="s1">&#39;ccpvdz&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mf</span> <span class="o">=</span> <span class="n">mm_charge</span><span class="p">(</span><span class="n">scf</span><span class="o">.</span><span class="n">RHF</span><span class="p">(</span><span class="n">mol</span><span class="p">),</span> <span class="p">[(</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.6</span><span class="p">,</span><span class="mf">0.8</span><span class="p">)],</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mf</span><span class="o">.</span><span class="n">kernel</span><span class="p">()</span>
+<span class="go">-101.940495711284</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hfg</span> <span class="o">=</span> <span class="n">mm_charge_grad</span><span class="p">(</span><span class="n">grad</span><span class="o">.</span><span class="n">hf</span><span class="o">.</span><span class="n">RHF</span><span class="p">(</span><span class="n">mf</span><span class="p">),</span> <span class="n">coords</span><span class="p">,</span> <span class="n">charges</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hfg</span><span class="o">.</span><span class="n">kernel</span><span class="p">()</span>
+<span class="go">[[-0.25912357 -0.29235976 -0.38245077]</span>
+<span class="go"> [-1.70497052 -1.89423883  1.2794798 ]]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyscf.qmmm.itrf.mm_charge">
+<code class="sig-prename descclassname">pyscf.qmmm.itrf.</code><code class="sig-name descname">mm_charge</code><span class="sig-paren">(</span><em class="sig-param">scf_method</em>, <em class="sig-param">atoms_or_coords</em>, <em class="sig-param">charges</em>, <em class="sig-param">unit=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyscf.qmmm.itrf.mm_charge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Embedding the one-electron (non-relativistic) potential generated by MM
+point charges into QM Hamiltonian.</p>
+<p>The total energy includes the regular QM energy, the interaction between
+the nuclei in QM region and the MM charges, and the static Coulomb
+interaction between the electron density and the MM charges. It does not
+include the static Coulomb interactions of the MM point charges, the MM
+energy, the vdw interaction or other bonding/non-bonding effects between
+QM region and MM particles.</p>
+<dl>
+<dt>Args:</dt><dd><p>scf_method : a HF or DFT object</p>
+<dl class="simple">
+<dt>atoms_or_coords<span class="classifier">2D array, shape (N,3)</span></dt><dd><p>MM particle coordinates</p>
+</dd>
+<dt>charges<span class="classifier">1D array</span></dt><dd><p>MM particle charges</p>
+</dd>
+</dl>
+</dd>
+<dt>Kwargs:</dt><dd><dl class="simple">
+<dt>unit<span class="classifier">str</span></dt><dd><p>Bohr, AU, Ang (case insensitive). Default is the same to mol.unit</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><p>Same method object as the input scf_method with modified 1e Hamiltonian</p>
+</dd>
+<dt>Note:</dt><dd><p>1. if MM charge and X2C correction are used together, function mm_charge
+needs to be applied after X2C decoration (.x2c method), eg
+mf = mm_charge(scf.RHF(mol).x2c()), [(0.5,0.6,0.8)], [-0.5]).
+2. Once mm_charge function is applied on the SCF object, it
+affects all the post-HF calculations eg MP2, CCSD, MCSCF etc</p>
+</dd>
+</dl>
+<p>Examples:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mol</span> <span class="o">=</span> <span class="n">gto</span><span class="o">.</span><span class="n">M</span><span class="p">(</span><span class="n">atom</span><span class="o">=</span><span class="s1">&#39;H 0 0 0; F 0 0 1&#39;</span><span class="p">,</span> <span class="n">basis</span><span class="o">=</span><span class="s1">&#39;ccpvdz&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mf</span> <span class="o">=</span> <span class="n">mm_charge</span><span class="p">(</span><span class="n">dft</span><span class="o">.</span><span class="n">RKS</span><span class="p">(</span><span class="n">mol</span><span class="p">),</span> <span class="p">[(</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.6</span><span class="p">,</span><span class="mf">0.8</span><span class="p">)],</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mf</span><span class="o">.</span><span class="n">kernel</span><span class="p">()</span>
+<span class="go">-101.940495711284</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyscf.qmmm.itrf.mm_charge_grad">
+<code class="sig-prename descclassname">pyscf.qmmm.itrf.</code><code class="sig-name descname">mm_charge_grad</code><span class="sig-paren">(</span><em class="sig-param">scf_grad</em>, <em class="sig-param">atoms_or_coords</em>, <em class="sig-param">charges</em>, <em class="sig-param">unit=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyscf.qmmm.itrf.mm_charge_grad" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply the MM charges in the QM gradients’ method.  It affects both the
+electronic and nuclear parts of the QM fragment.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>scf_grad<span class="classifier">a HF or DFT gradient object (grad.HF or grad.RKS etc)</span></dt><dd><p>Once the add_mm_charges_grad was applied, it affects all post-HF
+calculations eg MP2, CCSD, MCSCF etc</p>
+</dd>
+<dt>coords<span class="classifier">2D array, shape (N,3)</span></dt><dd><p>MM particle coordinates</p>
+</dd>
+<dt>charges<span class="classifier">1D array</span></dt><dd><p>MM particle charges</p>
+</dd>
+</dl>
+</dd>
+<dt>Kwargs:</dt><dd><dl class="simple">
+<dt>unit<span class="classifier">str</span></dt><dd><p>Bohr, AU, Ang (case insensitive). Default is the same to mol.unit</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><p>Same gradeints method object as the input scf_grad method</p>
+</dd>
+</dl>
+<p>Examples:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">gto</span><span class="p">,</span> <span class="n">scf</span><span class="p">,</span> <span class="n">grad</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mol</span> <span class="o">=</span> <span class="n">gto</span><span class="o">.</span><span class="n">M</span><span class="p">(</span><span class="n">atom</span><span class="o">=</span><span class="s1">&#39;H 0 0 0; F 0 0 1&#39;</span><span class="p">,</span> <span class="n">basis</span><span class="o">=</span><span class="s1">&#39;ccpvdz&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mf</span> <span class="o">=</span> <span class="n">mm_charge</span><span class="p">(</span><span class="n">scf</span><span class="o">.</span><span class="n">RHF</span><span class="p">(</span><span class="n">mol</span><span class="p">),</span> <span class="p">[(</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.6</span><span class="p">,</span><span class="mf">0.8</span><span class="p">)],</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mf</span><span class="o">.</span><span class="n">kernel</span><span class="p">()</span>
+<span class="go">-101.940495711284</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hfg</span> <span class="o">=</span> <span class="n">mm_charge_grad</span><span class="p">(</span><span class="n">grad</span><span class="o">.</span><span class="n">hf</span><span class="o">.</span><span class="n">RHF</span><span class="p">(</span><span class="n">mf</span><span class="p">),</span> <span class="n">coords</span><span class="p">,</span> <span class="n">charges</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hfg</span><span class="o">.</span><span class="n">kernel</span><span class="p">()</span>
+<span class="go">[[-0.25912357 -0.29235976 -0.38245077]</span>
+<span class="go"> [-1.70497052 -1.89423883  1.2794798 ]]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyscf.qmmm.itrf.qmmm_for_scf">
+<code class="sig-prename descclassname">pyscf.qmmm.itrf.</code><code class="sig-name descname">qmmm_for_scf</code><span class="sig-paren">(</span><em class="sig-param">scf_method</em>, <em class="sig-param">mm_mol</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyscf/qmmm/itrf.html#qmmm_for_scf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyscf.qmmm.itrf.qmmm_for_scf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add the potential of MM particles to SCF (HF and DFT) method or CASCI
+method then generate the corresponding QM/MM method for the QM system.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>mm_mol : MM Mole object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyscf.qmmm.itrf.qmmm_grad_for_scf">
+<code class="sig-prename descclassname">pyscf.qmmm.itrf.</code><code class="sig-name descname">qmmm_grad_for_scf</code><span class="sig-paren">(</span><em class="sig-param">scf_grad</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyscf/qmmm/itrf.html#qmmm_grad_for_scf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyscf.qmmm.itrf.qmmm_grad_for_scf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add the potential of MM particles to SCF (HF and DFT) object and then
+generate the corresponding QM/MM gradients method for the QM system.</p>
+</dd></dl>
+
+<p>The <code class="xref py py-mod docutils literal notranslate"><span class="pre">qmmm</span></code> module implements a generic interface for use with MM
+programs.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="rt.html" class="btn btn-neutral float-right" title="10.24. rt — Real-time time-dependent density functional theory" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="prop/esr.html" class="btn btn-neutral float-left" title="10.22.12. prop.esr — Electron spin-rotation coupling" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2015-2020, The PySCF Developers
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

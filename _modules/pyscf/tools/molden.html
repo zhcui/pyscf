@@ -1,15 +1,18 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pyscf.tools.molden &mdash; PySCF 1.5.0 documentation</title>
+  <title>pyscf.tools.molden &mdash; PySCF 1.7.5 documentation</title>
   
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
 
   
   
@@ -17,42 +20,37 @@
   
 
   
-
-  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
-  
-
-  
-  
-    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-    <link rel="top" title="PySCF 1.5.0 documentation" href="../../../index.html"/>
-        <link rel="up" title="Module code" href="../../index.html"/> 
-
-  
-  <script src="../../../_static/js/modernizr.min.js"></script>
-
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
-            <a href="../../../index.html" class="icon icon-home"> PySCF
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> PySCF
           
 
           
@@ -62,7 +60,7 @@
             
             
               <div class="version">
-                1.5
+                1.7
               </div>
             
           
@@ -79,6 +77,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -88,46 +87,28 @@
             
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../overview.html">1. An overview of PySCF</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">2. Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../version.html">2. Version history</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../install.html">3. Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../gto.html">4. gto &#8212; Molecular structure and GTO basis</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../lib.html">5. <code class="docutils literal"><span class="pre">lib</span></code> &#8212; Helper functions, parameters, and C extensions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../scf.html">6. scf &#8212; Mean-field methods</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../ao2mo.html">7. ao2mo &#8212; Integral transformations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../mcscf.html">8. mcscf &#8212; Multi-configurational self-consistent field</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../fci.html">9. fci &#8212; Full configuration interaction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../symm.html">10. symm &#8211; Point group symmetry and spin symmetry</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../df.html">11. df &#8212; Density fitting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../dft.html">12. dft &#8212; Density functional theory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../tddft.html">13. tddft &#8212; Time dependent density functional theory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../cc.html">14. cc &#8212; Coupled cluster</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../ci.html">15. ci &#8212; Configuration interaction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../dmrgscf.html">16. dmrgscf</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../fciqmcscf.html">17. fciqmcscf</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../tools.html">18. tools</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../grad.html">19. grad &#8212; Analytical nuclear gradients</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../hessian.html">20. hessian &#8212; Analytical nuclear Hessian</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../pbc.html">21. pbc &#8212; Periodic boundary conditions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../nao.html">22. nao &#8212; Numerical Atomic Orbitals</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../lo.html">23. lo &#8212; Orbital localization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../advanced.html">24. Miscellaneous</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../qmmm.html">25. qmmm &#8212; QM/MM interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../mrpt.html">26. mrpt &#8212; Multi-reference perturbation theory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../benchmark.html">27. Benchmark</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../code-rule.html">28. Code standard</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../version.html">29. Version history</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../code-rule.html">4. Code standard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../benchmark.html">5. Benchmark</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">6. Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../theory.html">7. Theoretical methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../advanced.html">8. Miscellaneous</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../interface.html">9. Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">10. Main modules</a></li>
 </ul>
 
             
           
         </div>
+        
       </div>
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../index.html">PySCF</a>
@@ -135,9 +116,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -158,7 +140,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../../index.html">Module code</a> &raquo;</li>
         
@@ -166,8 +148,6 @@
     
     
       <li class="wy-breadcrumbs-aside">
-        
-            
         
       </li>
     
@@ -181,7 +161,7 @@
             
   <h1>Source code for pyscf.tools.molden</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python</span>
-<span class="c1"># Copyright 2014-2018 The PySCF Developers. All Rights Reserved.</span>
+<span class="c1"># Copyright 2014-2020 The PySCF Developers. All Rights Reserved.</span>
 <span class="c1">#</span>
 <span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
 <span class="c1"># you may not use this file except in compliance with the License.</span>
@@ -202,6 +182,7 @@
 <span class="c1"># http://www.cmbi.ru.nl/molden/molden_format.html</span>
 
 <span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">import</span> <span class="nn">pyscf</span>
 <span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">lib</span>
@@ -215,8 +196,15 @@
 <span class="k">def</span> <span class="nf">orbital_coeff</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">fout</span><span class="p">,</span> <span class="n">mo_coeff</span><span class="p">,</span> <span class="n">spin</span><span class="o">=</span><span class="s1">&#39;Alpha&#39;</span><span class="p">,</span> <span class="n">symm</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ene</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                   <span class="n">occ</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ignore_h</span><span class="o">=</span><span class="n">IGNORE_H</span><span class="p">):</span>
     <span class="kn">from</span> <span class="nn">pyscf.symm</span> <span class="k">import</span> <span class="n">label_orb_symm</span>
+    <span class="k">if</span> <span class="n">mol</span><span class="o">.</span><span class="n">cart</span><span class="p">:</span>
+        <span class="c1"># pyscf Cartesian GTOs are not normalized. This may not be consistent</span>
+        <span class="c1"># with the requirements of molden format. Normalize Cartesian GTOs here</span>
+        <span class="n">norm</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">intor</span><span class="p">(</span><span class="s1">&#39;int1e_ovlp&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">diagonal</span><span class="p">()</span> <span class="o">**</span> <span class="o">.</span><span class="mi">5</span>
+        <span class="n">mo_coeff</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;i,ij-&gt;ij&#39;</span><span class="p">,</span> <span class="n">norm</span><span class="p">,</span> <span class="n">mo_coeff</span><span class="p">)</span>
+
     <span class="k">if</span> <span class="n">ignore_h</span><span class="p">:</span>
         <span class="n">mol</span><span class="p">,</span> <span class="n">mo_coeff</span> <span class="o">=</span> <span class="n">remove_high_l</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">mo_coeff</span><span class="p">)</span>
+
     <span class="n">aoidx</span> <span class="o">=</span> <span class="n">order_ao_index</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span>
     <span class="n">nmo</span> <span class="o">=</span> <span class="n">mo_coeff</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">symm</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -224,7 +212,7 @@
         <span class="k">if</span> <span class="n">mol</span><span class="o">.</span><span class="n">symmetry</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">symm</span> <span class="o">=</span> <span class="n">label_orb_symm</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">mol</span><span class="o">.</span><span class="n">irrep_name</span><span class="p">,</span> <span class="n">mol</span><span class="o">.</span><span class="n">symm_orb</span><span class="p">,</span>
-                                      <span class="n">mo_coeff</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mi">1</span><span class="n">e</span><span class="o">-</span><span class="mi">5</span><span class="p">)</span>
+                                      <span class="n">mo_coeff</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">)</span>
             <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
     <span class="k">if</span> <span class="n">ene</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -246,7 +234,7 @@
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">j</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">aoidx</span><span class="p">):</span>
             <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39; </span><span class="si">%3d</span><span class="s1">    </span><span class="si">%18.14g</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">mo_coeff</span><span class="p">[</span><span class="n">j</span><span class="p">,</span><span class="n">imo</span><span class="p">]))</span>
 
-<div class="viewcode-block" id="from_mo"><a class="viewcode-back" href="../../../tools.html#pyscf.tools.molden.from_mo">[docs]</a><span class="k">def</span> <span class="nf">from_mo</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">mo_coeff</span><span class="p">,</span> <span class="n">spin</span><span class="o">=</span><span class="s1">&#39;Alpha&#39;</span><span class="p">,</span> <span class="n">symm</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ene</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<div class="viewcode-block" id="from_mo"><a class="viewcode-back" href="../../../modules/tools.html#pyscf.tools.molden.from_mo">[docs]</a><span class="k">def</span> <span class="nf">from_mo</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">mo_coeff</span><span class="p">,</span> <span class="n">spin</span><span class="o">=</span><span class="s1">&#39;Alpha&#39;</span><span class="p">,</span> <span class="n">symm</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ene</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
             <span class="n">occ</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ignore_h</span><span class="o">=</span><span class="n">IGNORE_H</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Dump the given MOs in Molden format&#39;&#39;&#39;</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
@@ -254,7 +242,7 @@
         <span class="n">orbital_coeff</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">mo_coeff</span><span class="p">,</span> <span class="n">spin</span><span class="p">,</span> <span class="n">symm</span><span class="p">,</span> <span class="n">ene</span><span class="p">,</span> <span class="n">occ</span><span class="p">,</span> <span class="n">ignore_h</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="from_scf"><a class="viewcode-back" href="../../../tools.html#pyscf.tools.molden.from_scf">[docs]</a><span class="k">def</span> <span class="nf">from_scf</span><span class="p">(</span><span class="n">mf</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">ignore_h</span><span class="o">=</span><span class="n">IGNORE_H</span><span class="p">):</span>
+<div class="viewcode-block" id="from_scf"><a class="viewcode-back" href="../../../modules/tools.html#pyscf.tools.molden.from_scf">[docs]</a><span class="k">def</span> <span class="nf">from_scf</span><span class="p">(</span><span class="n">mf</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">ignore_h</span><span class="o">=</span><span class="n">IGNORE_H</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Dump the given SCF object in Molden format&#39;&#39;&#39;</span>
     <span class="n">dump_scf</span><span class="p">(</span><span class="n">mf</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">ignore_h</span><span class="p">)</span></div>
 <span class="k">def</span> <span class="nf">dump_scf</span><span class="p">(</span><span class="n">mf</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">ignore_h</span><span class="o">=</span><span class="n">IGNORE_H</span><span class="p">):</span>
@@ -263,7 +251,7 @@
     <span class="n">mo_coeff</span> <span class="o">=</span> <span class="n">mf</span><span class="o">.</span><span class="n">mo_coeff</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="n">header</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">ignore_h</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mf</span><span class="p">,</span> <span class="n">pyscf</span><span class="o">.</span><span class="n">scf</span><span class="o">.</span><span class="n">uhf</span><span class="o">.</span><span class="n">UHF</span><span class="p">)</span> <span class="ow">or</span> <span class="s1">&#39;UHF&#39;</span> <span class="o">==</span> <span class="n">mf</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mf</span><span class="p">,</span> <span class="n">pyscf</span><span class="o">.</span><span class="n">scf</span><span class="o">.</span><span class="n">uhf</span><span class="o">.</span><span class="n">UHF</span><span class="p">)</span> <span class="ow">or</span> <span class="s1">&#39;UHF&#39;</span> <span class="o">==</span> <span class="n">mf</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">:</span>
             <span class="n">orbital_coeff</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">mo_coeff</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">spin</span><span class="o">=</span><span class="s1">&#39;Alpha&#39;</span><span class="p">,</span>
                           <span class="n">ene</span><span class="o">=</span><span class="n">mf</span><span class="o">.</span><span class="n">mo_energy</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">occ</span><span class="o">=</span><span class="n">mf</span><span class="o">.</span><span class="n">mo_occ</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
                           <span class="n">ignore_h</span><span class="o">=</span><span class="n">ignore_h</span><span class="p">)</span>
@@ -320,140 +308,221 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">orbital_coeff</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">mo</span><span class="p">,</span> <span class="n">ene</span><span class="o">=</span><span class="n">ene</span><span class="p">,</span> <span class="n">occ</span><span class="o">=</span><span class="n">occ</span><span class="p">,</span> <span class="n">ignore_h</span><span class="o">=</span><span class="n">ignore_h</span><span class="p">)</span>
 
-<span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="n">moldenfile</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">load</span><span class="p">(</span><span class="n">moldenfile</span><span class="p">)</span>
-<div class="viewcode-block" id="load"><a class="viewcode-back" href="../../../tools.html#pyscf.tools.molden.load">[docs]</a><span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="n">moldenfile</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;Extract mol and orbitals from molden file</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">mol</span> <span class="o">=</span> <span class="n">gto</span><span class="o">.</span><span class="n">Mole</span><span class="p">()</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">moldenfile</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-        <span class="n">line</span> <span class="o">=</span> <span class="n">first_token</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s1">&#39;[Atoms]&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="s1">&#39;ANG&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="o">.</span><span class="n">upper</span><span class="p">():</span>
-            <span class="n">unit</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="n">_SEC_RE</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\[[^]]+\]&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">_read_one_section</span><span class="p">(</span><span class="n">molden_fp</span><span class="p">):</span>
+    <span class="n">sec</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span>
+    <span class="n">last_pos</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">line</span> <span class="o">=</span> <span class="n">molden_fp</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="p">:</span>
+            <span class="k">break</span>
+
+        <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">line</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span> <span class="ow">or</span> <span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;#&#39;</span><span class="p">:</span>  <span class="c1"># comment or blank line</span>
+            <span class="k">continue</span>
+
+        <span class="n">mo</span> <span class="o">=</span> <span class="n">_SEC_RE</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">mo</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">sec</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">sec</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">line</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Next section? rewind the fp pointer</span>
+                <span class="n">molden_fp</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">last_pos</span><span class="p">)</span>
+                <span class="k">break</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">unit</span> <span class="o">=</span> <span class="n">lib</span><span class="o">.</span><span class="n">param</span><span class="o">.</span><span class="n">BOHR</span>
+            <span class="n">sec</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
 
-        <span class="n">atoms</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">line</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
-        <span class="k">while</span> <span class="n">line</span><span class="p">:</span>
-            <span class="k">if</span> <span class="s1">&#39;[GTO]&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
-                <span class="k">break</span>
-            <span class="n">dat</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
-            <span class="n">symb</span><span class="p">,</span> <span class="n">atmid</span><span class="p">,</span> <span class="n">chg</span> <span class="o">=</span> <span class="n">dat</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span>
-            <span class="n">coord</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">dat</span><span class="p">[</span><span class="mi">3</span><span class="p">:]])</span><span class="o">*</span><span class="n">unit</span>
-            <span class="n">atoms</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">gto</span><span class="o">.</span><span class="n">mole</span><span class="o">.</span><span class="n">_std_symbol</span><span class="p">(</span><span class="n">symb</span><span class="p">)</span><span class="o">+</span><span class="n">atmid</span><span class="p">,</span> <span class="n">coord</span><span class="p">))</span>
-            <span class="n">line</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
-        <span class="n">mol</span><span class="o">.</span><span class="n">atom</span> <span class="o">=</span> <span class="n">atoms</span>
+        <span class="n">last_pos</span> <span class="o">=</span> <span class="n">molden_fp</span><span class="o">.</span><span class="n">tell</span><span class="p">()</span>
 
-        <span class="k">def</span> <span class="nf">read_one_bas</span><span class="p">(</span><span class="n">lsym</span><span class="p">,</span> <span class="n">nb</span><span class="p">,</span> <span class="n">fac</span><span class="p">):</span>
-            <span class="n">fac</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">fac</span><span class="p">)</span>
-            <span class="n">bas</span> <span class="o">=</span> <span class="p">[</span><span class="n">lib</span><span class="o">.</span><span class="n">param</span><span class="o">.</span><span class="n">ANGULARMAP</span><span class="p">[</span><span class="n">lsym</span><span class="p">],]</span>
-            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">nb</span><span class="p">)):</span>
-                <span class="n">dat</span> <span class="o">=</span> <span class="n">_d2e</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">())</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
-                <span class="n">bas</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="nb">float</span><span class="p">(</span><span class="n">dat</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">float</span><span class="p">(</span><span class="n">dat</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">*</span><span class="n">fac</span><span class="p">))</span>
-            <span class="k">return</span> <span class="n">bas</span>
-        <span class="n">basis</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="n">line</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">sec</span>
 
-<span class="c1"># Be careful with the atom sequence in [GTO] session, it does not correspond</span>
+<span class="k">def</span> <span class="nf">_parse_natoms</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="n">envs</span><span class="p">):</span>
+    <span class="n">envs</span><span class="p">[</span><span class="s1">&#39;natm&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">natm</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">natm</span>
+
+<span class="k">def</span> <span class="nf">_parse_atoms</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="n">envs</span><span class="p">):</span>
+    <span class="k">if</span> <span class="s1">&#39;ANG&#39;</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">():</span>
+        <span class="n">envs</span><span class="p">[</span><span class="s1">&#39;unit&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">unit</span> <span class="o">=</span> <span class="n">envs</span><span class="p">[</span><span class="s1">&#39;unit&#39;</span><span class="p">]</span>
+
+    <span class="n">envs</span><span class="p">[</span><span class="s1">&#39;atoms&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">atoms</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+        <span class="n">dat</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+        <span class="n">symb</span><span class="p">,</span> <span class="n">atmid</span><span class="p">,</span> <span class="n">chg</span> <span class="o">=</span> <span class="n">dat</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span>
+        <span class="n">coord</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">dat</span><span class="p">[</span><span class="mi">3</span><span class="p">:]])</span><span class="o">*</span><span class="n">unit</span>
+        <span class="n">atoms</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">gto</span><span class="o">.</span><span class="n">mole</span><span class="o">.</span><span class="n">_std_symbol</span><span class="p">(</span><span class="n">symb</span><span class="p">)</span><span class="o">+</span><span class="n">atmid</span><span class="p">,</span> <span class="n">coord</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">envs</span><span class="p">[</span><span class="s1">&#39;natm&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">envs</span><span class="p">[</span><span class="s1">&#39;natm&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">atoms</span><span class="p">):</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;Number of atoms in section ATOMS does not equal to N_ATOMS</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">atoms</span>
+
+<span class="k">def</span> <span class="nf">_parse_charge</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="n">envs</span><span class="p">):</span>
+    <span class="n">mulliken_charges</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">_d2e</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">[</span><span class="mi">1</span><span class="p">:]]</span>
+    <span class="k">return</span> <span class="n">mulliken_charges</span>
+
+<span class="k">def</span> <span class="nf">_parse_gto</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="n">envs</span><span class="p">):</span>
+    <span class="n">mol</span> <span class="o">=</span> <span class="n">envs</span><span class="p">[</span><span class="s1">&#39;mol&#39;</span><span class="p">]</span>
+    <span class="n">atoms</span> <span class="o">=</span> <span class="n">envs</span><span class="p">[</span><span class="s1">&#39;atoms&#39;</span><span class="p">]</span>
+    <span class="n">basis</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">lines_iter</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
+    <span class="nb">next</span><span class="p">(</span><span class="n">lines_iter</span><span class="p">)</span>  <span class="c1"># skip section header</span>
+
+<span class="c1"># * Do not use iter() here. Python 2 and 3 are different in iter()</span>
+    <span class="k">def</span> <span class="nf">read_one_bas</span><span class="p">(</span><span class="n">lsym</span><span class="p">,</span> <span class="n">nb</span><span class="p">,</span> <span class="n">fac</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="n">fac</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">fac</span><span class="p">)</span>
+        <span class="n">bas</span> <span class="o">=</span> <span class="p">[</span><span class="n">lib</span><span class="o">.</span><span class="n">param</span><span class="o">.</span><span class="n">ANGULARMAP</span><span class="p">[</span><span class="n">lsym</span><span class="o">.</span><span class="n">lower</span><span class="p">()],]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">nb</span><span class="p">)):</span>
+            <span class="n">dat</span> <span class="o">=</span> <span class="n">_d2e</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">lines_iter</span><span class="p">))</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+            <span class="n">bas</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="nb">float</span><span class="p">(</span><span class="n">dat</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">float</span><span class="p">(</span><span class="n">dat</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">*</span><span class="n">fac</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">bas</span>
+
+<span class="c1"># * Be careful with the atom sequence in [GTO] session, it does not correspond</span>
 <span class="c1"># to the atom sequence in [Atoms] session.</span>
-        <span class="n">atom_seq</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">while</span> <span class="n">line</span><span class="p">:</span>
-            <span class="k">if</span> <span class="s1">&#39;[&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
-                <span class="k">break</span>
-            <span class="n">dat</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dat</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="k">pass</span>
-            <span class="k">elif</span> <span class="n">dat</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
-                <span class="n">atom_seq</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">dat</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-                <span class="n">symb</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">atom</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">dat</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-                <span class="n">basis</span><span class="p">[</span><span class="n">symb</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="k">elif</span> <span class="n">dat</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="s1">&#39;spdfghij&#39;</span><span class="p">:</span>
-                <span class="n">lsym</span><span class="p">,</span> <span class="n">nb</span><span class="p">,</span> <span class="n">fac</span> <span class="o">=</span> <span class="n">dat</span>
-                <span class="n">basis</span><span class="p">[</span><span class="n">symb</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">read_one_bas</span><span class="p">(</span><span class="n">lsym</span><span class="p">,</span> <span class="n">nb</span><span class="p">,</span> <span class="n">fac</span><span class="p">))</span>
-            <span class="n">line</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
-        <span class="n">mol</span><span class="o">.</span><span class="n">basis</span> <span class="o">=</span> <span class="n">basis</span>
-        <span class="n">mol</span><span class="o">.</span><span class="n">atom</span> <span class="o">=</span> <span class="p">[</span><span class="n">mol</span><span class="o">.</span><span class="n">atom</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">atom_seq</span><span class="p">]</span>
+    <span class="n">atom_seq</span> <span class="o">=</span> <span class="p">[]</span>
 
-        <span class="n">mol</span><span class="o">.</span><span class="n">cart</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="k">while</span> <span class="n">line</span><span class="p">:</span>
-            <span class="k">if</span> <span class="s1">&#39;[5d]&#39;</span> <span class="ow">in</span> <span class="n">line</span> <span class="ow">or</span> <span class="s1">&#39;[9g]&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
-                <span class="n">mol</span><span class="o">.</span><span class="n">cart</span> <span class="o">=</span> <span class="kc">False</span>
-            <span class="k">elif</span> <span class="s1">&#39;[core]&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
-                <span class="n">line</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
-                <span class="k">while</span> <span class="n">line</span><span class="p">:</span>
-                    <span class="n">dat</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
-                    <span class="k">if</span> <span class="n">dat</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
-                        <span class="n">atm_id</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">dat</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span> <span class="o">-</span> <span class="mi">1</span>
-                        <span class="n">nelec_core</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">dat</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
-                        <span class="n">mol</span><span class="o">.</span><span class="n">ecp</span><span class="p">[</span><span class="n">atoms</span><span class="p">[</span><span class="n">atm_id</span><span class="p">][</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span><span class="n">nelec_core</span><span class="p">,</span> <span class="p">[]]</span>
-                    <span class="k">elif</span> <span class="s1">&#39;[MO]&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
-                        <span class="k">break</span>
-                    <span class="n">line</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
-            <span class="k">if</span> <span class="s1">&#39;[MO]&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
-                <span class="k">break</span>
-            <span class="n">line</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines_iter</span><span class="p">:</span>
+        <span class="n">dat</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">dat</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
+            <span class="n">atom_seq</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">dat</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">symb</span> <span class="o">=</span> <span class="n">atoms</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">dat</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">basis</span><span class="p">[</span><span class="n">symb</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 
-        <span class="k">if</span> <span class="n">mol</span><span class="o">.</span><span class="n">ecp</span><span class="p">:</span>
-            <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">ECP were dectected in the molden file.</span><span class="se">\n</span><span class="s1">&#39;</span>
-                             <span class="s1">&#39;Note Molden format does not support ECP data. &#39;</span>
-                             <span class="s1">&#39;ECP information was lost when saving to molden format.</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">dat</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="ow">in</span> <span class="s1">&#39;SPDFGHIJ&#39;</span><span class="p">:</span>
+            <span class="n">basis</span><span class="p">[</span><span class="n">symb</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">read_one_bas</span><span class="p">(</span><span class="o">*</span><span class="n">dat</span><span class="p">))</span>
+
+    <span class="n">mol</span><span class="o">.</span><span class="n">basis</span> <span class="o">=</span> <span class="n">envs</span><span class="p">[</span><span class="s1">&#39;basis&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">basis</span>
+    <span class="n">mol</span><span class="o">.</span><span class="n">atom</span> <span class="o">=</span> <span class="p">[</span><span class="n">atoms</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">atom_seq</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">mol</span>
+
+<span class="k">def</span> <span class="nf">_parse_mo</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="n">envs</span><span class="p">):</span>
+    <span class="n">mol</span> <span class="o">=</span> <span class="n">envs</span><span class="p">[</span><span class="s1">&#39;mol&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">mol</span><span class="o">.</span><span class="n">_built</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">mol</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">RuntimeError</span><span class="p">:</span>
             <span class="n">mol</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">spin</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
-        <span class="n">data</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;Sym&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">:]</span>
-        <span class="n">irrep_labels</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">mo_energy</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">spins</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">mo_occ</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">mo_coeff</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">norb_alpha</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
-        <span class="k">for</span> <span class="n">rawd</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
-            <span class="n">lines</span> <span class="o">=</span> <span class="n">rawd</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-            <span class="n">irrep_labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+    <span class="n">irrep_labels</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">mo_energy</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">spins</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">mo_occ</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">mo_coeff</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+        <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+        <span class="k">if</span> <span class="s1">&#39;SYM&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+            <span class="n">irrep_labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
             <span class="n">orb</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
-                <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
-                    <span class="k">continue</span>
-                <span class="k">elif</span> <span class="s1">&#39;Ene&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
-                    <span class="n">mo_energy</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">_d2e</span><span class="p">(</span><span class="n">line</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()))</span>
-                <span class="k">elif</span> <span class="s1">&#39;Spin&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
-                    <span class="n">spins</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
-                <span class="k">elif</span> <span class="s1">&#39;Occ&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
-                    <span class="n">mo_occ</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">_d2e</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">())))</span>
-                <span class="k">elif</span> <span class="s1">&#39;[MO]&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
-                    <span class="n">norb_alpha</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">mo_energy</span><span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">orb</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">_d2e</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">])))</span>
             <span class="n">mo_coeff</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">orb</span><span class="p">)</span>
-        <span class="n">mo_energy</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mo_energy</span><span class="p">)</span>
-        <span class="n">mo_occ</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mo_occ</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">mol</span><span class="o">.</span><span class="n">cart</span><span class="p">:</span>
-            <span class="n">aoidx</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">order_ao_index</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">cart</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
-            <span class="n">mo_coeff</span> <span class="o">=</span> <span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mo_coeff</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">)[</span><span class="n">aoidx</span><span class="p">]</span>
-<span class="c1"># AO are assumed to be normalized in molpro molden file</span>
-            <span class="n">s</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">intor</span><span class="p">(</span><span class="s1">&#39;int1e_ovlp&#39;</span><span class="p">)</span>
-            <span class="n">mo_coeff</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;i,ij-&gt;ij&#39;</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">s</span><span class="o">.</span><span class="n">diagonal</span><span class="p">()),</span> <span class="n">mo_coeff</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="s1">&#39;ENE&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+            <span class="n">mo_energy</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">_d2e</span><span class="p">(</span><span class="n">line</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()))</span>
+        <span class="k">elif</span> <span class="s1">&#39;SPIN&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+            <span class="n">spins</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+        <span class="k">elif</span> <span class="s1">&#39;OCC&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+            <span class="n">mo_occ</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">_d2e</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">())))</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">aoidx</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">order_ao_index</span><span class="p">(</span><span class="n">mol</span><span class="p">))</span>
-            <span class="n">mo_coeff</span> <span class="o">=</span> <span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mo_coeff</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">)[</span><span class="n">aoidx</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">norb_alpha</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">irrep_labels</span> <span class="o">=</span> <span class="p">(</span><span class="n">irrep_labels</span><span class="p">[:</span><span class="n">norb_alpha</span><span class="p">],</span> <span class="n">irrep_labels</span><span class="p">[</span><span class="n">norb_alpha</span><span class="p">:])</span>
-            <span class="n">spins</span> <span class="o">=</span> <span class="p">(</span><span class="n">spins</span><span class="p">[:</span><span class="n">norb_alpha</span><span class="p">],</span> <span class="n">spins</span><span class="p">[</span><span class="n">norb_alpha</span><span class="p">:])</span>
-            <span class="n">mo_energy</span> <span class="o">=</span> <span class="p">(</span><span class="n">mo_energy</span><span class="p">[:</span><span class="n">norb_alpha</span><span class="p">],</span> <span class="n">mo_energy</span><span class="p">[</span><span class="n">norb_alpha</span><span class="p">:])</span>
-            <span class="n">mo_occ</span> <span class="o">=</span> <span class="p">(</span><span class="n">mo_occ</span><span class="p">[:</span><span class="n">norb_alpha</span><span class="p">],</span> <span class="n">mo_occ</span><span class="p">[</span><span class="n">norb_alpha</span><span class="p">:])</span>
-            <span class="n">mo_coeff</span> <span class="o">=</span> <span class="p">(</span><span class="n">mo_coeff</span><span class="p">[:,:</span><span class="n">norb_alpha</span><span class="p">],</span> <span class="n">mo_coeff</span><span class="p">[:,</span><span class="n">norb_alpha</span><span class="p">:])</span>
-        <span class="k">return</span> <span class="n">mol</span><span class="p">,</span> <span class="n">mo_energy</span><span class="p">,</span> <span class="n">mo_coeff</span><span class="p">,</span> <span class="n">mo_occ</span><span class="p">,</span> <span class="n">irrep_labels</span><span class="p">,</span> <span class="n">spins</span></div>
+            <span class="n">orb</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">_d2e</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">])))</span>
 
-<span class="k">def</span> <span class="nf">first_token</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
-    <span class="n">line</span> <span class="o">=</span> <span class="n">stream</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
-    <span class="k">while</span> <span class="n">line</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">line</span>
-        <span class="n">line</span> <span class="o">=</span> <span class="n">stream</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+    <span class="n">mo_energy</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mo_energy</span><span class="p">)</span>
+    <span class="n">mo_occ</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mo_occ</span><span class="p">)</span>
+    <span class="n">aoidx</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">order_ao_index</span><span class="p">(</span><span class="n">mol</span><span class="p">))</span>
+    <span class="n">mo_coeff</span> <span class="o">=</span> <span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mo_coeff</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">)[</span><span class="n">aoidx</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">mol</span><span class="o">.</span><span class="n">cart</span><span class="p">:</span>
+<span class="c1"># Cartesian GTOs are normalized in molden format but they are not in pyscf</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">intor</span><span class="p">(</span><span class="s1">&#39;int1e_ovlp&#39;</span><span class="p">)</span>
+        <span class="n">mo_coeff</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;i,ij-&gt;ij&#39;</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">s</span><span class="o">.</span><span class="n">diagonal</span><span class="p">()),</span> <span class="n">mo_coeff</span><span class="p">)</span>
+
+
+    <span class="k">return</span> <span class="n">mol</span><span class="p">,</span> <span class="n">mo_energy</span><span class="p">,</span> <span class="n">mo_coeff</span><span class="p">,</span> <span class="n">mo_occ</span><span class="p">,</span> <span class="n">irrep_labels</span><span class="p">,</span> <span class="n">spins</span>
+
+
+<span class="k">def</span> <span class="nf">_parse_core</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="n">envs</span><span class="p">):</span>
+    <span class="n">mol</span> <span class="o">=</span> <span class="n">envs</span><span class="p">[</span><span class="s1">&#39;mol&#39;</span><span class="p">]</span>
+    <span class="n">atoms</span> <span class="o">=</span> <span class="n">envs</span><span class="p">[</span><span class="s1">&#39;atoms&#39;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+        <span class="n">dat</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">dat</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
+            <span class="n">atm_id</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">dat</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="n">nelec_core</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">dat</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+            <span class="n">mol</span><span class="o">.</span><span class="n">ecp</span><span class="p">[</span><span class="n">atoms</span><span class="p">[</span><span class="n">atm_id</span><span class="p">][</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span><span class="n">nelec_core</span><span class="p">,</span> <span class="p">[]]</span>
+
+    <span class="k">if</span> <span class="n">mol</span><span class="o">.</span><span class="n">ecp</span><span class="p">:</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">ECP were dectected in the molden file.</span><span class="se">\n</span><span class="s1">&#39;</span>
+                         <span class="s1">&#39;Note Molden format does not support ECP data. &#39;</span>
+                         <span class="s1">&#39;ECP information was lost when saving to molden format.</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">mol</span><span class="o">.</span><span class="n">ecp</span>
+
+<span class="n">_SEC_PARSER</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;GTO&#39;</span>      <span class="p">:</span> <span class="n">_parse_gto</span><span class="p">,</span>
+               <span class="s1">&#39;N_ATOMS&#39;</span>  <span class="p">:</span> <span class="n">_parse_natoms</span><span class="p">,</span>
+               <span class="s1">&#39;ATOMS&#39;</span>    <span class="p">:</span> <span class="n">_parse_atoms</span><span class="p">,</span>
+               <span class="s1">&#39;CHARGE&#39;</span>   <span class="p">:</span> <span class="n">_parse_charge</span><span class="p">,</span>
+               <span class="s1">&#39;MO&#39;</span>       <span class="p">:</span> <span class="n">_parse_mo</span><span class="p">,</span>
+               <span class="s1">&#39;CORE&#39;</span>     <span class="p">:</span> <span class="n">_parse_core</span><span class="p">,</span>
+               <span class="s1">&#39;MOLDEN FORMAT&#39;</span> <span class="p">:</span> <span class="k">lambda</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+              <span class="p">}</span>
+
+<div class="viewcode-block" id="load"><a class="viewcode-back" href="../../../modules/tools.html#pyscf.tools.molden.load">[docs]</a><span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="n">moldenfile</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Extract mol and orbitals from molden file</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">moldenfile</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">mol</span> <span class="o">=</span> <span class="n">gto</span><span class="o">.</span><span class="n">Mole</span><span class="p">()</span>
+        <span class="n">mol</span><span class="o">.</span><span class="n">cart</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">tokens</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;natm&#39;</span>  <span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                  <span class="s1">&#39;unit&#39;</span>  <span class="p">:</span> <span class="n">lib</span><span class="o">.</span><span class="n">param</span><span class="o">.</span><span class="n">BOHR</span><span class="p">,</span>
+                  <span class="s1">&#39;mol&#39;</span>   <span class="p">:</span> <span class="n">mol</span><span class="p">,</span>
+                  <span class="s1">&#39;atoms&#39;</span> <span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                  <span class="s1">&#39;basis&#39;</span> <span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="p">}</span>
+        <span class="n">mo_section_count</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="n">_read_one_section</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+            <span class="n">sec_title</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">sec_title</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">break</span>
+
+            <span class="n">sec_title</span> <span class="o">=</span> <span class="n">sec_title</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="n">sec_title</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;]&#39;</span><span class="p">)]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">sec_title</span> <span class="o">==</span> <span class="s1">&#39;MO&#39;</span><span class="p">:</span>
+                <span class="n">res</span> <span class="o">=</span> <span class="n">_parse_mo</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="n">tokens</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">mo_section_count</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># Alpha orbitals</span>
+                    <span class="n">mol</span><span class="p">,</span> <span class="n">mo_energy</span><span class="p">,</span> <span class="n">mo_coeff</span><span class="p">,</span> <span class="n">mo_occ</span><span class="p">,</span> <span class="n">irrep_labels</span><span class="p">,</span> <span class="n">spins</span> <span class="o">=</span> <span class="n">res</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">mo_energy</span>    <span class="o">=</span> <span class="n">mo_energy</span>   <span class="p">,</span> <span class="n">res</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="n">mo_coeff</span>     <span class="o">=</span> <span class="n">mo_coeff</span>    <span class="p">,</span> <span class="n">res</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+                    <span class="n">mo_occ</span>       <span class="o">=</span> <span class="n">mo_occ</span>      <span class="p">,</span> <span class="n">res</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+                    <span class="n">irrep_labels</span> <span class="o">=</span> <span class="n">irrep_labels</span><span class="p">,</span> <span class="n">res</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+                    <span class="n">spins</span>        <span class="o">=</span> <span class="n">spins</span>       <span class="p">,</span> <span class="n">res</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+
+                <span class="n">mo_section_count</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="k">elif</span> <span class="n">sec_title</span> <span class="ow">in</span> <span class="n">_SEC_PARSER</span><span class="p">:</span>
+                <span class="n">_SEC_PARSER</span><span class="p">[</span><span class="n">sec_title</span><span class="o">.</span><span class="n">upper</span><span class="p">()](</span><span class="n">lines</span><span class="p">,</span> <span class="n">tokens</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">sec_title</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;5D&#39;</span><span class="p">,</span> <span class="s1">&#39;7F&#39;</span><span class="p">,</span> <span class="s1">&#39;9G&#39;</span><span class="p">):</span>
+                <span class="n">mol</span><span class="o">.</span><span class="n">cart</span> <span class="o">=</span> <span class="kc">False</span>
+
+            <span class="k">elif</span> <span class="n">sec_title</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;6D&#39;</span> <span class="ow">or</span> <span class="n">sec_title</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;10F&#39;</span><span class="p">,</span> <span class="s1">&#39;15G&#39;</span><span class="p">):</span>
+                <span class="n">mol</span><span class="o">.</span><span class="n">cart</span> <span class="o">=</span> <span class="kc">True</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;Unknown section </span><span class="si">%s</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">sec_title</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">mo_section_count</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">spins</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;B&#39;</span><span class="p">:</span>  <span class="c1"># If including beta orbitals</span>
+            <span class="n">offset</span> <span class="o">=</span> <span class="n">spins</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">spins</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">mo_energy</span>    <span class="o">=</span> <span class="n">mo_energy</span>   <span class="p">[:</span><span class="n">offset</span><span class="p">],</span> <span class="n">mo_energy</span>   <span class="p">[</span><span class="n">offset</span><span class="p">:]</span>
+            <span class="n">mo_coeff</span>     <span class="o">=</span> <span class="n">mo_coeff</span>    <span class="p">[:</span><span class="n">offset</span><span class="p">],</span> <span class="n">mo_coeff</span>    <span class="p">[</span><span class="n">offset</span><span class="p">:]</span>
+            <span class="n">mo_occ</span>       <span class="o">=</span> <span class="n">mo_occ</span>      <span class="p">[:</span><span class="n">offset</span><span class="p">],</span> <span class="n">mo_occ</span>      <span class="p">[</span><span class="n">offset</span><span class="p">:]</span>
+            <span class="n">irrep_labels</span> <span class="o">=</span> <span class="n">irrep_labels</span><span class="p">[:</span><span class="n">offset</span><span class="p">],</span> <span class="n">irrep_labels</span><span class="p">[</span><span class="n">offset</span><span class="p">:]</span>
+            <span class="n">spins</span>        <span class="o">=</span> <span class="n">spins</span>       <span class="p">[:</span><span class="n">offset</span><span class="p">],</span> <span class="n">spins</span>       <span class="p">[</span><span class="n">offset</span><span class="p">:]</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mo_occ</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+        <span class="n">mol</span><span class="o">.</span><span class="n">spin</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">mo_occ</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">-</span> <span class="n">mo_occ</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+
+    <span class="k">return</span> <span class="n">mol</span><span class="p">,</span> <span class="n">mo_energy</span><span class="p">,</span> <span class="n">mo_coeff</span><span class="p">,</span> <span class="n">mo_occ</span><span class="p">,</span> <span class="n">irrep_labels</span><span class="p">,</span> <span class="n">spins</span></div>
+
+<span class="n">parse</span> <span class="o">=</span> <span class="n">read</span> <span class="o">=</span> <span class="n">load</span>
 
 <span class="k">def</span> <span class="nf">_d2e</span><span class="p">(</span><span class="n">token</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">token</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">)</span>
@@ -470,6 +539,7 @@
         <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">   </span><span class="si">%d</span><span class="s1">   </span><span class="si">%d</span><span class="s1">   &#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">symb</span><span class="p">,</span> <span class="n">ia</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">chg</span><span class="p">))</span>
         <span class="n">coord</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">atom_coord</span><span class="p">(</span><span class="n">ia</span><span class="p">)</span>
         <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%18.14f</span><span class="s1">   </span><span class="si">%18.14f</span><span class="s1">   </span><span class="si">%18.14f</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">coord</span><span class="p">))</span>
+
     <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;[GTO]</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">ia</span><span class="p">,</span> <span class="p">(</span><span class="n">sh0</span><span class="p">,</span> <span class="n">sh1</span><span class="p">,</span> <span class="n">p0</span><span class="p">,</span> <span class="n">p1</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">mol</span><span class="o">.</span><span class="n">offset_nr_by_atom</span><span class="p">()):</span>
         <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%d</span><span class="s1"> 0</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span><span class="p">(</span><span class="n">ia</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
@@ -484,7 +554,11 @@
                 <span class="k">for</span> <span class="n">ip</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nprim</span><span class="p">):</span>
                     <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;    </span><span class="si">%18.14g</span><span class="s1">  </span><span class="si">%18.14g</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">es</span><span class="p">[</span><span class="n">ip</span><span class="p">],</span> <span class="n">cs</span><span class="p">[</span><span class="n">ip</span><span class="p">,</span><span class="n">ic</span><span class="p">]))</span>
         <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;[5d]</span><span class="se">\n</span><span class="s1">[9g]</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">mol</span><span class="o">.</span><span class="n">cart</span><span class="p">:</span>
+        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;[6d]</span><span class="se">\n</span><span class="s1">[10f]</span><span class="se">\n</span><span class="s1">[15g]</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;[5d]</span><span class="se">\n</span><span class="s1">[7f]</span><span class="se">\n</span><span class="s1">[9g]</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">mol</span><span class="o">.</span><span class="n">has_ecp</span><span class="p">():</span>  <span class="c1"># See https://github.com/zorkzou/Molden2AIM</span>
         <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;[core]</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -494,7 +568,7 @@
                 <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> : </span><span class="si">%d</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">ia</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">nelec_ecp_core</span><span class="p">))</span>
     <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
-<span class="k">def</span> <span class="nf">order_ao_index</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">cart</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">order_ao_index</span><span class="p">(</span><span class="n">mol</span><span class="p">):</span>
 <span class="c1"># reorder d,f,g fucntion to</span>
 <span class="c1">#  5D: D 0, D+1, D-1, D+2, D-2</span>
 <span class="c1">#  6D: xx, yy, zz, xy, xz, yz</span>
@@ -506,7 +580,7 @@
 <span class="c1"># 15G: xxxx yyyy zzzz xxxy xxxz yyyx yyyz zzzx zzzy xxyy xxzz yyzz xxyz yyxz zzxy</span>
     <span class="n">idx</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">off</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">if</span> <span class="n">cart</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">mol</span><span class="o">.</span><span class="n">cart</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">ib</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">mol</span><span class="o">.</span><span class="n">nbas</span><span class="p">):</span>
             <span class="n">l</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">bas_angular</span><span class="p">(</span><span class="n">ib</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">mol</span><span class="o">.</span><span class="n">bas_nctr</span><span class="p">(</span><span class="n">ib</span><span class="p">)):</span>
@@ -542,7 +616,7 @@
                 <span class="n">off</span> <span class="o">+=</span> <span class="n">l</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span>
     <span class="k">return</span> <span class="n">idx</span>
 
-<div class="viewcode-block" id="remove_high_l"><a class="viewcode-back" href="../../../tools.html#pyscf.tools.molden.remove_high_l">[docs]</a><span class="k">def</span> <span class="nf">remove_high_l</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">mo_coeff</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="remove_high_l"><a class="viewcode-back" href="../../../modules/tools.html#pyscf.tools.molden.remove_high_l">[docs]</a><span class="k">def</span> <span class="nf">remove_high_l</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">mo_coeff</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Remove high angular momentum (l &gt;= 5) functions before dumping molden file.</span>
 <span class="sd">    If molden function raised error message ``RuntimeError l=5 is not supported``,</span>
 <span class="sd">    you can use this function to format orbitals.</span>
@@ -563,20 +637,25 @@
     <span class="k">if</span> <span class="n">mo_coeff</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">pmol</span><span class="p">,</span> <span class="kc">None</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">k</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">p1</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">idx</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">ib</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">mol</span><span class="o">.</span><span class="n">nbas</span><span class="p">):</span>
             <span class="n">l</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">bas_angular</span><span class="p">(</span><span class="n">ib</span><span class="p">)</span>
             <span class="n">nc</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">bas_nctr</span><span class="p">(</span><span class="n">ib</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">mol</span><span class="o">.</span><span class="n">cart</span><span class="p">:</span>
+                <span class="n">nd</span> <span class="o">=</span> <span class="p">(</span><span class="n">l</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">l</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">nd</span> <span class="o">=</span> <span class="n">l</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="n">p0</span><span class="p">,</span> <span class="n">p1</span> <span class="o">=</span> <span class="n">p1</span><span class="p">,</span> <span class="n">p1</span> <span class="o">+</span> <span class="n">nd</span> <span class="o">*</span> <span class="n">nc</span>
             <span class="k">if</span> <span class="n">l</span> <span class="o">&lt;=</span> <span class="mi">4</span><span class="p">:</span>
-                <span class="n">idx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">k</span><span class="o">+</span><span class="p">(</span><span class="n">l</span><span class="o">*</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">nc</span><span class="p">))</span>
-            <span class="n">k</span> <span class="o">+=</span> <span class="p">(</span><span class="n">l</span><span class="o">*</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">nc</span>
+                <span class="n">idx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">p0</span><span class="p">,</span> <span class="n">p1</span><span class="p">))</span>
+
         <span class="n">idx</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">hstack</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">pmol</span><span class="p">,</span> <span class="n">mo_coeff</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span></div>
 
 
 
-<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">scf</span>
     <span class="kn">import</span> <span class="nn">tempfile</span>
     <span class="n">mol</span> <span class="o">=</span> <span class="n">gto</span><span class="o">.</span><span class="n">Mole</span><span class="p">()</span>
@@ -604,9 +683,7 @@
 </pre></div>
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -615,11 +692,19 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015-, Qiming Sun &lt;osirpt.sun@gmail.com&gt;.
+        
+        &copy; Copyright 2015-2020, The PySCF Developers
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -631,38 +716,15 @@
   </div>
   
 
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../../',
-            VERSION:'1.5.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: ''
-        };
-    </script>
-      <script type="text/javascript" src="../../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

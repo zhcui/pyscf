@@ -1,0 +1,389 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>10.9. doci — Doubly occupied configuration interaction &mdash; PySCF 1.7.5 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="10.10. fci — Full configuration interaction" href="fci.html" />
+    <link rel="prev" title="10.8. dft — Density functional theory" href="dft.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> PySCF
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.7
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">1. An overview of PySCF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../version.html">2. Version history</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">3. Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../code-rule.html">4. Code standard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../benchmark.html">5. Benchmark</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">6. Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../theory.html">7. Theoretical methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced.html">8. Miscellaneous</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../interface.html">9. Interfaces</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../modules.html">10. Main modules</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="adc.html">10.1. <code class="xref py py-mod docutils literal notranslate"><span class="pre">adc</span></code> — Algebraic diagrammatic construction (ADC) scheme</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ao2mo.html">10.2. <code class="xref py py-mod docutils literal notranslate"><span class="pre">ao2mo</span></code> — Integral transformations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cc.html">10.3. <code class="xref py py-mod docutils literal notranslate"><span class="pre">cc</span></code> — Coupled cluster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ccn.html">10.4. <code class="xref py py-mod docutils literal notranslate"><span class="pre">ccn</span></code> — Auto-generated coupled cluster of arbitrary order</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ci.html">10.5. <code class="xref py py-mod docutils literal notranslate"><span class="pre">ci</span></code> — Configuration interaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data.html">10.6. <code class="xref py py-mod docutils literal notranslate"><span class="pre">data</span></code> — Data for constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="df.html">10.7. <code class="xref py py-mod docutils literal notranslate"><span class="pre">df</span></code> — Density fitting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dft.html">10.8. <code class="xref py py-mod docutils literal notranslate"><span class="pre">dft</span></code> — Density functional theory</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">10.9. <code class="xref py py-mod docutils literal notranslate"><span class="pre">doci</span></code> — Doubly occupied configuration interaction</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#examples">10.9.1. Examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-pyscf.doci">10.9.2. Program reference</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#doci-mcscf">10.9.2.1. doci_mcscf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#doci-slow">10.9.2.2. doci_slow</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="fci.html">10.10. <code class="xref py py-mod docutils literal notranslate"><span class="pre">fci</span></code> — Full configuration interaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="grad.html">10.11. <code class="xref py py-mod docutils literal notranslate"><span class="pre">grad</span></code> — Analytical nuclear gradients</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gto.html">10.12. <code class="xref py py-mod docutils literal notranslate"><span class="pre">gto</span></code> — Molecular structure and GTO basis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gw.html">10.13. <code class="xref py py-mod docutils literal notranslate"><span class="pre">gw</span></code> — Molecular G0W0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hci.html">10.14. <code class="xref py py-mod docutils literal notranslate"><span class="pre">hci</span></code> — Heat-bath selected CI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hessian.html">10.15. <code class="xref py py-mod docutils literal notranslate"><span class="pre">hessian</span></code> — Analytical nuclear Hessian</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lib.html">10.16. <code class="xref py py-mod docutils literal notranslate"><span class="pre">lib</span></code> — Helper functions, parameters, and C extensions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lo.html">10.17. <code class="xref py py-mod docutils literal notranslate"><span class="pre">lo</span></code> — Orbital localization and analysis tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mcscf.html">10.18. <code class="xref py py-mod docutils literal notranslate"><span class="pre">mcscf</span></code> — Multi-configurational self-consistent field</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mp.html">10.19. <code class="xref py py-mod docutils literal notranslate"><span class="pre">mp</span></code> — MP2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mrpt.html">10.20. <code class="xref py py-mod docutils literal notranslate"><span class="pre">mrpt</span></code> — Multi-reference perturbation theory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pbc.html">10.21. <code class="xref py py-mod docutils literal notranslate"><span class="pre">pbc</span></code> — Periodic boundary conditions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="prop.html">10.22. <code class="xref py py-mod docutils literal notranslate"><span class="pre">prop</span></code> — Molecular properties</a></li>
+<li class="toctree-l2"><a class="reference internal" href="qmmm.html">10.23. <code class="xref py py-mod docutils literal notranslate"><span class="pre">qmmm</span></code> — QM/MM interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rt.html">10.24. <code class="xref py py-mod docutils literal notranslate"><span class="pre">rt</span></code> — Real-time time-dependent density functional theory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scf.html">10.25. <code class="xref py py-mod docutils literal notranslate"><span class="pre">scf</span></code> — Self-consistent field methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="semiempirical.html">10.26. <code class="xref py py-mod docutils literal notranslate"><span class="pre">semiempirical</span></code> — Semiempirical methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sgx.html">10.27. <code class="xref py py-mod docutils literal notranslate"><span class="pre">sgx</span></code> — Pseudo-spectral methods (COSX, PS, SN-K)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solvent.html">10.28. <code class="xref py py-mod docutils literal notranslate"><span class="pre">solvent</span></code> — Solvent methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="soscf.html">10.29. <code class="xref py py-mod docutils literal notranslate"><span class="pre">soscf</span></code> — Second order SCF solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="symm.html">10.30. <code class="xref py py-mod docutils literal notranslate"><span class="pre">symm</span></code> – Point group symmetry and spin symmetry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tdscf.html">10.31. <code class="xref py py-mod docutils literal notranslate"><span class="pre">tdscf</span></code> — TDHF and TDDFT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html">10.32. <code class="xref py py-mod docutils literal notranslate"><span class="pre">tools</span></code> — Useful tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="x2c.html">10.33. <code class="xref py py-mod docutils literal notranslate"><span class="pre">x2c</span></code> — exact-two-component approach</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">PySCF</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../modules.html">10. Main modules</a> &raquo;</li>
+        
+      <li>10.9. <code class="xref py py-mod docutils literal notranslate"><span class="pre">doci</span></code> — Doubly occupied configuration interaction</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/modules/doci.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-doci">
+<span id="doci-doubly-occupied-configuration-interaction"></span><span id="doci"></span><h1>10.9. <a class="reference internal" href="#module-doci" title="doci"><code class="xref py py-mod docutils literal notranslate"><span class="pre">doci</span></code></a> — Doubly occupied configuration interaction<a class="headerlink" href="#module-doci" title="Permalink to this headline">¶</a></h1>
+<p>The <a class="reference internal" href="#module-doci" title="doci"><code class="xref py py-mod docutils literal notranslate"><span class="pre">doci</span></code></a> implements doubly-occupied configuration interaction. A minimal example on N2 calculation:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">gto</span><span class="p">,</span> <span class="n">doci</span>
+<span class="n">mol</span> <span class="o">=</span> <span class="n">gto</span><span class="o">.</span><span class="n">M</span><span class="p">(</span><span class="n">atom</span><span class="o">=</span><span class="s1">&#39;N 0 0 0; N 0 0 2.&#39;</span><span class="p">,</span> <span class="n">basis</span><span class="o">=</span><span class="s1">&#39;6-31g&#39;</span><span class="p">)</span>
+<span class="n">mf</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">RHF</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="n">mc</span> <span class="o">=</span> <span class="n">doci</span><span class="o">.</span><span class="n">CASSCF</span><span class="p">(</span><span class="n">mf</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">14</span><span class="p">)</span>
+<span class="n">mc</span><span class="o">.</span><span class="n">kernel</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="section" id="examples">
+<h2>10.9.1. Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<p>Relevant examples
+<code class="file docutils literal notranslate"><span class="pre">examples/doci/00-simple_doci_casscf.py</span></code></p>
+</div>
+<div class="section" id="module-pyscf.doci">
+<span id="program-reference"></span><h2>10.9.2. Program reference<a class="headerlink" href="#module-pyscf.doci" title="Permalink to this headline">¶</a></h2>
+<p>DOCI and DOCI based MCSCF</p>
+<div class="section" id="doci-mcscf">
+<h3>10.9.2.1. doci_mcscf<a class="headerlink" href="#doci-mcscf" title="Permalink to this headline">¶</a></h3>
+<span class="target" id="module-pyscf.doci.doci_mcscf"></span><dl class="class">
+<dt id="pyscf.doci.doci_mcscf.CASCI">
+<em class="property">class </em><code class="sig-prename descclassname">pyscf.doci.doci_mcscf.</code><code class="sig-name descname">CASCI</code><span class="sig-paren">(</span><em class="sig-param">mf_or_mol</em>, <em class="sig-param">ncas</em>, <em class="sig-param">nelecas</em>, <em class="sig-param">ncore=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyscf/doci/doci_mcscf.html#CASCI"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyscf.doci.doci_mcscf.CASCI" title="Permalink to this definition">¶</a></dt>
+<dd><p>DOCI-CASCI</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="pyscf.doci.doci_mcscf.CASSCF">
+<em class="property">class </em><code class="sig-prename descclassname">pyscf.doci.doci_mcscf.</code><code class="sig-name descname">CASSCF</code><span class="sig-paren">(</span><em class="sig-param">mf_or_mol</em>, <em class="sig-param">ncas</em>, <em class="sig-param">nelecas</em>, <em class="sig-param">ncore=None</em>, <em class="sig-param">frozen=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyscf/doci/doci_mcscf.html#CASSCF"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyscf.doci.doci_mcscf.CASSCF" title="Permalink to this definition">¶</a></dt>
+<dd><p>DOCI-CASSCF</p>
+</dd></dl>
+
+</div>
+<div class="section" id="doci-slow">
+<h3>10.9.2.2. doci_slow<a class="headerlink" href="#doci-slow" title="Permalink to this headline">¶</a></h3>
+<span class="target" id="module-pyscf.doci.doci_slow"></span><p>Doubly occupied configuration interaction (DOCI)</p>
+<dl class="class">
+<dt id="pyscf.doci.doci_slow.DOCI">
+<em class="property">class </em><code class="sig-prename descclassname">pyscf.doci.doci_slow.</code><code class="sig-name descname">DOCI</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyscf/doci/doci_slow.html#DOCI"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyscf.doci.doci_slow.DOCI" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="pyscf.doci.doci_slow.DOCI.contract_2e">
+<code class="sig-name descname">contract_2e</code><span class="sig-paren">(</span><em class="sig-param">eri</em>, <em class="sig-param">fcivec</em>, <em class="sig-param">norb</em>, <em class="sig-param">nelec</em>, <em class="sig-param">link_index=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyscf/doci/doci_slow.html#DOCI.contract_2e"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyscf.doci.doci_slow.DOCI.contract_2e" title="Permalink to this definition">¶</a></dt>
+<dd><p>Contract the 4-index tensor eri[pqrs] with a FCI vector</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\begin{split}|output\rangle = E_{pq} E_{rs} eri_{pq,rs} |CI\rangle \\\end{split}\\\begin{split}E_{pq}E_{rs} = E_{pr,qs} + \delta_{qr} E_{ps} \\\end{split}\\E_{pq} = p^+ q + \bar{p}^+ \bar{q}\\E_{pr,qs} = p^+ r^+ s q + \bar{p}^+ r^+ s \bar{q} + ...\end{aligned}\end{align} \]</div>
+<p><span class="math notranslate nohighlight">\(p,q,...\)</span> means spin-up orbitals and <span class="math notranslate nohighlight">\(\bar{p}, \bar{q}\)</span> means
+spin-down orbitals.</p>
+<p>Note the input argument eri is NOT the 2e hamiltonian tensor. 2e hamiltonian is</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}h2e &amp;= (pq|rs) E_{pr,qs} \\
+    &amp;= (pq|rs) (E_{pq}E_{rs} - \delta_{qr} E_{ps}) \\
+    &amp;= eri_{pq,rs} E_{pq}E_{rs} \\\end{split}\]</div>
+<p>So the relation between eri and hamiltonian (the 2e-integral tensor) is</p>
+<div class="math notranslate nohighlight">
+\[eri_{pq,rs} = (pq|rs) - (1/Nelec) \sum_q (pq|qs)\]</div>
+<p>to restore the symmetry between pq and rs,</p>
+<div class="math notranslate nohighlight">
+\[eri_{pq,rs} = (pq|rs) - (.5/Nelec) [\sum_q (pq|qs) + \sum_p (pq|rp)]\]</div>
+<p>See also <code class="xref py py-func docutils literal notranslate"><span class="pre">direct_spin1.absorb_h1e()</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyscf.doci.doci_slow.DOCI.get_init_guess">
+<code class="sig-name descname">get_init_guess</code><span class="sig-paren">(</span><em class="sig-param">norb</em>, <em class="sig-param">nelec</em>, <em class="sig-param">nroots</em>, <em class="sig-param">hdiag</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyscf/doci/doci_slow.html#DOCI.get_init_guess"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyscf.doci.doci_slow.DOCI.get_init_guess" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initial guess is the single Slater determinant</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyscf.doci.doci_slow.DOCI.kernel">
+<code class="sig-name descname">kernel</code><span class="sig-paren">(</span><em class="sig-param">h1e</em>, <em class="sig-param">eri</em>, <em class="sig-param">norb</em>, <em class="sig-param">nelec</em>, <em class="sig-param">ci0=None</em>, <em class="sig-param">ecore=0</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyscf/doci/doci_slow.html#DOCI.kernel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyscf.doci.doci_slow.DOCI.kernel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Kernel function is the main driver of a method.  Every method should
+define the kernel function as the entry of the calculation.  Note the
+return value of kernel function is not strictly defined.  It can be
+anything related to the method (such as the energy, the wave-function,
+the DFT mesh grids etc.).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyscf.doci.doci_slow.DOCI.make_hdiag">
+<code class="sig-name descname">make_hdiag</code><span class="sig-paren">(</span><em class="sig-param">h1e</em>, <em class="sig-param">eri</em>, <em class="sig-param">norb</em>, <em class="sig-param">nelec</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyscf/doci/doci_slow.html#DOCI.make_hdiag"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyscf.doci.doci_slow.DOCI.make_hdiag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Diagonal Hamiltonian for Davidson preconditioner</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyscf.doci.doci_slow.DOCI.make_rdm1">
+<code class="sig-name descname">make_rdm1</code><span class="sig-paren">(</span><em class="sig-param">civec</em>, <em class="sig-param">norb</em>, <em class="sig-param">nelec</em>, <em class="sig-param">link_index=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyscf/doci/doci_slow.html#DOCI.make_rdm1"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyscf.doci.doci_slow.DOCI.make_rdm1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Spin-traced one-particle density matrix</p>
+<p>dm1[p,q] = &lt;q_alpha^dagger p_alpha&gt; + &lt;q_beta^dagger p_beta&gt;</p>
+<p>The convention is based on McWeeney’s book, Eq (5.4.20)
+The contraction between 1-particle Hamiltonian and rdm1 is
+E = einsum(‘pq,qp’, h1, rdm1)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyscf.doci.doci_slow.DOCI.make_rdm12">
+<code class="sig-name descname">make_rdm12</code><span class="sig-paren">(</span><em class="sig-param">civec</em>, <em class="sig-param">norb</em>, <em class="sig-param">nelec</em>, <em class="sig-param">link_index=None</em>, <em class="sig-param">reorder=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyscf/doci/doci_slow.html#DOCI.make_rdm12"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyscf.doci.doci_slow.DOCI.make_rdm12" title="Permalink to this definition">¶</a></dt>
+<dd><p>Spin traced 1- and 2-particle density matrices.</p>
+<dl class="simple">
+<dt>1pdm[p,q] = :math:<a href="#id1"><span class="problematic" id="id2">`</span></a>langle <a href="#id5"><span class="problematic" id="id6">q_</span></a>alpha^dagger <a href="#id7"><span class="problematic" id="id8">p_</span></a>alpha rangle +</dt><dd><p>langle <a href="#id9"><span class="problematic" id="id10">q_</span></a>beta^dagger  <a href="#id11"><span class="problematic" id="id12">p_</span></a>beta rangle`;</p>
+</dd>
+<dt>2pdm[p,q,r,s] = :math:<a href="#id3"><span class="problematic" id="id4">`</span></a>langle <a href="#id13"><span class="problematic" id="id14">p_</span></a>alpha^dagger <a href="#id15"><span class="problematic" id="id16">r_</span></a>alpha^dagger <a href="#id17"><span class="problematic" id="id18">s_</span></a>alpha <a href="#id19"><span class="problematic" id="id20">q_</span></a>alpharangle +</dt><dd><p>langle <a href="#id21"><span class="problematic" id="id22">p_</span></a>beta^dagger  <a href="#id23"><span class="problematic" id="id24">r_</span></a>alpha^dagger <a href="#id25"><span class="problematic" id="id26">s_</span></a>alpha <a href="#id27"><span class="problematic" id="id28">q_</span></a>betarangle +
+langle <a href="#id29"><span class="problematic" id="id30">p_</span></a>alpha^dagger <a href="#id31"><span class="problematic" id="id32">r_</span></a>beta^dagger  <a href="#id33"><span class="problematic" id="id34">s_</span></a>beta  <a href="#id35"><span class="problematic" id="id36">q_</span></a>alpharangle +
+langle <a href="#id37"><span class="problematic" id="id38">p_</span></a>beta^dagger  <a href="#id39"><span class="problematic" id="id40">r_</span></a>beta^dagger  <a href="#id41"><span class="problematic" id="id42">s_</span></a>beta  <a href="#id43"><span class="problematic" id="id44">q_</span></a>betarangle`.</p>
+</dd>
+</dl>
+<p>Energy should be computed as
+E = einsum(‘pq,qp’, h1, 1pdm) + 1/2 * einsum(‘pqrs,pqrs’, eri, 2pdm)
+where h1[p,q] = &lt;p|h|q&gt; and eri[p,q,r,s] = (pq|rs)</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="pyscf.doci.doci_slow.contract_2e">
+<code class="sig-prename descclassname">pyscf.doci.doci_slow.</code><code class="sig-name descname">contract_2e</code><span class="sig-paren">(</span><em class="sig-param">eri</em>, <em class="sig-param">civec</em>, <em class="sig-param">norb</em>, <em class="sig-param">nelec</em>, <em class="sig-param">link_index=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyscf/doci/doci_slow.html#contract_2e"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyscf.doci.doci_slow.contract_2e" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute E_{pq}E_{rs}|CI&gt;</p>
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="fci.html" class="btn btn-neutral float-right" title="10.10. fci — Full configuration interaction" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="dft.html" class="btn btn-neutral float-left" title="10.8. dft — Density functional theory" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2015-2020, The PySCF Developers
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

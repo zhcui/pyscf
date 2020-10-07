@@ -1,0 +1,580 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>10.21.8. pbc.ci — CISD with PBCs &mdash; PySCF 1.7.5 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="10.21.9. pbc.cc — Coupled cluster with PBCs" href="cc.html" />
+    <link rel="prev" title="10.21.7. pbc.mp — PBC perturbation theory" href="mp.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> PySCF
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.7
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html">1. An overview of PySCF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../version.html">2. Version history</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">3. Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../code-rule.html">4. Code standard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../benchmark.html">5. Benchmark</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial.html">6. Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory.html">7. Theoretical methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../advanced.html">8. Miscellaneous</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../interface.html">9. Interfaces</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../modules.html">10. Main modules</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../adc.html">10.1. <code class="xref py py-mod docutils literal notranslate"><span class="pre">adc</span></code> — Algebraic diagrammatic construction (ADC) scheme</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ao2mo.html">10.2. <code class="xref py py-mod docutils literal notranslate"><span class="pre">ao2mo</span></code> — Integral transformations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cc.html">10.3. <code class="xref py py-mod docutils literal notranslate"><span class="pre">cc</span></code> — Coupled cluster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ccn.html">10.4. <code class="xref py py-mod docutils literal notranslate"><span class="pre">ccn</span></code> — Auto-generated coupled cluster of arbitrary order</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ci.html">10.5. <code class="xref py py-mod docutils literal notranslate"><span class="pre">ci</span></code> — Configuration interaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data.html">10.6. <code class="xref py py-mod docutils literal notranslate"><span class="pre">data</span></code> — Data for constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../df.html">10.7. <code class="xref py py-mod docutils literal notranslate"><span class="pre">df</span></code> — Density fitting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dft.html">10.8. <code class="xref py py-mod docutils literal notranslate"><span class="pre">dft</span></code> — Density functional theory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../doci.html">10.9. <code class="xref py py-mod docutils literal notranslate"><span class="pre">doci</span></code> — Doubly occupied configuration interaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fci.html">10.10. <code class="xref py py-mod docutils literal notranslate"><span class="pre">fci</span></code> — Full configuration interaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../grad.html">10.11. <code class="xref py py-mod docutils literal notranslate"><span class="pre">grad</span></code> — Analytical nuclear gradients</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gto.html">10.12. <code class="xref py py-mod docutils literal notranslate"><span class="pre">gto</span></code> — Molecular structure and GTO basis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gw.html">10.13. <code class="xref py py-mod docutils literal notranslate"><span class="pre">gw</span></code> — Molecular G0W0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hci.html">10.14. <code class="xref py py-mod docutils literal notranslate"><span class="pre">hci</span></code> — Heat-bath selected CI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hessian.html">10.15. <code class="xref py py-mod docutils literal notranslate"><span class="pre">hessian</span></code> — Analytical nuclear Hessian</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../lib.html">10.16. <code class="xref py py-mod docutils literal notranslate"><span class="pre">lib</span></code> — Helper functions, parameters, and C extensions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../lo.html">10.17. <code class="xref py py-mod docutils literal notranslate"><span class="pre">lo</span></code> — Orbital localization and analysis tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mcscf.html">10.18. <code class="xref py py-mod docutils literal notranslate"><span class="pre">mcscf</span></code> — Multi-configurational self-consistent field</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mp.html">10.19. <code class="xref py py-mod docutils literal notranslate"><span class="pre">mp</span></code> — MP2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mrpt.html">10.20. <code class="xref py py-mod docutils literal notranslate"><span class="pre">mrpt</span></code> — Multi-reference perturbation theory</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../pbc.html">10.21. <code class="xref py py-mod docutils literal notranslate"><span class="pre">pbc</span></code> — Periodic boundary conditions</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="gto.html">10.21.1. pbc.gto — Crystal cell structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ao2mo.html">10.21.2. pbc.ao2mo — Integral transformations for crystalline Gaussian type orbitals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scf.html">10.21.3. pbc.scf — Self-consistent field with periodic boundary conditions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dft.html">10.21.4. pbc.dft  — DFT with PBCs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="df.html">10.21.5. pbc.df — PBC denisty fitting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tdscf.html">10.21.6. pbc.tdscf — TDHF and TDDFT with PBCs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mp.html">10.21.7. pbc.mp — PBC perturbation theory</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">10.21.8. pbc.ci — CISD with PBCs</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#module-pyscf.pbc.ci">10.21.8.1. Program reference</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cc.html">10.21.9. pbc.cc — Coupled cluster with PBCs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mpicc.html">10.21.10. pbc.mpicc — PBC coupled cluster for MPI</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tools.html">10.21.11. pbc.tools — PBC tools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mix_mol.html">10.21.12. Mixing PBC and molecular modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="prop.html">10.21.13. pbc.prop — PBC property</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gw.html">10.21.14. pbc.gw — GW with PBC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="x2c.html">10.21.15. pbc.x2c — Exact Two-Component Method</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../prop.html">10.22. <code class="xref py py-mod docutils literal notranslate"><span class="pre">prop</span></code> — Molecular properties</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../qmmm.html">10.23. <code class="xref py py-mod docutils literal notranslate"><span class="pre">qmmm</span></code> — QM/MM interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../rt.html">10.24. <code class="xref py py-mod docutils literal notranslate"><span class="pre">rt</span></code> — Real-time time-dependent density functional theory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../scf.html">10.25. <code class="xref py py-mod docutils literal notranslate"><span class="pre">scf</span></code> — Self-consistent field methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../semiempirical.html">10.26. <code class="xref py py-mod docutils literal notranslate"><span class="pre">semiempirical</span></code> — Semiempirical methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sgx.html">10.27. <code class="xref py py-mod docutils literal notranslate"><span class="pre">sgx</span></code> — Pseudo-spectral methods (COSX, PS, SN-K)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../solvent.html">10.28. <code class="xref py py-mod docutils literal notranslate"><span class="pre">solvent</span></code> — Solvent methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../soscf.html">10.29. <code class="xref py py-mod docutils literal notranslate"><span class="pre">soscf</span></code> — Second order SCF solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../symm.html">10.30. <code class="xref py py-mod docutils literal notranslate"><span class="pre">symm</span></code> – Point group symmetry and spin symmetry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tdscf.html">10.31. <code class="xref py py-mod docutils literal notranslate"><span class="pre">tdscf</span></code> — TDHF and TDDFT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tools.html">10.32. <code class="xref py py-mod docutils literal notranslate"><span class="pre">tools</span></code> — Useful tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../x2c.html">10.33. <code class="xref py py-mod docutils literal notranslate"><span class="pre">x2c</span></code> — exact-two-component approach</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">PySCF</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../modules.html">10. Main modules</a> &raquo;</li>
+        
+          <li><a href="../pbc.html">10.21. <code class="xref py py-mod docutils literal notranslate"><span class="pre">pbc</span></code> — Periodic boundary conditions</a> &raquo;</li>
+        
+      <li>10.21.8. pbc.ci — CISD with PBCs</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/modules/pbc/ci.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="pbc-ci-cisd-with-pbcs">
+<span id="pbc-ci"></span><h1>10.21.8. pbc.ci — CISD with PBCs<a class="headerlink" href="#pbc-ci-cisd-with-pbcs" title="Permalink to this headline">¶</a></h1>
+<p>The <code class="xref py py-mod docutils literal notranslate"><span class="pre">pbc.ci</span></code> implements the singles and doubles configuration interaction method with periodic boundary conditions.
+It is analogous to the <a class="reference internal" href="../ci.html#module-ci" title="ci: CI energy and properties"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ci</span></code></a> module.</p>
+<div class="section" id="module-pyscf.pbc.ci">
+<span id="program-reference"></span><h2>10.21.8.1. Program reference<a class="headerlink" href="#module-pyscf.pbc.ci" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-pyscf.pbc.ci.cisd"></span><dl class="class">
+<dt id="pyscf.pbc.ci.cisd.GCISD">
+<em class="property">class </em><code class="sig-prename descclassname">pyscf.pbc.ci.cisd.</code><code class="sig-name descname">GCISD</code><span class="sig-paren">(</span><em class="sig-param">mf</em>, <em class="sig-param">frozen=None</em>, <em class="sig-param">mo_coeff=None</em>, <em class="sig-param">mo_occ=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyscf/pbc/ci/cisd.html#GCISD"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyscf.pbc.ci.cisd.GCISD" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="pyscf.pbc.ci.cisd.RCISD">
+<em class="property">class </em><code class="sig-prename descclassname">pyscf.pbc.ci.cisd.</code><code class="sig-name descname">RCISD</code><span class="sig-paren">(</span><em class="sig-param">mf</em>, <em class="sig-param">frozen=None</em>, <em class="sig-param">mo_coeff=None</em>, <em class="sig-param">mo_occ=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyscf/pbc/ci/cisd.html#RCISD"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyscf.pbc.ci.cisd.RCISD" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="pyscf.pbc.ci.cisd.UCISD">
+<em class="property">class </em><code class="sig-prename descclassname">pyscf.pbc.ci.cisd.</code><code class="sig-name descname">UCISD</code><span class="sig-paren">(</span><em class="sig-param">mf</em>, <em class="sig-param">frozen=None</em>, <em class="sig-param">mo_coeff=None</em>, <em class="sig-param">mo_occ=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyscf/pbc/ci/cisd.html#UCISD"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyscf.pbc.ci.cisd.UCISD" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<span class="target" id="module-pyscf.pbc.ci.kcis_rhf"></span><dl class="class">
+<dt id="pyscf.pbc.ci.kcis_rhf.KCIS">
+<em class="property">class </em><code class="sig-prename descclassname">pyscf.pbc.ci.kcis_rhf.</code><code class="sig-name descname">KCIS</code><span class="sig-paren">(</span><em class="sig-param">mf</em>, <em class="sig-param">frozen=None</em>, <em class="sig-param">mo_coeff=None</em>, <em class="sig-param">mo_occ=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyscf/pbc/ci/kcis_rhf.html#KCIS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyscf.pbc.ci.kcis_rhf.KCIS" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="pyscf.pbc.ci.kcis_rhf.KCIS.get_diag">
+<code class="sig-name descname">get_diag</code><span class="sig-paren">(</span><em class="sig-param">kshift</em>, <em class="sig-param">eris=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyscf.pbc.ci.kcis_rhf.KCIS.get_diag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Diagonal elements of CIS Hamiltonian.</p>
+<dl>
+<dt>Arguments:</dt><dd><p>cis {KCIS} – A KCIS instance
+kshift {int} – k-shift index. A k-shift vector is an exciton momentum.</p>
+<blockquote>
+<div><p>Available k-shift indices depend on the k-point mesh. For example,
+a 2 by 2 by 2 k-point mesh allows at most 8 k-shift values, which can
+be targeted by 0, 1, 2, 3, 4, 5, 6, or 7.</p>
+</div></blockquote>
+</dd>
+<dt>Keyword Arguments:</dt><dd><dl class="simple">
+<dt>eris {_CIS_ERIS} – Depending on cis.direct, eris may</dt><dd><p>contain 4-center (cis.direct=False) or 3-center (cis.direct=True)
+electron repulsion integrals (default: {None})</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><p>1D array – an array formed by diagonal elements of CIS Hamiltonian</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyscf.pbc.ci.kcis_rhf.KCIS.get_frozen_mask">
+<code class="sig-name descname">get_frozen_mask</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyscf.pbc.ci.kcis_rhf.KCIS.get_frozen_mask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Boolean mask for orbitals in k-point post-HF method.</p>
+<p>Creates a boolean mask to remove frozen orbitals and keep other orbitals for post-HF
+calculations.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>mp (<code class="xref py py-class docutils literal notranslate"><span class="pre">MP2</span></code>): An instantiation of an SCF or post-Hartree-Fock object.</p>
+</dd>
+<dt>Returns:</dt><dd><p>moidx (list of <code class="xref py py-obj docutils literal notranslate"><span class="pre">ndarray</span></code> of <cite>np.bool</cite>): Boolean mask of orbitals to include.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyscf.pbc.ci.kcis_rhf.KCIS.get_kconserv_r">
+<code class="sig-name descname">get_kconserv_r</code><span class="sig-paren">(</span><em class="sig-param">kshift</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyscf/pbc/ci/kcis_rhf.html#KCIS.get_kconserv_r"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyscf.pbc.ci.kcis_rhf.KCIS.get_kconserv_r" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the momentum conservation array for a set of k-points.</p>
+<p>Given k-point index m the array kconserv_r1[m] returns the index n that
+satisfies momentum conservation,</p>
+<blockquote>
+<div><p>(k(m) - k(n) - kshift) dot a = 2npi</p>
+</div></blockquote>
+<p>This is used for symmetry of 1p-1h excitation operator vector
+R_{m k_m}^{n k_n} is zero unless n satisfies the above.</p>
+<p>Note that this method is adapted from <cite>kpts_helper.get_kconserv()</cite>.</p>
+<dl class="simple">
+<dt>Arguments:</dt><dd><p>kshift {int} – index of momentum vector. It can be chosen as any of the available
+k-point index based on the specified kpt mesh.
+E.g. int from 0 to 7 can be chosen for a [2,2,2] grid.</p>
+</dd>
+<dt>Returns:</dt><dd><p>list – a list of k(n) corresponding to k(m) that ranges from 0 to max_k_index</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyscf.pbc.ci.kcis_rhf.KCIS.get_nmo">
+<code class="sig-name descname">get_nmo</code><span class="sig-paren">(</span><em class="sig-param">per_kpoint=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pyscf.pbc.ci.kcis_rhf.KCIS.get_nmo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of orbitals for k-point calculations.</p>
+<p>Number of orbitals for use in a calculation with k-points, taking into account
+frozen orbitals.</p>
+<dl>
+<dt>Note:</dt><dd><p>If <cite>per_kpoint</cite> is False, then the number of orbitals here is equal to max(nocc) + max(nvir),
+where each max is done over all k-points.  Otherwise the number of orbitals is returned
+as a list of number of orbitals at each k-point.</p>
+</dd>
+<dt>Args:</dt><dd><p>mp (<code class="xref py py-class docutils literal notranslate"><span class="pre">MP2</span></code>): An instantiation of an SCF or post-Hartree-Fock object.
+per_kpoint (bool, optional): True returns the number of orbitals at each k-point.</p>
+<blockquote>
+<div><p>For a description of False, see Note.</p>
+</div></blockquote>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>nmo (int, list of int): Number of orbitals. For return type, see description of arg</dt><dd><p><cite>per_kpoint</cite>.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyscf.pbc.ci.kcis_rhf.KCIS.get_nocc">
+<code class="sig-name descname">get_nocc</code><span class="sig-paren">(</span><em class="sig-param">per_kpoint=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pyscf.pbc.ci.kcis_rhf.KCIS.get_nocc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of occupied orbitals for k-point calculations.</p>
+<p>Number of occupied orbitals for use in a calculation with k-points, taking into
+account frozen orbitals.</p>
+<dl>
+<dt>Args:</dt><dd><p>mp (<code class="xref py py-class docutils literal notranslate"><span class="pre">MP2</span></code>): An instantiation of an SCF or post-Hartree-Fock object.
+per_kpoint (bool, optional): True returns the number of occupied</p>
+<blockquote>
+<div><p>orbitals at each k-point.  False gives the max of this list.</p>
+</div></blockquote>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>nocc (int, list of int): Number of occupied orbitals. For return type, see description of arg</dt><dd><p><cite>per_kpoint</cite>.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyscf.pbc.ci.kcis_rhf.KCIS.kernel">
+<code class="sig-name descname">kernel</code><span class="sig-paren">(</span><em class="sig-param">nroots=1</em>, <em class="sig-param">eris=None</em>, <em class="sig-param">kptlist=None</em>, <em class="sig-param">**kargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyscf.pbc.ci.kcis_rhf.KCIS.kernel" title="Permalink to this definition">¶</a></dt>
+<dd><p>CIS excitation energy with k-point sampling.</p>
+<dl>
+<dt>Arguments:</dt><dd><p>cis {KCIS} – A KCIS instance</p>
+</dd>
+<dt>Keyword Arguments:</dt><dd><p>nroots {int} – Number of requested excitation energies (default: {1})
+eris {_CIS_ERIS} – Depending on cis.direct, eris may</p>
+<blockquote>
+<div><p>contain 4-center (cis.direct=False) or 3-center (cis.direct=True)
+electron repulsion integrals (default: {None})</p>
+</div></blockquote>
+<dl class="simple">
+<dt>kptlist {list} – A list of indices for k-shift, i.e. the exciton momentum.</dt><dd><p>Available k-shift indices depend on the k-point mesh. For example,
+a 2 by 2 by 2 k-point mesh allows at most 8 k-shift values, which can
+be targeted by [0, 1, 2, 3, 4, 5, 6, 7]. When kptlist=None, all k-shift
+will be computed. (default: {None})</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><p>tuple – A tuple of excitation energies and corresponding eigenvectors</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyscf.pbc.ci.kcis_rhf.KCIS.matvec">
+<code class="sig-name descname">matvec</code><span class="sig-paren">(</span><em class="sig-param">vector</em>, <em class="sig-param">kshift</em>, <em class="sig-param">eris=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyscf.pbc.ci.kcis_rhf.KCIS.matvec" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute matrix-vector product of the Hamiltonion matrix and a CIS c
+oefficient vector, in the space of single excitation.</p>
+<dl>
+<dt>Arguments:</dt><dd><p>cis {KCIS} – A KCIS instance
+vector {1D array} – CIS coefficient vector
+kshift {int} – k-shift index. A k-shift vector is an exciton momentum.</p>
+<blockquote>
+<div><p>Available k-shift indices depend on the k-point mesh. For example,
+a 2 by 2 by 2 k-point mesh allows at most 8 k-shift values, which can
+be targeted by 0, 1, 2, 3, 4, 5, 6, or 7.</p>
+</div></blockquote>
+</dd>
+<dt>Keyword Arguments:</dt><dd><dl class="simple">
+<dt>eris {_CIS_ERIS} – Depending on cis.direct, eris may</dt><dd><p>contain 4-center (cis.direct=False) or 3-center (cis.direct=True)
+electron repulsion integrals (default: {None})</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>1D array – matrix-vector product of the Hamiltonion matrix and the</dt><dd><p>input vector.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="pyscf.pbc.ci.kcis_rhf.cis_H">
+<code class="sig-prename descclassname">pyscf.pbc.ci.kcis_rhf.</code><code class="sig-name descname">cis_H</code><span class="sig-paren">(</span><em class="sig-param">cis</em>, <em class="sig-param">kshift</em>, <em class="sig-param">eris=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyscf/pbc/ci/kcis_rhf.html#cis_H"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyscf.pbc.ci.kcis_rhf.cis_H" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build full Hamiltonian matrix in the space of single excitation,
+i.e. CIS Hamiltonian.</p>
+<dl>
+<dt>Arguments:</dt><dd><p>cis {KCIS} – A KCIS instance
+kshift {int} – k-shift index. A k-shift vector is an exciton momentum.</p>
+<blockquote>
+<div><p>Available k-shift indices depend on the k-point mesh. For example,
+a 2 by 2 by 2 k-point mesh allows at most 8 k-shift values, which can
+be targeted by 0, 1, 2, 3, 4, 5, 6, or 7.</p>
+</div></blockquote>
+</dd>
+<dt>Keyword Arguments:</dt><dd><dl class="simple">
+<dt>eris {_CIS_ERIS} – Depending on cis.direct, eris may</dt><dd><p>contain 4-center (cis.direct=False) or 3-center (cis.direct=True)
+electron repulsion integrals (default: {None})</p>
+</dd>
+</dl>
+</dd>
+<dt>Raises:</dt><dd><dl class="simple">
+<dt>MemoryError: MemoryError will be raise if there is not enough space to</dt><dd><p>store the full Hamiltonian matrix, which scales as Nk^2 O^2 V^2</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><p>2D array – the Hamiltonian matrix reshaped into (ki,i,a) by (kj,j,b)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyscf.pbc.ci.kcis_rhf.cis_diag">
+<code class="sig-prename descclassname">pyscf.pbc.ci.kcis_rhf.</code><code class="sig-name descname">cis_diag</code><span class="sig-paren">(</span><em class="sig-param">cis</em>, <em class="sig-param">kshift</em>, <em class="sig-param">eris=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyscf/pbc/ci/kcis_rhf.html#cis_diag"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyscf.pbc.ci.kcis_rhf.cis_diag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Diagonal elements of CIS Hamiltonian.</p>
+<dl>
+<dt>Arguments:</dt><dd><p>cis {KCIS} – A KCIS instance
+kshift {int} – k-shift index. A k-shift vector is an exciton momentum.</p>
+<blockquote>
+<div><p>Available k-shift indices depend on the k-point mesh. For example,
+a 2 by 2 by 2 k-point mesh allows at most 8 k-shift values, which can
+be targeted by 0, 1, 2, 3, 4, 5, 6, or 7.</p>
+</div></blockquote>
+</dd>
+<dt>Keyword Arguments:</dt><dd><dl class="simple">
+<dt>eris {_CIS_ERIS} – Depending on cis.direct, eris may</dt><dd><p>contain 4-center (cis.direct=False) or 3-center (cis.direct=True)
+electron repulsion integrals (default: {None})</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><p>1D array – an array formed by diagonal elements of CIS Hamiltonian</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyscf.pbc.ci.kcis_rhf.cis_matvec_singlet">
+<code class="sig-prename descclassname">pyscf.pbc.ci.kcis_rhf.</code><code class="sig-name descname">cis_matvec_singlet</code><span class="sig-paren">(</span><em class="sig-param">cis</em>, <em class="sig-param">vector</em>, <em class="sig-param">kshift</em>, <em class="sig-param">eris=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyscf/pbc/ci/kcis_rhf.html#cis_matvec_singlet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyscf.pbc.ci.kcis_rhf.cis_matvec_singlet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute matrix-vector product of the Hamiltonion matrix and a CIS c
+oefficient vector, in the space of single excitation.</p>
+<dl>
+<dt>Arguments:</dt><dd><p>cis {KCIS} – A KCIS instance
+vector {1D array} – CIS coefficient vector
+kshift {int} – k-shift index. A k-shift vector is an exciton momentum.</p>
+<blockquote>
+<div><p>Available k-shift indices depend on the k-point mesh. For example,
+a 2 by 2 by 2 k-point mesh allows at most 8 k-shift values, which can
+be targeted by 0, 1, 2, 3, 4, 5, 6, or 7.</p>
+</div></blockquote>
+</dd>
+<dt>Keyword Arguments:</dt><dd><dl class="simple">
+<dt>eris {_CIS_ERIS} – Depending on cis.direct, eris may</dt><dd><p>contain 4-center (cis.direct=False) or 3-center (cis.direct=True)
+electron repulsion integrals (default: {None})</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>1D array – matrix-vector product of the Hamiltonion matrix and the</dt><dd><p>input vector.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyscf.pbc.ci.kcis_rhf.kernel">
+<code class="sig-prename descclassname">pyscf.pbc.ci.kcis_rhf.</code><code class="sig-name descname">kernel</code><span class="sig-paren">(</span><em class="sig-param">cis</em>, <em class="sig-param">nroots=1</em>, <em class="sig-param">eris=None</em>, <em class="sig-param">kptlist=None</em>, <em class="sig-param">**kargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyscf/pbc/ci/kcis_rhf.html#kernel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyscf.pbc.ci.kcis_rhf.kernel" title="Permalink to this definition">¶</a></dt>
+<dd><p>CIS excitation energy with k-point sampling.</p>
+<dl>
+<dt>Arguments:</dt><dd><p>cis {KCIS} – A KCIS instance</p>
+</dd>
+<dt>Keyword Arguments:</dt><dd><p>nroots {int} – Number of requested excitation energies (default: {1})
+eris {_CIS_ERIS} – Depending on cis.direct, eris may</p>
+<blockquote>
+<div><p>contain 4-center (cis.direct=False) or 3-center (cis.direct=True)
+electron repulsion integrals (default: {None})</p>
+</div></blockquote>
+<dl class="simple">
+<dt>kptlist {list} – A list of indices for k-shift, i.e. the exciton momentum.</dt><dd><p>Available k-shift indices depend on the k-point mesh. For example,
+a 2 by 2 by 2 k-point mesh allows at most 8 k-shift values, which can
+be targeted by [0, 1, 2, 3, 4, 5, 6, 7]. When kptlist=None, all k-shift
+will be computed. (default: {None})</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><p>tuple – A tuple of excitation energies and corresponding eigenvectors</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="cc.html" class="btn btn-neutral float-right" title="10.21.9. pbc.cc — Coupled cluster with PBCs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="mp.html" class="btn btn-neutral float-left" title="10.21.7. pbc.mp — PBC perturbation theory" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2015-2020, The PySCF Developers
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

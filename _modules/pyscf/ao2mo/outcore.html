@@ -1,15 +1,18 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pyscf.ao2mo.outcore &mdash; PySCF 1.5.0 documentation</title>
+  <title>pyscf.ao2mo.outcore &mdash; PySCF 1.7.5 documentation</title>
   
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
 
   
   
@@ -17,42 +20,37 @@
   
 
   
-
-  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
-  
-
-  
-  
-    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-    <link rel="top" title="PySCF 1.5.0 documentation" href="../../../index.html"/>
-        <link rel="up" title="Module code" href="../../index.html"/> 
-
-  
-  <script src="../../../_static/js/modernizr.min.js"></script>
-
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
-            <a href="../../../index.html" class="icon icon-home"> PySCF
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> PySCF
           
 
           
@@ -62,7 +60,7 @@
             
             
               <div class="version">
-                1.5
+                1.7
               </div>
             
           
@@ -79,6 +77,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -88,46 +87,28 @@
             
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../overview.html">1. An overview of PySCF</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">2. Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../version.html">2. Version history</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../install.html">3. Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../gto.html">4. gto &#8212; Molecular structure and GTO basis</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../lib.html">5. <code class="docutils literal"><span class="pre">lib</span></code> &#8212; Helper functions, parameters, and C extensions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../scf.html">6. scf &#8212; Mean-field methods</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../ao2mo.html">7. ao2mo &#8212; Integral transformations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../mcscf.html">8. mcscf &#8212; Multi-configurational self-consistent field</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../fci.html">9. fci &#8212; Full configuration interaction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../symm.html">10. symm &#8211; Point group symmetry and spin symmetry</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../df.html">11. df &#8212; Density fitting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../dft.html">12. dft &#8212; Density functional theory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../tddft.html">13. tddft &#8212; Time dependent density functional theory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../cc.html">14. cc &#8212; Coupled cluster</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../ci.html">15. ci &#8212; Configuration interaction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../dmrgscf.html">16. dmrgscf</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../fciqmcscf.html">17. fciqmcscf</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../tools.html">18. tools</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../grad.html">19. grad &#8212; Analytical nuclear gradients</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../hessian.html">20. hessian &#8212; Analytical nuclear Hessian</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../pbc.html">21. pbc &#8212; Periodic boundary conditions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../nao.html">22. nao &#8212; Numerical Atomic Orbitals</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../lo.html">23. lo &#8212; Orbital localization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../advanced.html">24. Miscellaneous</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../qmmm.html">25. qmmm &#8212; QM/MM interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../mrpt.html">26. mrpt &#8212; Multi-reference perturbation theory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../benchmark.html">27. Benchmark</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../code-rule.html">28. Code standard</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../version.html">29. Version history</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../code-rule.html">4. Code standard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../benchmark.html">5. Benchmark</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">6. Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../theory.html">7. Theoretical methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../advanced.html">8. Miscellaneous</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../interface.html">9. Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">10. Main modules</a></li>
 </ul>
 
             
           
         </div>
+        
       </div>
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../index.html">PySCF</a>
@@ -135,9 +116,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -158,16 +140,16 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../ao2mo.html">pyscf.ao2mo</a> &raquo;</li>
         
       <li>pyscf.ao2mo.outcore</li>
     
     
       <li class="wy-breadcrumbs-aside">
-        
-            
         
       </li>
     
@@ -181,7 +163,7 @@
             
   <h1>Source code for pyscf.ao2mo.outcore</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python</span>
-<span class="c1"># Copyright 2014-2018 The PySCF Developers. All Rights Reserved.</span>
+<span class="c1"># Copyright 2014-2020 The PySCF Developers. All Rights Reserved.</span>
 <span class="c1">#</span>
 <span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
 <span class="c1"># you may not use this file except in compliance with the License.</span>
@@ -196,7 +178,6 @@
 <span class="c1"># limitations under the License.</span>
 
 <span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">import</span> <span class="nn">tempfile</span>
 <span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">import</span> <span class="nn">h5py</span>
 <span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">gto</span>
@@ -207,16 +188,16 @@
 <span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">__config__</span>
 
 <span class="n">IOBLK_SIZE</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">__config__</span><span class="p">,</span> <span class="s1">&#39;ao2mo_outcore_ioblk_size&#39;</span><span class="p">,</span> <span class="mi">256</span><span class="p">)</span>  <span class="c1"># 256 MB</span>
-<span class="n">IOBUF_WORDS</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">__config__</span><span class="p">,</span> <span class="s1">&#39;ao2mo_outcore_iobuf_words&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="n">e8</span><span class="p">)</span>  <span class="c1"># 800 MB</span>
+<span class="n">IOBUF_WORDS</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">__config__</span><span class="p">,</span> <span class="s1">&#39;ao2mo_outcore_iobuf_words&#39;</span><span class="p">,</span> <span class="mf">1e8</span><span class="p">)</span>  <span class="c1"># 800 MB</span>
 <span class="n">IOBUF_ROW_MIN</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">__config__</span><span class="p">,</span> <span class="s1">&#39;ao2mo_outcore_row_min&#39;</span><span class="p">,</span> <span class="mi">160</span><span class="p">)</span>
 <span class="n">MAX_MEMORY</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">__config__</span><span class="p">,</span> <span class="s1">&#39;ao2mo_outcore_max_memory&#39;</span><span class="p">,</span> <span class="mi">2000</span><span class="p">)</span>  <span class="c1"># 2GB</span>
 
 
-<div class="viewcode-block" id="full"><a class="viewcode-back" href="../../../ao2mo.html#pyscf.ao2mo.outcore.full">[docs]</a><span class="k">def</span> <span class="nf">full</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">mo_coeff</span><span class="p">,</span> <span class="n">erifile</span><span class="p">,</span> <span class="n">dataname</span><span class="o">=</span><span class="s1">&#39;eri_mo&#39;</span><span class="p">,</span>
+<div class="viewcode-block" id="full"><a class="viewcode-back" href="../../../modules/ao2mo.html#pyscf.ao2mo.outcore.full">[docs]</a><span class="k">def</span> <span class="nf">full</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">mo_coeff</span><span class="p">,</span> <span class="n">erifile</span><span class="p">,</span> <span class="n">dataname</span><span class="o">=</span><span class="s1">&#39;eri_mo&#39;</span><span class="p">,</span>
          <span class="n">intor</span><span class="o">=</span><span class="s1">&#39;int2e&#39;</span><span class="p">,</span> <span class="n">aosym</span><span class="o">=</span><span class="s1">&#39;s4&#39;</span><span class="p">,</span> <span class="n">comp</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
          <span class="n">max_memory</span><span class="o">=</span><span class="n">MAX_MEMORY</span><span class="p">,</span> <span class="n">ioblk_size</span><span class="o">=</span><span class="n">IOBLK_SIZE</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">logger</span><span class="o">.</span><span class="n">WARN</span><span class="p">,</span>
          <span class="n">compact</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-    <span class="sd">r&#39;&#39;&#39;Transfer arbitrary spherical AO integrals to MO integrals for given orbitals</span>
+    <span class="sa">r</span><span class="sd">&#39;&#39;&#39;Transfer arbitrary spherical AO integrals to MO integrals for given orbitals</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        mol : :class:`Mole` object</span>
@@ -272,7 +253,7 @@
 <span class="sd">    &gt;&gt;&gt; from pyscf import ao2mo</span>
 <span class="sd">    &gt;&gt;&gt; import h5py</span>
 <span class="sd">    &gt;&gt;&gt; def view(h5file, dataname=&#39;eri_mo&#39;):</span>
-<span class="sd">    ...     f5 = h5py.File(h5file)</span>
+<span class="sd">    ...     f5 = h5py.File(h5file, &#39;r&#39;)</span>
 <span class="sd">    ...     print(&#39;dataset %s, shape %s&#39; % (str(f5.keys()), str(f5[dataname].shape)))</span>
 <span class="sd">    ...     f5.close()</span>
 <span class="sd">    &gt;&gt;&gt; mol = gto.M(atom=&#39;O 0 0 0; H 0 1 0; H 0 0 1&#39;, basis=&#39;sto3g&#39;)</span>
@@ -294,11 +275,11 @@
             <span class="n">intor</span><span class="p">,</span> <span class="n">aosym</span><span class="p">,</span> <span class="n">comp</span><span class="p">,</span> <span class="n">max_memory</span><span class="p">,</span> <span class="n">ioblk_size</span><span class="p">,</span> <span class="n">verbose</span><span class="p">,</span> <span class="n">compact</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">erifile</span></div>
 
-<div class="viewcode-block" id="general"><a class="viewcode-back" href="../../../ao2mo.html#pyscf.ao2mo.outcore.general">[docs]</a><span class="k">def</span> <span class="nf">general</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">mo_coeffs</span><span class="p">,</span> <span class="n">erifile</span><span class="p">,</span> <span class="n">dataname</span><span class="o">=</span><span class="s1">&#39;eri_mo&#39;</span><span class="p">,</span>
+<div class="viewcode-block" id="general"><a class="viewcode-back" href="../../../modules/ao2mo.html#pyscf.ao2mo.outcore.general">[docs]</a><span class="k">def</span> <span class="nf">general</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">mo_coeffs</span><span class="p">,</span> <span class="n">erifile</span><span class="p">,</span> <span class="n">dataname</span><span class="o">=</span><span class="s1">&#39;eri_mo&#39;</span><span class="p">,</span>
             <span class="n">intor</span><span class="o">=</span><span class="s1">&#39;int2e&#39;</span><span class="p">,</span> <span class="n">aosym</span><span class="o">=</span><span class="s1">&#39;s4&#39;</span><span class="p">,</span> <span class="n">comp</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
             <span class="n">max_memory</span><span class="o">=</span><span class="n">MAX_MEMORY</span><span class="p">,</span> <span class="n">ioblk_size</span><span class="o">=</span><span class="n">IOBLK_SIZE</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">logger</span><span class="o">.</span><span class="n">WARN</span><span class="p">,</span>
             <span class="n">compact</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-    <span class="sd">r&#39;&#39;&#39;For the given four sets of orbitals, transfer arbitrary spherical AO</span>
+    <span class="sa">r</span><span class="sd">&#39;&#39;&#39;For the given four sets of orbitals, transfer arbitrary spherical AO</span>
 <span class="sd">    integrals to MO integrals on the fly.</span>
 
 <span class="sd">    Args:</span>
@@ -356,7 +337,7 @@
 <span class="sd">    &gt;&gt;&gt; from pyscf import ao2mo</span>
 <span class="sd">    &gt;&gt;&gt; import h5py</span>
 <span class="sd">    &gt;&gt;&gt; def view(h5file, dataname=&#39;eri_mo&#39;):</span>
-<span class="sd">    ...     f5 = h5py.File(h5file)</span>
+<span class="sd">    ...     f5 = h5py.File(h5file, &#39;r&#39;)</span>
 <span class="sd">    ...     print(&#39;dataset %s, shape %s&#39; % (str(f5.keys()), str(f5[dataname].shape)))</span>
 <span class="sd">    ...     f5.close()</span>
 <span class="sd">    &gt;&gt;&gt; mol = gto.M(atom=&#39;O 0 0 0; H 0 1 0; H 0 0 1&#39;, basis=&#39;sto3g&#39;)</span>
@@ -386,6 +367,9 @@
 <span class="sd">    &gt;&gt;&gt; view(&#39;oh2.h5&#39;)</span>
 <span class="sd">    dataset [&#39;eri_mo&#39;, &#39;new&#39;], shape (3, 100, 55)</span>
 <span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="n">numpy</span><span class="o">.</span><span class="n">complex</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">mo_coeffs</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Integral transformation for complex orbitals&#39;</span><span class="p">)</span>
+
     <span class="n">time_0pass</span> <span class="o">=</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">clock</span><span class="p">(),</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span>
     <span class="n">log</span> <span class="o">=</span> <span class="n">logger</span><span class="o">.</span><span class="n">new_logger</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
 
@@ -419,7 +403,7 @@
 
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">erifile</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">h5py</span><span class="o">.</span><span class="n">is_hdf5</span><span class="p">(</span><span class="n">erifile</span><span class="p">):</span>
-            <span class="n">feri</span> <span class="o">=</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">erifile</span><span class="p">)</span>
+            <span class="n">feri</span> <span class="o">=</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">erifile</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">dataname</span> <span class="ow">in</span> <span class="n">feri</span><span class="p">:</span>
                 <span class="k">del</span><span class="p">(</span><span class="n">feri</span><span class="p">[</span><span class="n">dataname</span><span class="p">])</span>
         <span class="k">else</span><span class="p">:</span>
@@ -445,7 +429,7 @@
 
     <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;MO integrals </span><span class="si">%s</span><span class="s1"> are saved in </span><span class="si">%s</span><span class="s1">/</span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">intor</span><span class="p">,</span> <span class="n">erifile</span><span class="p">,</span> <span class="n">dataname</span><span class="p">)</span>
     <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;num. MO ints = </span><span class="si">%.8g</span><span class="s1">, required disk </span><span class="si">%.8g</span><span class="s1"> MB&#39;</span><span class="p">,</span>
-              <span class="nb">float</span><span class="p">(</span><span class="n">nij_pair</span><span class="p">)</span><span class="o">*</span><span class="n">nkl_pair</span><span class="o">*</span><span class="n">comp</span><span class="p">,</span> <span class="n">nij_pair</span><span class="o">*</span><span class="n">nkl_pair</span><span class="o">*</span><span class="n">comp</span><span class="o">*</span><span class="mi">8</span><span class="o">/</span><span class="mi">1</span><span class="n">e6</span><span class="p">)</span>
+              <span class="nb">float</span><span class="p">(</span><span class="n">nij_pair</span><span class="p">)</span><span class="o">*</span><span class="n">nkl_pair</span><span class="o">*</span><span class="n">comp</span><span class="p">,</span> <span class="n">nij_pair</span><span class="o">*</span><span class="n">nkl_pair</span><span class="o">*</span><span class="n">comp</span><span class="o">*</span><span class="mi">8</span><span class="o">/</span><span class="mf">1e6</span><span class="p">)</span>
 
 <span class="c1"># transform e1</span>
     <span class="n">fswap</span> <span class="o">=</span> <span class="n">lib</span><span class="o">.</span><span class="n">H5TmpFile</span><span class="p">()</span>
@@ -478,10 +462,10 @@
     <span class="n">buf_write</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">empty_like</span><span class="p">(</span><span class="n">outbuf</span><span class="p">)</span>
 
     <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;step2: kl-pair (ao </span><span class="si">%d</span><span class="s1">, mo </span><span class="si">%d</span><span class="s1">), mem </span><span class="si">%.8g</span><span class="s1"> MB, ioblock </span><span class="si">%.8g</span><span class="s1"> MB&#39;</span><span class="p">,</span>
-              <span class="n">nao_pair</span><span class="p">,</span> <span class="n">nkl_pair</span><span class="p">,</span> <span class="n">iobuflen</span><span class="o">*</span><span class="n">nao_pair</span><span class="o">*</span><span class="mi">8</span><span class="o">/</span><span class="mi">1</span><span class="n">e6</span><span class="p">,</span>
-              <span class="n">iobuflen</span><span class="o">*</span><span class="n">nkl_pair</span><span class="o">*</span><span class="mi">8</span><span class="o">/</span><span class="mi">1</span><span class="n">e6</span><span class="p">)</span>
+              <span class="n">nao_pair</span><span class="p">,</span> <span class="n">nkl_pair</span><span class="p">,</span> <span class="n">iobuflen</span><span class="o">*</span><span class="n">nao_pair</span><span class="o">*</span><span class="mi">8</span><span class="o">/</span><span class="mf">1e6</span><span class="p">,</span>
+              <span class="n">iobuflen</span><span class="o">*</span><span class="n">nkl_pair</span><span class="o">*</span><span class="mi">8</span><span class="o">/</span><span class="mf">1e6</span><span class="p">)</span>
 
-    <span class="n">klaoblks</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">fswap</span><span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">])</span>
+    <span class="c1">#klaoblks = len(fswap[&#39;0&#39;])</span>
     <span class="n">ijmoblks</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">nij_pair</span><span class="p">)</span><span class="o">/</span><span class="n">iobuflen</span><span class="p">))</span> <span class="o">*</span> <span class="n">comp</span>
     <span class="n">ao_loc</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">ao_loc_nr</span><span class="p">(</span><span class="s1">&#39;_cart&#39;</span> <span class="ow">in</span> <span class="n">intor</span><span class="p">)</span>
     <span class="n">ti0</span> <span class="o">=</span> <span class="n">time_1pass</span>
@@ -519,11 +503,11 @@
 
 
 <span class="c1"># swapfile will be overwritten if exists.</span>
-<div class="viewcode-block" id="half_e1"><a class="viewcode-back" href="../../../ao2mo.html#pyscf.ao2mo.outcore.half_e1">[docs]</a><span class="k">def</span> <span class="nf">half_e1</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">mo_coeffs</span><span class="p">,</span> <span class="n">swapfile</span><span class="p">,</span>
+<div class="viewcode-block" id="half_e1"><a class="viewcode-back" href="../../../modules/ao2mo.html#pyscf.ao2mo.outcore.half_e1">[docs]</a><span class="k">def</span> <span class="nf">half_e1</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">mo_coeffs</span><span class="p">,</span> <span class="n">swapfile</span><span class="p">,</span>
             <span class="n">intor</span><span class="o">=</span><span class="s1">&#39;int2e&#39;</span><span class="p">,</span> <span class="n">aosym</span><span class="o">=</span><span class="s1">&#39;s4&#39;</span><span class="p">,</span> <span class="n">comp</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
             <span class="n">max_memory</span><span class="o">=</span><span class="n">MAX_MEMORY</span><span class="p">,</span> <span class="n">ioblk_size</span><span class="o">=</span><span class="n">IOBLK_SIZE</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">logger</span><span class="o">.</span><span class="n">WARN</span><span class="p">,</span>
             <span class="n">compact</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ao2mopt</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">r&#39;&#39;&#39;Half transform arbitrary spherical AO integrals to MO integrals</span>
+    <span class="sa">r</span><span class="sd">&#39;&#39;&#39;Half transform arbitrary spherical AO integrals to MO integrals</span>
 <span class="sd">    for the given two sets of orbitals</span>
 
 <span class="sd">    Args:</span>
@@ -574,6 +558,9 @@
 <span class="sd">        None</span>
 
 <span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="n">numpy</span><span class="o">.</span><span class="n">complex</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">mo_coeffs</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Integral transformation for complex orbitals&#39;</span><span class="p">)</span>
+
     <span class="n">intor</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">_add_suffix</span><span class="p">(</span><span class="n">intor</span><span class="p">)</span>
     <span class="n">time0</span> <span class="o">=</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">clock</span><span class="p">(),</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span>
     <span class="n">log</span> <span class="o">=</span> <span class="n">logger</span><span class="o">.</span><span class="n">new_logger</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
@@ -591,7 +578,7 @@
 
     <span class="n">e1buflen</span><span class="p">,</span> <span class="n">mem_words</span><span class="p">,</span> <span class="n">iobuf_words</span><span class="p">,</span> <span class="n">ioblk_words</span> <span class="o">=</span> \
             <span class="n">guess_e1bufsize</span><span class="p">(</span><span class="n">max_memory</span><span class="p">,</span> <span class="n">ioblk_size</span><span class="p">,</span> <span class="n">nij_pair</span><span class="p">,</span> <span class="n">nao_pair</span><span class="p">,</span> <span class="n">comp</span><span class="p">)</span>
-    <span class="n">ioblk_size</span> <span class="o">=</span> <span class="n">ioblk_words</span> <span class="o">*</span> <span class="mi">8</span><span class="o">/</span><span class="mi">1</span><span class="n">e6</span>
+    <span class="n">ioblk_size</span> <span class="o">=</span> <span class="n">ioblk_words</span> <span class="o">*</span> <span class="mi">8</span><span class="o">/</span><span class="mf">1e6</span>
 <span class="c1"># The buffer to hold AO integrals in C code, see line (@)</span>
     <span class="n">aobuflen</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">int</span><span class="p">((</span><span class="n">mem_words</span> <span class="o">-</span> <span class="mi">2</span><span class="o">*</span><span class="n">comp</span><span class="o">*</span><span class="n">e1buflen</span><span class="o">*</span><span class="n">nij_pair</span><span class="p">)</span> <span class="o">//</span> <span class="p">(</span><span class="n">nao_pair</span><span class="o">*</span><span class="n">comp</span><span class="p">)),</span>
                    <span class="n">IOBUF_ROW_MIN</span><span class="p">)</span>
@@ -610,11 +597,11 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">fswap</span> <span class="o">=</span> <span class="n">lib</span><span class="o">.</span><span class="n">H5TmpFile</span><span class="p">(</span><span class="n">swapfile</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">icomp</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">comp</span><span class="p">):</span>
-        <span class="n">g</span> <span class="o">=</span> <span class="n">fswap</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">icomp</span><span class="p">))</span> <span class="c1"># for h5py old version</span>
+        <span class="n">fswap</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">icomp</span><span class="p">))</span> <span class="c1"># for h5py old version</span>
 
-    <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;step1: tmpfile </span><span class="si">%s</span><span class="s1">  </span><span class="si">%.8g</span><span class="s1"> MB&#39;</span><span class="p">,</span> <span class="n">fswap</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span> <span class="n">nij_pair</span><span class="o">*</span><span class="n">nao_pair</span><span class="o">*</span><span class="mi">8</span><span class="o">/</span><span class="mi">1</span><span class="n">e6</span><span class="p">)</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;step1: tmpfile </span><span class="si">%s</span><span class="s1">  </span><span class="si">%.8g</span><span class="s1"> MB&#39;</span><span class="p">,</span> <span class="n">fswap</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span> <span class="n">nij_pair</span><span class="o">*</span><span class="n">nao_pair</span><span class="o">*</span><span class="mi">8</span><span class="o">/</span><span class="mf">1e6</span><span class="p">)</span>
     <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;step1: (ij,kl) = (</span><span class="si">%d</span><span class="s1">,</span><span class="si">%d</span><span class="s1">), mem cache </span><span class="si">%.8g</span><span class="s1"> MB, iobuf </span><span class="si">%.8g</span><span class="s1"> MB&#39;</span><span class="p">,</span>
-              <span class="n">nij_pair</span><span class="p">,</span> <span class="n">nao_pair</span><span class="p">,</span> <span class="n">mem_words</span><span class="o">*</span><span class="mi">8</span><span class="o">/</span><span class="mi">1</span><span class="n">e6</span><span class="p">,</span> <span class="n">iobuf_words</span><span class="o">*</span><span class="mi">8</span><span class="o">/</span><span class="mi">1</span><span class="n">e6</span><span class="p">)</span>
+              <span class="n">nij_pair</span><span class="p">,</span> <span class="n">nao_pair</span><span class="p">,</span> <span class="n">mem_words</span><span class="o">*</span><span class="mi">8</span><span class="o">/</span><span class="mf">1e6</span><span class="p">,</span> <span class="n">iobuf_words</span><span class="o">*</span><span class="mi">8</span><span class="o">/</span><span class="mf">1e6</span><span class="p">)</span>
     <span class="n">nstep</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">shranges</span><span class="p">)</span>
     <span class="n">e1buflen</span> <span class="o">=</span> <span class="nb">max</span><span class="p">([</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">shranges</span><span class="p">])</span>
 
@@ -633,7 +620,7 @@
         <span class="n">fill</span> <span class="o">=</span> <span class="n">_ao2mo</span><span class="o">.</span><span class="n">nr_e1fill</span>
         <span class="n">f_e1</span> <span class="o">=</span> <span class="n">_ao2mo</span><span class="o">.</span><span class="n">nr_e1</span>
         <span class="k">for</span> <span class="n">istep</span><span class="p">,</span><span class="n">sh_range</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">shranges</span><span class="p">):</span>
-            <span class="n">log</span><span class="o">.</span><span class="n">debug1</span><span class="p">(</span><span class="s1">&#39;step 1 [</span><span class="si">%d</span><span class="s1">/</span><span class="si">%d</span><span class="s1">], AO [</span><span class="si">%d</span><span class="s1">:</span><span class="si">%d</span><span class="s1">], len(buf) = </span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">,</span> \
+            <span class="n">log</span><span class="o">.</span><span class="n">debug1</span><span class="p">(</span><span class="s1">&#39;step 1 [</span><span class="si">%d</span><span class="s1">/</span><span class="si">%d</span><span class="s1">], AO [</span><span class="si">%d</span><span class="s1">:</span><span class="si">%d</span><span class="s1">], len(buf) = </span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">,</span>
                        <span class="n">istep</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">nstep</span><span class="p">,</span> <span class="o">*</span><span class="p">(</span><span class="n">sh_range</span><span class="p">[:</span><span class="mi">3</span><span class="p">]))</span>
             <span class="n">buflen</span> <span class="o">=</span> <span class="n">sh_range</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
             <span class="n">iobuf</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">((</span><span class="n">comp</span><span class="p">,</span><span class="n">buflen</span><span class="p">,</span><span class="n">nij_pair</span><span class="p">),</span> <span class="n">buffer</span><span class="o">=</span><span class="n">buf2</span><span class="p">)</span>
@@ -655,14 +642,24 @@
     <span class="n">fswap</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">return</span> <span class="n">swapfile</span></div>
 
-<span class="k">def</span> <span class="nf">_load_from_h5g</span><span class="p">(</span><span class="n">h5group</span><span class="p">,</span> <span class="n">row0</span><span class="p">,</span> <span class="n">row1</span><span class="p">,</span> <span class="n">out</span><span class="p">):</span>
-    <span class="n">nrow</span> <span class="o">=</span> <span class="n">row1</span> <span class="o">-</span> <span class="n">row0</span>
-    <span class="n">col0</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">h5group</span><span class="p">)):</span>
-        <span class="n">dat</span> <span class="o">=</span> <span class="n">h5group</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="p">)][</span><span class="n">row0</span><span class="p">:</span><span class="n">row1</span><span class="p">]</span>
-        <span class="n">col1</span> <span class="o">=</span> <span class="n">col0</span> <span class="o">+</span> <span class="n">dat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-        <span class="n">out</span><span class="p">[:</span><span class="n">nrow</span><span class="p">,</span><span class="n">col0</span><span class="p">:</span><span class="n">col1</span><span class="p">]</span> <span class="o">=</span> <span class="n">dat</span>
-        <span class="n">col0</span> <span class="o">=</span> <span class="n">col1</span>
+<span class="k">def</span> <span class="nf">_load_from_h5g</span><span class="p">(</span><span class="n">h5group</span><span class="p">,</span> <span class="n">row0</span><span class="p">,</span> <span class="n">row1</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">nkeys</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">h5group</span><span class="p">)</span>
+    <span class="n">dat</span> <span class="o">=</span> <span class="n">h5group</span><span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">]</span>
+    <span class="n">ncol</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">h5group</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="p">)]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nkeys</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">dat</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">((</span><span class="n">row1</span><span class="o">-</span><span class="n">row0</span><span class="p">,</span> <span class="n">ncol</span><span class="p">),</span> <span class="n">dat</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">buffer</span><span class="o">=</span><span class="n">out</span><span class="p">)</span>
+        <span class="n">col1</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nkeys</span><span class="p">):</span>
+            <span class="n">dat</span> <span class="o">=</span> <span class="n">h5group</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="p">)][</span><span class="n">row0</span><span class="p">:</span><span class="n">row1</span><span class="p">]</span>
+            <span class="n">col0</span><span class="p">,</span> <span class="n">col1</span> <span class="o">=</span> <span class="n">col1</span><span class="p">,</span> <span class="n">col1</span> <span class="o">+</span> <span class="n">dat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">out</span><span class="p">[:,</span><span class="n">col0</span><span class="p">:</span><span class="n">col1</span><span class="p">]</span> <span class="o">=</span> <span class="n">dat</span>
+    <span class="k">else</span><span class="p">:</span>  <span class="c1"># multiple components</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">((</span><span class="n">dat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">row1</span><span class="o">-</span><span class="n">row0</span><span class="p">,</span> <span class="n">ncol</span><span class="p">),</span> <span class="n">dat</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">buffer</span><span class="o">=</span><span class="n">out</span><span class="p">)</span>
+        <span class="n">col1</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nkeys</span><span class="p">):</span>
+            <span class="n">dat</span> <span class="o">=</span> <span class="n">h5group</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="p">)][:,</span><span class="n">row0</span><span class="p">:</span><span class="n">row1</span><span class="p">]</span>
+            <span class="n">col0</span><span class="p">,</span> <span class="n">col1</span> <span class="o">=</span> <span class="n">col1</span><span class="p">,</span> <span class="n">col1</span> <span class="o">+</span> <span class="n">dat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+            <span class="n">out</span><span class="p">[:,:,</span><span class="n">col0</span><span class="p">:</span><span class="n">col1</span><span class="p">]</span> <span class="o">=</span> <span class="n">dat</span>
     <span class="k">return</span> <span class="n">out</span>
 
 <span class="k">def</span> <span class="nf">_transpose_to_h5g</span><span class="p">(</span><span class="n">h5group</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">dat</span><span class="p">,</span> <span class="n">blksize</span><span class="p">,</span> <span class="n">chunks</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -671,10 +668,10 @@
     <span class="k">for</span> <span class="n">col0</span><span class="p">,</span> <span class="n">col1</span> <span class="ow">in</span> <span class="n">prange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ncol</span><span class="p">,</span> <span class="n">blksize</span><span class="p">):</span>
         <span class="n">dset</span><span class="p">[</span><span class="n">col0</span><span class="p">:</span><span class="n">col1</span><span class="p">]</span> <span class="o">=</span> <span class="n">lib</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">dat</span><span class="p">[:,</span><span class="n">col0</span><span class="p">:</span><span class="n">col1</span><span class="p">])</span>
 
-<div class="viewcode-block" id="full_iofree"><a class="viewcode-back" href="../../../ao2mo.html#pyscf.ao2mo.outcore.full_iofree">[docs]</a><span class="k">def</span> <span class="nf">full_iofree</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">mo_coeff</span><span class="p">,</span> <span class="n">intor</span><span class="o">=</span><span class="s1">&#39;int2e&#39;</span><span class="p">,</span> <span class="n">aosym</span><span class="o">=</span><span class="s1">&#39;s4&#39;</span><span class="p">,</span> <span class="n">comp</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<div class="viewcode-block" id="full_iofree"><a class="viewcode-back" href="../../../modules/ao2mo.html#pyscf.ao2mo.outcore.full_iofree">[docs]</a><span class="k">def</span> <span class="nf">full_iofree</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">mo_coeff</span><span class="p">,</span> <span class="n">intor</span><span class="o">=</span><span class="s1">&#39;int2e&#39;</span><span class="p">,</span> <span class="n">aosym</span><span class="o">=</span><span class="s1">&#39;s4&#39;</span><span class="p">,</span> <span class="n">comp</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                 <span class="n">max_memory</span><span class="o">=</span><span class="n">MAX_MEMORY</span><span class="p">,</span> <span class="n">ioblk_size</span><span class="o">=</span><span class="n">IOBLK_SIZE</span><span class="p">,</span>
                 <span class="n">verbose</span><span class="o">=</span><span class="n">logger</span><span class="o">.</span><span class="n">WARN</span><span class="p">,</span> <span class="n">compact</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-    <span class="sd">r&#39;&#39;&#39;Transfer arbitrary spherical AO integrals to MO integrals for given orbitals</span>
+    <span class="sa">r</span><span class="sd">&#39;&#39;&#39;Transfer arbitrary spherical AO integrals to MO integrals for given orbitals</span>
 <span class="sd">    This function is a wrap for :func:`ao2mo.outcore.general`.  It&#39;s not really</span>
 <span class="sd">    IO free.  The returned MO integrals are held in memory.  For backward compatibility,</span>
 <span class="sd">    it is used to replace the non-existed function direct.full_iofree.</span>
@@ -758,10 +755,10 @@
                 <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="n">compact</span><span class="o">=</span><span class="n">compact</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">feri</span><span class="p">[</span><span class="s1">&#39;eri_mo&#39;</span><span class="p">])</span></div>
 
-<div class="viewcode-block" id="general_iofree"><a class="viewcode-back" href="../../../ao2mo.html#pyscf.ao2mo.outcore.general_iofree">[docs]</a><span class="k">def</span> <span class="nf">general_iofree</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">mo_coeffs</span><span class="p">,</span> <span class="n">intor</span><span class="o">=</span><span class="s1">&#39;int2e&#39;</span><span class="p">,</span> <span class="n">aosym</span><span class="o">=</span><span class="s1">&#39;s4&#39;</span><span class="p">,</span> <span class="n">comp</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<div class="viewcode-block" id="general_iofree"><a class="viewcode-back" href="../../../modules/ao2mo.html#pyscf.ao2mo.outcore.general_iofree">[docs]</a><span class="k">def</span> <span class="nf">general_iofree</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">mo_coeffs</span><span class="p">,</span> <span class="n">intor</span><span class="o">=</span><span class="s1">&#39;int2e&#39;</span><span class="p">,</span> <span class="n">aosym</span><span class="o">=</span><span class="s1">&#39;s4&#39;</span><span class="p">,</span> <span class="n">comp</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                    <span class="n">max_memory</span><span class="o">=</span><span class="n">MAX_MEMORY</span><span class="p">,</span> <span class="n">ioblk_size</span><span class="o">=</span><span class="n">IOBLK_SIZE</span><span class="p">,</span>
                    <span class="n">verbose</span><span class="o">=</span><span class="n">logger</span><span class="o">.</span><span class="n">WARN</span><span class="p">,</span> <span class="n">compact</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-    <span class="sd">r&#39;&#39;&#39;For the given four sets of orbitals, transfer arbitrary spherical AO</span>
+    <span class="sa">r</span><span class="sd">&#39;&#39;&#39;For the given four sets of orbitals, transfer arbitrary spherical AO</span>
 <span class="sd">    integrals to MO integrals on the fly.  This function is a wrap for</span>
 <span class="sd">    :func:`ao2mo.outcore.general`.  It&#39;s not really IO free.  The returned MO</span>
 <span class="sd">    integrals are held in memory.  For backward compatibility, it is used to</span>
@@ -812,7 +809,7 @@
 <span class="sd">    &gt;&gt;&gt; from pyscf import ao2mo</span>
 <span class="sd">    &gt;&gt;&gt; import h5py</span>
 <span class="sd">    &gt;&gt;&gt; def view(h5file, dataname=&#39;eri_mo&#39;):</span>
-<span class="sd">    ...     f5 = h5py.File(h5file)</span>
+<span class="sd">    ...     f5 = h5py.File(h5file, &#39;r&#39;)</span>
 <span class="sd">    ...     print(&#39;dataset %s, shape %s&#39; % (str(f5.keys()), str(f5[dataname].shape)))</span>
 <span class="sd">    ...     f5.close()</span>
 <span class="sd">    &gt;&gt;&gt; mol = gto.M(atom=&#39;O 0 0 0; H 0 1 0; H 0 0 1&#39;, basis=&#39;sto3g&#39;)</span>
@@ -853,19 +850,19 @@
         <span class="k">yield</span> <span class="n">i</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="n">step</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">guess_e1bufsize</span><span class="p">(</span><span class="n">max_memory</span><span class="p">,</span> <span class="n">ioblk_size</span><span class="p">,</span> <span class="n">nij_pair</span><span class="p">,</span> <span class="n">nao_pair</span><span class="p">,</span> <span class="n">comp</span><span class="p">):</span>
-    <span class="n">mem_words</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_memory</span> <span class="o">*</span> <span class="mi">1</span><span class="n">e6</span> <span class="o">/</span> <span class="mi">8</span><span class="p">)</span>
+    <span class="n">mem_words</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_memory</span> <span class="o">*</span> <span class="mf">1e6</span> <span class="o">/</span> <span class="mi">8</span><span class="p">)</span>
 <span class="c1"># part of the max_memory is used to hold the AO integrals.  The iobuf is the</span>
 <span class="c1"># buffer to temporary hold the transformed integrals before streaming to disk.</span>
 <span class="c1"># iobuf is then divided to small blocks (ioblk_words) and streamed to disk.</span>
     <span class="n">iobuf_words</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">mem_words</span><span class="o">//</span><span class="mi">6</span><span class="p">),</span> <span class="n">IOBUF_WORDS</span><span class="p">)</span>
-    <span class="n">ioblk_words</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">ioblk_size</span><span class="o">*</span><span class="mi">1</span><span class="n">e6</span><span class="o">/</span><span class="mi">8</span><span class="p">,</span> <span class="n">iobuf_words</span><span class="p">))</span>
+    <span class="n">ioblk_words</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">ioblk_size</span><span class="o">*</span><span class="mf">1e6</span><span class="o">/</span><span class="mi">8</span><span class="p">,</span> <span class="n">iobuf_words</span><span class="p">))</span>
 
     <span class="n">e1buflen</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">mem_words</span><span class="o">*.</span><span class="mi">66</span><span class="o">/</span><span class="p">(</span><span class="n">comp</span><span class="o">*</span><span class="p">(</span><span class="n">nij_pair</span><span class="o">*</span><span class="mi">2</span><span class="o">+</span><span class="n">nao_pair</span><span class="p">)))</span>
     <span class="n">e1buflen</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">e1buflen</span><span class="p">,</span> <span class="n">IOBUF_ROW_MIN</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">e1buflen</span><span class="p">,</span> <span class="n">mem_words</span><span class="p">,</span> <span class="n">iobuf_words</span><span class="p">,</span> <span class="n">ioblk_words</span>
 
 <span class="k">def</span> <span class="nf">guess_e2bufsize</span><span class="p">(</span><span class="n">ioblk_size</span><span class="p">,</span> <span class="n">nrows</span><span class="p">,</span> <span class="n">ncols</span><span class="p">):</span>
-    <span class="n">e2buflen</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">ioblk_size</span><span class="o">*</span><span class="mi">1</span><span class="n">e6</span><span class="o">/</span><span class="mi">8</span><span class="o">/</span><span class="n">ncols</span><span class="p">,</span> <span class="n">nrows</span><span class="p">))</span>
+    <span class="n">e2buflen</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">ioblk_size</span><span class="o">*</span><span class="mf">1e6</span><span class="o">/</span><span class="mi">8</span><span class="o">/</span><span class="n">ncols</span><span class="p">,</span> <span class="n">nrows</span><span class="p">))</span>
     <span class="n">e2buflen</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">e2buflen</span><span class="o">//</span><span class="n">IOBUF_ROW_MIN</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">IOBUF_ROW_MIN</span>
     <span class="n">chunks</span> <span class="o">=</span> <span class="p">(</span><span class="n">IOBUF_ROW_MIN</span><span class="p">,</span> <span class="n">ncols</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">e2buflen</span><span class="p">,</span> <span class="n">chunks</span>
@@ -912,7 +909,7 @@
     <span class="k">if</span> <span class="n">max_aobuf</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">max_aobuf</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_aobuf</span><span class="p">)</span>
         <span class="k">def</span> <span class="nf">div_each_iobuf</span><span class="p">(</span><span class="n">ijstart</span><span class="p">,</span> <span class="n">ijstop</span><span class="p">,</span> <span class="n">buflen</span><span class="p">):</span>
-<span class="c1"># to fill each iobuf, AO integrals may need to be fill to aobuf several times</span>
+            <span class="c1"># to fill each iobuf, AO integrals may need to be fill to aobuf several times</span>
             <span class="k">return</span> <span class="p">(</span><span class="n">ijstart</span><span class="p">,</span> <span class="n">ijstop</span><span class="p">,</span> <span class="n">buflen</span><span class="p">,</span>
                     <span class="n">balance_partition</span><span class="p">(</span><span class="n">dij_loc</span><span class="p">,</span> <span class="n">max_aobuf</span><span class="p">,</span> <span class="n">ijstart</span><span class="p">,</span> <span class="n">ijstop</span><span class="p">))</span>
         <span class="n">ijsh_range</span> <span class="o">=</span> <span class="p">[</span><span class="n">div_each_iobuf</span><span class="p">(</span><span class="o">*</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">ijsh_range</span><span class="p">]</span>
@@ -944,9 +941,8 @@
 <span class="k">del</span><span class="p">(</span><span class="n">MAX_MEMORY</span><span class="p">)</span>
 
 
-<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">scf</span>
-    <span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">gto</span>
     <span class="kn">from</span> <span class="nn">pyscf.ao2mo</span> <span class="k">import</span> <span class="n">addons</span>
     <span class="n">mol</span> <span class="o">=</span> <span class="n">gto</span><span class="o">.</span><span class="n">Mole</span><span class="p">()</span>
     <span class="n">mol</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="mi">5</span>
@@ -992,9 +988,7 @@
 </pre></div>
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -1003,11 +997,19 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015-, Qiming Sun &lt;osirpt.sun@gmail.com&gt;.
+        
+        &copy; Copyright 2015-2020, The PySCF Developers
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -1019,38 +1021,15 @@
   </div>
   
 
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../../',
-            VERSION:'1.5.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: ''
-        };
-    </script>
-      <script type="text/javascript" src="../../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

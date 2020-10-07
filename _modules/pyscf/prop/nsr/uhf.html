@@ -1,0 +1,323 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pyscf.prop.nsr.uhf &mdash; PySCF 1.7.5 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home" alt="Documentation Home"> PySCF
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.7
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../overview.html">1. An overview of PySCF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../version.html">2. Version history</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../install.html">3. Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../code-rule.html">4. Code standard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../benchmark.html">5. Benchmark</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorial.html">6. Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../theory.html">7. Theoretical methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../advanced.html">8. Miscellaneous</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../interface.html">9. Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules.html">10. Main modules</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">PySCF</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>pyscf.prop.nsr.uhf</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pyscf.prop.nsr.uhf</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># Copyright 2014-2019 The PySCF Developers. All Rights Reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+<span class="c1">#</span>
+<span class="c1">#     http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1">#</span>
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+<span class="c1">#</span>
+<span class="c1"># Author: Qiming Sun &lt;osirpt.sun@gmail.com&gt;</span>
+<span class="c1">#</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">Non-relativistic nuclear spin-rotation tensors for UHF</span>
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">from</span> <span class="nn">pyscf.prop.nsr</span> <span class="k">import</span> <span class="n">rhf</span> <span class="k">as</span> <span class="n">rhf_nsr</span>
+<span class="kn">from</span> <span class="nn">pyscf.prop.nmr</span> <span class="k">import</span> <span class="n">uhf</span> <span class="k">as</span> <span class="n">uhf_nmr</span>
+<span class="kn">from</span> <span class="nn">pyscf.data</span> <span class="k">import</span> <span class="n">nist</span>
+
+
+<div class="viewcode-block" id="dia"><a class="viewcode-back" href="../../../../modules/prop/nsr.html#pyscf.prop.nsr.uhf.dia">[docs]</a><span class="k">def</span> <span class="nf">dia</span><span class="p">(</span><span class="n">nsrobj</span><span class="p">,</span> <span class="n">gauge_orig</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shielding_nuc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dm0</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Diamagnetic part of NSR tensors.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">dm0</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="n">dm0</span> <span class="o">=</span> <span class="n">nsrobj</span><span class="o">.</span><span class="n">_scf</span><span class="o">.</span><span class="n">make_rdm1</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">dm0</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="ow">and</span> <span class="n">dm0</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">):</span>
+        <span class="n">dm0</span> <span class="o">=</span> <span class="n">dm0</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">dm0</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">rhf_nsr</span><span class="o">.</span><span class="n">dia</span><span class="p">(</span><span class="n">nsrobj</span><span class="p">,</span> <span class="n">gauge_orig</span><span class="p">,</span> <span class="n">shielding_nuc</span><span class="p">,</span> <span class="n">dm0</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="para"><a class="viewcode-back" href="../../../../modules/prop/nsr.html#pyscf.prop.nsr.uhf.para">[docs]</a><span class="k">def</span> <span class="nf">para</span><span class="p">(</span><span class="n">nsrobj</span><span class="p">,</span> <span class="n">mo10</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mo_coeff</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mo_occ</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shielding_nuc</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Paramagnetic part of NSR shielding tensors.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">shielding_nuc</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="n">shielding_nuc</span> <span class="o">=</span> <span class="n">nsrobj</span><span class="o">.</span><span class="n">shielding_nuc</span>
+
+    <span class="c1"># The first order Hamiltonian for rotation part is the same to the</span>
+    <span class="c1"># first order Hamiltonian for magnetic field except a factor of 2.</span>
+    <span class="n">nsr_para</span> <span class="o">=</span> <span class="n">uhf_nmr</span><span class="o">.</span><span class="n">para</span><span class="p">(</span><span class="n">nsrobj</span><span class="p">,</span> <span class="n">mo10</span><span class="p">,</span> <span class="n">mo_coeff</span><span class="p">,</span> <span class="n">mo_occ</span><span class="p">,</span>
+                            <span class="n">shielding_nuc</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span>
+
+    <span class="n">mol</span> <span class="o">=</span> <span class="n">nsrobj</span><span class="o">.</span><span class="n">mol</span>
+    <span class="n">im</span><span class="p">,</span> <span class="n">mass_center</span> <span class="o">=</span> <span class="n">rhf_nsr</span><span class="o">.</span><span class="n">inertia_tensor</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span>
+    <span class="n">nsr_para</span> <span class="o">=</span> <span class="n">rhf_nsr</span><span class="o">.</span><span class="n">_safe_solve</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">nsr_para</span><span class="p">)</span>
+    <span class="n">unit</span> <span class="o">=</span> <span class="n">rhf_nsr</span><span class="o">.</span><span class="n">_atom_gyro_list</span><span class="p">(</span><span class="n">mol</span><span class="p">)[</span><span class="n">shielding_nuc</span><span class="p">]</span> <span class="o">*</span> <span class="n">nist</span><span class="o">.</span><span class="n">ALPHA</span><span class="o">**</span><span class="mi">2</span>
+    <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;ixy,i-&gt;ixy&#39;</span><span class="p">,</span> <span class="n">nsr_para</span><span class="p">,</span> <span class="n">unit</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="NSR"><a class="viewcode-back" href="../../../../modules/prop/nsr.html#pyscf.prop.nsr.uhf.NSR">[docs]</a><span class="k">class</span> <span class="nc">NSR</span><span class="p">(</span><span class="n">rhf_nsr</span><span class="o">.</span><span class="n">NSR</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Nuclear-spin rotation tensors for UHF&#39;&#39;&#39;</span>
+    <span class="n">dia</span> <span class="o">=</span> <span class="n">dia</span>
+    <span class="n">para</span> <span class="o">=</span> <span class="n">para</span>
+    <span class="n">get_fock</span> <span class="o">=</span> <span class="n">uhf_nmr</span><span class="o">.</span><span class="n">get_fock</span>
+    <span class="n">solve_mo1</span> <span class="o">=</span> <span class="n">uhf_nmr</span><span class="o">.</span><span class="n">solve_mo1</span></div>
+
+<span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">lib</span>
+<span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">scf</span>
+<span class="n">scf</span><span class="o">.</span><span class="n">uhf</span><span class="o">.</span><span class="n">UHF</span><span class="o">.</span><span class="n">NSR</span> <span class="o">=</span> <span class="n">lib</span><span class="o">.</span><span class="n">class_as_method</span><span class="p">(</span><span class="n">NSR</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">gto</span>
+    <span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">scf</span>
+    <span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">lib</span>
+    <span class="n">mol</span> <span class="o">=</span> <span class="n">gto</span><span class="o">.</span><span class="n">Mole</span><span class="p">()</span>
+    <span class="n">mol</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="mi">7</span>
+    <span class="n">mol</span><span class="o">.</span><span class="n">output</span> <span class="o">=</span> <span class="s1">&#39;/dev/null&#39;</span>
+    <span class="n">mol</span><span class="o">.</span><span class="n">atom</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;h  ,  0.   0.   0.917</span>
+<span class="s1">                  f  ,  0.   0.   0.</span>
+<span class="s1">                  &#39;&#39;&#39;</span>
+    <span class="n">mol</span><span class="o">.</span><span class="n">basis</span> <span class="o">=</span> <span class="s1">&#39;dzp&#39;</span>
+    <span class="n">mol</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+
+    <span class="n">mf</span> <span class="o">=</span> <span class="n">scf</span><span class="o">.</span><span class="n">UHF</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+    <span class="n">rotg</span> <span class="o">=</span> <span class="n">mf</span><span class="o">.</span><span class="n">NSR</span><span class="p">()</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">rotg</span><span class="o">.</span><span class="n">kernel</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="o">-</span><span class="mf">274.44236312671563</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">lib</span><span class="o">.</span><span class="n">finger</span><span class="p">(</span><span class="n">m</span><span class="p">)</span> <span class="o">-</span> <span class="mf">26.68194604747653</span><span class="p">)</span>
+
+    <span class="n">rotg</span><span class="o">.</span><span class="n">gauge_orig</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">.</span><span class="mi">917</span><span class="o">/</span><span class="n">lib</span><span class="o">.</span><span class="n">param</span><span class="o">.</span><span class="n">BOHR</span><span class="p">)</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">rotg</span><span class="o">.</span><span class="n">kernel</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mf">274.9496549281562</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">lib</span><span class="o">.</span><span class="n">finger</span><span class="p">(</span><span class="n">m</span><span class="p">)</span> <span class="o">-</span> <span class="mf">96.22450556074686</span><span class="p">)</span>
+
+    <span class="n">mol</span><span class="o">.</span><span class="n">atom</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;C  ,  0.   0.   0.</span>
+<span class="s1">                  O  ,  0.   0.   1.1283</span>
+<span class="s1">                  &#39;&#39;&#39;</span>
+    <span class="n">mol</span><span class="o">.</span><span class="n">basis</span> <span class="o">=</span> <span class="s1">&#39;ccpvdz&#39;</span>
+    <span class="n">mol</span><span class="o">.</span><span class="n">nucprop</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;C&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;mass&#39;</span><span class="p">:</span> <span class="mi">13</span><span class="p">}}</span>
+    <span class="n">mol</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+    <span class="n">mf</span> <span class="o">=</span> <span class="n">scf</span><span class="o">.</span><span class="n">UHF</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+    <span class="n">rotg</span> <span class="o">=</span> <span class="n">NSR</span><span class="p">(</span><span class="n">mf</span><span class="p">)</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">rotg</span><span class="o">.</span><span class="n">kernel</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="o">-</span><span class="mf">34.6383402509185</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">lib</span><span class="o">.</span><span class="n">finger</span><span class="p">(</span><span class="n">m</span><span class="p">)</span> <span class="o">-</span> <span class="o">-</span><span class="mf">12.115914020554674</span><span class="p">)</span>
+
+    <span class="n">mol</span><span class="o">.</span><span class="n">atom</span><span class="o">=</span><span class="s1">&#39;&#39;&#39;O      0.   0.       0.</span>
+<span class="s1">                H      0.  -0.757    0.587</span>
+<span class="s1">                H      0.   0.757    0.587&#39;&#39;&#39;</span>
+    <span class="n">mol</span><span class="o">.</span><span class="n">basis</span> <span class="o">=</span> <span class="s1">&#39;ccpvdz&#39;</span>
+    <span class="n">mol</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+    <span class="n">mf</span> <span class="o">=</span> <span class="n">scf</span><span class="o">.</span><span class="n">UHF</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+    <span class="n">rotg</span> <span class="o">=</span> <span class="n">NSR</span><span class="p">(</span><span class="n">mf</span><span class="p">)</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">rotg</span><span class="o">.</span><span class="n">kernel</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">lib</span><span class="o">.</span><span class="n">finger</span><span class="p">(</span><span class="n">m</span><span class="p">)</span> <span class="o">-</span> <span class="o">-</span><span class="mf">66.68587704814556</span><span class="p">)</span>
+
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2015-2020, The PySCF Developers
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

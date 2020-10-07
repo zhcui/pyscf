@@ -1,15 +1,18 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pyscf.cc.uccsd &mdash; PySCF 1.5.0 documentation</title>
+  <title>pyscf.cc.uccsd &mdash; PySCF 1.7.5 documentation</title>
   
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
 
   
   
@@ -17,42 +20,37 @@
   
 
   
-
-  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
-  
-
-  
-  
-    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-    <link rel="top" title="PySCF 1.5.0 documentation" href="../../../index.html"/>
-        <link rel="up" title="Module code" href="../../index.html"/> 
-
-  
-  <script src="../../../_static/js/modernizr.min.js"></script>
-
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
-            <a href="../../../index.html" class="icon icon-home"> PySCF
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> PySCF
           
 
           
@@ -62,7 +60,7 @@
             
             
               <div class="version">
-                1.5
+                1.7
               </div>
             
           
@@ -79,6 +77,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -88,46 +87,28 @@
             
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../overview.html">1. An overview of PySCF</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">2. Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../version.html">2. Version history</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../install.html">3. Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../gto.html">4. gto &#8212; Molecular structure and GTO basis</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../lib.html">5. <code class="docutils literal"><span class="pre">lib</span></code> &#8212; Helper functions, parameters, and C extensions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../scf.html">6. scf &#8212; Mean-field methods</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../ao2mo.html">7. ao2mo &#8212; Integral transformations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../mcscf.html">8. mcscf &#8212; Multi-configurational self-consistent field</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../fci.html">9. fci &#8212; Full configuration interaction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../symm.html">10. symm &#8211; Point group symmetry and spin symmetry</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../df.html">11. df &#8212; Density fitting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../dft.html">12. dft &#8212; Density functional theory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../tddft.html">13. tddft &#8212; Time dependent density functional theory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../cc.html">14. cc &#8212; Coupled cluster</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../ci.html">15. ci &#8212; Configuration interaction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../dmrgscf.html">16. dmrgscf</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../fciqmcscf.html">17. fciqmcscf</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../tools.html">18. tools</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../grad.html">19. grad &#8212; Analytical nuclear gradients</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../hessian.html">20. hessian &#8212; Analytical nuclear Hessian</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../pbc.html">21. pbc &#8212; Periodic boundary conditions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../nao.html">22. nao &#8212; Numerical Atomic Orbitals</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../lo.html">23. lo &#8212; Orbital localization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../advanced.html">24. Miscellaneous</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../qmmm.html">25. qmmm &#8212; QM/MM interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../mrpt.html">26. mrpt &#8212; Multi-reference perturbation theory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../benchmark.html">27. Benchmark</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../code-rule.html">28. Code standard</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../version.html">29. Version history</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../code-rule.html">4. Code standard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../benchmark.html">5. Benchmark</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">6. Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../theory.html">7. Theoretical methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../advanced.html">8. Miscellaneous</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../interface.html">9. Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">10. Main modules</a></li>
 </ul>
 
             
           
         </div>
+        
       </div>
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../index.html">PySCF</a>
@@ -135,9 +116,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -158,16 +140,16 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../cc.html">pyscf.cc</a> &raquo;</li>
         
       <li>pyscf.cc.uccsd</li>
     
     
       <li class="wy-breadcrumbs-aside">
-        
-            
         
       </li>
     
@@ -181,7 +163,7 @@
             
   <h1>Source code for pyscf.cc.uccsd</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python</span>
-<span class="c1"># Copyright 2014-2018 The PySCF Developers. All Rights Reserved.</span>
+<span class="c1"># Copyright 2014-2020 The PySCF Developers. All Rights Reserved.</span>
 <span class="c1">#</span>
 <span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
 <span class="c1"># you may not use this file except in compliance with the License.</span>
@@ -196,6 +178,7 @@
 <span class="c1"># limitations under the License.</span>
 <span class="c1">#</span>
 <span class="c1"># Author: Timothy Berkelbach &lt;tim.berkelbach@gmail.com&gt;</span>
+<span class="c1">#         Qiming Sun &lt;osirpt.sun@gmail.com&gt;</span>
 <span class="c1">#</span>
 
 <span class="sd">&#39;&#39;&#39;</span>
@@ -210,9 +193,9 @@
 <span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">ao2mo</span>
 <span class="kn">from</span> <span class="nn">pyscf.lib</span> <span class="k">import</span> <span class="n">logger</span>
 <span class="kn">from</span> <span class="nn">pyscf.cc</span> <span class="k">import</span> <span class="n">ccsd</span>
-<span class="kn">from</span> <span class="nn">pyscf.cc</span> <span class="k">import</span> <span class="n">rccsd</span>
 <span class="kn">from</span> <span class="nn">pyscf.ao2mo</span> <span class="k">import</span> <span class="n">_ao2mo</span>
 <span class="kn">from</span> <span class="nn">pyscf.mp</span> <span class="k">import</span> <span class="n">ump2</span>
+<span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">scf</span>
 <span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">__config__</span>
 
 <span class="n">MEMORYMIN</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">__config__</span><span class="p">,</span> <span class="s1">&#39;cc_ccsd_memorymin&#39;</span><span class="p">,</span> <span class="mi">2000</span><span class="p">)</span>
@@ -226,9 +209,9 @@
     <span class="n">t2aa</span><span class="p">,</span> <span class="n">t2ab</span><span class="p">,</span> <span class="n">t2bb</span> <span class="o">=</span> <span class="n">t2</span>
     <span class="n">nocca</span><span class="p">,</span> <span class="n">noccb</span><span class="p">,</span> <span class="n">nvira</span><span class="p">,</span> <span class="n">nvirb</span> <span class="o">=</span> <span class="n">t2ab</span><span class="o">.</span><span class="n">shape</span>
     <span class="n">mo_ea_o</span> <span class="o">=</span> <span class="n">eris</span><span class="o">.</span><span class="n">mo_energy</span><span class="p">[</span><span class="mi">0</span><span class="p">][:</span><span class="n">nocca</span><span class="p">]</span>
-    <span class="n">mo_ea_v</span> <span class="o">=</span> <span class="n">eris</span><span class="o">.</span><span class="n">mo_energy</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">nocca</span><span class="p">:]</span>
+    <span class="n">mo_ea_v</span> <span class="o">=</span> <span class="n">eris</span><span class="o">.</span><span class="n">mo_energy</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">nocca</span><span class="p">:]</span> <span class="o">+</span> <span class="n">cc</span><span class="o">.</span><span class="n">level_shift</span>
     <span class="n">mo_eb_o</span> <span class="o">=</span> <span class="n">eris</span><span class="o">.</span><span class="n">mo_energy</span><span class="p">[</span><span class="mi">1</span><span class="p">][:</span><span class="n">noccb</span><span class="p">]</span>
-    <span class="n">mo_eb_v</span> <span class="o">=</span> <span class="n">eris</span><span class="o">.</span><span class="n">mo_energy</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">noccb</span><span class="p">:]</span>
+    <span class="n">mo_eb_v</span> <span class="o">=</span> <span class="n">eris</span><span class="o">.</span><span class="n">mo_energy</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">noccb</span><span class="p">:]</span> <span class="o">+</span> <span class="n">cc</span><span class="o">.</span><span class="n">level_shift</span>
     <span class="n">fova</span> <span class="o">=</span> <span class="n">eris</span><span class="o">.</span><span class="n">focka</span><span class="p">[:</span><span class="n">nocca</span><span class="p">,</span><span class="n">nocca</span><span class="p">:]</span>
     <span class="n">fovb</span> <span class="o">=</span> <span class="n">eris</span><span class="o">.</span><span class="n">fockb</span><span class="p">[:</span><span class="n">noccb</span><span class="p">,</span><span class="n">noccb</span><span class="p">:]</span>
 
@@ -262,9 +245,9 @@
     <span class="n">wOvvO</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">noccb</span><span class="p">,</span><span class="n">nvira</span><span class="p">,</span><span class="n">nvira</span><span class="p">,</span><span class="n">noccb</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
 
     <span class="n">mem_now</span> <span class="o">=</span> <span class="n">lib</span><span class="o">.</span><span class="n">current_memory</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">max_memory</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">cc</span><span class="o">.</span><span class="n">max_memory</span> <span class="o">-</span> <span class="n">mem_now</span><span class="p">)</span>
+    <span class="n">max_memory</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">cc</span><span class="o">.</span><span class="n">max_memory</span> <span class="o">-</span> <span class="n">mem_now</span> <span class="o">-</span> <span class="n">u2aa</span><span class="o">.</span><span class="n">size</span><span class="o">*</span><span class="mf">8e-6</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">nvira</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">nocca</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">blksize</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">ccsd</span><span class="o">.</span><span class="n">BLKMIN</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">max_memory</span><span class="o">*</span><span class="mi">1</span><span class="n">e6</span><span class="o">/</span><span class="mi">8</span><span class="o">/</span><span class="p">(</span><span class="n">nvira</span><span class="o">**</span><span class="mi">3</span><span class="o">*</span><span class="mi">3</span><span class="o">+</span><span class="mi">1</span><span class="p">)))</span>
+        <span class="n">blksize</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">ccsd</span><span class="o">.</span><span class="n">BLKMIN</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">max_memory</span><span class="o">*</span><span class="mf">1e6</span><span class="o">/</span><span class="mi">8</span><span class="o">/</span><span class="p">(</span><span class="n">nvira</span><span class="o">**</span><span class="mi">3</span><span class="o">*</span><span class="mi">3</span><span class="o">+</span><span class="mi">1</span><span class="p">)))</span>
         <span class="k">for</span> <span class="n">p0</span><span class="p">,</span><span class="n">p1</span> <span class="ow">in</span> <span class="n">lib</span><span class="o">.</span><span class="n">prange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">nocca</span><span class="p">,</span> <span class="n">blksize</span><span class="p">):</span>
             <span class="n">ovvv</span> <span class="o">=</span> <span class="n">eris</span><span class="o">.</span><span class="n">get_ovvv</span><span class="p">(</span><span class="nb">slice</span><span class="p">(</span><span class="n">p0</span><span class="p">,</span><span class="n">p1</span><span class="p">))</span>  <span class="c1"># ovvv = eris.ovvv[p0:p1]</span>
             <span class="n">ovvv</span> <span class="o">=</span> <span class="n">ovvv</span> <span class="o">-</span> <span class="n">ovvv</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
@@ -277,7 +260,7 @@
             <span class="n">ovvv</span> <span class="o">=</span> <span class="n">tmp1aa</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">if</span> <span class="n">nvirb</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">noccb</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">blksize</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">ccsd</span><span class="o">.</span><span class="n">BLKMIN</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">max_memory</span><span class="o">*</span><span class="mi">1</span><span class="n">e6</span><span class="o">/</span><span class="mi">8</span><span class="o">/</span><span class="p">(</span><span class="n">nvirb</span><span class="o">**</span><span class="mi">3</span><span class="o">*</span><span class="mi">3</span><span class="o">+</span><span class="mi">1</span><span class="p">)))</span>
+        <span class="n">blksize</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">ccsd</span><span class="o">.</span><span class="n">BLKMIN</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">max_memory</span><span class="o">*</span><span class="mf">1e6</span><span class="o">/</span><span class="mi">8</span><span class="o">/</span><span class="p">(</span><span class="n">nvirb</span><span class="o">**</span><span class="mi">3</span><span class="o">*</span><span class="mi">3</span><span class="o">+</span><span class="mi">1</span><span class="p">)))</span>
         <span class="k">for</span> <span class="n">p0</span><span class="p">,</span><span class="n">p1</span> <span class="ow">in</span> <span class="n">lib</span><span class="o">.</span><span class="n">prange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">noccb</span><span class="p">,</span> <span class="n">blksize</span><span class="p">):</span>
             <span class="n">OVVV</span> <span class="o">=</span> <span class="n">eris</span><span class="o">.</span><span class="n">get_OVVV</span><span class="p">(</span><span class="nb">slice</span><span class="p">(</span><span class="n">p0</span><span class="p">,</span><span class="n">p1</span><span class="p">))</span>  <span class="c1"># OVVV = eris.OVVV[p0:p1]</span>
             <span class="n">OVVV</span> <span class="o">=</span> <span class="n">OVVV</span> <span class="o">-</span> <span class="n">OVVV</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
@@ -290,7 +273,7 @@
             <span class="n">OVVV</span> <span class="o">=</span> <span class="n">tmp1bb</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">if</span> <span class="n">nvirb</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">nocca</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">blksize</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">ccsd</span><span class="o">.</span><span class="n">BLKMIN</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">max_memory</span><span class="o">*</span><span class="mi">1</span><span class="n">e6</span><span class="o">/</span><span class="mi">8</span><span class="o">/</span><span class="p">(</span><span class="n">nvira</span><span class="o">*</span><span class="n">nvirb</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="mi">3</span><span class="o">+</span><span class="mi">1</span><span class="p">)))</span>
+        <span class="n">blksize</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">ccsd</span><span class="o">.</span><span class="n">BLKMIN</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">max_memory</span><span class="o">*</span><span class="mf">1e6</span><span class="o">/</span><span class="mi">8</span><span class="o">/</span><span class="p">(</span><span class="n">nvira</span><span class="o">*</span><span class="n">nvirb</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="mi">3</span><span class="o">+</span><span class="mi">1</span><span class="p">)))</span>
         <span class="k">for</span> <span class="n">p0</span><span class="p">,</span><span class="n">p1</span> <span class="ow">in</span> <span class="n">lib</span><span class="o">.</span><span class="n">prange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">nocca</span><span class="p">,</span> <span class="n">blksize</span><span class="p">):</span>
             <span class="n">ovVV</span> <span class="o">=</span> <span class="n">eris</span><span class="o">.</span><span class="n">get_ovVV</span><span class="p">(</span><span class="nb">slice</span><span class="p">(</span><span class="n">p0</span><span class="p">,</span><span class="n">p1</span><span class="p">))</span>  <span class="c1"># ovVV = eris.ovVV[p0:p1]</span>
             <span class="n">Fvvb</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;mf,mfAE-&gt;AE&#39;</span><span class="p">,</span> <span class="n">t1a</span><span class="p">[</span><span class="n">p0</span><span class="p">:</span><span class="n">p1</span><span class="p">],</span> <span class="n">ovVV</span><span class="p">)</span>
@@ -303,7 +286,7 @@
             <span class="n">ovVV</span> <span class="o">=</span> <span class="n">tmp1ab</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">if</span> <span class="n">nvira</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">noccb</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">blksize</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">ccsd</span><span class="o">.</span><span class="n">BLKMIN</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">max_memory</span><span class="o">*</span><span class="mi">1</span><span class="n">e6</span><span class="o">/</span><span class="mi">8</span><span class="o">/</span><span class="p">(</span><span class="n">nvirb</span><span class="o">*</span><span class="n">nvira</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="mi">3</span><span class="o">+</span><span class="mi">1</span><span class="p">)))</span>
+        <span class="n">blksize</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">ccsd</span><span class="o">.</span><span class="n">BLKMIN</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">max_memory</span><span class="o">*</span><span class="mf">1e6</span><span class="o">/</span><span class="mi">8</span><span class="o">/</span><span class="p">(</span><span class="n">nvirb</span><span class="o">*</span><span class="n">nvira</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="mi">3</span><span class="o">+</span><span class="mi">1</span><span class="p">)))</span>
         <span class="k">for</span> <span class="n">p0</span><span class="p">,</span><span class="n">p1</span> <span class="ow">in</span> <span class="n">lib</span><span class="o">.</span><span class="n">prange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">noccb</span><span class="p">,</span> <span class="n">blksize</span><span class="p">):</span>
             <span class="n">OVvv</span> <span class="o">=</span> <span class="n">eris</span><span class="o">.</span><span class="n">get_OVvv</span><span class="p">(</span><span class="nb">slice</span><span class="p">(</span><span class="n">p0</span><span class="p">,</span><span class="n">p1</span><span class="p">))</span>  <span class="c1"># OVvv = eris.OVvv[p0:p1]</span>
             <span class="n">Fvva</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;MF,MFae-&gt;ae&#39;</span><span class="p">,</span> <span class="n">t1b</span><span class="p">[</span><span class="n">p0</span><span class="p">:</span><span class="n">p1</span><span class="p">],</span> <span class="n">OVvv</span><span class="p">)</span>
@@ -339,7 +322,7 @@
     <span class="n">woVvO</span> <span class="o">+=</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">lib</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;nJfB,menf-&gt;mBeJ&#39;</span><span class="p">,</span> <span class="n">t2ab</span><span class="p">,</span> <span class="n">ovov</span><span class="p">)</span>
     <span class="n">tmpaa</span> <span class="o">=</span> <span class="n">lib</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;jf,menf-&gt;mnej&#39;</span><span class="p">,</span> <span class="n">t1a</span><span class="p">,</span> <span class="n">ovov</span><span class="p">)</span>
     <span class="n">wovvo</span> <span class="o">-=</span> <span class="n">lib</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;nb,mnej-&gt;mbej&#39;</span><span class="p">,</span> <span class="n">t1a</span><span class="p">,</span> <span class="n">tmpaa</span><span class="p">)</span>
-    <span class="n">eirs_ovov</span> <span class="o">=</span> <span class="n">ovov</span> <span class="o">=</span> <span class="n">tmpaa</span> <span class="o">=</span> <span class="n">tilaa</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">eris_ovov</span> <span class="o">=</span> <span class="n">ovov</span> <span class="o">=</span> <span class="n">tmpaa</span> <span class="o">=</span> <span class="n">tilaa</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="n">eris_OVOV</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">eris</span><span class="o">.</span><span class="n">OVOV</span><span class="p">)</span>
     <span class="n">eris_OVOO</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">eris</span><span class="o">.</span><span class="n">OVOO</span><span class="p">)</span>
@@ -450,7 +433,7 @@
     <span class="n">tmp1ab</span> <span class="o">=</span> <span class="n">lib</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;ie,meBJ-&gt;mBiJ&#39;</span><span class="p">,</span> <span class="n">t1a</span><span class="p">,</span> <span class="n">eris_ovVO</span><span class="p">)</span>
     <span class="n">tmp1ab</span><span class="o">+=</span> <span class="n">lib</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;IE,mjBE-&gt;mBjI&#39;</span><span class="p">,</span> <span class="n">t1b</span><span class="p">,</span> <span class="n">eris_ooVV</span><span class="p">)</span>
     <span class="n">u2ab</span> <span class="o">-=</span> <span class="n">lib</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;ma,mBiJ-&gt;iJaB&#39;</span><span class="p">,</span> <span class="n">t1a</span><span class="p">,</span> <span class="n">tmp1ab</span><span class="p">)</span>
-    <span class="n">eris_ooVV</span> <span class="o">=</span> <span class="n">eris_ovVo</span> <span class="o">=</span> <span class="n">tmp1ab</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">eris_ooVV</span> <span class="o">=</span> <span class="n">eris_ovVO</span> <span class="o">=</span> <span class="n">tmp1ab</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="n">eris_OOvv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">eris</span><span class="o">.</span><span class="n">OOvv</span><span class="p">)</span>
     <span class="n">eris_OVvo</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">eris</span><span class="o">.</span><span class="n">OVvo</span><span class="p">)</span>
@@ -460,7 +443,7 @@
     <span class="n">tmp1ba</span> <span class="o">=</span> <span class="n">lib</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;IE,MEbj-&gt;MbIj&#39;</span><span class="p">,</span> <span class="n">t1b</span><span class="p">,</span> <span class="n">eris_OVvo</span><span class="p">)</span>
     <span class="n">tmp1ba</span><span class="o">+=</span> <span class="n">lib</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;ie,MJbe-&gt;MbJi&#39;</span><span class="p">,</span> <span class="n">t1a</span><span class="p">,</span> <span class="n">eris_OOvv</span><span class="p">)</span>
     <span class="n">u2ab</span> <span class="o">-=</span> <span class="n">lib</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;MA,MbIj-&gt;jIbA&#39;</span><span class="p">,</span> <span class="n">t1b</span><span class="p">,</span> <span class="n">tmp1ba</span><span class="p">)</span>
-    <span class="n">eris_OOvv</span> <span class="o">=</span> <span class="n">eris_OVvO</span> <span class="o">=</span> <span class="n">tmp1ba</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">eris_OOvv</span> <span class="o">=</span> <span class="n">eris_OVvo</span> <span class="o">=</span> <span class="n">tmp1ba</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="n">u2aa</span> <span class="o">+=</span> <span class="mi">2</span><span class="o">*</span><span class="n">lib</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;imae,mbej-&gt;ijab&#39;</span><span class="p">,</span> <span class="n">t2aa</span><span class="p">,</span> <span class="n">wovvo</span><span class="p">)</span>
     <span class="n">u2aa</span> <span class="o">+=</span> <span class="mi">2</span><span class="o">*</span><span class="n">lib</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;iMaE,MbEj-&gt;ijab&#39;</span><span class="p">,</span> <span class="n">t2ab</span><span class="p">,</span> <span class="n">wOvVo</span><span class="p">)</span>
@@ -521,7 +504,7 @@
     <span class="k">return</span> <span class="n">t1new</span><span class="p">,</span> <span class="n">t2new</span>
 
 
-<div class="viewcode-block" id="energy"><a class="viewcode-back" href="../../../cc.html#pyscf.cc.uccsd.energy">[docs]</a><span class="k">def</span> <span class="nf">energy</span><span class="p">(</span><span class="n">cc</span><span class="p">,</span> <span class="n">t1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">t2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">eris</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="energy"><a class="viewcode-back" href="../../../modules/cc.html#pyscf.cc.uccsd.energy">[docs]</a><span class="k">def</span> <span class="nf">energy</span><span class="p">(</span><span class="n">cc</span><span class="p">,</span> <span class="n">t1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">t2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">eris</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;UCCSD correlation energy&#39;&#39;&#39;</span>
     <span class="k">if</span> <span class="n">t1</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="n">t1</span> <span class="o">=</span> <span class="n">cc</span><span class="o">.</span><span class="n">t1</span>
     <span class="k">if</span> <span class="n">t2</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="n">t2</span> <span class="o">=</span> <span class="n">cc</span><span class="o">.</span><span class="n">t2</span>
@@ -547,7 +530,7 @@
     <span class="n">e</span> <span class="o">+=</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;ia,jb,iajb&#39;</span><span class="p">,</span><span class="n">t1b</span><span class="p">,</span><span class="n">t1b</span><span class="p">,</span><span class="n">eris_OVOV</span><span class="p">)</span>
     <span class="n">e</span> <span class="o">-=</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;ia,jb,ibja&#39;</span><span class="p">,</span><span class="n">t1b</span><span class="p">,</span><span class="n">t1b</span><span class="p">,</span><span class="n">eris_OVOV</span><span class="p">)</span>
     <span class="n">e</span> <span class="o">+=</span>     <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;ia,jb,iajb&#39;</span><span class="p">,</span><span class="n">t1a</span><span class="p">,</span><span class="n">t1b</span><span class="p">,</span><span class="n">eris_ovOV</span><span class="p">)</span>
-    <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">imag</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="n">e</span><span class="o">-</span><span class="mi">4</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">imag</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1e-4</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">cc</span><span class="p">,</span> <span class="s1">&#39;Non-zero imaginary part found in UCCSD energy </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">e</span><span class="o">.</span><span class="n">real</span></div>
 
@@ -609,7 +592,7 @@
     <span class="n">nocca</span><span class="p">,</span> <span class="n">noccb</span><span class="p">,</span> <span class="n">nvira</span><span class="p">,</span> <span class="n">nvirb</span> <span class="o">=</span> <span class="n">t2ab</span><span class="o">.</span><span class="n">shape</span>
 
     <span class="k">if</span> <span class="n">mycc</span><span class="o">.</span><span class="n">direct</span><span class="p">:</span>  <span class="c1"># AO direct CCSD</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">eris</span><span class="p">,</span> <span class="s1">&#39;mo_coeff&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">eris</span><span class="o">.</span><span class="n">mo_coeff</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">eris</span><span class="p">,</span> <span class="s1">&#39;mo_coeff&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">mo_a</span><span class="p">,</span> <span class="n">mo_b</span> <span class="o">=</span> <span class="n">eris</span><span class="o">.</span><span class="n">mo_coeff</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">moidxa</span><span class="p">,</span> <span class="n">moidxb</span> <span class="o">=</span> <span class="n">mycc</span><span class="o">.</span><span class="n">get_frozen_mask</span><span class="p">()</span>
@@ -646,7 +629,7 @@
         <span class="k">assert</span><span class="p">(</span><span class="n">t2sym</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">with_ovvv</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">NotImplementedError</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">eris</span><span class="p">,</span> <span class="s1">&#39;mo_coeff&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">eris</span><span class="o">.</span><span class="n">mo_coeff</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">eris</span><span class="p">,</span> <span class="s1">&#39;mo_coeff&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">mo_a</span><span class="p">,</span> <span class="n">mo_b</span> <span class="o">=</span> <span class="n">eris</span><span class="o">.</span><span class="n">mo_coeff</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">moidxa</span><span class="p">,</span> <span class="n">moidxb</span> <span class="o">=</span> <span class="n">mycc</span><span class="o">.</span><span class="n">get_frozen_mask</span><span class="p">()</span>
@@ -714,18 +697,19 @@
     <span class="k">return</span> <span class="n">u2aa</span><span class="p">,</span><span class="n">u2ab</span><span class="p">,</span><span class="n">u2bb</span>
 
 
-<div class="viewcode-block" id="UCCSD"><a class="viewcode-back" href="../../../cc.html#pyscf.cc.uccsd.UCCSD">[docs]</a><span class="k">class</span> <span class="nc">UCCSD</span><span class="p">(</span><span class="n">ccsd</span><span class="o">.</span><span class="n">CCSD</span><span class="p">):</span>
+<div class="viewcode-block" id="UCCSD"><a class="viewcode-back" href="../../../modules/cc.html#pyscf.cc.uccsd.UCCSD">[docs]</a><span class="k">class</span> <span class="nc">UCCSD</span><span class="p">(</span><span class="n">ccsd</span><span class="o">.</span><span class="n">CCSD</span><span class="p">):</span>
 
-    <span class="n">conv_tol</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">__config__</span><span class="p">,</span> <span class="s1">&#39;cc_uccsd_UCCSD_conv_tol&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="n">e</span><span class="o">-</span><span class="mi">7</span><span class="p">)</span>
-    <span class="n">conv_tol_normt</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">__config__</span><span class="p">,</span> <span class="s1">&#39;cc_uccsd_UCCSD_conv_tol_normt&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="n">e</span><span class="o">-</span><span class="mi">6</span><span class="p">)</span>
+    <span class="n">conv_tol</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">__config__</span><span class="p">,</span> <span class="s1">&#39;cc_uccsd_UCCSD_conv_tol&#39;</span><span class="p">,</span> <span class="mf">1e-7</span><span class="p">)</span>
+    <span class="n">conv_tol_normt</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">__config__</span><span class="p">,</span> <span class="s1">&#39;cc_uccsd_UCCSD_conv_tol_normt&#39;</span><span class="p">,</span> <span class="mf">1e-6</span><span class="p">)</span>
 
 <span class="c1"># Attribute frozen can be</span>
 <span class="c1"># * An integer : The same number of inner-most alpha and beta orbitals are frozen</span>
 <span class="c1"># * One list : Same alpha and beta orbital indices to be frozen</span>
 <span class="c1"># * A pair of list : First list is the orbital indices to be frozen for alpha</span>
 <span class="c1">#       orbitals, second list is for beta orbitals</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mf</span><span class="p">,</span> <span class="n">frozen</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mo_coeff</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mo_occ</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="n">ccsd</span><span class="o">.</span><span class="n">CCSD</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mf</span><span class="p">,</span> <span class="n">frozen</span><span class="p">,</span> <span class="n">mo_coeff</span><span class="p">,</span> <span class="n">mo_occ</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mf</span><span class="p">,</span> <span class="n">frozen</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mo_coeff</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mo_occ</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mf</span><span class="p">,</span> <span class="n">scf</span><span class="o">.</span><span class="n">uhf</span><span class="o">.</span><span class="n">UHF</span><span class="p">)</span>
+        <span class="n">ccsd</span><span class="o">.</span><span class="n">CCSD</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mf</span><span class="p">,</span> <span class="n">frozen</span><span class="p">,</span> <span class="n">mo_coeff</span><span class="p">,</span> <span class="n">mo_occ</span><span class="p">)</span>
 
     <span class="n">get_nocc</span> <span class="o">=</span> <span class="n">get_nocc</span>
     <span class="n">get_nmo</span> <span class="o">=</span> <span class="n">get_nmo</span>
@@ -772,9 +756,9 @@
     <span class="n">_add_vvvv</span> <span class="o">=</span> <span class="n">_add_vvvv</span>
     <span class="n">_add_vvVV</span> <span class="o">=</span> <span class="n">_add_vvVV</span>
 
-    <span class="k">def</span> <span class="nf">kernel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">t2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">eris</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mbpt2</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ccsd</span><span class="p">(</span><span class="n">t1</span><span class="p">,</span> <span class="n">t2</span><span class="p">,</span> <span class="n">eris</span><span class="p">,</span> <span class="n">mbpt2</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">ccsd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">t2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">eris</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mbpt2</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="UCCSD.kernel"><a class="viewcode-back" href="../../../modules/cc.html#pyscf.cc.uccsd.UCCSD.kernel">[docs]</a>    <span class="k">def</span> <span class="nf">kernel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">t2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">eris</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mbpt2</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ccsd</span><span class="p">(</span><span class="n">t1</span><span class="p">,</span> <span class="n">t2</span><span class="p">,</span> <span class="n">eris</span><span class="p">,</span> <span class="n">mbpt2</span><span class="p">)</span></div>
+<div class="viewcode-block" id="UCCSD.ccsd"><a class="viewcode-back" href="../../../modules/cc.html#pyscf.cc.uccsd.UCCSD.ccsd">[docs]</a>    <span class="k">def</span> <span class="nf">ccsd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">t2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">eris</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mbpt2</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Ground-state unrestricted (U)CCSD.</span>
 
 <span class="sd">        Kwargs:</span>
@@ -789,8 +773,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">t1</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nocca</span><span class="p">,</span><span class="n">nvira</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">noccb</span><span class="p">,</span><span class="n">nvirb</span><span class="p">)))</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">e_corr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">t1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">t2</span>
 
-        <span class="k">if</span> <span class="n">eris</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="n">eris</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ao2mo</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mo_coeff</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">ccsd</span><span class="o">.</span><span class="n">CCSD</span><span class="o">.</span><span class="n">ccsd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t1</span><span class="p">,</span> <span class="n">t2</span><span class="p">,</span> <span class="n">eris</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ccsd</span><span class="o">.</span><span class="n">CCSD</span><span class="o">.</span><span class="n">ccsd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t1</span><span class="p">,</span> <span class="n">t2</span><span class="p">,</span> <span class="n">eris</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">solve_lambda</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">t2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">l1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">l2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                      <span class="n">eris</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -813,7 +796,7 @@
         <span class="k">return</span> <span class="n">uccsd_t</span><span class="o">.</span><span class="n">kernel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eris</span><span class="p">,</span> <span class="n">t1</span><span class="p">,</span> <span class="n">t2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span>
     <span class="n">uccsd_t</span> <span class="o">=</span> <span class="n">ccsd_t</span>
 
-    <span class="k">def</span> <span class="nf">make_rdm1</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">t2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">l1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">l2</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="UCCSD.make_rdm1"><a class="viewcode-back" href="../../../modules/cc.html#pyscf.cc.uccsd.UCCSD.make_rdm1">[docs]</a>    <span class="k">def</span> <span class="nf">make_rdm1</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">t2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">l1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">l2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ao_repr</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Un-relaxed 1-particle density matrix in MO space</span>
 
 <span class="sd">        Returns:</span>
@@ -825,9 +808,9 @@
         <span class="k">if</span> <span class="n">l1</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="n">l1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">l1</span>
         <span class="k">if</span> <span class="n">l2</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="n">l2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">l2</span>
         <span class="k">if</span> <span class="n">l1</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="n">l1</span><span class="p">,</span> <span class="n">l2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">solve_lambda</span><span class="p">(</span><span class="n">t1</span><span class="p">,</span> <span class="n">t2</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">uccsd_rdm</span><span class="o">.</span><span class="n">make_rdm1</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t1</span><span class="p">,</span> <span class="n">t2</span><span class="p">,</span> <span class="n">l1</span><span class="p">,</span> <span class="n">l2</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">uccsd_rdm</span><span class="o">.</span><span class="n">make_rdm1</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t1</span><span class="p">,</span> <span class="n">t2</span><span class="p">,</span> <span class="n">l1</span><span class="p">,</span> <span class="n">l2</span><span class="p">,</span> <span class="n">ao_repr</span><span class="o">=</span><span class="n">ao_repr</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">make_rdm2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">t2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">l1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">l2</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="UCCSD.make_rdm2"><a class="viewcode-back" href="../../../modules/cc.html#pyscf.cc.uccsd.UCCSD.make_rdm2">[docs]</a>    <span class="k">def</span> <span class="nf">make_rdm2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">t2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">l1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">l2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ao_repr</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;2-particle density matrix in spin-oribital basis.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="kn">from</span> <span class="nn">pyscf.cc</span> <span class="k">import</span> <span class="n">uccsd_rdm</span>
@@ -836,20 +819,32 @@
         <span class="k">if</span> <span class="n">l1</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="n">l1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">l1</span>
         <span class="k">if</span> <span class="n">l2</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="n">l2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">l2</span>
         <span class="k">if</span> <span class="n">l1</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="n">l1</span><span class="p">,</span> <span class="n">l2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">solve_lambda</span><span class="p">(</span><span class="n">t1</span><span class="p">,</span> <span class="n">t2</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">uccsd_rdm</span><span class="o">.</span><span class="n">make_rdm2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t1</span><span class="p">,</span> <span class="n">t2</span><span class="p">,</span> <span class="n">l1</span><span class="p">,</span> <span class="n">l2</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">uccsd_rdm</span><span class="o">.</span><span class="n">make_rdm2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t1</span><span class="p">,</span> <span class="n">t2</span><span class="p">,</span> <span class="n">l1</span><span class="p">,</span> <span class="n">l2</span><span class="p">,</span> <span class="n">ao_repr</span><span class="o">=</span><span class="n">ao_repr</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">spin_square</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mo_coeff</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">pyscf.fci.spin_op</span> <span class="k">import</span> <span class="n">spin_square_general</span>
+        <span class="k">if</span> <span class="n">mo_coeff</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">mo_coeff</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mo_coeff</span>
+        <span class="k">if</span> <span class="n">s</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scf</span><span class="o">.</span><span class="n">get_ovlp</span><span class="p">()</span>
+
+        <span class="n">dma</span><span class="p">,</span><span class="n">dmb</span>        <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_rdm1</span><span class="p">()</span>
+        <span class="n">dmaa</span><span class="p">,</span><span class="n">dmab</span><span class="p">,</span><span class="n">dmbb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_rdm2</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">spin_square_general</span><span class="p">(</span><span class="n">dma</span><span class="p">,</span><span class="n">dmb</span><span class="p">,</span><span class="n">dmaa</span><span class="p">,</span><span class="n">dmab</span><span class="p">,</span><span class="n">dmbb</span><span class="p">,</span><span class="n">mo_coeff</span><span class="p">,</span><span class="n">s</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">ao2mo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mo_coeff</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">nmoa</span><span class="p">,</span> <span class="n">nmob</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_nmo</span><span class="p">()</span>
         <span class="n">nao</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mo_coeff</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">nmo_pair</span> <span class="o">=</span> <span class="n">nmoa</span> <span class="o">*</span> <span class="p">(</span><span class="n">nmoa</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
         <span class="n">nao_pair</span> <span class="o">=</span> <span class="n">nao</span> <span class="o">*</span> <span class="p">(</span><span class="n">nao</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
-        <span class="n">mem_incore</span> <span class="o">=</span> <span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">nao_pair</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">nmoa</span><span class="o">**</span><span class="mi">4</span><span class="p">)</span> <span class="o">+</span> <span class="n">nmo_pair</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="mi">8</span><span class="o">/</span><span class="mi">1</span><span class="n">e6</span>
+        <span class="n">mem_incore</span> <span class="o">=</span> <span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">nao_pair</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">nmoa</span><span class="o">**</span><span class="mi">4</span><span class="p">)</span> <span class="o">+</span> <span class="n">nmo_pair</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="mi">8</span><span class="o">/</span><span class="mf">1e6</span>
         <span class="n">mem_now</span> <span class="o">=</span> <span class="n">lib</span><span class="o">.</span><span class="n">current_memory</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_scf</span><span class="o">.</span><span class="n">_eri</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span>
             <span class="p">(</span><span class="n">mem_incore</span><span class="o">+</span><span class="n">mem_now</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_memory</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">incore_complete</span><span class="p">)):</span>
             <span class="k">return</span> <span class="n">_make_eris_incore</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mo_coeff</span><span class="p">)</span>
 
-        <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_scf</span><span class="p">,</span> <span class="s1">&#39;with_df&#39;</span><span class="p">):</span>
+        <span class="k">elif</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_scf</span><span class="p">,</span> <span class="s1">&#39;with_df&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;UCCSD detected DF being used in the HF object. &#39;</span>
                         <span class="s1">&#39;MO integrals are computed based on the DF 3-index tensors.</span><span class="se">\n</span><span class="s1">&#39;</span>
                         <span class="s1">&#39;It</span><span class="se">\&#39;</span><span class="s1">s recommended to use dfccsd.CCSD for the &#39;</span>
@@ -910,13 +905,41 @@
         <span class="k">if</span> <span class="n">nmo</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="n">nmo</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nmo</span>
         <span class="k">return</span> <span class="n">vector_to_amplitudes</span><span class="p">(</span><span class="n">vector</span><span class="p">,</span> <span class="n">nmo</span><span class="p">,</span> <span class="n">nocc</span><span class="p">)</span>
 
+    <span class="k">def</span> <span class="nf">vector_size</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nmo</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nocc</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">nocc</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="n">nocc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nocc</span>
+        <span class="k">if</span> <span class="n">nmo</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="n">nmo</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nmo</span>
+        <span class="n">nocca</span><span class="p">,</span> <span class="n">noccb</span> <span class="o">=</span> <span class="n">nocc</span>
+        <span class="n">nmoa</span><span class="p">,</span> <span class="n">nmob</span> <span class="o">=</span> <span class="n">nmo</span>
+        <span class="n">nvira</span><span class="p">,</span> <span class="n">nvirb</span> <span class="o">=</span> <span class="n">nmoa</span><span class="o">-</span><span class="n">nocca</span><span class="p">,</span> <span class="n">nmob</span><span class="o">-</span><span class="n">noccb</span>
+        <span class="n">sizea</span> <span class="o">=</span> <span class="n">nocca</span> <span class="o">*</span> <span class="n">nvira</span> <span class="o">+</span> <span class="n">nocca</span><span class="o">*</span><span class="p">(</span><span class="n">nocca</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">//</span><span class="mi">2</span><span class="o">*</span><span class="n">nvira</span><span class="o">*</span><span class="p">(</span><span class="n">nvira</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">//</span><span class="mi">2</span>
+        <span class="n">sizeb</span> <span class="o">=</span> <span class="n">noccb</span> <span class="o">*</span> <span class="n">nvirb</span> <span class="o">+</span> <span class="n">noccb</span><span class="o">*</span><span class="p">(</span><span class="n">noccb</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">//</span><span class="mi">2</span><span class="o">*</span><span class="n">nvirb</span><span class="o">*</span><span class="p">(</span><span class="n">nvirb</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">//</span><span class="mi">2</span>
+        <span class="n">sizeab</span> <span class="o">=</span> <span class="n">nocca</span> <span class="o">*</span> <span class="n">noccb</span> <span class="o">*</span> <span class="n">nvira</span> <span class="o">*</span> <span class="n">nvirb</span>
+        <span class="k">return</span> <span class="n">sizea</span> <span class="o">+</span> <span class="n">sizeb</span> <span class="o">+</span> <span class="n">sizeab</span>
+
     <span class="k">def</span> <span class="nf">amplitudes_from_rccsd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t1</span><span class="p">,</span> <span class="n">t2</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">amplitudes_from_rccsd</span><span class="p">(</span><span class="n">t1</span><span class="p">,</span> <span class="n">t2</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">amplitudes_from_rccsd</span><span class="p">(</span><span class="n">t1</span><span class="p">,</span> <span class="n">t2</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_t1_diagnostic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t1</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">t1</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="n">t1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">t1</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+        <span class="c1">#return get_t1_diagnostic(t1)</span>
+
+    <span class="k">def</span> <span class="nf">get_d1_diagnostic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t1</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">t1</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="n">t1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">t1</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+        <span class="c1">#return get_d1_diagnostic(t1)</span>
+
+    <span class="k">def</span> <span class="nf">get_d2_diagnostic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t2</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">t2</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="n">t2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">t2</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+        <span class="c1">#return get_d2_diagnostic(t2)</span>
+
+<span class="n">CCSD</span> <span class="o">=</span> <span class="n">UCCSD</span>
 
 
 <span class="k">class</span> <span class="nc">_ChemistsERIs</span><span class="p">(</span><span class="n">ccsd</span><span class="o">.</span><span class="n">_ChemistsERIs</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mol</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="n">ccsd</span><span class="o">.</span><span class="n">_ChemistsERIs</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mol</span><span class="p">)</span>
+        <span class="n">ccsd</span><span class="o">.</span><span class="n">_ChemistsERIs</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mol</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">OOOO</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">OVOO</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">OVOV</span> <span class="o">=</span> <span class="kc">None</span>
@@ -945,10 +968,12 @@
                 <span class="p">(</span><span class="n">mo_coeff</span><span class="p">[</span><span class="mi">0</span><span class="p">][:,</span><span class="n">mo_idx</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">mo_coeff</span><span class="p">[</span><span class="mi">1</span><span class="p">][:,</span><span class="n">mo_idx</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
 <span class="c1"># Note: Recomputed fock matrix since SCF may not be fully converged.</span>
         <span class="n">dm</span> <span class="o">=</span> <span class="n">mycc</span><span class="o">.</span><span class="n">_scf</span><span class="o">.</span><span class="n">make_rdm1</span><span class="p">(</span><span class="n">mycc</span><span class="o">.</span><span class="n">mo_coeff</span><span class="p">,</span> <span class="n">mycc</span><span class="o">.</span><span class="n">mo_occ</span><span class="p">)</span>
-        <span class="n">fockao</span> <span class="o">=</span> <span class="n">mycc</span><span class="o">.</span><span class="n">_scf</span><span class="o">.</span><span class="n">get_hcore</span><span class="p">()</span> <span class="o">+</span> <span class="n">mycc</span><span class="o">.</span><span class="n">_scf</span><span class="o">.</span><span class="n">get_veff</span><span class="p">(</span><span class="n">mycc</span><span class="o">.</span><span class="n">mol</span><span class="p">,</span> <span class="n">dm</span><span class="p">)</span>
+        <span class="n">vhf</span> <span class="o">=</span> <span class="n">mycc</span><span class="o">.</span><span class="n">_scf</span><span class="o">.</span><span class="n">get_veff</span><span class="p">(</span><span class="n">mycc</span><span class="o">.</span><span class="n">mol</span><span class="p">,</span> <span class="n">dm</span><span class="p">)</span>
+        <span class="n">fockao</span> <span class="o">=</span> <span class="n">mycc</span><span class="o">.</span><span class="n">_scf</span><span class="o">.</span><span class="n">get_fock</span><span class="p">(</span><span class="n">vhf</span><span class="o">=</span><span class="n">vhf</span><span class="p">,</span> <span class="n">dm</span><span class="o">=</span><span class="n">dm</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">focka</span> <span class="o">=</span> <span class="n">reduce</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">,</span> <span class="p">(</span><span class="n">mo_coeff</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">conj</span><span class="p">()</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">fockao</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">mo_coeff</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fockb</span> <span class="o">=</span> <span class="n">reduce</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">,</span> <span class="p">(</span><span class="n">mo_coeff</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">conj</span><span class="p">()</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">fockao</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">mo_coeff</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fock</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">focka</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fockb</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">e_hf</span> <span class="o">=</span> <span class="n">mycc</span><span class="o">.</span><span class="n">_scf</span><span class="o">.</span><span class="n">energy_tot</span><span class="p">(</span><span class="n">dm</span><span class="o">=</span><span class="n">dm</span><span class="p">,</span> <span class="n">vhf</span><span class="o">=</span><span class="n">vhf</span><span class="p">)</span>
         <span class="n">nocca</span><span class="p">,</span> <span class="n">noccb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nocc</span> <span class="o">=</span> <span class="n">mycc</span><span class="o">.</span><span class="n">nocc</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mol</span> <span class="o">=</span> <span class="n">mycc</span><span class="o">.</span><span class="n">mol</span>
 
@@ -960,12 +985,12 @@
         <span class="k">if</span> <span class="n">gap_a</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">gap_a</span> <span class="o">=</span> <span class="n">gap_a</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">gap_a</span> <span class="o">=</span> <span class="mi">1</span><span class="n">e9</span>
+            <span class="n">gap_a</span> <span class="o">=</span> <span class="mf">1e9</span>
         <span class="k">if</span> <span class="n">gap_b</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">gap_b</span> <span class="o">=</span> <span class="n">gap_b</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">gap_b</span> <span class="o">=</span> <span class="mi">1</span><span class="n">e9</span>
-        <span class="k">if</span> <span class="n">gap_a</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="n">e</span><span class="o">-</span><span class="mi">5</span> <span class="ow">or</span> <span class="n">gap_b</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="n">e</span><span class="o">-</span><span class="mi">5</span><span class="p">:</span>
+            <span class="n">gap_b</span> <span class="o">=</span> <span class="mf">1e9</span>
+        <span class="k">if</span> <span class="n">gap_a</span> <span class="o">&lt;</span> <span class="mf">1e-5</span> <span class="ow">or</span> <span class="n">gap_b</span> <span class="o">&lt;</span> <span class="mf">1e-5</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">mycc</span><span class="p">,</span> <span class="s1">&#39;HOMO-LUMO gap (</span><span class="si">%s</span><span class="s1">,</span><span class="si">%s</span><span class="s1">) too small for UCCSD&#39;</span><span class="p">,</span>
                         <span class="n">gap_a</span><span class="p">,</span> <span class="n">gap_b</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span>
@@ -1014,7 +1039,6 @@
         <span class="k">return</span> <span class="n">ovvv</span>
 
 <span class="k">def</span> <span class="nf">_make_eris_incore</span><span class="p">(</span><span class="n">mycc</span><span class="p">,</span> <span class="n">mo_coeff</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ao2mofn</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="n">cput0</span> <span class="o">=</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">clock</span><span class="p">(),</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span>
     <span class="n">eris</span> <span class="o">=</span> <span class="n">_ChemistsERIs</span><span class="p">()</span>
     <span class="n">eris</span><span class="o">.</span><span class="n">_common_init_</span><span class="p">(</span><span class="n">mycc</span><span class="p">,</span> <span class="n">mo_coeff</span><span class="p">)</span>
 
@@ -1094,7 +1118,6 @@
     <span class="k">return</span> <span class="n">eris</span>
 
 <span class="k">def</span> <span class="nf">_make_eris_outcore</span><span class="p">(</span><span class="n">mycc</span><span class="p">,</span> <span class="n">mo_coeff</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="n">cput0</span> <span class="o">=</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">clock</span><span class="p">(),</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span>
     <span class="n">eris</span> <span class="o">=</span> <span class="n">_ChemistsERIs</span><span class="p">()</span>
     <span class="n">eris</span><span class="o">.</span><span class="n">_common_init_</span><span class="p">(</span><span class="n">mycc</span><span class="p">,</span> <span class="n">mo_coeff</span><span class="p">)</span>
 
@@ -1231,10 +1254,142 @@
     <span class="n">tau1ab</span> <span class="o">+=</span> <span class="n">t2ab</span>
     <span class="k">return</span> <span class="n">tau1ab</span>
 
+<span class="k">def</span> <span class="nf">_fp</span><span class="p">(</span><span class="n">nocc</span><span class="p">,</span> <span class="n">nmo</span><span class="p">):</span>
+    <span class="n">nocca</span><span class="p">,</span> <span class="n">noccb</span> <span class="o">=</span> <span class="n">nocc</span>
+    <span class="n">nmoa</span><span class="p">,</span> <span class="n">nmob</span> <span class="o">=</span> <span class="n">nmo</span>
+    <span class="n">nvira</span><span class="p">,</span> <span class="n">nvirb</span> <span class="o">=</span> <span class="n">nmoa</span> <span class="o">-</span> <span class="n">nocca</span><span class="p">,</span> <span class="n">nmob</span> <span class="o">-</span> <span class="n">noccb</span>
 
-<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
-    <span class="kn">import</span> <span class="nn">copy</span>
-    <span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">scf</span>
+    <span class="c1"># vvvv</span>
+    <span class="n">fp</span>  <span class="o">=</span> <span class="n">nocca</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nvira</span><span class="o">**</span><span class="mi">4</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">noccb</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nvirb</span><span class="o">**</span><span class="mi">4</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span>    <span class="o">*</span> <span class="n">nvira</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">noccb</span>    <span class="o">*</span> <span class="n">nvirb</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="mi">2</span>
+
+    <span class="c1"># ovvv</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nvira</span><span class="o">**</span><span class="mi">3</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nvira</span><span class="o">**</span><span class="mi">3</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nvira</span><span class="o">**</span><span class="mi">3</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span><span class="o">**</span><span class="mi">3</span> <span class="o">*</span> <span class="n">nvira</span><span class="o">**</span><span class="mi">3</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span><span class="o">**</span><span class="mi">3</span> <span class="o">*</span> <span class="n">nvira</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="mi">2</span>
+
+    <span class="c1"># OVVV</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">noccb</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nvirb</span><span class="o">**</span><span class="mi">3</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">noccb</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nvirb</span><span class="o">**</span><span class="mi">3</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">noccb</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nvirb</span><span class="o">**</span><span class="mi">3</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">noccb</span><span class="o">**</span><span class="mi">3</span> <span class="o">*</span> <span class="n">nvirb</span><span class="o">**</span><span class="mi">3</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">noccb</span><span class="o">**</span><span class="mi">3</span> <span class="o">*</span> <span class="n">nvirb</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="mi">2</span>
+
+    <span class="c1"># ovVV</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span>    <span class="o">*</span> <span class="n">nvira</span> <span class="o">*</span> <span class="n">noccb</span>    <span class="o">*</span> <span class="n">nvirb</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nvira</span>            <span class="o">*</span> <span class="n">nvirb</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span>    <span class="o">*</span> <span class="n">nvira</span> <span class="o">*</span> <span class="n">noccb</span>    <span class="o">*</span> <span class="n">nvirb</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span>    <span class="o">*</span> <span class="n">nvira</span> <span class="o">*</span> <span class="n">noccb</span>    <span class="o">*</span> <span class="n">nvirb</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nvira</span> <span class="o">*</span> <span class="n">noccb</span>    <span class="o">*</span> <span class="n">nvirb</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nvira</span> <span class="o">*</span> <span class="n">noccb</span>    <span class="o">*</span> <span class="n">nvirb</span>    <span class="o">*</span> <span class="mi">2</span>
+
+    <span class="c1"># OVvv</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span>    <span class="o">*</span> <span class="n">nvira</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">noccb</span>    <span class="o">*</span> <span class="n">nvirb</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span>            <span class="n">nvira</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">noccb</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nvirb</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span>    <span class="o">*</span> <span class="n">nvira</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">noccb</span>    <span class="o">*</span> <span class="n">nvirb</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span>    <span class="o">*</span> <span class="n">nvira</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">noccb</span>    <span class="o">*</span> <span class="n">nvirb</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span>    <span class="o">*</span> <span class="n">nvira</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">noccb</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nvirb</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span>    <span class="o">*</span> <span class="n">nvira</span>    <span class="o">*</span> <span class="n">noccb</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nvirb</span> <span class="o">*</span> <span class="mi">2</span>
+
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span><span class="o">**</span><span class="mi">4</span> <span class="o">*</span> <span class="n">nvira</span>    <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span><span class="o">**</span><span class="mi">4</span> <span class="o">*</span> <span class="n">nvira</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span><span class="o">**</span><span class="mi">4</span> <span class="o">*</span> <span class="n">nvira</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span><span class="o">**</span><span class="mi">3</span> <span class="o">*</span> <span class="n">nvira</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span><span class="o">**</span><span class="mi">3</span> <span class="o">*</span> <span class="n">nvira</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nvira</span><span class="o">**</span><span class="mi">3</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span><span class="o">**</span><span class="mi">3</span> <span class="o">*</span> <span class="n">nvira</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span><span class="o">**</span><span class="mi">3</span> <span class="o">*</span> <span class="n">nvira</span><span class="o">**</span><span class="mi">3</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nvira</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">noccb</span>    <span class="o">*</span> <span class="n">nvirb</span>    <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span><span class="o">**</span><span class="mi">3</span> <span class="o">*</span> <span class="n">nvira</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span><span class="o">**</span><span class="mi">3</span> <span class="o">*</span> <span class="n">nvira</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="mi">2</span>
+
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">noccb</span><span class="o">**</span><span class="mi">4</span> <span class="o">*</span> <span class="n">nvirb</span>    <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">noccb</span><span class="o">**</span><span class="mi">4</span> <span class="o">*</span> <span class="n">nvirb</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">noccb</span><span class="o">**</span><span class="mi">4</span> <span class="o">*</span> <span class="n">nvirb</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">noccb</span><span class="o">**</span><span class="mi">3</span> <span class="o">*</span> <span class="n">nvirb</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">noccb</span><span class="o">**</span><span class="mi">3</span> <span class="o">*</span> <span class="n">nvirb</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">noccb</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nvirb</span><span class="o">**</span><span class="mi">3</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">noccb</span><span class="o">**</span><span class="mi">3</span> <span class="o">*</span> <span class="n">nvirb</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">noccb</span><span class="o">**</span><span class="mi">3</span> <span class="o">*</span> <span class="n">nvirb</span><span class="o">**</span><span class="mi">3</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">noccb</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nvirb</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nocca</span>    <span class="o">*</span> <span class="n">nvira</span>    <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">noccb</span><span class="o">**</span><span class="mi">3</span> <span class="o">*</span> <span class="n">nvirb</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">noccb</span><span class="o">**</span><span class="mi">3</span> <span class="o">*</span> <span class="n">nvirb</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="mi">2</span>
+
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nvira</span>    <span class="o">*</span> <span class="n">noccb</span>    <span class="o">*</span> <span class="n">nvirb</span>    <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nvira</span>    <span class="o">*</span> <span class="n">noccb</span>    <span class="o">*</span> <span class="n">nvirb</span>    <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span><span class="o">**</span><span class="mi">2</span>            <span class="o">*</span> <span class="n">noccb</span>    <span class="o">*</span> <span class="n">nvirb</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">noccb</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nvirb</span>    <span class="o">*</span> <span class="n">nocca</span>    <span class="o">*</span> <span class="n">nvira</span>    <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">noccb</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nvirb</span>    <span class="o">*</span> <span class="n">nocca</span>    <span class="o">*</span> <span class="n">nvira</span>    <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">noccb</span><span class="o">**</span><span class="mi">2</span>            <span class="o">*</span> <span class="n">nocca</span>    <span class="o">*</span> <span class="n">nvira</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="mi">2</span>
+
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span><span class="o">**</span><span class="mi">2</span>            <span class="o">*</span> <span class="n">noccb</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nvirb</span>    <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nvira</span>    <span class="o">*</span> <span class="n">noccb</span><span class="o">**</span><span class="mi">2</span>            <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nvira</span>    <span class="o">*</span> <span class="n">noccb</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nvirb</span>    <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nvira</span>    <span class="o">*</span> <span class="n">noccb</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nvirb</span>    <span class="o">*</span> <span class="mi">2</span>
+
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span>    <span class="o">*</span> <span class="n">nvira</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">noccb</span>    <span class="o">*</span> <span class="n">nvirb</span>    <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span>    <span class="o">*</span> <span class="n">nvira</span>    <span class="o">*</span> <span class="n">noccb</span>    <span class="o">*</span> <span class="n">nvirb</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span>    <span class="o">*</span> <span class="n">nvira</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">noccb</span>    <span class="o">*</span> <span class="n">nvirb</span>    <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span>    <span class="o">*</span> <span class="n">nvira</span>    <span class="o">*</span> <span class="n">noccb</span>    <span class="o">*</span> <span class="n">nvirb</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="mi">2</span>
+
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nvira</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">noccb</span>    <span class="o">*</span> <span class="n">nvirb</span>    <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span>    <span class="o">*</span> <span class="n">nvira</span>    <span class="o">*</span> <span class="n">noccb</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nvirb</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nvira</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">noccb</span>    <span class="o">*</span> <span class="n">nvirb</span>    <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span>    <span class="o">*</span> <span class="n">nvira</span>    <span class="o">*</span> <span class="n">noccb</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nvirb</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nvira</span>    <span class="o">*</span> <span class="n">noccb</span>    <span class="o">*</span> <span class="n">nvirb</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span>    <span class="o">*</span> <span class="n">nvira</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">noccb</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nvirb</span>    <span class="o">*</span> <span class="mi">2</span>
+
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span>    <span class="o">*</span> <span class="n">nvira</span>    <span class="o">*</span> <span class="n">noccb</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nvirb</span>    <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nvira</span>    <span class="o">*</span> <span class="n">noccb</span>    <span class="o">*</span> <span class="n">nvirb</span>    <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span>    <span class="o">*</span> <span class="n">nvira</span>    <span class="o">*</span> <span class="n">noccb</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nvirb</span>    <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nvira</span>    <span class="o">*</span> <span class="n">noccb</span>    <span class="o">*</span> <span class="n">nvirb</span>    <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span><span class="o">**</span><span class="mi">2</span>            <span class="o">*</span> <span class="n">noccb</span>    <span class="o">*</span> <span class="n">nvirb</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span>    <span class="o">*</span> <span class="n">nvira</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">noccb</span><span class="o">**</span><span class="mi">2</span>            <span class="o">*</span> <span class="mi">2</span>
+
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span><span class="o">**</span><span class="mi">3</span> <span class="o">*</span> <span class="n">nvira</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span><span class="o">**</span><span class="mi">3</span> <span class="o">*</span> <span class="n">nvira</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">noccb</span><span class="o">**</span><span class="mi">3</span> <span class="o">*</span> <span class="n">nvirb</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">noccb</span><span class="o">**</span><span class="mi">3</span> <span class="o">*</span> <span class="n">nvirb</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="mi">2</span>
+
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nvira</span>    <span class="o">*</span> <span class="n">noccb</span>    <span class="o">*</span> <span class="n">nvirb</span>    <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span><span class="o">**</span><span class="mi">2</span>            <span class="o">*</span> <span class="n">noccb</span>    <span class="o">*</span> <span class="n">nvirb</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nvira</span>    <span class="o">*</span> <span class="n">noccb</span>    <span class="o">*</span> <span class="n">nvirb</span>    <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">noccb</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nvirb</span>    <span class="o">*</span> <span class="n">nocca</span>    <span class="o">*</span> <span class="n">nvira</span>    <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">noccb</span><span class="o">**</span><span class="mi">2</span>            <span class="o">*</span> <span class="n">nocca</span>    <span class="o">*</span> <span class="n">nvira</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">noccb</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nvirb</span>    <span class="o">*</span> <span class="n">nocca</span>    <span class="o">*</span> <span class="n">nvira</span>    <span class="o">*</span> <span class="mi">2</span>
+
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span><span class="o">**</span><span class="mi">3</span> <span class="o">*</span> <span class="n">nvira</span><span class="o">**</span><span class="mi">3</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nvira</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">noccb</span>    <span class="o">*</span> <span class="n">nvirb</span>    <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">noccb</span><span class="o">**</span><span class="mi">3</span> <span class="o">*</span> <span class="n">nvirb</span><span class="o">**</span><span class="mi">3</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">noccb</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nvirb</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nocca</span>    <span class="o">*</span> <span class="n">nvira</span>    <span class="o">*</span> <span class="mi">2</span>
+
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nvira</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">noccb</span>    <span class="o">*</span> <span class="n">nvirb</span>    <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span>    <span class="o">*</span> <span class="n">nvira</span>    <span class="o">*</span> <span class="n">noccb</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nvirb</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span>    <span class="o">*</span> <span class="n">nvira</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">noccb</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nvirb</span>    <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nvira</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">noccb</span>    <span class="o">*</span> <span class="n">nvirb</span>    <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nvira</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">noccb</span>    <span class="o">*</span> <span class="n">nvirb</span>    <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nvira</span>    <span class="o">*</span> <span class="n">noccb</span>    <span class="o">*</span> <span class="n">nvirb</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="mi">2</span>
+
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nvira</span><span class="o">**</span><span class="mi">3</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">noccb</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nvirb</span><span class="o">**</span><span class="mi">3</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span>    <span class="o">*</span> <span class="n">nvira</span>    <span class="o">*</span> <span class="n">noccb</span>    <span class="o">*</span> <span class="n">nvirb</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span>    <span class="o">*</span> <span class="n">nvira</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">noccb</span>    <span class="o">*</span> <span class="n">nvirb</span>    <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span><span class="o">**</span><span class="mi">3</span> <span class="o">*</span> <span class="n">nvira</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">noccb</span><span class="o">**</span><span class="mi">3</span> <span class="o">*</span> <span class="n">nvirb</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span>    <span class="o">*</span> <span class="n">nvira</span>    <span class="o">*</span> <span class="n">noccb</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nvirb</span>    <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nvira</span>    <span class="o">*</span> <span class="n">noccb</span>    <span class="o">*</span> <span class="n">nvirb</span>    <span class="o">*</span> <span class="mi">2</span>
+
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nvira</span><span class="o">**</span><span class="mi">3</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">noccb</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nvirb</span><span class="o">**</span><span class="mi">3</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nvira</span>    <span class="o">*</span> <span class="n">noccb</span>    <span class="o">*</span> <span class="n">nvirb</span>    <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">fp</span> <span class="o">+=</span> <span class="n">nocca</span>    <span class="o">*</span> <span class="n">nvira</span>    <span class="o">*</span> <span class="n">noccb</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nvirb</span>    <span class="o">*</span> <span class="mi">2</span>
+    <span class="k">return</span> <span class="n">fp</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">gto</span>
 
     <span class="n">mol</span> <span class="o">=</span> <span class="n">gto</span><span class="o">.</span><span class="n">Mole</span><span class="p">()</span>
@@ -1287,9 +1442,7 @@
 </pre></div>
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -1298,11 +1451,19 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015-, Qiming Sun &lt;osirpt.sun@gmail.com&gt;.
+        
+        &copy; Copyright 2015-2020, The PySCF Developers
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -1314,38 +1475,15 @@
   </div>
   
 
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../../',
-            VERSION:'1.5.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: ''
-        };
-    </script>
-      <script type="text/javascript" src="../../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

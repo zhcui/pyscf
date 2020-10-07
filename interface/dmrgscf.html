@@ -1,0 +1,306 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>9.3. dmrgscf — DMRG and DMRG-SCF/CASSCF &mdash; PySCF 1.7.5 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="9.4. fciqmcscf — Full configuration interaction quantum Monte Carlo (FCIQMC)" href="fciqmcscf.html" />
+    <link rel="prev" title="9.2. geomopt — Geometry optimization" href="geomopt.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> PySCF
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.7
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">1. An overview of PySCF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../version.html">2. Version history</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">3. Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../code-rule.html">4. Code standard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../benchmark.html">5. Benchmark</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">6. Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../theory.html">7. Theoretical methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced.html">8. Miscellaneous</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../interface.html">9. Interfaces</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="dftd3.html">9.1. <code class="xref py py-mod docutils literal notranslate"><span class="pre">dftd3</span></code> — DFT with D3 dispersion correction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomopt.html">9.2. <code class="xref py py-mod docutils literal notranslate"><span class="pre">geomopt</span></code> — Geometry optimization</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">9.3. <code class="xref py py-mod docutils literal notranslate"><span class="pre">dmrgscf</span></code> — DMRG and DMRG-SCF/CASSCF</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#examples">9.3.1. Examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-pyscf.dmrgscf.dmrg_sym">9.3.2. Program Reference</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="fciqmcscf.html">9.4. <code class="xref py py-mod docutils literal notranslate"><span class="pre">fciqmcscf</span></code> — Full configuration interaction quantum Monte Carlo (FCIQMC)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cornell_shci.html">9.5. <code class="xref py py-mod docutils literal notranslate"><span class="pre">cornell_shci</span></code> — Semistochastic heat-bath configuration interaction (SHCI)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shciscf.html">9.6. <code class="xref py py-mod docutils literal notranslate"><span class="pre">shciscf</span></code> — Semistochastic heat bath configuration interaction (SHCI)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="icmpspt.html">9.7. <code class="xref py py-mod docutils literal notranslate"><span class="pre">icmpspt</span></code> — Internal-contracted MPS perturbation method</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nao.html">9.8. <code class="xref py py-mod docutils literal notranslate"><span class="pre">nao</span></code> — Numerical Atomic Orbitals</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">10. Main modules</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">PySCF</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../interface.html">9. Interfaces</a> &raquo;</li>
+        
+      <li>9.3. <code class="xref py py-mod docutils literal notranslate"><span class="pre">dmrgscf</span></code> — DMRG and DMRG-SCF/CASSCF</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/interface/dmrgscf.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="dmrgscf-dmrg-and-dmrg-scf-casscf">
+<span id="dmrgscf"></span><h1>9.3. <code class="xref py py-mod docutils literal notranslate"><span class="pre">dmrgscf</span></code> — DMRG and DMRG-SCF/CASSCF<a class="headerlink" href="#dmrgscf-dmrg-and-dmrg-scf-casscf" title="Permalink to this headline">¶</a></h1>
+<p>The <code class="xref py py-mod docutils literal notranslate"><span class="pre">dmrgscf</span></code> module interfaces PySCF with external DMRG solvers, such as
+<a class="reference external" href="https://sanshar.github.io/Block">Block</a>,
+<a class="reference external" href="https://github.com/sanshar/StackBlock">StackBlock</a> and
+<a class="reference external" href="https://github.com/SebWouters/CheMPS2">CheMPS2</a>.
+See also <code class="xref py py-mod docutils literal notranslate"><span class="pre">mcscf</span></code>.</p>
+<p>To perform a DMRG CASSCF calculation, first modify pyscf/dmrgscf/settings.py
+and set the correct path for the DMRG solver, and then run <em>e.g.</em>,</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">gto</span>
+<span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">scf</span>
+<span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">mcscf</span>
+<span class="kn">from</span> <span class="nn">pyscf</span> <span class="k">import</span> <span class="n">dmrgscf</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">pyscf.dmrgscf</span> <span class="k">import</span> <span class="n">settings</span>
+<span class="k">if</span> <span class="s1">&#39;SLURMD_NODENAME&#39;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>  <span class="c1"># slurm system</span>
+    <span class="n">settings</span><span class="o">.</span><span class="n">MPIPREFIX</span> <span class="o">=</span> <span class="s1">&#39;srun&#39;</span>
+<span class="k">elif</span> <span class="s1">&#39;PBS_NODEFILE&#39;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>   <span class="c1"># PBS system</span>
+    <span class="n">settings</span><span class="o">.</span><span class="n">MPIPREFIX</span> <span class="o">=</span> <span class="s1">&#39;mpirun&#39;</span>
+<span class="k">else</span><span class="p">:</span>  <span class="c1"># MPI on single node</span>
+    <span class="n">settings</span><span class="o">.</span><span class="n">MPIPREFIX</span> <span class="o">=</span> <span class="s1">&#39;mpirun -np 4&#39;</span>
+
+<span class="n">b</span> <span class="o">=</span> <span class="mf">1.2</span>
+<span class="n">mol</span> <span class="o">=</span> <span class="n">gto</span><span class="o">.</span><span class="n">M</span><span class="p">(</span>
+    <span class="n">verbose</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="n">atom</span> <span class="o">=</span> <span class="s1">&#39;N 0 0 0; N 0 0 </span><span class="si">%f</span><span class="s1">&#39;</span><span class="o">%</span><span class="n">b</span><span class="p">,</span>
+    <span class="n">basis</span> <span class="o">=</span> <span class="s1">&#39;cc-pvdz&#39;</span><span class="p">,</span>
+    <span class="n">symmetry</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">mf</span> <span class="o">=</span> <span class="n">scf</span><span class="o">.</span><span class="n">RHF</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span>
+<span class="n">mf</span><span class="o">.</span><span class="n">kernel</span><span class="p">()</span>
+
+<span class="n">mc</span> <span class="o">=</span> <span class="n">dmrgscf</span><span class="o">.</span><span class="n">DMRGSCF</span><span class="p">(</span><span class="n">mf</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+<span class="n">mc</span><span class="o">.</span><span class="n">state_average_</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
+<span class="n">mc</span><span class="o">.</span><span class="n">kernel</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">mc</span><span class="o">.</span><span class="n">e_tot</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="section" id="examples">
+<h2>9.3.1. Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference download internal" download="" href="../_downloads/6e8bb6f57c9b618de0e6da18c0759443/01-dmrg_casscf_with_block.py"><code class="xref download docutils literal notranslate"><span class="pre">examples/dmrg/01-dmrg_casscf_with_block.py</span></code></a>
+<a class="reference download internal" download="" href="../_downloads/9dbe969fa9d706201e4a4d9d53ded3bc/01-dmrg_casscf_with_stackblock.py"><code class="xref download docutils literal notranslate"><span class="pre">examples/dmrg/01-dmrg_casscf_with_stackblock.py</span></code></a>
+<code class="xref download docutils literal notranslate"><span class="pre">examples/dmrg/02-dmrg_nevpt2.py</span></code>
+<a class="reference download internal" download="" href="../_downloads/fbfc1ecadbc20839151e805c6e1ea27b/03-density_matrix.py"><code class="xref download docutils literal notranslate"><span class="pre">examples/dmrg/03-density_matrix.py</span></code></a>
+<a class="reference download internal" download="" href="../_downloads/3f984eb877edaa6cb3980959c40b5121/10-state_average.py"><code class="xref download docutils literal notranslate"><span class="pre">examples/dmrg/10-state_average.py</span></code></a>
+<a class="reference download internal" download="" href="../_downloads/9ad875765d092770156ffcf2cafc0e8b/11-excited_states.py"><code class="xref download docutils literal notranslate"><span class="pre">examples/dmrg/11-excited_states.py</span></code></a>
+<a class="reference download internal" download="" href="../_downloads/5df2370852bae2f5f1c160cf0d6880ff/30-dmrg_casscf_nevpt2_for_Cr2.py"><code class="xref download docutils literal notranslate"><span class="pre">examples/dmrg/30-dmrg_casscf_nevpt2_for_Cr2.py</span></code></a>
+<a class="reference download internal" download="" href="../_downloads/ec9d7dd855744f0b68a3959602bdd4a2/31-dmrg_casscf_for_feporph.py"><code class="xref download docutils literal notranslate"><span class="pre">examples/dmrg/31-dmrg_casscf_for_feporph.py</span></code></a>
+<a class="reference download internal" download="" href="../_downloads/e51c9c86dfeefa0c3406ead0088f8809/32-dmrg_casscf_nevpt2_for_FeS.py"><code class="xref download docutils literal notranslate"><span class="pre">examples/dmrg/32-dmrg_casscf_nevpt2_for_FeS.py</span></code></a></p>
+</div>
+<div class="section" id="module-pyscf.dmrgscf.dmrg_sym">
+<span id="program-reference"></span><h2>9.3.2. Program Reference<a class="headerlink" href="#module-pyscf.dmrgscf.dmrg_sym" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="pyscf.dmrgscf.dmrg_sym.convert_lzsym">
+<code class="sig-prename descclassname">pyscf.dmrgscf.dmrg_sym.</code><code class="sig-name descname">convert_lzsym</code><span class="sig-paren">(</span><em class="sig-param">gpname</em>, <em class="sig-param">orbsym</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyscf/dmrgscf/dmrg_sym.html#convert_lzsym"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyscf.dmrgscf.dmrg_sym.convert_lzsym" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert orbital symmetry irrep_id to Block internal irrep_id</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyscf.dmrgscf.dmrg_sym.convert_orbsym">
+<code class="sig-prename descclassname">pyscf.dmrgscf.dmrg_sym.</code><code class="sig-name descname">convert_orbsym</code><span class="sig-paren">(</span><em class="sig-param">gpname</em>, <em class="sig-param">orbsym</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyscf/dmrgscf/dmrg_sym.html#convert_orbsym"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyscf.dmrgscf.dmrg_sym.convert_orbsym" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert orbital symmetry irrep_id to Block internal irrep_id</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="fciqmcscf.html" class="btn btn-neutral float-right" title="9.4. fciqmcscf — Full configuration interaction quantum Monte Carlo (FCIQMC)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="geomopt.html" class="btn btn-neutral float-left" title="9.2. geomopt — Geometry optimization" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2015-2020, The PySCF Developers
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
