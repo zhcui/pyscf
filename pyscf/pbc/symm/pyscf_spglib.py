@@ -19,18 +19,34 @@
 '''
 Interface to spglib
 '''
+import pkg_resources
 try:
-    import spglib
-except:
-    raise ImportError("Cannot import spglib.")
+    dist = pkg_resources.get_distribution('spglib')
+except pkg_resources.DistributionNotFound:
+    dist = None
+if dist is None or [int(x) for x in dist.version.split('.')] < [1, 15, 1]:
+    msg = ('spglib not found or outdated. Install or update with:\n\t pip install -U spglib')
+    raise ImportError(msg)
+
+import spglib
 
 def cell_to_spgcell(cell):
+    r'''
+    Convert PySCF Cell object to spglib cell object
+    '''
     a = cell.lattice_vectors()
     atm_pos = cell.get_scaled_positions()
     atm_num = []
     from pyscf.data import elements
     for symbol in cell.elements:
+        if 'X-' in symbol or 'GHOST-' in symbol:
+            raise NotImplementedError("Ghost atoms are not supported with symmetry.")
         atm_num.append(elements.NUC[symbol])
+    for iatm in range(cell.natm):
+        symb = cell.atom_symbol(iatm)
+        idx = ''.join([i for i in symb if i.isnumeric()])
+        if idx.isnumeric(): 
+            atm_num[iatm] += int(idx) * 1000
     spg_cell = (a, atm_pos, atm_num, cell.magmoms)
     return spg_cell
 

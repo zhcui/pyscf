@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# Authors: Xing Zhang
+# Authors: Xing Zhang <zhangxing.nju@gmail.com>
 #
 
 import numpy as np
@@ -525,9 +525,9 @@ class KPoints(lib.StreamObject):
     This class handles k-point symmetries etc.
 
     Attributes:
-        cell : pbc.gto.cell.Cell class
+        cell : :class:`Cell` object
             unit cell info
-        sg_symm : pbc.symm.Symmetry class
+        sg_symm : :class:`pbc.symm.Symmetry` object
             space group info of the cell
         bz_k_scaled : (nbzk,3) ndarray
             scaled k points in full BZ

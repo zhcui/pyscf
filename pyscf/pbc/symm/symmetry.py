@@ -18,12 +18,11 @@
 
 import numpy as np
 from numpy.linalg import inv
-from pyscf import __config__
 from pyscf import lib
 from pyscf.symm.Dmatrix import *
+from pyscf.pbc.symm import space_group
 from functools import reduce
 
-SYMPREC = getattr(__config__, 'pbc_symm_symmetry_symprec', 1e-6)
 XYZ = np.eye(3)
 
 def is_right_hand_screw(c):
@@ -161,50 +160,11 @@ def make_Dmats(cell, ops, l_max=None):
             Dmats.append(get_Dmat_cart(op, l_max))
     return Dmats, l_max
 
-class SpaceGroup(lib.StreamObject):
-    '''
-    Determines the space group of a lattice.
-    Attributes:
-        cell : pbc.cell.Cell class 
-        symbol : string
-        rotations : (n,3,3) ndarray 
-        translations : (n,3) ndarray
-    '''
-    def __init__(self, cell, symprec=SYMPREC):
-        self.cell = cell
-        self.symprec = symprec
-        self.rotations = np.reshape(np.eye(3,dtype=int), (-1,3,3))
-        self.translations = np.zeros((1,3))
-
-    def get_space_group(self, dump_info=True):
-        try:
-            from pyscf.pbc.symm.pyscf_spglib import cell_to_spgcell, get_symmetry_dataset, get_symmetry
-            cell = cell_to_spgcell(self.cell)
-            dataset = get_symmetry_dataset(cell, symprec=self.symprec)
-            self.international_symbol = dataset['international']
-            self.international_number = dataset['number']
-            self.point_group_symbol = dataset['pointgroup']
-            ops = get_symmetry(cell, symprec=self.symprec)
-            self.rotations = ops['rotations']
-            self.translations = ops['translations']
-        except:
-            raise NotImplementedError("use spglib to determine space group for now")
-
-        if dump_info:
-            self.dump_info()
-        return self
-
-    def dump_info(self):
-        self.stdout.write('[Cell] International symbol:  %s (%d)\n' % (self.international_symbol, self.international_number))
-        self.stdout.write('[Cell] Point group symbol:  %s\n' % self.point_group_symbol)
-
 class Symmetry():
+    r'''
+    Symmetry info of a crystal.
     '''
-    contains space group symmetry info of a Cell object
-    '''
-
     def __init__(self, cell, auxcell=None, point_group = True, symmorphic = True):
-
         self.cell = cell
         if self.cell is None: #no cell info
             self.space_group = None
@@ -212,11 +172,10 @@ class Symmetry():
             self.op_trans = np.zeros((1,3))
             self.Dmats = None #this may give errors
             return
-        #if self.cell.cart == True:
-        #    raise NotImplementedError("No symmetry support for cartesian basis yet")
+
         #from pyscf.pbc.tools.pyscf_ase import get_space_group
         #self.space_group = get_space_group(self.cell)
-        self.space_group = SpaceGroup(cell).get_space_group()
+        self.space_group = space_group.SpaceGroup(cell).build()
         self.op_rot = self.space_group.rotations
         self.op_trans = self.space_group.translations
         self.symmorphic = symmorphic
@@ -234,14 +193,6 @@ class Symmetry():
         if auxcell is not None:
             l_max = np.max(auxcell._bas[:,1])
         self.Dmats, self.l_max = make_Dmats(self.cell, self.op_rot, l_max)
-
-def is_eye(op):
-
-    return ((op - np.eye(3,dtype=int)) == 0).all()
-
-def is_inversion(op):
-
-    return ((op + np.eye(3,dtype=int)) == 0).all()
 
 def get_phase(cell, op, coords_scaled, kpt_scaled):
     natm = cell.natm
