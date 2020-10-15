@@ -510,9 +510,9 @@ def make_kpts(cell, kpts=np.zeros((1,3)),
               space_group_symmetry=True, time_reversal_symmetry=True,
               symmorphic=True):
     if isinstance(kpts, KPoints):
-        return kpts
+        return kpts.build(space_group_symmetry, time_reversal_symmetry, symmorphic)
     else:
-        return KPoints(cell, kpts, space_group_symmetry, time_reversal_symmetry, symmorphic).build()
+        return KPoints(cell, kpts).build(space_group_symmetry, time_reversal_symmetry, symmorphic)
 
 class KPoints(symm.Symmetry, lib.StreamObject):
     r'''
@@ -551,15 +551,15 @@ class KPoints(symm.Symmetry, lib.StreamObject):
         time_reversal_symm_bz : (nkpts,) array of int
             whether k-points in BZ and IBZ are related by time-reversal symmetry
     '''
-    def __init__(self, cell, kpts=np.zeros((1,3)), 
-                 space_group_symmetry=True, time_reversal_symmetry=True,
-                 symmorphic=True):
-        symm.Symmetry.__init__(self, cell, space_group_symmetry=space_group_symmetry, symmorphic=True)
-        self.verbose = self.cell.verbose
-        self.time_reversal = time_reversal_symmetry and not self.has_inversion
+    def __init__(self, cell, kpts=np.zeros((1,3))): 
+        symm.Symmetry.__init__(self, cell)
+        self.verbose = logger.NOTE
+        if getattr(self.cell, 'verbose', None):
+            self.verbose = self.cell.verbose
+        self.time_reversal = False
 
         self.kpts_ibz = self.kpts = kpts
-        self.kpts_scaled_ibz = self.kpts_scaled = cell.get_scaled_kpts(self.kpts)
+        self.kpts_scaled_ibz = self.kpts_scaled = None
         nkpts = len(self.kpts)
         self.weights_ibz = self.weights = np.asarray([1./nkpts] * nkpts)
         self.ibz2bz = self.bz2ibz = np.arange(nkpts, dtype=int)
@@ -599,7 +599,13 @@ class KPoints(symm.Symmetry, lib.StreamObject):
     def nkpts_ibz(self, n):
         self._nkpts_ibz = n
 
-    def build(self, make_kpairs=True):
+    def build(self, space_group_symmetry=True, time_reversal_symmetry=True,
+              symmorphic=True, make_kpairs=True, *args, **kwargs):
+        symm.Symmetry.build(self, space_group_symmetry, symmorphic, *args, **kwargs)
+        if not getattr(self.cell, '_built', None): return
+
+        self.time_reversal = time_reversal_symmetry and not self.has_inversion
+        self.kpts_scaled_ibz = self.kpts_scaled = self.cell.get_scaled_kpts(self.kpts)
         self.make_kpts_ibz()
         self.dump_info()
         if make_kpairs:
@@ -646,6 +652,7 @@ class KPoints(symm.Symmetry, lib.StreamObject):
 
 
 if __name__ == "__main__":
+    import numpy
     from pyscf.pbc import gto
     cell = gto.Cell()
     cell.atom = """
@@ -658,4 +665,10 @@ if __name__ == "__main__":
     cell.verbose = 4
     cell.build()
     nk = [3,3,3]
-    kpts = cell.make_kpts(nk, space_group_symmetry=True, time_reversal_symmetry=True)
+    kpts_bz = cell.make_kpts(nk)
+    kpts0 = cell.make_kpts(nk, space_group_symmetry=True, time_reversal_symmetry=True)
+    kpts1 = KPoints(cell, kpts_bz).build(space_group_symmetry=True, time_reversal_symmetry=True)
+    print(numpy.allclose(kpts0.kpts_ibz, kpts1.kpts_ibz))
+
+    kpts = KPoints(None)
+    print(kpts.kpts)

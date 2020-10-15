@@ -26,10 +26,10 @@ from pyscf.pbc import tools
 from pyscf.pbc.dft import numint
 from pyscf.pbc.df.df_jk import _format_dms, _format_kpts_band, _format_jks
 from pyscf.pbc.df.df_jk import _ewald_exxdiv_for_G0
+from pyscf.pbc.lib.kpts import KPoints
 from pyscf.pbc.lib.kpts_helper import is_zero, gamma_point
 
-def get_j_kpts_ibz(mydf, dm_kpts, kd, hermi=1, kpts_band=None):
-
+def get_j_kpts_ibz(mydf, dm_kpts, hermi=1, kd=KPoints(None), kpts_band=None):
     t1 = (time.clock(), time.time())
     kpts = kd.kpts_ibz
 
@@ -118,7 +118,7 @@ def get_j_kpts_ibz(mydf, dm_kpts, kd, hermi=1, kpts_band=None):
     t1 = lib.logger.timer_debug1(mydf, 'dot ao:', *t1)
     return _format_jks(vj_kpts, dm_kpts, input_band, kpts)
 
-def get_k_kpts_ibz(mydf, dm_kpts, kd, hermi=1, kpts_band=None, exxdiv=None):
+def get_k_kpts_ibz(mydf, dm_kpts, hermi=1, kd=KPoints(None), kpts_band=None, exxdiv=None):
 
     cell = mydf.cell
     mesh = mydf.mesh

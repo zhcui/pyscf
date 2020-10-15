@@ -188,14 +188,23 @@ class Symmetry():
         l_max : int
             Maximum angular momentum considered in `Dmats`
     '''
-    def __init__(self, cell, auxcell=None, space_group_symmetry=True, symmorphic=True):
-        if not cell._built:
+    def __init__(self, cell):
+        self.cell = cell
+        self.spacegroup = None
+        self.symmorphic = True
+        self.ops = [space_group.SpaceGroup_element(),]
+        self.nop = len(self.ops)
+        self.has_inversion = False
+        self.Dmats = None
+        self.l_max = None
+
+    def build(self, space_group_symmetry=True, symmorphic=True, *args, **kwargs):
+        if self.cell is None: return
+        if not self.cell._built:
             sys.stderr.write('Warning: %s must be initialized before calling Symmetry.\n'
                              'Initialize %s in %s\n' % (cell, cell, self))
-            cell.build()
-
-        self.cell = cell
-        self.spacegroup = space_group.SpaceGroup(cell).build()
+            self.cell.build()
+        self.spacegroup = space_group.SpaceGroup(self.cell).build()
         self.symmorphic = symmorphic
         if space_group_symmetry:
             self.ops = copy.deepcopy(self.spacegroup.ops) #in case that a subset of ops is considered
@@ -205,15 +214,18 @@ class Symmetry():
                 rm_list = check_mesh_symmetry(self.cell, self.ops)
                 self.ops[:] = [op for i, op in enumerate(self.ops) if i not in rm_list]
         else:
-            self.ops = space_group.SpaceGroup_element()
+            self.ops = [space_group.SpaceGroup_element(),]
         self.nop = len(self.ops)
         self.has_inversion = any([op.rot_is_inversion for op in self.ops])
 
         l_max = None
-        if auxcell is not None:
-            l_max = np.max(auxcell._bas[:,1])
+        if 'auxcell' in kwargs:
+            auxcell = kwargs['auxcell']
+            if getattr(auxcell, '_bas', None):
+                l_max = np.max(auxcell._bas[:,1])
         op_rot = [op.inv().a2r(self.cell).rot for op in self.ops]
         self.Dmats, self.l_max = make_Dmats(self.cell, op_rot, l_max)
+
 
 def check_mesh_symmetry(cell, ops, mesh=None, tol=SYMPREC):
     if mesh is None: mesh = cell.mesh

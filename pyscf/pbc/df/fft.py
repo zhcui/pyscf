@@ -168,6 +168,7 @@ class FFTDF(lib.StreamObject):
         self.max_memory = cell.max_memory
 
         self.kpts = kpts
+        self.kpts_weights = numpy.asarray([1./len(self.kpts)] * len(self.kpts))
         self.grids = gen_grid.UniformGrids(cell)
 
         # to mimic molecular DF object
@@ -335,20 +336,20 @@ class FFTDF(lib.StreamObject):
                 vj = fft_jk.get_j_kpts(self, dm, hermi, kpts, kpts_band)
         return vj, vk
 
-    def get_jk_ibz(self, dm, hermi=1, kd=None, kpts_band=None,
+    def get_jk_ibz(self, dm, hermi=1, kpts=None, kpts_band=None,
                    with_j=True, with_k=True, omega=None, exxdiv=None):
         from pyscf.pbc.df import fft_jk_ibz
         if omega is not None:
-            raise NotImplementedError()
+            raise NotImplementedError
 
-        if kd is None:
-            return self.get_jk(dm,hermi,self.kpts,kpts_band,with_j,with_k,exxdiv)
+        if kpts is None:
+            return self.get_jk(dm, hermi, kpts, kpts_band, with_j, with_k, omega, exxdiv)
 
         vj = vk = None
-        if with_j:
-            vj = fft_jk_ibz.get_j_kpts_ibz(self, dm, kd, hermi, kpts_band)
         if with_k:
-            vk = fft_jk_ibz.get_k_kpts_ibz(self, dm, kd, hermi, kpts_band, exxdiv)
+            vk = fft_jk_ibz.get_k_kpts_ibz(self, dm, hermi, kpts, kpts_band, exxdiv)
+        if with_j:
+            vj = fft_jk_ibz.get_j_kpts_ibz(self, dm, hermi, kpts, kpts_band)
         return vj, vk
 
     get_eri = get_ao_eri = fft_ao2mo.get_eri
