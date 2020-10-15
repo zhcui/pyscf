@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# Author: Xing Zhang
+# Author: Xing Zhang <zhangxing.nju@gmail.com>
 #
 
 '''
@@ -31,7 +31,7 @@ from pyscf.pbc.lib.kpts_helper import is_zero, gamma_point
 def get_j_kpts_ibz(mydf, dm_kpts, kd, hermi=1, kpts_band=None):
 
     t1 = (time.clock(), time.time())
-    kpts = kd.ibz_k
+    kpts = kd.kpts_ibz
 
     cell = mydf.cell
     mesh = mydf.mesh
@@ -70,7 +70,7 @@ def get_j_kpts_ibz(mydf, dm_kpts, kd, hermi=1, kpts_band=None):
             for i in range(nset):
                 rhoR[i] += kd.symmetrize_density(rhoR_k[i], k, mesh)
 
-        rhoR *= 1./kd.nbzk
+        rhoR *= 1./kd.nkpts
       
         for i in range(nset):
             rhoG = tools.fft(rhoR[i], mesh)
@@ -92,7 +92,7 @@ def get_j_kpts_ibz(mydf, dm_kpts, kd, hermi=1, kpts_band=None):
             for i in range(nset):
                 rhoR[i] += kd.symmetrize_density(rhoR_k[i], k, mesh)
 
-        rhoR *= 1./kd.nbzk
+        rhoR *= 1./kd.nkpts
 
         for i in range(nset):
             rhoG = tools.fft(rhoR[i], mesh)
@@ -131,16 +131,16 @@ def get_k_kpts_ibz(mydf, dm_kpts, kd, hermi=1, kpts_band=None, exxdiv=None):
     else:
         mo_coeff = None
 
-    kpts = kd.ibz_k
+    kpts = kd.kpts_ibz
     dm_kpts = lib.asarray(dm_kpts, order='C')
     dms = _format_dms(dm_kpts, kpts)
     nset, nkpts, nao = dms.shape[:3]
     dms_all = []
     for i in range(nset):
         dms_all.append(kd.transform_dm(dms[i]))
-    dms = np.asarray(dms_all).reshape(nset,kd.nbzk,nao,nao)
+    dms = np.asarray(dms_all).reshape(nset,kd.nkpts,nao,nao)
 
-    weight = 1./kd.nbzk * (cell.vol/ngrids)
+    weight = 1./kd.nkpts * (cell.vol/ngrids)
 
     kpts_band, input_band = _format_kpts_band(kpts_band, kpts), kpts_band
     nband = len(kpts_band)
@@ -154,9 +154,9 @@ def get_k_kpts_ibz(mydf, dm_kpts, kd, hermi=1, kpts_band=None, exxdiv=None):
 
     t1 = (time.clock(), time.time())
     ao2_kpts = [np.asarray(ao.T, order='C')
-                for ao in mydf._numint.eval_ao(cell, coords, kpts=kd.bz_k)]
+                for ao in mydf._numint.eval_ao(cell, coords, kpts=kd.kpts)]
     if input_band is None:
-        idx = [k[-1] for k in kd.bz_k_group]
+        idx = [k[-1] for k in kd.stars]
         ao1_kpts = [ao2_kpts[k] for k in idx]
     else:
         ao1_kpts = [np.asarray(ao.T, order='C')
@@ -185,7 +185,7 @@ def get_k_kpts_ibz(mydf, dm_kpts, kd, hermi=1, kpts_band=None, exxdiv=None):
             #continue
             return 0.
 
-        kpt2 = kd.bz_k[k2]
+        kpt2 = kd.kpts[k2]
         naoj = ao2T.shape[0]
         if mo_coeff is None or nset > 1:
             ao_dms = [lib.dot(dms[i,k2], ao2T.conj()) for i in range(nset)]
@@ -231,10 +231,10 @@ def get_k_kpts_ibz(mydf, dm_kpts, kd, hermi=1, kpts_band=None, exxdiv=None):
 
     try:
         from joblib import Parallel, delayed
-        with lib.with_multiproc_nproc(kd.nbzk) as mpi:
-            res = Parallel(n_jobs = mpi.nproc)(delayed(_get_vk_loc)(k, lib.num_threads()) for k in range(kd.nbzk))
+        with lib.with_multiproc_nproc(kd.nkpts) as mpi:
+            res = Parallel(n_jobs = mpi.nproc)(delayed(_get_vk_loc)(k, lib.num_threads()) for k in range(kd.nkpts))
     except:
-        res = [_get_vk_loc(k, lib.num_threads()) for k in range(kd.nbzk)]
+        res = [_get_vk_loc(k, lib.num_threads()) for k in range(kd.nkpts)]
     for item in res:
         vk_kpts += item
     t1 = lib.logger.timer_debug1(mydf, 'get_k_kpts: make_kpt ', *t1)
@@ -245,6 +245,6 @@ def get_k_kpts_ibz(mydf, dm_kpts, kd, hermi=1, kpts_band=None, exxdiv=None):
     # can only be used with AFTDF/GDF/MDF method.  In the FFTDF method, 1D, 2D
     # and 3D should use the ewald probe charge correction.
     if exxdiv == 'ewald':
-        _ewald_exxdiv_for_G0(cell, kd.bz_k, dms, vk_kpts, kpts_band=kpts_band)
+        _ewald_exxdiv_for_G0(cell, kd.kpts, dms, vk_kpts, kpts_band=kpts_band)
 
     return _format_jks(vk_kpts, dm_kpts, input_band, kpts)

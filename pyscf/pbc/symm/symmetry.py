@@ -16,14 +16,23 @@
 # Authors: Xing Zhang <zhangxing.nju@gmail.com>
 #
 
+import copy
 import numpy as np
 from numpy.linalg import inv
 from pyscf import lib
+from pyscf.lib import logger
 from pyscf.symm.Dmatrix import *
 from pyscf.pbc.symm import space_group
 from functools import reduce
 
+SYMPREC = space_group.SYMPREC
 XYZ = np.eye(3)
+
+def is_eye(op):
+    return ((op - np.eye(3,dtype=int)) == 0).all()
+
+def is_inversion(op):
+    return ((op + np.eye(3,dtype=int)) == 0).all()
 
 def is_right_hand_screw(c):
     '''
@@ -77,12 +86,13 @@ def transform_rot_a_to_b(cell, op):
 
 def transform_rot(op, a, b):
     '''
-    transform rotation operator from (a1,a2,a3) system to (b1,b2,b3) system
+    Transform rotation operator from (a1,a2,a3) system to (b1,b2,b3) system
+    Note: raise error when the point-group symmetries of the two coordinate systems are different.
     '''
     P = np.dot(inv(b),a)
     R = reduce(np.dot,(P, op, inv(P))).round(15)
     if(np.amax(np.absolute(R-R.round())) > SYMPREC):
-        raise RuntimeError("rotation matrix is wrong!")
+        raise RuntimeError("Point-group symmetries of the two coordinate systems are different.")
     return R.round().astype(int)
 
 def get_Dmat(op,l):
@@ -149,11 +159,9 @@ def make_Dmats(cell, ops, l_max=None):
         l_max = np.max(cell._bas[:,1])
     else:
         l_max = max(l_max, np.max(cell._bas[:,1]))
-    nop = len(ops)
-    Dmats = []
 
-    for i in range(nop):
-        op = transform_rot_a_to_r(cell, ops[i])
+    Dmats = []
+    for op in ops:
         if not cell.cart:
             Dmats.append([get_Dmat(op, l) for l in range(l_max+1)])
         else:
@@ -163,36 +171,76 @@ def make_Dmats(cell, ops, l_max=None):
 class Symmetry():
     r'''
     Symmetry info of a crystal.
+
+    Attributes:
+        cell : :class:`Cell` object
+        spacegroup : :class:`SpaceGroup` object
+        symmorphic : bool
+            Whether space group is symmorphic
+        has_inversion : bool
+            Whether space group contains inversion operation
+        ops : list of :class:`SpaceGroup_element` object
+            Symmetry operators (may be a subset of the operators in the space group)
+        nop : int
+            Length of `ops`.
+        Dmats : list of 2d arrays
+            Wigner D-matries
+        l_max : int
+            Maximum angular momentum considered in `Dmats`
     '''
-    def __init__(self, cell, auxcell=None, point_group = True, symmorphic = True):
+    def __init__(self, cell, auxcell=None, space_group_symmetry=True, symmorphic=True):
+        if not cell._built:
+            sys.stderr.write('Warning: %s must be initialized before calling Symmetry.\n'
+                             'Initialize %s in %s\n' % (cell, cell, self))
+            cell.build()
+
         self.cell = cell
-        if self.cell is None: #no cell info
-            self.space_group = None
-            self.op_rot = np.eye(3,dtype =int).reshape(1,3,3)
-            self.op_trans = np.zeros((1,3))
-            self.Dmats = None #this may give errors
-            return
-
-        #from pyscf.pbc.tools.pyscf_ase import get_space_group
-        #self.space_group = get_space_group(self.cell)
-        self.space_group = space_group.SpaceGroup(cell).build()
-        self.op_rot = self.space_group.rotations
-        self.op_trans = self.space_group.translations
+        self.spacegroup = space_group.SpaceGroup(cell).build()
         self.symmorphic = symmorphic
-        if self.symmorphic:
-            self.op_rot = self.op_rot[np.where((np.absolute(self.op_trans)<1.e-10).all(1))]
-            self.op_trans = np.zeros((len(self.op_rot),3))
+        if space_group_symmetry:
+            self.ops = copy.deepcopy(self.spacegroup.ops) #in case that a subset of ops is considered
+            if self.symmorphic:
+                self.ops[:] = [op for op in self.ops if op.trans_is_zero]
+            else:
+                rm_list = check_mesh_symmetry(self.cell, self.ops)
+                self.ops[:] = [op for i, op in enumerate(self.ops) if i not in rm_list]
         else:
-            raise NotImplementedError('no sub-translational symmetry for now')
-
-        if not point_group:
-            self.op_rot = np.eye(3,dtype =int).reshape(1,3,3)
-            self.op_trans = np.zeros((1,3))
+            self.ops = space_group.SpaceGroup_element()
+        self.nop = len(self.ops)
+        self.has_inversion = any([op.rot_is_inversion for op in self.ops])
 
         l_max = None
         if auxcell is not None:
             l_max = np.max(auxcell._bas[:,1])
-        self.Dmats, self.l_max = make_Dmats(self.cell, self.op_rot, l_max)
+        op_rot = [op.inv().a2r(self.cell).rot for op in self.ops]
+        self.Dmats, self.l_max = make_Dmats(self.cell, op_rot, l_max)
+
+def check_mesh_symmetry(cell, ops, mesh=None, tol=SYMPREC):
+    if mesh is None: mesh = cell.mesh
+    ft = []
+    rm_list = []
+    for i, op in enumerate(ops):
+        if not op.trans_is_zero:
+            ft.append(op.trans)
+            tmp = op.trans * np.asarray(mesh)
+            if (abs(tmp - tmp.round()) > tol).any():
+                rm_list.append(i)
+
+    ft = np.asarray(ft)
+    mesh1 = copy.deepcopy(mesh)
+    for x in range(3):
+        while True:
+            tmp = ft[:,x] * mesh1[x]
+            if (abs(tmp - tmp.round()) > tol).any():
+                mesh1[x] = mesh1[x] + 1
+            else:
+                break
+
+    if rm_list:
+        logger.warn(cell, 'Cell.mesh has lower symmetry than the lattice.\
+                    \nSome of the symmetry operations have been removed.\
+                    \nRecommended mesh is %s', mesh1)
+    return rm_list
 
 def get_phase(cell, op, coords_scaled, kpt_scaled):
     natm = cell.natm
@@ -200,7 +248,7 @@ def get_phase(cell, op, coords_scaled, kpt_scaled):
     atm_map = np.arange(natm)
     for iatm in range(natm):
         r = coords_scaled[iatm]
-        op_dot_r = np.dot(op, r)
+        op_dot_r = op.dot_rot(r - op.inv().trans)
         op_dot_r_0 = np.mod(np.mod(op_dot_r, 1), 1)
         diff = np.einsum('ki->k', abs(op_dot_r_0 - coords_scaled))
         atm_map[iatm] = np.where(diff < SYMPREC)[0]
@@ -212,12 +260,10 @@ def get_phase(cell, op, coords_scaled, kpt_scaled):
 
 def get_rotation_mat(kd, ibz_kpt_scaled, mo_coeff_or_dm, op_idx):
     cell = kd.cell
-    sg_symm = kd.sg_symm
-    kpt_scaled = np.dot(inv(kd.op_rot[op_idx]), ibz_kpt_scaled)
-    op = transform_rot_b_to_a(cell, kd.op_rot[op_idx])
-    inv_op = inv(op)
+    op = kd.ops[op_idx]
+    kpt_scaled = op.a2b(cell).dot_rot(ibz_kpt_scaled)
     coords = cell.get_scaled_positions()
-    atm_map, phases = get_phase(cell, inv_op, coords, kpt_scaled)
+    atm_map, phases = get_phase(cell, op, coords, kpt_scaled)
 
     dim = mo_coeff_or_dm.shape[0]
     mat = np.zeros([dim, dim], dtype=np.complex128)
@@ -245,7 +291,7 @@ def get_rotation_mat(kd, ibz_kpt_scaled, mo_coeff_or_dm, op_idx):
         shlid_1 = aoslice[iatm][1]
         for ishl in range(shlid_0, shlid_1):
             l = cell._bas[ishl,1]
-            D = sg_symm.Dmats[op_idx][l] * phase
+            D = kd.Dmats[op_idx][l] * phase
             if not cell.cart:
                 nao = 2*l + 1
             else:

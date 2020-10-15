@@ -448,9 +448,9 @@ class KSCF(pbchf.SCF):
         kpts : (nks,3) ndarray
             The sampling k-points in Cartesian coordinates, in units of 1/Bohr.
         wtk  : (nks,) ndarray
-            The weight of each k point.
-        kpts_descriptor : KPoints class
-            Instance of :class:`KPoints` if k-point symmetry considered.
+            The weights of k-points.
+        kpts_descriptor : :class:`KPoints` object
+            Not None if k-point symmetry is considered.
     '''
     conv_tol_grad = getattr(__config__, 'pbc_scf_KSCF_conv_tol_grad', None)
     direct_scf = getattr(__config__, 'pbc_scf_SCF_direct_scf', False)
@@ -466,17 +466,17 @@ class KSCF(pbchf.SCF):
         self.with_df = df.FFTDF(cell)
         self.exxdiv = exxdiv
         self.kpts_descriptor = None
-        if getattr(kpts, 'ibz_k', None) is not None:
+        if getattr(kpts, 'kpts_ibz', None) is not None:
             self.kpts_descriptor = kpts
-            self.kpts = self.kpts_descriptor.ibz_k
-            self.wtk  = self.kpts_descriptor.ibz_weight
+            self.kpts = self.kpts_descriptor.kpts_ibz
+            self.wtk  = self.kpts_descriptor.weights_ibz
         else:
             self.kpts = kpts
             self.wtk = np.asarray([1./len(self.kpts)] * len(self.kpts))
         self.conv_tol = cell.precision * 10
 
         self.exx_built = False
-        self._keys = self._keys.union(['cell', 'exx_built', 'exxdiv', 'with_df','wtk','kpts_descriptor'])
+        self._keys = self._keys.union(['cell', 'exx_built', 'exxdiv', 'with_df', 'wtk','kpts_descriptor'])
 
     @property
     def kpts(self):
@@ -484,7 +484,7 @@ class KSCF(pbchf.SCF):
             # To handle the attribute kpt loaded from chkfile
             self.kpt = self.__dict__.pop('kpts')
         if self.kpts_descriptor is not None:
-            return self.kpts_descriptor.ibz_k
+            return self.kpts_descriptor.kpts_ibz
         return self.with_df.kpts
     @kpts.setter
     def kpts(self, x):
@@ -520,7 +520,7 @@ class KSCF(pbchf.SCF):
             isinstance(self.exxdiv, str) and self.exxdiv.lower() == 'ewald'):
             kpts = self.kpts
             if self.kpts_descriptor is not None:
-                kpts = self.kpts_descriptor.bz_k
+                kpts = self.kpts_descriptor.kpts
             madelung = tools.pbc.madelung(cell, [kpts])
             logger.info(self, '    madelung (= occupied orbital energy shift) = %s', madelung)
             nkpts = len(self.kpts)

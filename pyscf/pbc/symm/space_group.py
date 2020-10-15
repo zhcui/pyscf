@@ -20,19 +20,72 @@ import numpy as np
 from pyscf import __config__
 from pyscf import lib
 from pyscf.lib import logger
+from functools import reduce
 
 SYMPREC = getattr(__config__, 'pbc_symm_space_group_symprec', 1e-6)
+XYZ = np.eye(3)
+
+def transform_rot(op, a, b):
+    r'''
+    Transform rotation operator from :math:`\mathbf{a}` basis system to :math:`\mathbf{b}` basis system.
+
+    Note: 
+        This function raises error when the point-group symmetries of the two basis systems are different.
+
+    Arguments:
+        op : (3,3) array
+            Rotation operator in :math:`\mathbf{a}` basis system.
+        a : (3,3) array
+            Basis vectors of :math:`\mathbf{a}` basis system (row-major).
+        b : (3,3) array
+            Basis vectors of :math:`\mathbf{b}` basis system (row-major).
+
+    Returns:
+        A (3,3) array
+            Rotation operator in :math:`\mathbf{b}` basis system.
+    '''
+    P = np.dot(np.linalg.inv(b.T), a.T)
+    R = reduce(np.dot,(P, op, np.linalg.inv(P))).round(15)
+    if(np.amax(np.absolute(R-R.round())) > SYMPREC):
+        raise RuntimeError("Point-group symmetries of the two coordinate systems are different.")
+    return R.round().astype(int)
+
+def transform_trans(op, a, b):
+    r'''
+    Transform translation operator from :math:`\mathbf{a}` basis system to :math:`\mathbf{b}` basis system.
+
+    Arguments:
+        op : (3,) array
+            Translation operator in :math:`\mathbf{a}` basis system.
+        a : (3,3) array
+            Basis vectors of :math:`\mathbf{a}` basis system (row-major).
+        b : (3,3) array
+            Basis vectors of :math:`\mathbf{b}` basis system (row-major).
+ 
+    Returns:
+        A (3,) array
+            Translation operator in :math:`\mathbf{b}` basis system.
+    '''
+    P = np.dot(np.linalg.inv(b.T), a.T)
+    return np.dot(op, P.T)
+
 
 class SpaceGroup_element():
-    r'''
-    Space group element
     '''
-    def __init__(self, rot=np.eye(3,dtype=int), trans=np.zeros((3))):
+    Matrix representation of space group operations
+    
+    Attributes:
+        rot : (3,3) array
+            Rotation operator.
+        trans : (3,) array
+            Translation operator.
+    '''
+    def __init__(self, rot=np.eye(3, dtype=int), trans=np.zeros((3))):
         self.rot = np.asarray(rot)
         self.trans = np.asarray(trans)
 
     def dot(self, r_or_op):
-        r'''
+        '''
         Operates on a point or multiplication of two operators
         '''
         if isinstance(r_or_op, np.ndarray) and r_or_op.ndim==1 and len(r_or_op)==3:
@@ -47,26 +100,108 @@ class SpaceGroup_element():
         else:
             raise KeyError("Input has wrong type: %s" % type(r_or_op))
 
+    def dot_rot(self, r):
+        '''
+        Rotate a point (without translation)
+        '''
+        return np.dot(r, self.rot.T)
+
     def inv(self):
-        r'''
+        '''
         Inverse of self
         '''
         inv_rot = np.linalg.inv(self.rot)
         trans = -np.dot(self.trans, inv_rot.T)
         return SpaceGroup_element(inv_rot, trans)
 
+    def transform(self, a, b):
+        r'''
+        Transform from :math:`\mathbf{a}` basis system to :math:`\mathbf{b}` basis system.
+        '''
+        rot = transform_rot(self.rot, a, b)
+        trans = transform_trans(self.trans, a, b)
+        return SpaceGroup_element(rot, trans)
+
+    @property
+    def rot_is_eye(self):
+        return ((self.rot - np.eye(3,dtype=int)) == 0).all()
+
+    @property
+    def rot_is_inversion(self):
+        return ((self.rot + np.eye(3,dtype=int)) == 0).all()
+
+    @property
+    def trans_is_zero(self):
+        return (abs(self.trans) < SYMPREC).all()
+
+    @property
+    def is_eye(self):
+        '''
+        Whether self is identity operation.
+        '''
+        return self.rot_is_eye and self.trans_is_zero
+
+    @property
+    def is_inversion(self):
+        '''
+        Whether self is inversion operation.
+        '''
+        return self.rot_is_inversion and self.trans_is_zero
+
+    def a2b(self, cell):
+        '''
+        Transform from direct lattice system to reciprocal lattice system.
+        '''
+        return self.transform(cell.lattice_vectors(), cell.reciprocal_vectors())
+
+    def a2r(self, cell):
+        '''
+        Transform from direct lattice system to Cartesian coordinate system.
+        '''
+        return self.transform(cell.lattice_vectors(), XYZ)
+
+    def b2a(self, cell):
+        '''
+        Transform from reciprocal lattice system to direct lattice system.
+        '''
+        return self.transform(cell.reciprocal_vectors(), cell.lattice_vectors())
+
+    def b2r(self, cell):
+        '''
+        Transform from reciprocal lattice system to Cartesian coordinate system.
+        '''
+        return self.transform(cell.reciprocal_vectors(), XYZ)
+
+    def r2a(self, cell):
+        '''
+        Transform from Cartesian coordinate system to direct lattice system.
+        '''
+        return self.transform(XYZ, cell.lattice_vectors())
+
+    def r2b(self, cell):
+        '''
+        Transform from Cartesian coordinate system to reciprocal lattice system.
+        '''
+        return self.transform(XYZ, cell.reciprocal_vectors())
+
+    def __str__(self):
+        s = ''
+        for x in range(3):
+            s += '%2d %2d %2d %10.6f\n' % (self.rot[x][0], self.rot[x][1], self.rot[x][2], self.trans[x])
+        return s
+
 
 class SpaceGroup(lib.StreamObject):
-    r'''
+    '''
     Determines the space group of a lattice.
     Attributes:
         cell : :class:`Cell` object
         symprec : float
             Numerical tolerance for determining the space group. Default value is 1e-6.
         verbose : int
-            Print level. Default value equals to :class:`Cell.verbose`.
-        ops : list
-            Elements of the space group.
+            Print level. Default value equals to `cell.verbose`.
+        ops : list of :class:`SpaceGroup_element` objects
+            Matrix representation of the space group operations (in direct lattice system).
         nop : int
             Order of the space group.
         groupname : dict
@@ -109,5 +244,29 @@ class SpaceGroup(lib.StreamObject):
         if self.verbose >= logger.DEBUG:
             logger.debug(self, "Space group symmetry operations:")
             for op in self.ops:
-                logger.debug(self, "%s", np.hstack((op.rot, op.trans.reshape(3,1))))
+                logger.debug(self, op.__str__())
 
+if __name__ == "__main__":
+    from pyscf.pbc import gto
+    cell = gto.Cell()
+    cell.atom = """
+      Cu 1.000000     1.00000      0.0000
+      O  0.000000     1.00000      0.0000
+      O  1.000000     2.00000      0.0000
+      Cu 1.000000     3.00000      0.0000
+      O  1.000000     4.00000      0.0000
+      O  2.000000     3.00000      0.0000
+      Cu 3.000000     3.00000      0.0000
+      O  4.000000     3.00000      0.0000
+      O  3.000000     2.00000      0.0000
+      Cu 3.000000     1.00000      0.0000
+      O  3.000000     0.00000      0.0000
+      O  2.000000     1.00000      0.0000
+    """
+    cell.a = [[4.0, 0., 0.], [0., 4.0, 0.], [0., 0., 4.0]]
+    cell.verbose = 5
+    cell.dimension = 2
+    cell.magmoms = [0.5,0.5,-0.5,-0.5,0.5,-0.5,0.5,0.5,-0.5,-0.5,0.5,-0.5]
+    cell.build()
+    sg = SpaceGroup(cell)
+    sg.build()
