@@ -21,114 +21,48 @@ import numpy as np
 from numpy.linalg import inv
 from pyscf import lib
 from pyscf.lib import logger
-from pyscf.symm.Dmatrix import *
+from pyscf.symm import param
+from pyscf.symm.Dmatrix import Dmatrix, get_euler_angles
 from pyscf.pbc.symm import space_group
 from functools import reduce
 
 SYMPREC = space_group.SYMPREC
 XYZ = np.eye(3)
 
-def is_eye(op):
-    return ((op - np.eye(3,dtype=int)) == 0).all()
-
-def is_inversion(op):
-    return ((op + np.eye(3,dtype=int)) == 0).all()
-
-def is_right_hand_screw(c):
+def _is_right_handed(c):
     '''
-    check if coordinate system is right hand screw
+    Check if coordinate system is right-handed
     '''
     x = c[0]
     y = c[1]
     z = c[2]
-
     val = np.dot(np.cross(x,y), z)   
-    if val > 0:
-        return True
-    else:
-        return False
+    return val > 0
 
-def transform_rot_a_to_r(cell, ops):
+def get_Dmat(op, l):
     '''
-    transform rotation operator from (a1,a2,a3) system to (x,y,z) system
-    '''
-    a = cell.lattice_vectors().T
-    b = XYZ
-    if ops.ndim == 2:
-        return transform_rot(ops,a,b)
-    else:
-        ops_r = [transform_rot(op,a,b) for op in ops]
-        return np.asarray(ops_r)
-
-def transform_rot_b_to_r(cell, op):
-    '''
-    transform rotation operator from (b1,b2,b3) system to (x,y,z) system
-    '''
-    b = cell.reciprocal_vectors().T
-    r = XYZ
-    return transform_rot(op,b,r)
-
-def transform_rot_b_to_a(cell, op):
-    '''
-    transform rotation operator from (b1,b2,b3) system to (a1,a2,a3) system
-    '''
-    a = cell.lattice_vectors().T
-    b = cell.reciprocal_vectors().T
-    return transform_rot(op,b,a)
-
-def transform_rot_a_to_b(cell, op):
-    '''
-    transform rotation operator from (a1,a2,a3) system to (b1,b2,b3) system
-    '''
-    a = cell.lattice_vectors().T
-    b = cell.reciprocal_vectors().T
-    return transform_rot(op,a,b)
-
-def transform_rot(op, a, b):
-    '''
-    Transform rotation operator from (a1,a2,a3) system to (b1,b2,b3) system
-    Note: raise error when the point-group symmetries of the two coordinate systems are different.
-    '''
-    P = np.dot(inv(b),a)
-    R = reduce(np.dot,(P, op, inv(P))).round(15)
-    if(np.amax(np.absolute(R-R.round())) > SYMPREC):
-        raise RuntimeError("Point-group symmetries of the two coordinate systems are different.")
-    return R.round().astype(int)
-
-def get_Dmat(op,l):
-    '''
-    Get Wigner D matrix
-    Arguments:
+    Get Wigner D-matrix
+    Args:
         op : (3,3) ndarray
             rotation operator in (x,y,z) system
         l : int
             angular momentum
     '''
     c1 = XYZ
-    c2 = np.dot(op, c1.T).T
-    right_hand = is_right_hand_screw(c2)
-    alpha,beta,gamma = get_euler_angles(c1,c2)
+    c2 = np.dot(inv(op), c1.T).T
+    right_handed = _is_right_handed(c2)
+    alpha, beta, gamma = get_euler_angles(c1,c2)
     D = Dmatrix(l, alpha, beta, gamma, reorder_p=True)
-    if not right_hand:
-        if l == 1:
-            D[:,0] *= -1.0
-        elif l == 2:
-            D[:,0] *= -1.0
-            D[:,3] *= -1.0
-        elif l == 3:
-            D[:,1] *= -1.0
-            D[:,4] *= -1.0
-            D[:,6] *= -1.0
-        elif l == 4:
-            D[:,0] *= -1.0
-            D[:,2] *= -1.0
-            D[:,5] *= -1.0
-            D[:,7] *= -1.0
-        elif l > 4:
-            raise NotImplementedError("l > 4 NYI")
+    if not right_handed:
+        if l > 7:
+            raise NotImplementedError("Parities for orbitals with l > 7 are unknown.")
+        for m in range(-l, l+1):
+            if param.SPHERIC_GTO_PARITY_ODD[l][m+l][0]:
+                D[:, m+l] *= -1.0
     return D.round(15)
 
-def get_Dmat_cart(op,l_max): #need verification
+def get_Dmat_cart(op,l_max): 
+    #XXX need verification
     pp = get_Dmat(op, 1)
     Ds = [np.ones((1,1))]
     for l in range(1, l_max+1):
@@ -169,7 +103,7 @@ def make_Dmats(cell, ops, l_max=None):
     return Dmats, l_max
 
 class Symmetry():
-    r'''
+    '''
     Symmetry info of a crystal.
 
     Attributes:
@@ -223,11 +157,12 @@ class Symmetry():
             auxcell = kwargs['auxcell']
             if getattr(auxcell, '_bas', None):
                 l_max = np.max(auxcell._bas[:,1])
-        op_rot = [op.inv().a2r(self.cell).rot for op in self.ops]
+        op_rot = [op.a2r(self.cell).rot for op in self.ops]
         self.Dmats, self.l_max = make_Dmats(self.cell, op_rot, l_max)
 
 
 def check_mesh_symmetry(cell, ops, mesh=None, tol=SYMPREC):
+    #XXX what if GDF?
     if mesh is None: mesh = cell.mesh
     ft = []
     rm_list = []
@@ -254,7 +189,7 @@ def check_mesh_symmetry(cell, ops, mesh=None, tol=SYMPREC):
                     \nRecommended mesh is %s', mesh1)
     return rm_list
 
-def get_phase(cell, op, coords_scaled, kpt_scaled):
+def _get_phase(cell, op, coords_scaled, kpt_scaled):
     natm = cell.natm
     phase = np.zeros([natm], dtype = np.complex128)
     atm_map = np.arange(natm)
@@ -270,12 +205,10 @@ def get_phase(cell, op, coords_scaled, kpt_scaled):
         phase[iatm] = np.exp(-1j * np.dot(kpt_scaled, r_diff) * 2.0 * np.pi)
     return atm_map, phase
 
-def get_rotation_mat(kd, ibz_kpt_scaled, mo_coeff_or_dm, op_idx):
-    cell = kd.cell
-    op = kd.ops[op_idx]
-    kpt_scaled = op.a2b(cell).dot_rot(ibz_kpt_scaled)
+def _get_rotation_mat(cell, kpt_scaled_ibz, mo_coeff_or_dm, op, Dmats):
+    kpt_scaled = op.a2b(cell).dot_rot(kpt_scaled_ibz)
     coords = cell.get_scaled_positions()
-    atm_map, phases = get_phase(cell, op, coords, kpt_scaled)
+    atm_map, phases = _get_phase(cell, op, coords, kpt_scaled)
 
     dim = mo_coeff_or_dm.shape[0]
     mat = np.zeros([dim, dim], dtype=np.complex128)
@@ -303,7 +236,7 @@ def get_rotation_mat(kd, ibz_kpt_scaled, mo_coeff_or_dm, op_idx):
         shlid_1 = aoslice[iatm][1]
         for ishl in range(shlid_0, shlid_1):
             l = cell._bas[ishl,1]
-            D = kd.Dmats[op_idx][l] * phase
+            D = Dmats[l] * phase
             if not cell.cart:
                 nao = 2*l + 1
             else:
@@ -317,21 +250,33 @@ def get_rotation_mat(kd, ibz_kpt_scaled, mo_coeff_or_dm, op_idx):
         assert(ao_off_j == aoslice[jatm][3])
     return mat.T.conj()
 
-def symmetrize_mo_coeff(kd, ibz_kpt_scaled, mo_coeff, op_idx):
+def transform_mo_coeff(cell, kpt_scaled, mo_coeff, op, Dmats):
     '''
-    get MO coefficients for a symmetry related k point
-    '''
-    mat = get_rotation_mat(kd, ibz_kpt_scaled, mo_coeff, op_idx)
-    res = np.dot(mat, mo_coeff)
-    return res
+    Get MO coefficients at a symmetry-related k-point
 
-def symmetrize_dm(kd, ibz_kpt_scaled, dm, op_idx):
+    Args:
+        cell : :class:`Cell` object
+        kpt_scaled : (3,) array
+            scaled k-point
+        mo_coeff : (nao, nmo) array
+            MO coefficients at the input k-point
+        op : :class:`SpaceGroup_element` object
+            Space group operation that connects the two k-points
+        Dmats: list of arrays
+            Wigner D-matrices for op
+
+    Returns:
+        MO coefficients at the symmetry-related k-point
     '''
-    get density matrix for a symmetry related k point
+    mat = _get_rotation_mat(cell, kpt_scaled, mo_coeff, op, Dmats)
+    return np.dot(mat, mo_coeff)
+
+def transform_dm(cell, kpt_scaled, dm, op, Dmats):
     '''
-    mat = get_rotation_mat(kd, ibz_kpt_scaled, dm, op_idx)
-    res = reduce(np.dot, (mat, dm, mat.T.conj()))
-    return res
+    Get density matrix for a symmetry-related k-point
+    '''
+    mat = _get_rotation_mat(cell, kpt_scaled, dm, op, Dmats)
+    return reduce(np.dot, (mat, dm, mat.T.conj()))
 
 def make_rot_loc(l_max, key):
     l = np.arange(l_max+1)

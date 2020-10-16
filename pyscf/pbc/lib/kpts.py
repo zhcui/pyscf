@@ -29,16 +29,14 @@ KPTS_DIFF_TOL = getattr(__config__, 'pbc_lib_kpts_kpts_diff_tol', 1e-6)
 libpbc = lib.load_library('libpbc')
 
 def make_kpts_ibz(kpts):
-    r'''
+    '''
     Constructe k-points in IBZ
 
     Note: 
         This function modifies the :obj:`kpts` object.
 
-    Arguments:
-        kpts : :class:`KPoints` instance
-        time_reversal_symmetry : bool
-             Whether to consider time reversal symmetry
+    Args:
+        kpts : :class:`KPoints` object
     '''
     cell = kpts.cell
     nkpts = kpts.nkpts
@@ -104,14 +102,15 @@ def make_kpts_ibz(kpts):
                     break
 
 def make_kpairs_ibz(kpts, permutation_symmetry=True):
-    r'''
+    #XXX check time-reversal symmetry
+    '''
     Constructe k-pairs in IBZ
 
     Note:
         This function modifies the :obj:`kpts` object.
 
     Arguments:
-        kpts : :class:`KPoints` instance
+        kpts : :class:`KPoints` object
         permutation_symmetry : bool
              Whether to consider permutation symmetry
     '''
@@ -198,9 +197,9 @@ def make_kpairs_ibz(kpts, permutation_symmetry=True):
     #return iL2L, L_group, sym_group, L2iL, idx_ij
     return None
 
-def map_k_points_fast(kpts_scaled, ops, tol=1e-7):
+def map_k_points_fast(kpts_scaled, ops, tol=KPTS_DIFF_TOL):
     #This routine is modified from GPAW
-    r'''
+    '''
     Find symmetry-related k-points.
 
     Arguments:
@@ -247,9 +246,9 @@ def map_k_points_fast(kpts_scaled, ops, tol=1e-7):
         bz2bz_ks[orders[1] - nkpts, s] = orders[0]
     return bz2bz_ks
 
-def aglomerate_points(k_kc, tol):
+def aglomerate_points(k_kc, tol=KPTS_DIFF_TOL):
     #This routine is adopted from GPAW
-    r'''
+    '''
     Remove numerical error
     '''
     nd = k_kc.shape[1]
@@ -361,7 +360,7 @@ def transform_mo_coeff(kpts, mo_coeff_ibz):
             elif op.is_inversion:
                 mo_bz = mo_ibz.conj()
             else:
-                mo_bz = symm.symmetrize_mo_coeff(kpts, ibz_k_scaled, mo_ibz, iop)
+                mo_bz = symm.transform_mo_coeff(kpts.cell, ibz_k_scaled, mo_ibz, op, kpts.Dmats[iop])
                 if time_reversal:
                     mo_bz = mo_bz.conj()
             return mo_bz
@@ -376,7 +375,7 @@ def transform_mo_coeff(kpts, mo_coeff_ibz):
             mos.append(_transform(mo_coeff, iop, op))
     return mos
 
-def transform_single_mo_coeff(kpts, mo_coeff_ibz, k):
+def transform_mo_coeff_k(kpts, mo_coeff_ibz, k):
     '''
     Get MO coefficients for a k-point in BZ
 
@@ -403,10 +402,12 @@ def transform_single_mo_coeff(kpts, mo_coeff_ibz, k):
     elif op.is_inversion:
         mo_bz = mo_ibz.conj()
     else:
-        mo_bz = symm.symmetrize_mo_coeff(kpts, ibz_k_scaled, mo_ibz, iop)
+        mo_bz = symm.transform_mo_coeff(kpts.cell, ibz_k_scaled, mo_ibz, op, kpts.Dmats[iop])
         if time_reversal:
             mo_bz = mo_bz.conj()
     return mo_bz
+
+transform_single_mo_coeff = transform_mo_coeff_k
 
 def transform_mo_occ(kpts, mo_occ_ibz):
     '''
@@ -452,7 +453,7 @@ def transform_dm(kpts, dm_ibz):
             elif op.is_inversion:
                 dm_bz = dm_ibz.conj()
             else:
-                dm_bz = symm.symmetrize_dm(kpts, ibz_kpt_scaled, dm_ibz, iop)
+                dm_bz = symm.transform_dm(kpts.cell, ibz_kpt_scaled, dm_ibz, op, kpts.Dmats[iop])
                 if time_reversal:
                     dm_bz = dm_bz.conj()
             return dm_bz
@@ -515,7 +516,7 @@ def make_kpts(cell, kpts=np.zeros((1,3)),
         return KPoints(cell, kpts).build(space_group_symmetry, time_reversal_symmetry, symmorphic)
 
 class KPoints(symm.Symmetry, lib.StreamObject):
-    r'''
+    '''
     The class handling k-point symmetry.
 
     Attributes:
@@ -551,7 +552,7 @@ class KPoints(symm.Symmetry, lib.StreamObject):
         time_reversal_symm_bz : (nkpts,) array of int
             whether k-points in BZ and IBZ are related by time-reversal symmetry
     '''
-    def __init__(self, cell, kpts=np.zeros((1,3))): 
+    def __init__(self, cell=None, kpts=np.zeros((1,3))): 
         symm.Symmetry.__init__(self, cell)
         self.verbose = logger.NOTE
         if getattr(self.cell, 'verbose', None):
@@ -574,7 +575,7 @@ class KPoints(symm.Symmetry, lib.StreamObject):
         self._nkpts = len(self.kpts)
         self._nkpts_ibz = len(self.kpts_ibz)
 
-        #k pairs
+        #XXX k-pairs
         self.ibz2bz_kk = None
         self.ibz_kk_weight = None
         self.ibz2bz_kk_s2 = None
@@ -670,5 +671,5 @@ if __name__ == "__main__":
     kpts1 = KPoints(cell, kpts_bz).build(space_group_symmetry=True, time_reversal_symmetry=True)
     print(numpy.allclose(kpts0.kpts_ibz, kpts1.kpts_ibz))
 
-    kpts = KPoints(None)
+    kpts = KPoints()
     print(kpts.kpts)
