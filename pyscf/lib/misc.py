@@ -168,7 +168,6 @@ class with_multiproc_nproc(object):
             num_threads(self.sys_threads)
             self.nproc = 1
 
-
 def c_int_arr(m):
     npm = numpy.array(m).flatten('C')
     arr = (ctypes.c_int * npm.size)(*npm)

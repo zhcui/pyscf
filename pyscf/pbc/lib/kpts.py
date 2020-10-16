@@ -270,8 +270,18 @@ def symmetrize_density(kpts, rhoR_k, ibz_k_idx, mesh):
     '''
     Transform real-space densities from IBZ to full BZ
     '''
-    rhoR_k = np.asarray(rhoR_k, dtype=np.double, order='C')
-    rhoR = np.zeros_like(rhoR_k, dtype=np.double, order='C')
+    rhoR_k = np.asarray(rhoR_k, order='C')
+    rhoR = np.zeros_like(rhoR_k, order='C')
+
+    dtype = rhoR_k.dtype
+    if dtype == np.double:
+        symmetrize = libpbc.symmetrize
+        symmetrize_ft = libpbc.symmetrize_ft
+    elif dtype == np.complex128:
+        symmetrize = libpbc.symmetrize_complex
+        symmetrize_ft = libpbc.symmetrize_ft_complex
+    else:
+        raise RuntimeError("Unsupported data type %s" % dtype)
 
     c_rhoR = rhoR.ctypes.data_as(ctypes.c_void_p)
     c_rhoR_k = rhoR_k.ctypes.data_as(ctypes.c_void_p)
@@ -287,11 +297,11 @@ def symmetrize_density(kpts, rhoR_k, ibz_k_idx, mesh):
             op_rot = np.asarray(inv_op.rot, dtype=np.int32, order='C')
             c_op_rot = op_rot.ctypes.data_as(ctypes.c_void_p)
             if inv_op.trans_is_zero:
-                libpbc.symmetrize(c_rhoR, c_rhoR_k, c_op_rot, c_mesh)
+                symmetrize(c_rhoR, c_rhoR_k, c_op_rot, c_mesh)
             else:
                 trans = np.asarray(inv_op.trans, dtype=np.double, order='C')
                 c_trans = trans.ctypes.data_as(ctypes.c_void_p)
-                libpbc.symmetrize_ft(c_rhoR, c_rhoR_k, c_op_rot, c_trans, c_mesh)
+                symmetrize_ft(c_rhoR, c_rhoR_k, c_op_rot, c_trans, c_mesh)
     return rhoR
 
 def symmetrize_wavefunction(kpts, psiR_k, mesh): 

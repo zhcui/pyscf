@@ -317,6 +317,10 @@ class FFTDF(lib.StreamObject):
             return _sub_df_jk_(self, dm, hermi, kpts, kpts_band,
                                with_j, with_k, omega, exxdiv)
 
+        if hasattr(kpts, "kpts_ibz"):
+            return self.get_jk_ibz(dm, hermi, kpts, kpts_band,
+                                   with_j, with_k, omega, exxdiv)
+
         if kpts is None:
             if numpy.all(self.kpts == 0): # Gamma-point J/K by default
                 kpts = numpy.zeros(3)
@@ -339,12 +343,6 @@ class FFTDF(lib.StreamObject):
     def get_jk_ibz(self, dm, hermi=1, kpts=None, kpts_band=None,
                    with_j=True, with_k=True, omega=None, exxdiv=None):
         from pyscf.pbc.df import fft_jk_ibz
-        if omega is not None:
-            raise NotImplementedError
-
-        if kpts is None:
-            return self.get_jk(dm, hermi, kpts, kpts_band, with_j, with_k, omega, exxdiv)
-
         vj = vk = None
         if with_k:
             vk = fft_jk_ibz.get_k_kpts_ibz(self, dm, hermi, kpts, kpts_band, exxdiv)

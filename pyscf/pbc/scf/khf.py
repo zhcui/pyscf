@@ -466,7 +466,7 @@ class KSCF(pbchf.SCF):
         self.with_df = df.FFTDF(cell)
         self.exxdiv = exxdiv
         self.kpts_descriptor = None
-        if getattr(kpts, 'kpts_ibz', None) is not None:
+        if hasattr(kpts, 'kpts_ibz'):
             self.kpts_descriptor = kpts
             self.kpts = self.kpts_descriptor.kpts_ibz
             self.kpts_weights  = self.kpts_descriptor.weights_ibz
@@ -636,11 +636,9 @@ class KSCF(pbchf.SCF):
         cpu0 = (time.clock(), time.time())
         kd = self.kpts_descriptor
         if kd is not None and np.allclose(kpts, kd.kpts_ibz):
-            vj, vk = self.with_df.get_jk_ibz(dm_kpts, hermi, kd, kpts_band,
-                                             with_j, with_k, omega, exxdiv=self.exxdiv)
-        else:
-            vj, vk = self.with_df.get_jk(dm_kpts, hermi, kpts, kpts_band,
-                                         with_j, with_k, omega, exxdiv=self.exxdiv)
+            kpts = kd
+        vj, vk = self.with_df.get_jk(dm_kpts, hermi, kpts, kpts_band,
+                                     with_j, with_k, omega, exxdiv=self.exxdiv)
         logger.timer(self, 'vj and vk', *cpu0)
         return vj, vk
 
