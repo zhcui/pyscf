@@ -1,13 +1,38 @@
+#!/usr/bin/env python
+# Copyright 2014-2020 The PySCF Developers. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# Author: Xing Zhang <zhangxing.nju@gmail.com>
+#
+
+'''
+Density fitting with Gaussian basis
+Ref:
+J. Chem. Phys. 147, 164119 (2017)
+'''
+
 import time
 import numpy
 from pyscf import lib
 from pyscf.lib import logger
+from pyscf.pbc.lib.kpts import KPoints
 from pyscf.pbc.lib.kpts_helper import gamma_point
 from .df_jk import _format_dms, _format_kpts_band, _format_jks
 from .df_jk import _ewald_exxdiv_for_G0
 from .df_jk import zdotNN, zdotCN, zdotNC
 
-def get_j_kpts_ibz(mydf, dm_kpts, kd, hermi=1, kpts_band=None):
+def get_j_kpts_ibz(mydf, dm_kpts, hermi=1, kd=KPoints(), kpts_band=None):
     log = logger.Logger(mydf.stdout, mydf.verbose)
     t1 = (time.clock(), time.time())
     if mydf._cderi is None or not mydf.has_kpts(kpts_band):
@@ -18,14 +43,14 @@ def get_j_kpts_ibz(mydf, dm_kpts, kd, hermi=1, kpts_band=None):
         mydf.build(kpts_band=kpts_band)
         t1 = log.timer_debug1('Init get_j_kpts', *t1)
 
-    kpts = kd.ibz_k
+    kpts = kd.kpts_ibz
     dm_kpts = lib.asarray(dm_kpts, order='C')
     dms = _format_dms(dm_kpts, kpts)
-    nset, nibzk, nao = dms.shape[:3]
-    dms_all = []
+    nset, nkpts, nao = dms.shape[:3]
+    dms_bz = []
     for i in range(nset):
-        dms_all.append(kd.transform_dm(dms[i]))
-    dms = numpy.asarray(dms_all).reshape(nset,kd.nbzk,nao,nao)
+        dms_bz.append(kd.transform_dm(dms[i]))
+    dms = numpy.asarray(dms_bz).reshape(nset, kd.nkpts, nao, nao)
 
     if mydf.auxcell is None:
         # If mydf._cderi is the file that generated from another calculation,
@@ -39,13 +64,13 @@ def get_j_kpts_ibz(mydf, dm_kpts, kd, hermi=1, kpts_band=None):
     nband = len(kpts_band)
     j_real = gamma_point(kpts_band) and not numpy.iscomplexobj(dms)
 
-    nkpts = kd.nbzk
+    nkpts = kd.nkpts
     dmsR = dms.real.transpose(0,1,3,2).reshape(nset,nkpts,nao**2)
     dmsI = dms.imag.transpose(0,1,3,2).reshape(nset,nkpts,nao**2)
     rhoR = numpy.zeros((nset,naux))
     rhoI = numpy.zeros((nset,naux))
     max_memory = max(2000, (mydf.max_memory - lib.current_memory()[0]))
-    for k, kpt in enumerate(kd.bz_k):
+    for k, kpt in enumerate(kd.kpts):
         kptii = numpy.asarray((kpt,kpt))
         p1 = 0
         for LpqR, LpqI, sign in mydf.sr_loop(kptii, max_memory, False):
@@ -61,7 +86,7 @@ def get_j_kpts_ibz(mydf, dm_kpts, kd, hermi=1, kpts_band=None):
             LpqR = LpqI = None
     t1 = log.timer_debug1('get_j pass 1', *t1)
 
-    weight = 1./kd.nbzk
+    weight = 1./nkpts
     rhoR *= weight
     rhoI *= weight
     vjR = numpy.zeros((nset,nband,nao_pair))
@@ -93,7 +118,7 @@ def get_j_kpts_ibz(mydf, dm_kpts, kd, hermi=1, kpts_band=None):
     return _format_jks(vj_kpts, dm_kpts, input_band, kpts)
 
 
-def get_k_kpts_ibz(mydf, dm_kpts, kd, hermi=1, kpts_band=None, exxdiv=None):
+def get_k_kpts_ibz(mydf, dm_kpts, hermi=1, kd=KPoints(), kpts_band=None, exxdiv=None):
     cell = mydf.cell
     log = logger.Logger(mydf.stdout, mydf.verbose)
     t1 = (time.clock(), time.time())
@@ -105,14 +130,14 @@ def get_k_kpts_ibz(mydf, dm_kpts, kd, hermi=1, kpts_band=None, exxdiv=None):
         mydf.build(kpts_band=kpts_band)
         t1 = log.timer_debug1('Init get_k_kpts', *t1)
 
-    kpts = kd.ibz_k
+    kpts = kd.kpts_ibz
     dm_kpts = lib.asarray(dm_kpts, order='C')
     dms = _format_dms(dm_kpts, kpts)
-    nset, nibzk, nao = dms.shape[:3]
-    dms_all = []
+    nset, nkpts, nao = dms.shape[:3]
+    dms_bz = []
     for i in range(nset):
-        dms_all.append(kd.transform_dm(dms[i]))
-    dms = numpy.asarray(dms_all).reshape(nset,kd.nbzk,nao,nao)
+        dms_bz.append(kd.transform_dm(dms[i]))
+    dms = numpy.asarray(dms_bz).reshape(nset,kd.nkpts,nao,nao)
 
     kpts_band, input_band = _format_kpts_band(kpts_band, kpts), kpts_band
     nband = len(kpts_band)
@@ -126,7 +151,7 @@ def get_k_kpts_ibz(mydf, dm_kpts, kd, hermi=1, kpts_band=None, exxdiv=None):
     bufI = numpy.empty((mydf.blockdim*nao**2))
     max_memory = max(2000, mydf.max_memory-lib.current_memory()[0])
     def make_kpt(ki, kj, swap_2e):
-        kpti = kd.bz_k[ki]
+        kpti = kd.kpts[ki]
         kptj = kpts_band[kj]
 
         for LpqR, LpqI, sign in mydf.sr_loop((kpti,kptj), max_memory, False):
@@ -155,20 +180,20 @@ def get_k_kpts_ibz(mydf, dm_kpts, kd, hermi=1, kpts_band=None, exxdiv=None):
                            pLqR.reshape(nao,-1).T, pLqI.reshape(nao,-1).T,
                            sign, vkR[i,ki], vkI[i,ki], 1)
 
-    for ki in range(kd.nbzk):
+    for ki in range(kd.nkpts):
         for kj in range(nband):
             make_kpt(ki, kj, False)
         t1 = log.timer_debug1('get_k_kpts: make_kpt (%d,*)'%ki, *t1)
 
-    if (gamma_point(kd.bz_k) and gamma_point(kpts_band) and
+    if (gamma_point(kd.kpts) and gamma_point(kpts_band) and
         not numpy.iscomplexobj(dm_kpts)):
         vk_kpts = vkR
     else:
         vk_kpts = vkR + vkI * 1j
-    vk_kpts *= 1./kd.nbzk
+    vk_kpts *= 1./kd.nkpts
 
     if exxdiv == 'ewald':
-        _ewald_exxdiv_for_G0(cell, kd.bz_k, dms, vk_kpts, kpts_band=kpts_band)
+        _ewald_exxdiv_for_G0(cell, kd.kpts, dms, vk_kpts, kpts_band=kpts_band)
 
     return _format_jks(vk_kpts, dm_kpts, input_band, kpts)
 

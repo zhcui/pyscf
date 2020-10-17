@@ -425,7 +425,12 @@ class GDF(aft.AFTDF):
         self.verbose = cell.verbose
         self.max_memory = cell.max_memory
 
-        self.kpts = kpts  # default is gamma point
+        if hasattr(kpts, "kpts_ibz"):
+            self.kpts = kpts.kpts_ibz
+            self.kpts_weights = kpts.weights_ibz
+        else:
+            self.kpts = kpts  # default is gamma point
+            self.kpts_weights = numpy.asarray([1./len(self.kpts)] * len(self.kpts))
         self.kpts_band = None
         self._auxbasis = None
 
@@ -714,6 +719,10 @@ class GDF(aft.AFTDF):
             return _sub_df_jk_(self, dm, hermi, kpts, kpts_band,
                                with_j, with_k, omega, exxdiv)
 
+        if hasattr(kpts, "kpts_ibz"):
+            return self.get_jk_ibz(dm, hermi, kpts, kpts_band,
+                                   with_j, with_k, omega, exxdiv)
+
         if kpts is None:
             if numpy.all(self.kpts == 0):
                 # Gamma-point calculation by default
@@ -733,22 +742,16 @@ class GDF(aft.AFTDF):
             vj = df_jk.get_j_kpts(self, dm, hermi, kpts, kpts_band)
         return vj, vk
 
-
-    def get_jk_ibz(self, dm, hermi=1, kd=None, kpts_band=None,
+    def get_jk_ibz(self, dm, hermi=1, kpts=None, kpts_band=None,
                    with_j=True, with_k=True, omega=None, exxdiv=None):
-        if omega is not None:  # J/K for RSH functionals
-            return _sub_df_jk_(self, dm, hermi, kpts, kpts_band,
-                               with_j, with_k, omega, exxdiv)
-
-        if kd is None:
-            return self.get_jk(self, dm, hermi, self.kpts, kpts_band, with_j,
-                                with_k, exxdiv)
-        vj = vk = None
         from pyscf.pbc.df import df_jk_ibz
+        if omega:
+            raise KeyError("Call get_jk instead for the long-range part of Coulomb.")
+        vj = vk = None
         if with_k:
-            vk = df_jk_ibz.get_k_kpts_ibz(self, dm, kd, hermi, kpts_band, exxdiv)
+            vk = df_jk_ibz.get_k_kpts_ibz(self, dm, hermi, kpts, kpts_band, exxdiv)
         if with_j:
-            vj = df_jk_ibz.get_j_kpts_ibz(self, dm, kd, hermi, kpts_band)
+            vj = df_jk_ibz.get_j_kpts_ibz(self, dm, hermi, kpts, kpts_band)
         return vj, vk
 
     get_eri = get_ao_eri = df_ao2mo.get_eri

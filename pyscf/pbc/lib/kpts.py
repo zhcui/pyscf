@@ -631,13 +631,12 @@ class KPoints(symm.Symmetry, lib.StreamObject):
                 logger.info(self, '%d:  %11.8f, %11.8f, %11.8f    %d/%d', 
                             k, *self.kpts_scaled_ibz[k], np.floor(self.weights_ibz[k]*self.nkpts), self.nkpts)
 
-    def build_kptij_lst(self):
+    def make_gdf_kptij_lst_jk(self):
         '''
-        Build k-point-pair list used by GDF
+        Build GDF k-point-pair list for get_jk
         All combinations:
-            k_ibz  k_ibz
-            k_ibz  k_bz
-            k_bz   k_bz
+            k_ibz != k_bz
+            k_bz  == k_bz
         '''
         kptij_lst = [(self.kpts[i], self.kpts[i]) for i in range(self.nkpts)]
         for i in range(self.nkpts_ibz):

@@ -375,13 +375,17 @@ def get_rho(mf, dm=None, grids=None, kpts=None):
     from pyscf.pbc.dft import numint
     if dm is None:
         dm = mf.make_rdm1()
+        if mf.kpts_descriptor is not None:
+            dm = mf.kpts_descriptor.transform_dm(dm)
     if getattr(dm[0], 'ndim', None) != 2:  # KUHF
         dm = dm[0] + dm[1]
     if grids is None:
         grids = gen_grid.UniformGrids(mf.cell)
     if kpts is None:
         kpts = mf.kpts
-    ni = numint.KNumInt(kpts_descriptor=mf.kpts_descriptor)
+        if mf.kpts_descriptor is not None:
+            kpts = mf.kpts_descriptor.kpts
+    ni = numint.KNumInt()
     return ni.get_rho(mf.cell, dm, grids, kpts, mf.max_memory)
 
 def as_scanner(mf):
@@ -488,7 +492,6 @@ class KSCF(pbchf.SCF):
     @kpts.setter
     def kpts(self, x):
         self.with_df.kpts = np.reshape(x, (-1,3))
-        #self.kpts_weights = np.asarray([1./len(self.with_df.kpts)] * len(self.with_df.kpts))
 
     @property
     def kpts_weights(self):
@@ -742,14 +745,14 @@ class KSCF(pbchf.SCF):
     get_rho = get_rho
 
     @lib.with_doc(dip_moment.__doc__)
-    def dip_moment(self, cell=None, dm=None, unit='Debye', verbose=logger.NOTE,
+    def dip_moment(self, cell=None, dm=None, kpts=None, unit='Debye', verbose=logger.NOTE,
                    **kwargs):
         rho = kwargs.pop('rho', None)
         if rho is None:
             rho = self.get_rho(dm)
         if cell is None:
             cell = self.cell
-        return dip_moment(cell, dm, unit, verbose, rho=rho, kpts=self.kpts, **kwargs)
+        return dip_moment(cell, dm, unit, verbose, rho=rho, kpts=kpts, **kwargs)
 
     canonicalize = canonicalize
 
