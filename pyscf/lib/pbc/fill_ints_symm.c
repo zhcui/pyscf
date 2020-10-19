@@ -814,13 +814,13 @@ void PBCnr3c_symm_drv(int (*intor)(), void (*fill)(), double complex *eri,
     double* t2 = malloc(sizeof(double));
     *t2 = 0.0;
 
-//    #pragma omp parallel
+    #pragma omp parallel
     {
         int ish, jsh, ij;
         double *env_loc = malloc(sizeof(double)*nenv);
         memcpy(env_loc, env, sizeof(double)*nenv);
         double *buf = malloc(sizeof(double)*(count+cache_size));
-//        #pragma omp for schedule(dynamic)
+        #pragma omp for schedule(dynamic)
         for (ij = 0; ij < nish*njsh; ij++) {
             ish = ij / njsh;
             jsh = ij % njsh;
