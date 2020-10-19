@@ -68,14 +68,14 @@ endif()
 # will automatically load all settings specified in cmake.arch.inc
 #
 
-if (${BLA_VENDOR} STREQUAL "Intel10_64lp_seq")
-  find_path (BLAS_INCLUDE_DIRS mkl.h
-    /usr/include
-    /usr/local/include
-    /usr/include/x86_64-linux-gnu
-    $ENV{MKLROOT}/include)
-  include_directories(${BLAS_INCLUDE_DIRS})
-endif()
+#if (${BLA_VENDOR} STREQUAL "Intel10_64lp_seq")
+#  find_path (BLAS_INCLUDE_DIRS mkl.h
+#    /usr/include
+#    /usr/local/include
+#    /usr/include/x86_64-linux-gnu
+#    $ENV{MKLROOT}/include)
+#  include_directories(${BLAS_INCLUDE_DIRS})
+#endif()
 
 find_package(OpenMP)
 if(OPENMP_FOUND)
