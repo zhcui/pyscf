@@ -166,8 +166,7 @@ def _dft_common_init_(mf, xc='LDA,VWN'):
     # Note Do not refer to .with_df._numint because mesh/coords may be different
     if isinstance(mf, khf.KSCF):
         if getattr(mf, 'kpts_descriptor', None) is not None:
-            #simply use full-BZ k points for now
-            mf._numint = numint.KNumInt(mf.kpts_descriptor.bz_k, mf.kpts_descriptor)
+            mf._numint = numint.KNumInt(mf.kpts_descriptor.kpts)
         else:
             mf._numint = numint.KNumInt(mf.kpts)
     else:

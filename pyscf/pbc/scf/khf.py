@@ -491,7 +491,13 @@ class KSCF(pbchf.SCF):
 
     @kpts.setter
     def kpts(self, x):
-        self.with_df.kpts = np.reshape(x, (-1,3))
+        if hasattr(x, 'kpts_ibz'):
+            self.with_df.kpts = np.reshape(x.kpts_ibz, (-1,3))
+            self.with_df.kpts_weights = x.weights_ibz
+        else:
+            kpts = np.reshape(x, (-1,3))
+            self.with_df.kpts = kpts
+            self.with_df.kpts_weights = [1./len(kpts)] * len(kpts)
 
     @property
     def kpts_weights(self):
@@ -636,10 +642,13 @@ class KSCF(pbchf.SCF):
         if cell is None: cell = self.cell
         if kpts is None: kpts = self.kpts
         if dm_kpts is None: dm_kpts = self.make_rdm1()
-        cpu0 = (time.clock(), time.time())
         kd = self.kpts_descriptor
-        if kd is not None and np.allclose(kpts, kd.kpts_ibz):
-            kpts = kd
+        if len(kpts) == getattr(kd, 'nkpts_ibz', 0) and np.allclose(kpts, kd.kpts_ibz):
+            #kpts = kd
+            kpts = kd.kpts
+            dm_kpts = kd.transform_dm(dm_kpts)
+            if kpts_band is None: kpts_band = kd.kpts_ibz
+        cpu0 = (time.clock(), time.time())
         vj, vk = self.with_df.get_jk(dm_kpts, hermi, kpts, kpts_band,
                                      with_j, with_k, omega, exxdiv=self.exxdiv)
         logger.timer(self, 'vj and vk', *cpu0)

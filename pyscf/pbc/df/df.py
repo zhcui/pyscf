@@ -425,12 +425,15 @@ class GDF(aft.AFTDF):
         self.verbose = cell.verbose
         self.max_memory = cell.max_memory
 
+        self.kpts_descriptor = None
         if hasattr(kpts, "kpts_ibz"):
-            self.kpts = kpts.kpts_ibz
-            self.kpts_weights = kpts.weights_ibz
+            self.kpts_descriptor = kpts
+            self.kpts = self.kpts_descriptor.kpts_ibz
+            self.kpts_weights = self.kpts_descriptor.weights_ibz
         else:
             self.kpts = kpts  # default is gamma point
             self.kpts_weights = numpy.asarray([1./len(self.kpts)] * len(self.kpts))
+
         self.kpts_band = None
         self._auxbasis = None
 

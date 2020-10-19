@@ -180,7 +180,7 @@ def energy_elec(mf, dm_kpts=None, h1e_kpts=None, vhf_kpts=None):
     if dm_kpts is None: dm_kpts = mf.make_rdm1()
     if h1e_kpts is None: h1e_kpts = mf.get_hcore()
     if vhf_kpts is None: vhf_kpts = mf.get_veff(mf.cell, dm_kpts)
-    wtk = mf.wtk
+    wtk = mf.kpts_weights
 
     #nkpts = len(h1e_kpts)
     #e1 = 1./nkpts * np.einsum('kij,kji', dm_kpts[0], h1e_kpts)
@@ -382,7 +382,7 @@ class KUHF(khf.KSCF, pbcuhf.UHF):
             cell = self.cell
             nkpts = len(self.kpts)
             if self.kpts_descriptor is not None:
-                nkpts = self.kpts_descriptor.nbzk
+                nkpts = self.kpts_descriptor.nkpts
             ne = cell.tot_electrons(nkpts)
             nalpha = (ne + cell.spin) // 2
             nbeta = nalpha - cell.spin
@@ -431,12 +431,12 @@ class KUHF(khf.KSCF, pbcuhf.UHF):
             dm_kpts[1,:] *= 0.99  # To slightly break spin symmetry
             assert dm_kpts.shape[0]==2
 
-        ne = np.einsum('k,xkij,kji->x', self.wtk, dm_kpts, self.get_ovlp(cell)).real
+        ne = np.einsum('k,xkij,kji->x', self.kpts_weights, dm_kpts, self.get_ovlp(cell)).real
         # FIXME: consider the fractional num_electron or not? This maybe
         # relates to the charged system.
         nkpts = len(self.kpts)
         if self.kpts_descriptor is not None:
-            nkpts = self.kpts_descriptor.nbzk
+            nkpts = self.kpts_descriptor.nkpts
         ne *= nkpts
         nelec = np.asarray(self.nelec)
         if np.any(abs(ne - nelec) > 1e-7*nkpts):

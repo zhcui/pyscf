@@ -104,7 +104,7 @@ def smearing_(mf, sigma=None, method=SMEARING_METHOD, mu0=None, fix_spin=False):
         if is_khf:
             nkpts = len(mf.kpts)
             if getattr(mf, 'kpts_descriptor', None) is not None:
-                nkpts = mf.kpts_descriptor.nbzk
+                nkpts = mf.kpts_descriptor.nkpts
         else:
             nkpts = 1
         nelectron = mf.cell.tot_electrons(nkpts)

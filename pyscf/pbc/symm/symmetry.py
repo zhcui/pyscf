@@ -24,10 +24,8 @@ from pyscf.lib import logger
 from pyscf.symm import param
 from pyscf.symm.Dmatrix import Dmatrix, get_euler_angles
 from pyscf.pbc.symm import space_group
+from pyscf.pbc.symm.space_group import SYMPREC, XYZ
 from functools import reduce
-
-SYMPREC = space_group.SYMPREC
-XYZ = np.eye(3)
 
 def _is_right_handed(c):
     '''

@@ -2345,7 +2345,8 @@ class Mole(lib.StreamObject):
 
         if not self.magmoms:
             self.magmoms = [0.,]*self.natm
-        if abs(numpy.sum(numpy.asarray(self.magmoms)) - self.spin / 2.0) > 1e-6:
+        if self.spin == 0 and abs(numpy.sum(numpy.asarray(self.magmoms)) - self.spin / 2.0) > 1e-6:
+            #don't check for unrestricted calcs.
             raise ValueError("mol.magmoms is set incorrectly.")
 
         if self.symmetry:

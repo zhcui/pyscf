@@ -57,6 +57,7 @@ def density_fit(mf, auxbasis=None, mesh=None, with_df=None):
         if getattr(mf, 'kpts_descriptor', None) is not None:
             #make sure default build contains all k-pairs for JK
             with_df.kpts_band = mf.kpts_descriptor.kpts
+            with_df.kpts_descriptor = mf.kpts_descriptor
         with_df.max_memory = mf.max_memory
         with_df.stdout = mf.stdout
         with_df.verbose = mf.verbose

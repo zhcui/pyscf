@@ -116,7 +116,7 @@ Keyword argument "init_dm" is replaced by "dm0"''')
     from pyscf.scf import uhf
     if isinstance(mf, uhf.UHF) and getattr(mf, 'kpts_descriptor', None) is not None:
         if getattr(mf,'smearing_method',None) is None:
-            raise RuntimeError('Smearing is a must for using k-point symmetry in KUHF.')
+            raise RuntimeError('Smearing is a must for preserving k-point symmetry in KUHF.')
     del(uhf)
 
     cput0 = (time.clock(), time.time())

@@ -335,16 +335,6 @@ def nr_rks(ni, cell, grids, xc_code, dms, spin=0, relativity=0, hermi=0,
     if kpts is None:
         kpts = numpy.zeros((1,3))
 
-    kd = getattr(ni, 'kpts_descriptor', None)
-    if kd is not None:
-        if getattr(dms, 'mo_coeff', None) is not None:
-            mo_coeff = kd.transform_mo_coeff(dms.mo_coeff)
-            mo_occ = kd.transform_mo_occ(dms.mo_occ)
-            dms = lib.tag_array(kd.transform_dm(dms), mo_coeff=mo_coeff, mo_occ=mo_occ)
-        else:
-            dms = kd.transform_dm(dms)
-        kpts = kd.bz_k
-
     xctype = ni._xc_type(xc_code)
     make_rho, nset, nao = ni._gen_rho_evaluator(cell, dms, hermi)
 
@@ -443,16 +433,6 @@ def nr_uks(ni, cell, grids, xc_code, dms, spin=1, relativity=0, hermi=0,
     '''
     if kpts is None:
         kpts = numpy.zeros((1,3))
-
-    kd = getattr(ni, 'kpts_descriptor', None)
-    if kd is not None:
-        if getattr(dms, 'mo_coeff', None) is not None:
-            mo_coeff = kd.transform_mo_coeff(dms.mo_coeff)
-            mo_occ = kd.transform_mo_occ(dms.mo_occ)
-            dms = lib.tag_array(kd.transform_dm(dms), mo_coeff=mo_coeff, mo_occ=mo_occ)
-        else:
-            dms = kd.transform_dm(dms)
-        kpts = kd.bz_k
 
     xctype = ni._xc_type(xc_code)
     dma, dmb = _format_uks_dm(dms)
@@ -1205,11 +1185,20 @@ class KNumInt(numint.NumInt):
         grids_coords = grids.coords
         grids_weights = grids.weights
         ngrids = grids_coords.shape[0]
-        nkpts = len(kpts)
         comp = (deriv+1)*(deriv+2)*(deriv+3)//6
+
+        kpts_all = kpts
+        if kpts_band is not None:
+            kpts_band = numpy.reshape(kpts_band, (-1,3))
+            where = [member(k, kpts) for k in kpts_band]
+            where = [k_id[0] if len(k_id)>0 else None for k_id in where]
+            kpts_band_uniq = [k for k in kpts_band if len(member(k, kpts))==0]
+            if kpts_band_uniq:
+                kpts_all = numpy.vstack([kpts,kpts_band_uniq])
+
 # NOTE to index grids.non0tab, the blksize needs to be the integer multiplier of BLKSIZE
         if blksize is None:
-            blksize = int(max_memory*1e6/(comp*2*nkpts*nao*16*BLKSIZE))*BLKSIZE
+            blksize = int(max_memory*1e6/(comp*2*len(kpts_all)*nao*16*BLKSIZE))*BLKSIZE
             blksize = max(BLKSIZE, min(blksize, ngrids, BLKSIZE*1200))
         if non0tab is None:
             non0tab = grids.non0tab
@@ -1217,19 +1206,26 @@ class KNumInt(numint.NumInt):
             non0tab = numpy.empty(((ngrids+BLKSIZE-1)//BLKSIZE,cell.nbas),
                                   dtype=numpy.uint8)
             non0tab[:] = 0xff
-        if kpts_band is not None:
-            kpts_band = numpy.reshape(kpts_band, (-1,3))
-            where = [member(k, kpts) for k in kpts_band]
-            where = [k_id[0] if len(k_id)>0 else None for k_id in where]
 
         for ip0 in range(0, ngrids, blksize):
             ip1 = min(ngrids, ip0+blksize)
             coords = grids_coords[ip0:ip1]
             weight = grids_weights[ip0:ip1]
             non0 = non0tab[ip0//BLKSIZE:]
-            ao_k1 = ao_k2 = self.eval_ao(cell, coords, kpts, deriv=deriv, non0tab=non0)
+            ao_kall = self.eval_ao(cell, coords, kpts_all, deriv=deriv, non0tab=non0)
             if kpts_band is not None:
-                ao_k1 = self.eval_ao(cell, coords, kpts_band, deriv=deriv, non0tab=non0)
+                ao_k2 = ao_kall[:len(kpts)]
+                ao_k1 = []
+                i = 0
+                for k_idx in where:
+                    if k_idx is not None:
+                        ao_k1.append(ao_kall[k_idx])
+                    else:
+                        ao_k1.append(ao_kall[i+len(kpts)])
+                        i += 1
+                assert(i+len(kpts) == len(kpts_all))
+            else:
+                ao_k1 = ao_k2 = ao_kall
             yield ao_k1, ao_k2, non0, weight, coords
             ao_k1 = ao_k2 = None
 

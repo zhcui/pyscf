@@ -22,10 +22,9 @@ from pyscf import lib
 from pyscf.lib import logger
 from pyscf import __config__
 from pyscf.pbc.symm import symmetry as symm
-from pyscf.pbc.lib.kpts_helper import member
+from pyscf.pbc.lib.kpts_helper import member, KPT_DIFF_TOL
 from numpy.linalg import inv
 
-KPTS_DIFF_TOL = getattr(__config__, 'pbc_lib_kpts_kpts_diff_tol', 1e-6)
 libpbc = lib.load_library('libpbc')
 
 def make_kpts_ibz(kpts):
@@ -45,7 +44,7 @@ def make_kpts_ibz(kpts):
     if kpts.time_reversal:
         op_rot = np.concatenate([op_rot, -op_rot])
 
-    bz2bz_ks = map_k_points_fast(kpts.kpts_scaled, op_rot, KPTS_DIFF_TOL)
+    bz2bz_ks = map_k_points_fast(kpts.kpts_scaled, op_rot, KPT_DIFF_TOL)
     kpts.k2opk = bz2bz_ks
     if -1 in bz2bz_ks:
         if kpts.verbose >= logger.WARN:
@@ -80,7 +79,7 @@ def make_kpts_ibz(kpts):
                 continue
             diff = bz_k_scaled - np.dot(ibz_k_scaled, op.T)
             diff = diff - diff.round()
-            if (np.absolute(diff) < KPTS_DIFF_TOL).all():
+            if (np.absolute(diff) < KPT_DIFF_TOL).all():
                 kpts.time_reversal_symm_bz[k] = io // nop
                 kpts.stars_ops_bz[k] = io % nop
                 break
@@ -97,7 +96,7 @@ def make_kpts_ibz(kpts):
                     continue
                 diff = bz_k_scaled - np.dot(ibz_k_scaled, op.T)
                 diff = diff - diff.round()
-                if (np.absolute(diff) < KPTS_DIFF_TOL).all():
+                if (np.absolute(diff) < KPT_DIFF_TOL).all():
                     kpts.stars_ops[i].append(io % nop)
                     break
 
@@ -197,7 +196,7 @@ def make_kpairs_ibz(kpts, permutation_symmetry=True):
     #return iL2L, L_group, sym_group, L2iL, idx_ij
     return None
 
-def map_k_points_fast(kpts_scaled, ops, tol=KPTS_DIFF_TOL):
+def map_k_points_fast(kpts_scaled, ops, tol=KPT_DIFF_TOL):
     #This routine is modified from GPAW
     '''
     Find symmetry-related k-points.
@@ -246,7 +245,7 @@ def map_k_points_fast(kpts_scaled, ops, tol=KPTS_DIFF_TOL):
         bz2bz_ks[orders[1] - nkpts, s] = orders[0]
     return bz2bz_ks
 
-def aglomerate_points(k_kc, tol=KPTS_DIFF_TOL):
+def aglomerate_points(k_kc, tol=KPT_DIFF_TOL):
     #This routine is adopted from GPAW
     '''
     Remove numerical error
@@ -441,6 +440,11 @@ def transform_dm(kpts, dm_ibz):
     '''
     Transform density matrices from IBZ to full BZ
     '''
+    mo_occ = mo_coeff = None
+    if getattr(dm_ibz, "mo_coeff", None) is not None:
+        mo_coeff = kpts.transform_mo_coeff(dm_ibz.mo_coeff)
+        mo_occ = kpts.transform_mo_occ(dm_ibz.mo_occ)
+
     dms = []
     is_uhf = False
     if (isinstance(dm_ibz, np.ndarray) and dm_ibz.ndim == 4) or \
@@ -479,9 +483,10 @@ def transform_dm(kpts, dm_ibz):
     if is_uhf:
         nkpts = len(dms[0])
         nao = dms[0][0].shape[0]
-        return lib.asarray(dms).reshape(2,nkpts,nao,nao)
+        dms = lib.asarray(dms).reshape(2,nkpts,nao,nao)
     else:
-        return lib.asarray(dms)
+        dms = lib.asarray(dms)
+    return lib.tag_array(dms, mo_coeff=mo_coeff, mo_occ=mo_occ)
 
 def transform_mo_energy(kpts, mo_energy_ibz):
     '''

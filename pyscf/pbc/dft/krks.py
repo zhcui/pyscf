@@ -57,14 +57,26 @@ def get_veff(ks, cell=None, dm=None, dm_last=0, vhf_last=0, hermi=1,
     if cell is None: cell = ks.cell
     if dm is None: dm = ks.make_rdm1()
     if kpts is None: kpts = ks.kpts
+
+    dm_bz = dm
+    kpts_bz = kpts
+    kpts_band_ibz = kpts_band
+    kd = ks.kpts_descriptor
+    weight = [1./len(kpts_bz)] * len(kpts_bz)
+    if len(kpts) == getattr(kd, 'nkpts_ibz', 0) and np.allclose(kpts, kd.kpts_ibz):
+        kpts_bz = kd.kpts
+        dm_bz = kd.transform_dm(dm)
+        if kpts_band_ibz is None: kpts_band_ibz = kd.kpts_ibz
+        weight = ks.kpts_weights
+
     t0 = (time.clock(), time.time())
 
     omega, alpha, hyb = ks._numint.rsh_and_hybrid_coeff(ks.xc, spin=cell.spin)
     hybrid = abs(hyb) > 1e-10 or abs(alpha) > 1e-10
 
     if not hybrid and isinstance(ks.with_df, multigrid.MultiGridFFTDF):
-        n, exc, vxc = multigrid.nr_rks(ks.with_df, ks.xc, dm, hermi,
-                                       kpts, kpts_band,
+        n, exc, vxc = multigrid.nr_rks(ks.with_df, ks.xc, dm_bz, hermi,
+                                       kpts_bz, kpts_band_ibz,
                                        with_j=True, return_j=False)
         logger.debug(ks, 'nelec by numeric integration = %s', n)
         t0 = logger.timer(ks, 'vxc', *t0)
@@ -79,21 +91,17 @@ def get_veff(ks, cell=None, dm=None, dm_last=0, vhf_last=0, hermi=1,
         ks.grids.build(with_non0tab=True)
         if (isinstance(ks.grids, gen_grid.BeckeGrids) and
             ks.small_rho_cutoff > 1e-20 and ground_state):
-            ks.grids = rks.prune_small_rho_grids_(ks, cell, dm, ks.grids, kpts)
+            ks.grids = rks.prune_small_rho_grids_(ks, cell, dm_bz, ks.grids, kpts_bz)
         t0 = logger.timer(ks, 'setting up grids', *t0)
 
     if hermi == 2:  # because rho = 0
         n, exc, vxc = 0, 0, 0
     else:
-        n, exc, vxc = ks._numint.nr_rks(cell, ks.grids, ks.xc, dm, 0,
-                                        kpts, kpts_band)
+        n, exc, vxc = ks._numint.nr_rks(cell, ks.grids, ks.xc, dm_bz, 0,
+                                        kpts_bz, kpts_band_ibz)
         logger.debug(ks, 'nelec by numeric integration = %s', n)
         t0 = logger.timer(ks, 'vxc', *t0)
 
-    if (len(kpts) != len(ks.wtk)):
-        weight = [1./len(kpts)]*len(kpts)
-    else:
-        weight = ks.wtk
     if not hybrid:
         vj = ks.get_j(cell, dm, hermi, kpts, kpts_band)
         vxc += vj
@@ -109,11 +117,9 @@ def get_veff(ks, cell=None, dm=None, dm_last=0, vhf_last=0, hermi=1,
         vxc += vj - vk * .5
 
         if ground_state:
-            #exc -= np.einsum('Kij,Kji', dm, vk).real * .5 * .5 * weight
             exc -= np.einsum('K,Kij,Kji', weight, dm, vk).real * .5 * .5
 
     if ground_state:
-        #ecoul = np.einsum('Kij,Kji', dm, vj).real * .5 * weight
         ecoul = np.einsum('K,Kij,Kji', weight, dm, vj).real * .5
     else:
         ecoul = None
@@ -126,6 +132,12 @@ def get_rho(mf, dm=None, grids=None, kpts=None):
     if dm is None: dm = mf.make_rdm1()
     if grids is None: grids = mf.grids
     if kpts is None: kpts = mf.kpts
+
+    kd = mf.kpts_descriptor
+    if len(kpts) == getattr(kd, 'nkpts_ibz', 0) and np.allclose(kpts, kd.kpts_ibz):
+        kpts = kd.kpts
+        dm = kd.transform_dm(dm)
+
     if isinstance(mf.with_df, multigrid.MultiGridFFTDF):
         rho = mf.with_df.get_rho(dm, kpts)
     else:
@@ -153,9 +165,9 @@ class KRKS(rks.KohnShamDFT, khf.KRHF):
         if vhf is None or getattr(vhf, 'ecoul', None) is None:
             vhf = self.get_veff(self.cell, dm_kpts)
 
-        #weight = 1./len(h1e_kpts)
-        weight = self.wtk 
-        #e1 = weight * np.einsum('kij,kji', h1e_kpts, dm_kpts)
+        weight = self.kpts_weights
+        if len(h1e_kpts) != len(weight):
+            weight = [1./len(h1e_kpts)] * len(h1e_kpts)
         e1 = np.einsum('k,kij,kji', weight, h1e_kpts, dm_kpts)
         tot_e = e1 + vhf.ecoul + vhf.exc
         self.scf_summary['e1'] = e1.real
