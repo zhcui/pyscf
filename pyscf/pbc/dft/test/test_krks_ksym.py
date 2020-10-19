@@ -21,7 +21,7 @@ import numpy as np
 
 from pyscf.pbc import gto as pbcgto
 from pyscf.pbc import scf as pscf
-from pyscf.pbc.dft import krks,kuks
+from pyscf.pbc.dft import krks,kuks,multigrid
 
 L = 2.
 He = pbcgto.Cell()
@@ -49,14 +49,14 @@ def make_primitive_cell(mesh):
     return cell
 
 cell = make_primitive_cell([17]*3)
+nk = [1,2,2]
 
 def tearDownModule():
-    global cell, He
-    del cell, He
+    global cell, He, nk
+    del cell, He, nk
 
 class KnownValues(unittest.TestCase):
     def test_krks_gamma_center(self):
-        nk = [2,2,2]
         kpts0 = cell.make_kpts(nk, with_gamma_point=True)
         kmf0 = krks.KRKS(cell, kpts=kpts0)
         kmf0.xc = 'lda'
@@ -69,7 +69,6 @@ class KnownValues(unittest.TestCase):
         self.assertAlmostEqual(kmf.e_tot, kmf0.e_tot, 7)
 
     def test_krks_monkhorst(self):
-        nk = [2,2,2]
         kpts0 = cell.make_kpts(nk, with_gamma_point=False)
         kmf0 = krks.KRKS(cell, kpts=kpts0)
         kmf0.xc = 'lda'
@@ -82,7 +81,6 @@ class KnownValues(unittest.TestCase):
         self.assertAlmostEqual(kmf.e_tot, kmf0.e_tot, 7)
 
     def test_kuks_gamma_center(self):
-        nk = [2,2,2]
         kpts0 = cell.make_kpts(nk, with_gamma_point=True)
         kumf0 = kuks.KUKS(cell, kpts=kpts0)
         kumf0.xc = 'lda'
@@ -97,7 +95,6 @@ class KnownValues(unittest.TestCase):
         self.assertAlmostEqual(kumf.e_tot, kumf0.e_tot, 7)
 
     def test_kuks_monkhorst(self):
-        nk = [2,2,2]
         kpts0 = cell.make_kpts(nk, with_gamma_point=False)
         kumf0 = kuks.KUKS(cell, kpts=kpts0)
         kumf0.xc = 'lda'
@@ -112,7 +109,6 @@ class KnownValues(unittest.TestCase):
         self.assertAlmostEqual(kumf.e_tot, kumf0.e_tot, 7)
 
     def test_rsh(self):
-        nk = [2,2,2]
         kpts0 = He.make_kpts(nk, with_gamma_point=False)
         kmf0 = krks.KRKS(He, kpts=kpts0)
         kmf0.xc = 'camb3lyp'
@@ -125,7 +121,6 @@ class KnownValues(unittest.TestCase):
         self.assertAlmostEqual(kmf.e_tot, kmf0.e_tot, 9)
 
     def test_rsh_df(self):
-        nk = [2,2,2]
         kpts0 = He.make_kpts(nk, with_gamma_point=False)
         kmf0 = krks.KRKS(He, kpts=kpts0).density_fit()
         kmf0.xc = 'camb3lyp'
@@ -138,7 +133,6 @@ class KnownValues(unittest.TestCase):
         self.assertAlmostEqual(kmf.e_tot, kmf0.e_tot, 9)
 
     def test_rsh_mdf(self):
-        nk = [1,2,2]
         kpts0 = He.make_kpts(nk, with_gamma_point=False)
         kmf0 = krks.KRKS(He, kpts=kpts0).mix_density_fit()
         kmf0.xc = 'camb3lyp'
@@ -150,6 +144,24 @@ class KnownValues(unittest.TestCase):
         kmf.kernel()
         self.assertAlmostEqual(kmf.e_tot, kmf0.e_tot, 9)
 
+    def test_multigrid(self):
+        kmf0 = krks.KRKS(cell, kpts=cell.make_kpts(nk))
+        kmf0.xc = 'lda'
+        kmf0 = multigrid.multigrid(kmf0)
+        kmf0.kernel()
+
+        kpts = cell.make_kpts(nk,space_group_symmetry=True,time_reversal_symmetry=True)
+        kmf = krks.KRKS(cell, kpts=kpts)
+        kmf.xc = 'lda'
+        kmf = multigrid.multigrid(kmf)
+        kmf.kernel()
+        self.assertAlmostEqual(kmf.e_tot, kmf0.e_tot, 7)
+
+        kmf.with_df = multigrid.MultiGridFFTDF(cell, kpts)
+        kmf.kernel()
+        self.assertAlmostEqual(kmf.e_tot, kmf0.e_tot, 7)
+
+
 if __name__ == '__main__':
-    print("Full Tests for pbc.scf.khf with k-point symmetry")
+    print("Full Tests for DFT with k-point symmetry")
     unittest.main()

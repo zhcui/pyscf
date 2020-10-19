@@ -15,7 +15,7 @@
 #
 # Author: Timothy Berkelbach <tim.berkelbach@gmail.com>
 #         James McClain <jdmcclain47@gmail.com>
-#         Xing Zhang (k-symmetry)
+#         Xing Zhang <zhangxing.nju@gmail.com>
 #
 
 
@@ -101,7 +101,7 @@ def kernel(mp, mo_energy, mo_coeff, verbose=logger.NOTE, with_t2=WITH_T2):
     logger.timer(mp, 'KMP2', *t0)
     return emp2, t2
 
-def kernel_symm(mp, mo_energy, mo_coeff, verbose=logger.NOTE, with_t2=WITH_T2):
+def kernel_ksym(mp, mo_energy, mo_coeff, verbose=logger.NOTE, with_t2=WITH_T2):
     t0 = (time.clock(), time.time())
     nmo = mp.nmo
     nocc = mp.nocc
@@ -109,7 +109,7 @@ def kernel_symm(mp, mo_energy, mo_coeff, verbose=logger.NOTE, with_t2=WITH_T2):
     nkpts = mp.nkpts
     
     kd = mp.kpts_descriptor
-    nbzk = kd.nbzk
+    nbzk = kd.nkpts
     nibz_kk_s2 = len(kd.ibz2bz_kk_s2)
 
     eia = np.zeros((nocc,nvir))
@@ -121,7 +121,6 @@ def kernel_symm(mp, mo_energy, mo_coeff, verbose=logger.NOTE, with_t2=WITH_T2):
     oovv_ij = np.zeros((nbzk,nocc,nocc,nvir,nvir), dtype=mo_coeff[0].dtype)
 
     mo_e_o = [mo_energy[k][:nocc] for k in range(nkpts)]
-    #mo_e_v = [kd.transform_mo_energy(mo_energy)[k][nocc:] for k in range(nbzk)]
     mo_e_v = [mo_energy[k][nocc:] for k in range(nkpts)]
 
     # Get location of non-zero/padded elements in occupied and virtual space
@@ -136,21 +135,21 @@ def kernel_symm(mp, mo_energy, mo_coeff, verbose=logger.NOTE, with_t2=WITH_T2):
         kkidx_bz = kd.ibz2bz_kk_s2[kij]
         ki_bz = kkidx_bz // nbzk
         kj_bz = kkidx_bz % nbzk
+        kpts_i = kd.kpts[ki_bz]
+        kpts_j = kd.kpts[kj_bz]
         ki = kd.bz2ibz[ki_bz]
         kj = kd.bz2ibz[kj_bz]
         for ka_bz in range(nbzk):
             kb_bz = kconserv[ki_bz,ka_bz,kj_bz]
-            #ka = kd.bz2ibz[ka_bz]
-            #kb = kd.bz2ibz[kb_bz]
-
+            kpts_a = kd.kpts[ka_bz]
+            kpts_b = kd.kpts[kb_bz]
             orbo_i = kd.transform_single_mo_coeff(mo_coeff, ki_bz)[:,:nocc]
             orbo_j = kd.transform_single_mo_coeff(mo_coeff, kj_bz)[:,:nocc]
             orbv_a = kd.transform_single_mo_coeff(mo_coeff, ka_bz)[:,nocc:]
             orbv_b = kd.transform_single_mo_coeff(mo_coeff, kb_bz)[:,nocc:]
-
             oovv_ij[ka_bz] = fao2mo((orbo_i,orbv_a,orbo_j,orbv_b),
-                            (kd.bz_k[ki_bz],kd.bz_k[ka_bz],kd.bz_k[kj_bz],kd.bz_k[kb_bz]),
-                            compact=False).reshape(nocc,nvir,nocc,nvir).transpose(0,2,1,3) / nbzk
+                                    (kpts_i,kpts_a,kpts_j,kpts_b),
+                                    compact=False).reshape(nocc,nvir,nocc,nvir).transpose(0,2,1,3) / nbzk
         for ka_bz in range(nbzk):
             kb_bz = kconserv[ki_bz,ka_bz,kj_bz]
             ka = kd.bz2ibz[ka_bz]
@@ -601,7 +600,7 @@ class KMP2(mp2.MP2):
         if self.kpts_descriptor is None:
             self.khelper = kpts_helper.KptsHelper(mf.cell, mf.kpts)
         else:
-            self.khelper = kpts_helper.KptsHelper(mf.cell, self.kpts_descriptor.bz_k)
+            self.khelper = kpts_helper.KptsHelper(mf.cell, self.kpts_descriptor.kpts)
         self.mo_coeff = mo_coeff
         self.mo_occ = mo_occ
         self._nocc = None
@@ -636,7 +635,7 @@ class KMP2(mp2.MP2):
                 kernel(self, mo_energy, mo_coeff, verbose=self.verbose, with_t2=with_t2)
         else:
             self.e_corr, self.t2 = \
-                kernel_symm(self, mo_energy, mo_coeff, verbose=self.verbose, with_t2=with_t2)
+                kernel_ksym(self, mo_energy, mo_coeff, verbose=self.verbose, with_t2=with_t2)
         logger.log(self, 'KMP2 energy = %.15g', self.e_corr)
         return self.e_corr, self.t2
 KRMP2 = KMP2
