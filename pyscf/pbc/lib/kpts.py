@@ -632,9 +632,11 @@ class KPoints(symm.Symmetry, lib.StreamObject):
         if self.verbose >= logger.INFO:
             logger.info(self, 'time reversal: %s', self.time_reversal)
             logger.info(self, 'k-points in IBZ                           weights')
+            ibzk = self.kpts_scaled_ibz
             for k in range(self.nkpts_ibz):
                 logger.info(self, '%d:  %11.8f, %11.8f, %11.8f    %d/%d', 
-                            k, *self.kpts_scaled_ibz[k], np.floor(self.weights_ibz[k]*self.nkpts), self.nkpts)
+                            k, ibzk[k][0], ibzk[k][1], ibzk[k][2],
+                            np.floor(self.weights_ibz[k]*self.nkpts), self.nkpts)
 
     def make_gdf_kptij_lst_jk(self):
         '''
