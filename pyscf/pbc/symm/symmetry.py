@@ -171,7 +171,7 @@ def check_mesh_symmetry(cell, ops, mesh=None, tol=SYMPREC):
             if (abs(tmp - tmp.round()) > tol).any():
                 rm_list.append(i)
 
-    ft = np.asarray(ft)
+    ft = np.reshape(np.asarray(ft), (-1,3))
     mesh1 = copy.deepcopy(mesh)
     for x in range(3):
         while True:

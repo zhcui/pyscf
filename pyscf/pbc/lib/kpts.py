@@ -101,7 +101,6 @@ def make_kpts_ibz(kpts):
                     break
 
 def make_kpairs_ibz(kpts, permutation_symmetry=True):
-    #XXX check time-reversal symmetry
     '''
     Constructe k-pairs in IBZ
 
@@ -180,21 +179,65 @@ def make_kpairs_ibz(kpts, permutation_symmetry=True):
         for i in range(len(kpts.ibz_kk_s2_weight)):
             if idx_ji[i] not in kpts.ibz2bz_kk:
                 kpts.ibz_kk_s2_weight[i] /= 2.
-
-    #idx_i = (iL2L[L2iL] // nL).reshape((-1,1))
-    #idx_j = (iL2L[L2iL] % nL).reshape((-1,1))
-
-    #Lop = np.empty(nL2, dtype = np.int32)
-    #Lop[L_group] = sym_group
-    #res = np.hstack((iL2L[L2iL].reshape(-1,1), Lop.reshape(-1,1)))
-    #buf[idx] = res
-
-    #idx_i = (iL2L // nL).reshape((-1,1))
-    #idx_j = (iL2L % nL).reshape((-1,1))
-    #idx_ij = np.hstack((idx_i, idx_j))
-
-    #return iL2L, L_group, sym_group, L2iL, idx_ij
     return None
+
+def make_ktuples_ibz(kpts, ntuple=2):
+    '''
+    Constructe k-tuples in IBZ
+
+    Arguments:
+        kpts : :class:`KPoints` object
+        ntuple : int
+             n-tuple
+    '''
+    bz2bz_ks = kpts.k2opk
+    nop = bz2bz_ks.shape[-1]
+
+    nbzk = kpts.nkpts
+    nbzk2 = nbzk**ntuple
+    bz2bz_T = np.zeros([nop, nbzk2], dtype=int)
+    if kpts.verbose >= logger.INFO:
+        logger.info(kpts, 'Number of k %d-tuples: %d', ntuple, nbzk2)
+
+    for iop in range(nop):
+        tmp = lib.cartesian_prod([bz2bz_ks[:,iop]]*ntuple)
+        idx_throw = np.unique(np.where(tmp == -1)[0])
+        for i in range(ntuple):
+            bz2bz_T[iop] += tmp[:,i] * nbzk**(ntuple-i-1)
+        bz2bz_T[iop, idx_throw] = -1
+
+    bz2bz_ksks = bz2bz_T.T
+    bz2bz_kk = -np.ones(nbzk2+1, dtype=int)
+    ibz2bz_kk = []
+    k_group = []
+    sym_group = []
+    group_size = []
+    for k in range(nbzk2-1, -1, -1):
+        if bz2bz_kk[k] == -1:
+            bz2bz_kk[bz2bz_ksks[k]] = k
+            ibz2bz_kk.append(k)
+            k_idx, op_idx = np.unique(bz2bz_ksks[k], return_index=True)
+            if k_idx[0] == -1:
+                k_idx = k_idx[1:]
+                op_idx = op_idx[1:]
+            group_size.append(op_idx.size)
+            k_group.append(k_idx)
+            sym_group.append(op_idx)
+
+    ibz2bz_kk = np.array(ibz2bz_kk[::-1])
+    if kpts.verbose >= logger.INFO:
+        logger.info(kpts, 'Number of k %d-tuples in IBZ: %s', ntuple, len(ibz2bz_kk))
+
+    bz2bz_kk = bz2bz_kk[:-1].copy()
+    bz2ibz_kk = np.empty(nbzk2,dtype=int)
+    bz2ibz_kk[ibz2bz_kk] = np.arange(len(ibz2bz_kk))
+    bz2ibz_kk = bz2ibz_kk[bz2bz_kk]
+
+    bz2ibz_kk = bz2ibz_kk
+    kk_group = k_group[::-1]
+    kk_sym_group = sym_group[::-1]
+    ibz_kk_weight = np.bincount(bz2ibz_kk) *(1.0 / nbzk2)
+    return ibz2bz_kk, ibz_kk_weight, bz2ibz_kk, kk_group, kk_sym_group
 
 def map_k_points_fast(kpts_scaled, ops, tol=KPT_DIFF_TOL):
     #This routine is modified from GPAW
@@ -656,8 +699,20 @@ class KPoints(symm.Symmetry, lib.StreamObject):
         kptij_lst = np.asarray(kptij_lst)
         return kptij_lst
 
+    def loop_ktuples(self, ibz2bz, ntuple):
+        nkpts = self.nkpts
+        for k in ibz2bz:
+            res = []
+            for i in range(ntuple-1, -1, -1):
+                ki = k // nkpts**(i)
+                k = k - ki * nkpts**(i)
+                res.append(ki)
+            yield tuple(res)
+
     make_kpts_ibz = make_kpts_ibz
     make_kpairs_ibz = make_kpairs_ibz
+    make_ktuples_ibz = make_ktuples_ibz
+    loop_ktuples = loop_ktuples
     symmetrize_density = symmetrize_density
     symmetrize_wavefunction = symmetrize_wavefunction
     transform_mo_coeff = transform_mo_coeff
