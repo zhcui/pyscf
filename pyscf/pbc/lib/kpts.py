@@ -22,7 +22,7 @@ from pyscf import lib
 from pyscf.lib import logger
 from pyscf import __config__
 from pyscf.pbc.symm import symmetry as symm
-from pyscf.pbc.lib.kpts_helper import member, KPT_DIFF_TOL
+from pyscf.pbc.lib.kpts_helper import member, KPT_DIFF_TOL, KptsHelper
 from numpy.linalg import inv
 
 libpbc = lib.load_library('libpbc')
@@ -238,6 +238,90 @@ def make_ktuples_ibz(kpts, ntuple=2):
     kk_sym_group = sym_group[::-1]
     ibz_kk_weight = np.bincount(bz2ibz_kk) *(1.0 / nbzk2)
     return ibz2bz_kk, ibz_kk_weight, bz2ibz_kk, kk_group, kk_sym_group
+
+def make_k4_ibz(kpts, sym='s1'):
+    #physicist's notation
+    ibz2bz, weight, _, group, _ = kpts.make_ktuples_ibz(3)
+    khelper = KptsHelper(kpts.cell, kpts.kpts)
+    k4 = []
+    for ki, kj, ka in kpts.loop_ktuples(ibz2bz, 3):
+        kb = khelper.kconserv[ki,ka,kj]
+        k4.append([ki,kj,ka,kb])
+
+    if sym == "s1":
+        return np.asarray(k4), np.asarray(weight)
+    elif sym == "s2" or sym == "s4":
+        k4_s2 = []
+        weight_s2 = []
+        for i, k in enumerate(k4):
+            ki,kj,ka,kb = k
+            k_sym = [kj,ki,kb,ka] #interchange dummy indices
+            if not k in k4_s2 and not k_sym in k4_s2:
+                k4_s2.append(k)
+                w = weight[i]
+                if k != k_sym and k_sym in k4:
+                    idx = k4.index(k_sym)
+                    w += weight[idx]
+                weight_s2.append(w)
+        #refine s2 symmetry
+        k4_s2_refine = []
+        weight_s2_refine = []
+        skip = np.zeros([len(k4_s2)], dtype=int)
+        for i, k in enumerate(k4_s2):
+            if skip[i]: continue
+            ki,kj,ka,kb = k
+            k_sym = [kj,ki,kb,ka]
+            if ki==kj and ka==kb:
+                k4_s2_refine.append(k)
+                weight_s2_refine.append(weight_s2[i])
+                continue
+            idx_sym = None
+            for j in range(i+1, len(k4_s2)):
+                if skip[j]: continue
+                k_tmp = k4_s2[j]
+                if ki in k_tmp and kj in k_tmp and ka in k_tmp and kb in k_tmp:
+                    idx = k4.index(k_tmp)
+                    for kii,kjj,kaa in kpts.loop_ktuples(group[idx], 3):
+                        kbb = khelper.kconserv[kii,kaa,kjj]
+                        if k_sym == [kii,kjj,kaa,kbb]:
+                            idx_sym = j
+                            break
+                    if idx_sym is not None:
+                        break
+            w = weight_s2[i]
+            if idx_sym is not None:
+                skip[idx_sym] = 1
+                w += weight_s2[idx_sym]
+            k4_s2_refine.append(k)
+            weight_s2_refine.append(w)
+        k4_s2 = k4_s2_refine
+        weight_s2 = weight_s2_refine
+        #end refine
+        if sym == "s2":
+            k4_s2 = np.asarray(k4_s2)
+            weight_s2 = np.asarray(weight_s2)
+            idx = np.lexsort(k4_s2.T[::-1,:])
+            return k4_s2[idx], weight_s2[idx]
+        else:
+            k4_s4 = []
+            weight_s4 = []
+            for i, k in enumerate(k4_s2):
+                ki,kj,ka,kb = k
+                k_sym = [ka,kb,ki,kj] #complex conjugate
+                if not k in k4_s4 and not k_sym in k4_s4:
+                    k4_s4.append(k)
+                    w = weight_s2[i]
+                    if k != k_sym and k_sym in k4_s2:
+                        idx = k4_s2.index(k_sym)
+                        w += weight_s2[idx]
+                    weight_s4.append(w)
+            k4_s4 = np.asarray(k4_s4)
+            weight_s4 = np.asarray(weight_s4)
+            idx = np.lexsort(k4_s4.T[::-1,:])
+            return k4_s4[idx], weight_s4[idx]
+    else:
+        raise NotImplementedError("Unsupported symmetry.")
+    return
 
 def map_k_points_fast(kpts_scaled, ops, tol=KPT_DIFF_TOL):
     #This routine is modified from GPAW
@@ -712,6 +796,7 @@ class KPoints(symm.Symmetry, lib.StreamObject):
     make_kpts_ibz = make_kpts_ibz
     make_kpairs_ibz = make_kpairs_ibz
     make_ktuples_ibz = make_ktuples_ibz
+    make_k4_ibz = make_k4_ibz
     loop_ktuples = loop_ktuples
     symmetrize_density = symmetrize_density
     symmetrize_wavefunction = symmetrize_wavefunction
