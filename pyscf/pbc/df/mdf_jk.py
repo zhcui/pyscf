@@ -49,17 +49,12 @@ def density_fit(mf, auxbasis=None, mesh=None, with_df=None):
     if with_df is None:
         if getattr(mf, 'kpts', None) is not None:
             kpts = mf.kpts
-            kpts_weights = mf.kpts_weights
         else:
             kpts = numpy.reshape(mf.kpt, (1,3))
-            kpts_weights = numpy.asarray([1.,])
 
+        if getattr(kpts, 'kpts', None) is not None:
+            kpts = kpts.kpts
         with_df = mdf.MDF(mf.cell, kpts)
-        with_df.kpts_weights = kpts_weights
-        if getattr(mf, 'kpts_descriptor', None) is not None:
-            #make sure default build contains all k-pairs for JK
-            with_df.kpts_band = mf.kpts_descriptor.kpts
-            with_df.kpts_descriptor = mf.kpts_descriptor
         with_df.max_memory = mf.max_memory
         with_df.stdout = mf.stdout
         with_df.verbose = mf.verbose

@@ -181,8 +181,6 @@ def _make_j3c(mydf, cell, auxcell, kptij_lst, cderi_file):
     # j2c ~ (-kpt_ji | kpt_ji)
     j2c = fused_cell.pbc_intor('int2c2e', hermi=1, kpts=uniq_kpts)
 
-    t1 = log.timer_debug1('2c2e', *t1)
-
     max_memory = max(2000, mydf.max_memory - lib.current_memory()[0])
     blksize = max(2048, int(max_memory*.5e6/16/fused_cell.nao_nr()))
     log.debug2('max_memory %s (MB)  blocksize %s', max_memory, blksize)
@@ -206,8 +204,6 @@ def _make_j3c(mydf, cell, auxcell, kptij_lst, cderi_file):
             LkR = LkI = None
         fswap['j2c/%d'%k] = fuse(fuse(j2c[k]).T).T
     j2c = coulG = None
-
-    t1 = log.timer_debug1('2c2e_PW', *t1)
 
     def cholesky_decomposed_metric(uniq_kptji_id):
         j2c = numpy.asarray(fswap['j2c/%d'%uniq_kptji_id])
@@ -241,7 +237,6 @@ def _make_j3c(mydf, cell, auxcell, kptij_lst, cderi_file):
     feri['j3c-kptij'] = kptij_lst
     nsegs = len(fswap['j3c-junk/0'])
     def make_kpt(uniq_kptji_id, cholesky_j2c):
-        t1 = (time.clock(), time.time())
         kpt = uniq_kpts[uniq_kptji_id]  # kpt = kptj - kpti
         log.debug1('kpt = %s', kpt)
         adapted_ji_idx = numpy.where(uniq_inverse == uniq_kptji_id)[0]
@@ -289,7 +284,6 @@ def _make_j3c(mydf, cell, auxcell, kptij_lst, cderi_file):
         # buf for ft_aopair
         buf = numpy.empty(nkptj*buflen*Gblksize, dtype=numpy.complex128)
         def pw_contract(istep, sh_range, j3cR, j3cI):
-            t1 = (time.clock(), time.time())
             bstart, bend, ncol = sh_range
             if aosym == 's2':
                 shls_slice = (bstart, bend, 0, bend)
@@ -314,8 +308,6 @@ def _make_j3c(mydf, cell, auxcell, kptij_lst, cderi_file):
                         lib.dot(kLR[p0:p1].T, pqkI.T, -1, j3cI[k][naux:], 1)
                         lib.dot(kLI[p0:p1].T, pqkR.T,  1, j3cI[k][naux:], 1)
 
-            t1 = log.timer_debug1('pw_con_j3c', *t1)
-
             for k, ji in enumerate(adapted_ji_idx):
                 if is_zero(kpt) and gamma_point(adapted_kptjs[k]):
                     v = fuse(j3cR[k])
@@ -330,7 +322,6 @@ def _make_j3c(mydf, cell, auxcell, kptij_lst, cderi_file):
                 # low-dimension systems
                 if j2c_negative is not None:
                     feri['j3c-/%d/%d'%(ji,istep)] = lib.dot(j2c_negative, v)
-            t1 = log.timer_debug1('pw_con_j3c_j2c', *t1)
 
         with lib.call_in_background(pw_contract) as compute:
             col1 = 0
@@ -358,8 +349,6 @@ def _make_j3c(mydf, cell, auxcell, kptij_lst, cderi_file):
                 compute(istep, sh_range, j3cR, j3cI)
         for ji in adapted_ji_idx:
             del(fswap['j3c-junk/%d'%ji])
-
-        t1 = log.timer_debug1('make_kpt', *t1)
 
     # Wrapped around boundary and symmetry between k and -k can be used
     # explicitly for the metric integrals.  We consider this symmetry
@@ -425,15 +414,7 @@ class GDF(aft.AFTDF):
         self.verbose = cell.verbose
         self.max_memory = cell.max_memory
 
-        self.kpts_descriptor = None
-        if hasattr(kpts, "kpts_ibz"):
-            self.kpts_descriptor = kpts
-            self.kpts = self.kpts_descriptor.kpts_ibz
-            self.kpts_weights = self.kpts_descriptor.weights_ibz
-        else:
-            self.kpts = kpts  # default is gamma point
-            self.kpts_weights = numpy.asarray([1./len(self.kpts)] * len(self.kpts))
-
+        self.kpts = kpts  # default is gamma point
         self.kpts_band = None
         self._auxbasis = None
 
@@ -535,7 +516,7 @@ class GDF(aft.AFTDF):
     def check_sanity(self):
         return lib.StreamObject.check_sanity(self)
 
-    def build(self, j_only=None, with_j3c=True, kpts_band=None, kptij_lst_input=None):
+    def build(self, j_only=None, with_j3c=True, kpts_band=None):
         if self.kpts_band is not None:
             self.kpts_band = numpy.reshape(self.kpts_band, (-1,3))
         if kpts_band is not None:
@@ -571,8 +552,6 @@ class GDF(aft.AFTDF):
             kptij_lst.extend([(ki, kj) for ki in kband_uniq for kj in kpts])
             kptij_lst.extend([(ki, ki) for ki in kband_uniq])
             kptij_lst = numpy.asarray(kptij_lst)
-        if kptij_lst_input is not None:
-            kptij_lst = numpy.asarray(kptij_lst_input)
 
         if with_j3c:
             if isinstance(self._cderi_to_save, str):
@@ -726,10 +705,6 @@ class GDF(aft.AFTDF):
             return _sub_df_jk_(self, dm, hermi, kpts, kpts_band,
                                with_j, with_k, omega, exxdiv)
 
-        if hasattr(kpts, "kpts_ibz"):
-            return self.get_jk_ibz(dm, hermi, kpts, kpts_band,
-                                   with_j, with_k, omega, exxdiv)
-
         if kpts is None:
             if numpy.all(self.kpts == 0):
                 # Gamma-point calculation by default
@@ -747,18 +722,6 @@ class GDF(aft.AFTDF):
             vk = df_jk.get_k_kpts(self, dm, hermi, kpts, kpts_band, exxdiv)
         if with_j:
             vj = df_jk.get_j_kpts(self, dm, hermi, kpts, kpts_band)
-        return vj, vk
-
-    def get_jk_ibz(self, dm, hermi=1, kpts=None, kpts_band=None,
-                   with_j=True, with_k=True, omega=None, exxdiv=None):
-        from pyscf.pbc.df import df_jk_ibz
-        if omega:
-            raise KeyError("Call get_jk instead for the long-range part of Coulomb.")
-        vj = vk = None
-        if with_k:
-            vk = df_jk_ibz.get_k_kpts_ibz(self, dm, hermi, kpts, kpts_band, exxdiv)
-        if with_j:
-            vj = df_jk_ibz.get_j_kpts_ibz(self, dm, hermi, kpts, kpts_band)
         return vj, vk
 
     get_eri = get_ao_eri = df_ao2mo.get_eri

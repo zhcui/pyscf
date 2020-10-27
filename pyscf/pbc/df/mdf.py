@@ -325,16 +325,8 @@ class MDF(df.DF):
         self.stdout = cell.stdout
         self.verbose = cell.verbose
         self.max_memory = cell.max_memory
-        
-        self.kpts_descriptor = None
-        if hasattr(kpts, "kpts_ibz"):
-            self.kpts_descriptor = kpts
-            self.kpts = self.kpts_descriptor.kpts_ibz
-            self.kpts_weights = self.kpts_descriptor.weights_ibz
-        else:
-            self.kpts = kpts  # default is gamma point
-            self.kpts_weights = numpy.asarray([1./len(self.kpts)] * len(self.kpts))
 
+        self.kpts = kpts  # default is gamma point
         self.kpts_band = None
         self._auxbasis = None
         self.mesh = _mesh_for_valence(cell)

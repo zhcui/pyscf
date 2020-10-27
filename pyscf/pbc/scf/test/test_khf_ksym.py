@@ -101,7 +101,7 @@ class KnownValues(unittest.TestCase):
         kmf0 = khf.KRHF(He, kpts=kpts0).density_fit().run()
         
         kpts = He.make_kpts(nk, space_group_symmetry=True,time_reversal_symmetry=True)
-        kmf = khf.KRHF(He, kpts=kpts).density_fit().run()
+        kmf = pscf.KRHF(He, kpts=kpts).density_fit().run()
         self.assertAlmostEqual(kmf.e_tot, kmf0.e_tot, 7)
 
     def test_krhf_mdf(self):
@@ -109,7 +109,7 @@ class KnownValues(unittest.TestCase):
         kmf0 = khf.KRHF(He, kpts=kpts0).mix_density_fit().run()
 
         kpts = He.make_kpts(nk, space_group_symmetry=True,time_reversal_symmetry=True)
-        kmf = khf.KRHF(He, kpts=kpts).mix_density_fit().run()
+        kmf = pscf.KRHF(He, kpts=kpts).mix_density_fit().run()
         self.assertAlmostEqual(kmf.e_tot, kmf0.e_tot, 7)
 
 if __name__ == '__main__':
