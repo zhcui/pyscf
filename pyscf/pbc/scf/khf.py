@@ -256,9 +256,9 @@ def energy_elec(mf, dm_kpts=None, h1e_kpts=None, vhf_kpts=None):
     if h1e_kpts is None: h1e_kpts = mf.get_hcore()
     if vhf_kpts is None: vhf_kpts = mf.get_veff(mf.cell, dm_kpts)
 
-    kpts_weights = mf.kpts_weights
-    e1 = np.einsum('k,kij,kji', kpts_weights, dm_kpts, h1e_kpts)
-    e_coul = np.einsum('k,kij,kji', kpts_weights, dm_kpts, vhf_kpts) * 0.5
+    nkpts = len(dm_kpts)
+    e1 = 1./nkpts * np.einsum('kij,kji', dm_kpts, h1e_kpts)
+    e_coul = 1./nkpts * np.einsum('kij,kji', dm_kpts, vhf_kpts) * 0.5
     mf.scf_summary['e1'] = e1.real
     mf.scf_summary['e2'] = e_coul.real
     logger.debug(mf, 'E1 = %s  E_coul = %s', e1, e_coul)
@@ -266,7 +266,6 @@ def energy_elec(mf, dm_kpts=None, h1e_kpts=None, vhf_kpts=None):
         logger.warn(mf, "Coulomb energy has imaginary part %s. "
                     "Coulomb integrals (e-e, e-N) may not converge !",
                     e_coul.imag)
-
     return (e1+e_coul).real, e_coul.real
 
 
@@ -378,16 +377,12 @@ def get_rho(mf, dm=None, grids=None, kpts=None):
     from pyscf.pbc.dft import numint
     if dm is None:
         dm = mf.make_rdm1()
-        if mf.kpts_descriptor is not None:
-            dm = mf.kpts_descriptor.transform_dm(dm)
     if getattr(dm[0], 'ndim', None) != 2:  # KUHF
         dm = dm[0] + dm[1]
     if grids is None:
         grids = gen_grid.UniformGrids(mf.cell)
     if kpts is None:
         kpts = mf.kpts
-        if mf.kpts_descriptor is not None:
-            kpts = mf.kpts_descriptor.kpts
     ni = numint.KNumInt()
     return ni.get_rho(mf.cell, dm, grids, kpts, mf.max_memory)
 
@@ -454,16 +449,12 @@ class KSCF(pbchf.SCF):
     Attributes:
         kpts : (nks,3) ndarray
             The sampling k-points in Cartesian coordinates, in units of 1/Bohr.
-        kpts_weights  : (nks,) ndarray
-            The weights of k-points.
-        kpts_descriptor : :class:`KPoints` object
-            Not None if k-point symmetry is considered.
     '''
     conv_tol_grad = getattr(__config__, 'pbc_scf_KSCF_conv_tol_grad', None)
     direct_scf = getattr(__config__, 'pbc_scf_SCF_direct_scf', False)
 
     def __init__(self, cell, kpts=np.zeros((1,3)),
-                 exxdiv=getattr(__config__, 'pbc_scf_SCF_exxdiv', 'ewald')): 
+                 exxdiv=getattr(__config__, 'pbc_scf_SCF_exxdiv', 'ewald')):
         if not cell._built:
             sys.stderr.write('Warning: cell.build() is not called in input\n')
             cell.build()
@@ -472,18 +463,11 @@ class KSCF(pbchf.SCF):
 
         self.with_df = df.FFTDF(cell)
         self.exxdiv = exxdiv
-        self.kpts_descriptor = None
-        if hasattr(kpts, 'kpts_ibz'):
-            self.kpts_descriptor = kpts
-            self.kpts = self.kpts_descriptor.kpts_ibz
-            self.kpts_weights  = self.kpts_descriptor.weights_ibz
-        else:
-            self.kpts = kpts
-            self.kpts_weights = np.asarray([1./len(self.kpts)] * len(self.kpts))
+        self.kpts = kpts
         self.conv_tol = cell.precision * 10
 
         self.exx_built = False
-        self._keys = self._keys.union(['cell', 'exx_built', 'exxdiv', 'with_df', 'kpts_weights','kpts_descriptor'])
+        self._keys = self._keys.union(['cell', 'exx_built', 'exxdiv', 'with_df'])
 
     @property
     def kpts(self):
@@ -491,24 +475,9 @@ class KSCF(pbchf.SCF):
             # To handle the attribute kpt loaded from chkfile
             self.kpt = self.__dict__.pop('kpts')
         return self.with_df.kpts
-
     @kpts.setter
     def kpts(self, x):
-        if hasattr(x, 'kpts_ibz'):
-            self.with_df.kpts = np.reshape(x.kpts_ibz, (-1,3))
-            self.with_df.kpts_weights = x.weights_ibz
-        else:
-            kpts = np.reshape(x, (-1,3))
-            self.with_df.kpts = kpts
-            self.with_df.kpts_weights = [1./len(kpts)] * len(kpts)
-
-    @property
-    def kpts_weights(self):
-        return self.with_df.kpts_weights
-
-    @kpts_weights.setter
-    def kpts_weights(self, x):
-        self.with_df.kpts_weights = np.asarray(x)
+        self.with_df.kpts = np.reshape(x, (-1,3))
 
     @property
     def mo_energy_kpts(self):
@@ -537,10 +506,7 @@ class KSCF(pbchf.SCF):
         cell = self.cell
         if ((cell.dimension >= 2 and cell.low_dim_ft_type != 'inf_vacuum') and
             isinstance(self.exxdiv, str) and self.exxdiv.lower() == 'ewald'):
-            kpts = self.kpts
-            if self.kpts_descriptor is not None:
-                kpts = self.kpts_descriptor.kpts
-            madelung = tools.pbc.madelung(cell, [kpts])
+            madelung = tools.pbc.madelung(cell, [self.kpts])
             logger.info(self, '    madelung (= occupied orbital energy shift) = %s', madelung)
             nkpts = len(self.kpts)
             # FIXME: consider the fractional num_electron or not? This maybe
@@ -597,14 +563,13 @@ class KSCF(pbchf.SCF):
         else:
             dm = self.init_guess_by_minao(cell)
 
-        nkpts = len(self.kpts)
         if dm_kpts is None:
-            dm_kpts = lib.asarray([dm]*nkpts)
+            dm_kpts = lib.asarray([dm]*len(self.kpts))
 
-        ne = np.einsum('k,kij,kji', self.kpts_weights, dm_kpts, self.get_ovlp(cell)).real
+        ne = np.einsum('kij,kji->', dm_kpts, self.get_ovlp(cell)).real
         # FIXME: consider the fractional num_electron or not? This maybe
         # relate to the charged system.
-        ne *= nkpts
+        nkpts = len(self.kpts)
         nelectron = float(self.cell.tot_electrons(nkpts))
         if abs(ne - nelectron) > 1e-7*nkpts:
             logger.debug(self, 'Big error detected in the electron number '
@@ -645,12 +610,6 @@ class KSCF(pbchf.SCF):
         if cell is None: cell = self.cell
         if kpts is None: kpts = self.kpts
         if dm_kpts is None: dm_kpts = self.make_rdm1()
-        kd = self.kpts_descriptor
-        if len(kpts) == getattr(kd, 'nkpts_ibz', 0) and np.allclose(kpts, kd.kpts_ibz):
-            #kpts = kd
-            kpts = kd.kpts
-            dm_kpts = kd.transform_dm(dm_kpts)
-            if kpts_band is None: kpts_band = kd.kpts_ibz
         cpu0 = (time.clock(), time.time())
         vj, vk = self.with_df.get_jk(dm_kpts, hermi, kpts, kpts_band,
                                      with_j, with_k, omega, exxdiv=self.exxdiv)
@@ -701,6 +660,7 @@ class KSCF(pbchf.SCF):
             # Note: this is actually "self.mo_occ_kpts"
             # which is stored in self.mo_occ of the scf.hf.RHF superclass
             mo_occ_kpts = self.mo_occ
+
         return make_rdm1(mo_coeff_kpts, mo_occ_kpts, **kwargs)
 
     def get_bands(self, kpts_band, cell=None, dm_kpts=None, kpts=None):
@@ -757,14 +717,14 @@ class KSCF(pbchf.SCF):
     get_rho = get_rho
 
     @lib.with_doc(dip_moment.__doc__)
-    def dip_moment(self, cell=None, dm=None, kpts=None, unit='Debye', verbose=logger.NOTE,
+    def dip_moment(self, cell=None, dm=None, unit='Debye', verbose=logger.NOTE,
                    **kwargs):
         rho = kwargs.pop('rho', None)
         if rho is None:
             rho = self.get_rho(dm)
         if cell is None:
             cell = self.cell
-        return dip_moment(cell, dm, unit, verbose, rho=rho, kpts=kpts, **kwargs)
+        return dip_moment(cell, dm, unit, verbose, rho=rho, kpts=self.kpts, **kwargs)
 
     canonicalize = canonicalize
 

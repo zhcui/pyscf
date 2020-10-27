@@ -167,14 +167,7 @@ class FFTDF(lib.StreamObject):
         self.verbose = cell.verbose
         self.max_memory = cell.max_memory
 
-        self.kpts_descriptor = None
-        if hasattr(kpts, "kpts_ibz"):
-            self.kpts_descriptor = kpts
-            self.kpts = self.kpts_descriptor.kpts_ibz
-            self.kpts_weights = self.kpts_descriptor.weights_ibz
-        else:
-            self.kpts = kpts
-            self.kpts_weights = numpy.asarray([1./len(self.kpts)] * len(self.kpts))
+        self.kpts = kpts
         self.grids = gen_grid.UniformGrids(cell)
 
         # to mimic molecular DF object
@@ -323,10 +316,6 @@ class FFTDF(lib.StreamObject):
             return _sub_df_jk_(self, dm, hermi, kpts, kpts_band,
                                with_j, with_k, omega, exxdiv)
 
-        if hasattr(kpts, "kpts_ibz"):
-            return self.get_jk_ibz(dm, hermi, kpts, kpts_band,
-                                   with_j, with_k, omega, exxdiv)
-
         if kpts is None:
             if numpy.all(self.kpts == 0): # Gamma-point J/K by default
                 kpts = numpy.zeros(3)
@@ -344,18 +333,6 @@ class FFTDF(lib.StreamObject):
                 vk = fft_jk.get_k_kpts(self, dm, hermi, kpts, kpts_band, exxdiv)
             if with_j:
                 vj = fft_jk.get_j_kpts(self, dm, hermi, kpts, kpts_band)
-        return vj, vk
-
-    def get_jk_ibz(self, dm, hermi=1, kpts=None, kpts_band=None,
-                   with_j=True, with_k=True, omega=None, exxdiv=None):
-        from pyscf.pbc.df import fft_jk_ibz
-        if omega:
-            raise KeyError("Call get_jk instead for the long-range part of Coulomb.")
-        vj = vk = None
-        if with_k:
-            vk = fft_jk_ibz.get_k_kpts_ibz(self, dm, hermi, kpts, kpts_band, exxdiv)
-        if with_j:
-            vj = fft_jk_ibz.get_j_kpts_ibz(self, dm, hermi, kpts, kpts_band)
         return vj, vk
 
     get_eri = get_ao_eri = fft_ao2mo.get_eri

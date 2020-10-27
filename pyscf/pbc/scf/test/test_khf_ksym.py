@@ -61,7 +61,7 @@ class KnownValues(unittest.TestCase):
         kmf0 = khf.KRHF(cell, kpts=kpts0).run()
 
         kpts = cell.make_kpts(nk, with_gamma_point=True,space_group_symmetry=True,time_reversal_symmetry=True)
-        kmf = khf.KRHF(cell, kpts=kpts).run()
+        kmf = pscf.KRHF(cell, kpts=kpts).run()
         self.assertAlmostEqual(kmf.e_tot, kmf0.e_tot, 7)
 
     def test_krhf_monkhorst(self):
@@ -69,7 +69,7 @@ class KnownValues(unittest.TestCase):
         kmf0 = khf.KRHF(cell, kpts=kpts0).run()
 
         kpts = cell.make_kpts(nk, with_gamma_point=False,space_group_symmetry=True,time_reversal_symmetry=True)
-        kmf = khf.KRHF(cell, kpts=kpts).run()
+        kmf = pscf.KRHF(cell, kpts=kpts).run()
         self.assertAlmostEqual(kmf.e_tot, kmf0.e_tot, 7)
 
     def test_kuhf_gamma_center(self):
