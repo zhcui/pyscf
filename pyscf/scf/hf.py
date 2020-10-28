@@ -112,13 +112,6 @@ def kernel(mf, conv_tol=1e-10, conv_tol_grad=None,
         raise RuntimeError('''
 You see this error message because of the API updates in pyscf v0.11.
 Keyword argument "init_dm" is replaced by "dm0"''')
-
-    from pyscf.scf import uhf
-    if isinstance(mf, uhf.UHF) and getattr(mf, 'kpts_descriptor', None) is not None:
-        if getattr(mf,'smearing_method',None) is None:
-            raise RuntimeError('Smearing is a must for preserving k-point symmetry in KUHF.')
-    del(uhf)
-
     cput0 = (time.clock(), time.time())
     if conv_tol_grad is None:
         conv_tol_grad = numpy.sqrt(conv_tol)

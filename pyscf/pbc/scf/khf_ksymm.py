@@ -159,7 +159,11 @@ class KsymAdaptedKRHF(khf.KRHF):
         if kpts is None: kpts = self.kpts
         if dm_kpts is None: dm_kpts = self.make_rdm1()
         #get dms for each kpt in BZ
-        if len(dm_kpts) != kpts.nkpts_ibz:
+        if isinstance(dm_kpts[0], np.ndarray) and dm_kpts[0].ndim == 3:
+            ndm = len(dm_kpts[0])
+        else:
+            ndm = len(dm_kpts)
+        if ndm != kpts.nkpts_ibz:
             raise RuntimeError("Number of input density matrices does not \
                                match the number of IBZ kpts: %d vs %d." \
                                % (len(dm_kpts),kpts.nkpts_ibz))
@@ -189,7 +193,12 @@ class KsymAdaptedKRHF(khf.KRHF):
             return super().get_rho(dm, grids, kpts)
         if dm is None: dm = self.make_rdm1()
         if kpts is None: kpts = self.kpts
-        if len(dm) != kpts.nkpts_ibz:
+
+        if isinstance(dm_kpts[0], np.ndarray) and dm_kpts[0].ndim == 3:
+            ndm = len(dm_kpts[0])
+        else:
+            ndm = len(dm_kpts)
+        if ndm != kpts.nkpts_ibz:
             raise RuntimeError("Number of input density matrices does not \
                                match the number of IBZ kpts: %d vs %d." \
                                % (len(dm),kpts.nkpts_ibz))

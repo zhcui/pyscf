@@ -141,8 +141,6 @@ def get_occ(mf, mo_energy_kpts=None, mo_coeff_kpts=None):
     if mo_energy_kpts is None: mo_energy_kpts = mf.mo_energy
 
     nocc_a, nocc_b = mf.nelec
-    if mf.kpts_descriptor is not None:
-        mo_energy_kpts = mf.kpts_descriptor.transform_mo_energy(mo_energy_kpts)
     mo_energy = np.sort(np.hstack(mo_energy_kpts[0]))
     fermi_a = mo_energy[nocc_a-1]
     mo_occ_kpts = [[], []]
@@ -192,9 +190,6 @@ def get_occ(mf, mo_energy_kpts=None, mo_coeff_kpts=None):
                              k, kpt[0], kpt[1], kpt[2], mo_energy_kpts[1][k])
         np.set_printoptions(threshold=1000)
 
-    if mf.kpts_descriptor is not None:
-        mo_occ_kpts[0] = mf.kpts_descriptor.check_mo_occ_symmetry(mo_occ_kpts[0])
-        mo_occ_kpts[1] = mf.kpts_descriptor.check_mo_occ_symmetry(mo_occ_kpts[1])
     return mo_occ_kpts
 
 
@@ -204,17 +199,12 @@ def energy_elec(mf, dm_kpts=None, h1e_kpts=None, vhf_kpts=None):
     if dm_kpts is None: dm_kpts = mf.make_rdm1()
     if h1e_kpts is None: h1e_kpts = mf.get_hcore()
     if vhf_kpts is None: vhf_kpts = mf.get_veff(mf.cell, dm_kpts)
-    wtk = mf.kpts_weights
 
-    #nkpts = len(h1e_kpts)
-    #e1 = 1./nkpts * np.einsum('kij,kji', dm_kpts[0], h1e_kpts)
-    #e1+= 1./nkpts * np.einsum('kij,kji', dm_kpts[1], h1e_kpts)
-    e1 = np.einsum('k,kij,kji', wtk, dm_kpts[0], h1e_kpts)
-    e1+= np.einsum('k,kij,kji', wtk, dm_kpts[1], h1e_kpts)
-    #e_coul = 1./nkpts * np.einsum('kij,kji', dm_kpts[0], vhf_kpts[0]) * 0.5
-    #e_coul+= 1./nkpts * np.einsum('kij,kji', dm_kpts[1], vhf_kpts[1]) * 0.5
-    e_coul = np.einsum('k,kij,kji', wtk, dm_kpts[0], vhf_kpts[0]) * 0.5
-    e_coul+= np.einsum('k,kij,kji', wtk, dm_kpts[1], vhf_kpts[1]) * 0.5
+    nkpts = len(h1e_kpts)
+    e1 = 1./nkpts * np.einsum('kij,kji', dm_kpts[0], h1e_kpts)
+    e1+= 1./nkpts * np.einsum('kij,kji', dm_kpts[1], h1e_kpts)
+    e_coul = 1./nkpts * np.einsum('kij,kji', dm_kpts[0], vhf_kpts[0]) * 0.5
+    e_coul+= 1./nkpts * np.einsum('kij,kji', dm_kpts[1], vhf_kpts[1]) * 0.5
     mf.scf_summary['e1'] = e1.real
     mf.scf_summary['e2'] = e_coul.real
     logger.debug(mf, 'E1 = %s  E_coul = %s', e1, e_coul)
@@ -405,8 +395,6 @@ class KUHF(khf.KSCF, pbcuhf.UHF):
         else:
             cell = self.cell
             nkpts = len(self.kpts)
-            if self.kpts_descriptor is not None:
-                nkpts = self.kpts_descriptor.nkpts
             ne = cell.tot_electrons(nkpts)
             nalpha = (ne + cell.spin) // 2
             nbeta = nalpha - cell.spin
@@ -455,13 +443,10 @@ class KUHF(khf.KSCF, pbcuhf.UHF):
             dm_kpts[1,:] *= 0.99  # To slightly break spin symmetry
             assert dm_kpts.shape[0]==2
 
-        ne = np.einsum('k,xkij,kji->x', self.kpts_weights, dm_kpts, self.get_ovlp(cell)).real
+        ne = np.einsum('xkij,kji->x', dm_kpts, self.get_ovlp(cell)).real
         # FIXME: consider the fractional num_electron or not? This maybe
         # relates to the charged system.
         nkpts = len(self.kpts)
-        if self.kpts_descriptor is not None:
-            nkpts = self.kpts_descriptor.nkpts
-        ne *= nkpts
         nelec = np.asarray(self.nelec)
         if np.any(abs(ne - nelec) > 1e-7*nkpts):
             logger.debug(self, 'Big error detected in the electron number '
@@ -504,7 +489,7 @@ class KUHF(khf.KSCF, pbcuhf.UHF):
             g = reduce(np.dot, (mo[:,viridx].T.conj(), fock, mo[:,occidx]))
             return g.ravel()
 
-        nkpts = len(self.kpts)
+        nkpts = len(mo_occ_kpts[0])
         grad_kpts = [grad(mo_coeff_kpts[0][k], mo_occ_kpts[0][k], fock[0][k])
                      for k in range(nkpts)]
         grad_kpts+= [grad(mo_coeff_kpts[1][k], mo_occ_kpts[1][k], fock[1][k])

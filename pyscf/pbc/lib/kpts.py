@@ -329,15 +329,15 @@ def map_k_points_fast(kpts_scaled, ops, tol=KPT_DIFF_TOL):
     Find symmetry-related k-points.
 
     Arguments:
-        kpts_scaled : (nkpts, 3) array
+        kpts_scaled : (nkpts, 3) ndarray
             scaled k-points
-        ops : (nop, 3, 3) array
+        ops : (nop, 3, 3) ndarray of int
             rotation operators
         tol : float
             k-points differ by `tol` are considered as different
 
     Returns:
-        bz2bz_ks : (nkpts, nop) array of int
+        bz2bz_ks : (nkpts, nop) ndarray of int
             mapping table between k and op*k.
             bz2bz_ks[k1,s] = k2 if ops[s] * kpts_scaled[k1] = kpts_scaled[k2] + K,
             where K is a reciprocal lattice vector.
@@ -471,7 +471,7 @@ def transform_mo_coeff(kpts, mo_coeff_ibz):
 
     Arguments:
         kpts : :class:`KPoints` object
-        mo_coeff_ibz : ([2,] nkpts_ibz, nao, nmo) array
+        mo_coeff_ibz : ([2,] nkpts_ibz, nao, nmo) ndarray
             MO coefficients for k-points in IBZ
     '''
     mos = []
@@ -517,7 +517,7 @@ def transform_mo_coeff_k(kpts, mo_coeff_ibz, k):
 
     Arguments:
         kpts : :class:`KPoints` object
-        mo_coeff_ibz : (nkpts_ibz, nao, nmo) array
+        mo_coeff_ibz : (nkpts_ibz, nao, nmo) ndarray
             MO coefficients for k-points in IBZ
         k : int
             k-point index in BZ
@@ -617,7 +617,7 @@ def transform_dm(kpts, dm_ibz):
 
 def transform_mo_energy(kpts, mo_energy_ibz):
     '''
-    Transform mo_energy from IBZ to full BZ
+    Transform MO energies from IBZ to full BZ
     '''
     is_uhf = False
     if isinstance(mo_energy_ibz[0][0], np.ndarray):
@@ -636,14 +636,18 @@ def transform_mo_energy(kpts, mo_energy_ibz):
 
 def check_mo_occ_symmetry(kpts, mo_occ, tol=1e-6):
     '''
-    Check if mo_occ has the correct symmetry
+    Check if MO occupations in BZ have the correct symmetry
+    and return MO occupations in IBZ.
     '''
     for bz_k in kpts.stars:
         nbzk = len(bz_k)
         for i in range(nbzk):
             for j in range(i+1,nbzk):
                 if not (np.absolute(mo_occ[bz_k[i]] - mo_occ[bz_k[j]]) < tol).all():
-                    raise RuntimeError("Symmetry broken")
+                    raise RuntimeError("Symmetry broken solution found. \
+                                        This is probably due to KUHF calculations \
+                                        with integer occupation numbers. \
+                                        Try use smearing or turn off symmetry.")
     mo_occ_ibz = []
     for k in range(kpts.nkpts_ibz):
         mo_occ_ibz.append(mo_occ[kpts.ibz2bz[k]])
@@ -743,7 +747,7 @@ class KPoints(symm.Symmetry, lib.StreamObject):
         self._nkpts_ibz = n
 
     def build(self, space_group_symmetry=True, time_reversal_symmetry=True,
-              symmorphic=True, make_kpairs=True, *args, **kwargs):
+              symmorphic=True, *args, **kwargs):
         symm.Symmetry.build(self, space_group_symmetry, symmorphic, *args, **kwargs)
         if not getattr(self.cell, '_built', None): return
 
@@ -751,8 +755,6 @@ class KPoints(symm.Symmetry, lib.StreamObject):
         self.kpts_scaled_ibz = self.kpts_scaled = self.cell.get_scaled_kpts(self.kpts)
         self.make_kpts_ibz()
         self.dump_info()
-        if make_kpairs:
-            self.make_kpairs_ibz()
         return self
 
     def dump_info(self):

@@ -75,24 +75,20 @@ class KnownValues(unittest.TestCase):
     def test_kuhf_gamma_center(self):
         kpts0 = cell.make_kpts(nk, with_gamma_point=True)
         kmf0 = kuhf.KUHF(cell, kpts=kpts0)
-        kmf0 = pscf.addons.smearing_(kmf0, sigma=0.001, method='fermi',fix_spin=True)
         kmf0.kernel()
 
         kpts = cell.make_kpts(nk, with_gamma_point=True,space_group_symmetry=True,time_reversal_symmetry=True)
-        kumf = kuhf.KUHF(cell, kpts=kpts)
-        kumf = pscf.addons.smearing_(kumf, sigma=0.001, method='fermi',fix_spin=True)
+        kumf = pscf.KUHF(cell, kpts=kpts)
         kumf.kernel()
         self.assertAlmostEqual(kumf.e_tot, kmf0.e_tot, 7)
 
     def test_kuhf_monkhorst(self):
         kpts0 = cell.make_kpts(nk, with_gamma_point=False)
         kmf0 = kuhf.KUHF(cell, kpts=kpts0)
-        kmf0 = pscf.addons.smearing_(kmf0, sigma=0.001, method='fermi',fix_spin=True)
         kmf0.kernel()
 
         kpts = cell.make_kpts(nk, with_gamma_point=False,space_group_symmetry=True,time_reversal_symmetry=True)
-        kumf = kuhf.KUHF(cell, kpts=kpts)
-        kumf = pscf.addons.smearing_(kumf, sigma=0.001, method='fermi',fix_spin=True)
+        kumf = pscf.KUHF(cell, kpts=kpts)
         kumf.kernel()
         self.assertAlmostEqual(kumf.e_tot, kmf0.e_tot, 7)
 
@@ -110,6 +106,22 @@ class KnownValues(unittest.TestCase):
 
         kpts = He.make_kpts(nk, space_group_symmetry=True,time_reversal_symmetry=True)
         kmf = pscf.KRHF(He, kpts=kpts).mix_density_fit().run()
+        self.assertAlmostEqual(kmf.e_tot, kmf0.e_tot, 7)
+
+    def test_kuhf_df(self):
+        kpts0 = He.make_kpts(nk)
+        kmf0 = kuhf.KUHF(He, kpts=kpts0).density_fit().run()
+
+        kpts = He.make_kpts(nk, space_group_symmetry=True,time_reversal_symmetry=True)
+        kmf = pscf.KUHF(He, kpts=kpts).density_fit().run()
+        self.assertAlmostEqual(kmf.e_tot, kmf0.e_tot, 7)
+
+    def test_kuhf_mdf(self):
+        kpts0 = He.make_kpts(nk)
+        kmf0 = kuhf.KUHF(He, kpts=kpts0).mix_density_fit().run()
+
+        kpts = He.make_kpts(nk, space_group_symmetry=True,time_reversal_symmetry=True)
+        kmf = pscf.KUHF(He, kpts=kpts).mix_density_fit().run()
         self.assertAlmostEqual(kmf.e_tot, kmf0.e_tot, 7)
 
 if __name__ == '__main__':
