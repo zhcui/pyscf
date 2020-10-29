@@ -29,7 +29,7 @@ if (CMAKE_COMPILER_IS_GNUCC) # Does it skip the link flag on old OsX?
     set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--no-as-needed")
   endif()
 endif()
-set(CMAKE_C_FLAGS "-g -Wall ${CMAKE_C_FLAGS}")
+set(CMAKE_C_FLAGS "-Wall ${CMAKE_C_FLAGS}")
 
 if (${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION} VERSION_GREATER 3.0.0)
   cmake_policy(SET CMP0042 NEW)
@@ -55,7 +55,7 @@ else()
   message(STATUS "BLAS libraries: ${BLAS_LIBRARIES}")
 endif()
 # if unable to find mkl library, just create BLAS_LIBRARIES here, e.g.
-#set(BLAS_LIBRARIES "-L/usr/local/apps/anaconda2/2019.03/lib -lmkl_def -lmkl_intel_lp64 -lmkl_gnu_thread -lmkl_core -lpthread -lmkl_avx -lm -lgomp")
+# set(BLAS_LIBRARIES "-L/path/to/mkl/lib -lmkl_intel_lp64 -lmkl_sequential -lmkl_core -lpthread -lmkl_avx -lm")
 # or
 # set(BLAS_LIBRARIES "                  /path/to/mkl/lib/intel64/libmkl_intel_lp64.so")
 # set(BLAS_LIBRARIES "${BLAS_LIBRARIES};/path/to/mkl/lib/intel64/libmkl_sequential.so")
@@ -67,15 +67,6 @@ endif()
 # These settings can be written in the cmake.arch.inc file. This config file
 # will automatically load all settings specified in cmake.arch.inc
 #
-
-#if (${BLA_VENDOR} STREQUAL "Intel10_64lp_seq")
-#  find_path (BLAS_INCLUDE_DIRS mkl.h
-#    /usr/include
-#    /usr/local/include
-#    /usr/include/x86_64-linux-gnu
-#    $ENV{MKLROOT}/include)
-#  include_directories(${BLAS_INCLUDE_DIRS})
-#endif()
 
 find_package(OpenMP)
 if(OPENMP_FOUND)
