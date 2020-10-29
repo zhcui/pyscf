@@ -63,7 +63,7 @@ class KnownValues(unittest.TestCase):
         kmf0.kernel()
 
         kpts = cell.make_kpts(nk, with_gamma_point=True,space_group_symmetry=True,time_reversal_symmetry=True)
-        kmf = krks.KRKS(cell, kpts=kpts)
+        kmf = pscf.KRKS(cell, kpts=kpts)
         kmf.xc = 'lda'
         kmf.kernel()
         self.assertAlmostEqual(kmf.e_tot, kmf0.e_tot, 7)
@@ -75,7 +75,7 @@ class KnownValues(unittest.TestCase):
         kmf0.kernel()
 
         kpts = cell.make_kpts(nk, with_gamma_point=False,space_group_symmetry=True,time_reversal_symmetry=True)
-        kmf = krks.KRKS(cell, kpts=kpts)
+        kmf = pscf.KRKS(cell, kpts=kpts)
         kmf.xc = 'lda'
         kmf.kernel()
         self.assertAlmostEqual(kmf.e_tot, kmf0.e_tot, 7)
@@ -84,13 +84,11 @@ class KnownValues(unittest.TestCase):
         kpts0 = cell.make_kpts(nk, with_gamma_point=True)
         kumf0 = kuks.KUKS(cell, kpts=kpts0)
         kumf0.xc = 'lda'
-        kumf0 = pscf.addons.smearing_(kumf0, sigma=0.001, method='fermi',fix_spin=True)
         kumf0.kernel()
 
         kpts = cell.make_kpts(nk, with_gamma_point=True,space_group_symmetry=True,time_reversal_symmetry=True)
-        kumf = kuks.KUKS(cell, kpts=kpts)
+        kumf = pscf.KUKS(cell, kpts=kpts)
         kumf.xc = 'lda'
-        kumf = pscf.addons.smearing_(kumf, sigma=0.001, method='fermi',fix_spin=True)
         kumf.kernel()
         self.assertAlmostEqual(kumf.e_tot, kumf0.e_tot, 7)
 
@@ -98,13 +96,11 @@ class KnownValues(unittest.TestCase):
         kpts0 = cell.make_kpts(nk, with_gamma_point=False)
         kumf0 = kuks.KUKS(cell, kpts=kpts0)
         kumf0.xc = 'lda'
-        kumf0 = pscf.addons.smearing_(kumf0, sigma=0.001, method='fermi',fix_spin=True)
         kumf0.kernel()
 
         kpts = cell.make_kpts(nk, with_gamma_point=False,space_group_symmetry=True,time_reversal_symmetry=True)
-        kumf = kuks.KUKS(cell, kpts=kpts)
+        kumf = pscf.KUKS(cell, kpts=kpts)
         kumf.xc = 'lda'
-        kumf = pscf.addons.smearing_(kumf, sigma=0.001, method='fermi',fix_spin=True)
         kumf.kernel()
         self.assertAlmostEqual(kumf.e_tot, kumf0.e_tot, 7)
 
@@ -115,7 +111,7 @@ class KnownValues(unittest.TestCase):
         kmf0.kernel()
 
         kpts = He.make_kpts(nk, with_gamma_point=False, space_group_symmetry=True,time_reversal_symmetry=True)
-        kmf = krks.KRKS(He, kpts=kpts)
+        kmf = pscf.KRKS(He, kpts=kpts)
         kmf.xc = 'camb3lyp'
         kmf.kernel()
         self.assertAlmostEqual(kmf.e_tot, kmf0.e_tot, 9)
@@ -127,7 +123,7 @@ class KnownValues(unittest.TestCase):
         kmf0.kernel()
 
         kpts = He.make_kpts(nk, with_gamma_point=False, space_group_symmetry=True,time_reversal_symmetry=True)
-        kmf = krks.KRKS(He, kpts=kpts).density_fit()
+        kmf = pscf.KRKS(He, kpts=kpts).density_fit()
         kmf.xc = 'camb3lyp'
         kmf.kernel()
         self.assertAlmostEqual(kmf.e_tot, kmf0.e_tot, 9)
@@ -139,7 +135,7 @@ class KnownValues(unittest.TestCase):
         kmf0.kernel()
 
         kpts = He.make_kpts(nk, with_gamma_point=False, space_group_symmetry=True,time_reversal_symmetry=True)
-        kmf = krks.KRKS(He, kpts=kpts).mix_density_fit()
+        kmf = pscf.KRKS(He, kpts=kpts).mix_density_fit()
         kmf.xc = 'camb3lyp'
         kmf.kernel()
         self.assertAlmostEqual(kmf.e_tot, kmf0.e_tot, 9)
@@ -151,7 +147,7 @@ class KnownValues(unittest.TestCase):
         kmf0.kernel()
 
         kpts = cell.make_kpts(nk,space_group_symmetry=True,time_reversal_symmetry=True)
-        kmf = krks.KRKS(cell, kpts=kpts)
+        kmf = pscf.KRKS(cell, kpts=kpts)
         kmf.xc = 'lda'
         kmf = multigrid.multigrid(kmf)
         kmf.kernel()

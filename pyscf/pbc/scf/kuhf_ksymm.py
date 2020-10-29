@@ -107,7 +107,9 @@ def energy_elec(mf, dm_kpts=None, h1e_kpts=None, vhf_kpts=None):
 
 
 class KsymAdaptedKUHF(kuhf.KUHF, khf_ksymm.KRHF):
-
+    """
+    KUHF with k-point symmetry
+    """
     def __init__(self, cell, kpts=libkpts.KPoints(),
                  exxdiv=getattr(__config__, 'pbc_scf_SCF_exxdiv', 'ewald')):
         self._kpts = None

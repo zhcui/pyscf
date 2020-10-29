@@ -19,12 +19,32 @@ from pyscf.pbc.dft import roks
 from pyscf.pbc.dft import krks
 from pyscf.pbc.dft import kuks
 from pyscf.pbc.dft import kroks
+from pyscf.pbc.dft import krks_ksymm
+from pyscf.pbc.dft import kuks_ksymm
 
 UKS = uks.UKS
 ROKS = roks.ROKS
 
-KRKS = krks.KRKS
-KUKS = kuks.KUKS
+#KRKS = krks.KRKS
+def KRKS(cell, *args, **kwargs):
+    for arg in args:
+        if hasattr(arg, "kpts_ibz"):
+            return krks_ksymm.KRKS(cell, *args, **kwargs)
+    if 'kpts' in kwargs:
+        if hasattr(kwargs['kpts'], "kpts_ibz"):
+            return krks_ksymm.KRKS(cell, *args, **kwargs)
+    return krks.KRKS(cell, *args, **kwargs)
+
+#KUKS = kuks.KUKS
+def KUKS(cell, *args, **kwargs):
+    for arg in args:
+        if hasattr(arg, "kpts_ibz"):
+            return kuks_ksymm.KUKS(cell, *args, **kwargs)
+    if 'kpts' in kwargs:
+        if hasattr(kwargs['kpts'], "kpts_ibz"):
+            return kuks_ksymm.KUKS(cell, *args, **kwargs)
+    return kuks.KUKS(cell, *args, **kwargs)
+
 KROKS = kroks.KROKS
 
 def RKS(cell, *args, **kwargs):

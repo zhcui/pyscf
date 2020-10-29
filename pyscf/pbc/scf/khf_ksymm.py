@@ -27,7 +27,7 @@ from pyscf.pbc import tools
 from pyscf.pbc.lib import kpts as libkpts
 from pyscf.pbc.scf import khf
 
-
+@lib.with_doc(khf.energy_elec.__doc__)
 def energy_elec(mf, dm_kpts=None, h1e_kpts=None, vhf_kpts=None):
     if dm_kpts is None: dm_kpts = mf.make_rdm1()
     if h1e_kpts is None: h1e_kpts = mf.get_hcore()
@@ -47,6 +47,9 @@ def energy_elec(mf, dm_kpts=None, h1e_kpts=None, vhf_kpts=None):
 
 
 class KsymAdaptedKRHF(khf.KRHF):
+    """
+    KRHF with k-point symmetry
+    """
     def __init__(self, cell, kpts=libkpts.KPoints(),
                  exxdiv=getattr(__config__, 'pbc_scf_SCF_exxdiv', 'ewald')):
         self._kpts = None
@@ -138,18 +141,21 @@ class KsymAdaptedKRHF(khf.KRHF):
             dm_kpts *= (nelectron / ne).reshape(-1,1,1)
         return dm_kpts
 
+    @lib.with_doc(khf.get_ovlp.__doc__)
     def get_ovlp(self, cell=None, kpts=None):
         if isinstance(kpts, np.ndarray):
             return super().get_ovlp(cell, kpts)
         if kpts is None: kpts = self.kpts
         return super().get_ovlp(cell, kpts.kpts_ibz)
 
+    @lib.with_doc(khf.get_hcore.__doc__)
     def get_hcore(self, cell=None, kpts=None):
         if isinstance(kpts, np.ndarray):
             return super().get_hcore(cell, kpts)
         if kpts is None: kpts = self.kpts
         return super().get_hcore(cell, kpts.kpts_ibz)
 
+    @lib.with_doc(khf.get_jk.__doc__)
     def get_jk(self, cell=None, dm_kpts=None, hermi=1, kpts=None, kpts_band=None,
                with_j=True, with_k=True, omega=None, **kwargs):
         if isinstance(kpts, np.ndarray):
@@ -166,7 +172,7 @@ class KsymAdaptedKRHF(khf.KRHF):
         if ndm != kpts.nkpts_ibz:
             raise RuntimeError("Number of input density matrices does not \
                                match the number of IBZ kpts: %d vs %d." \
-                               % (len(dm_kpts),kpts.nkpts_ibz))
+                               % (ndm, kpts.nkpts_ibz))
         dm_kpts = kpts.transform_dm(dm_kpts)
         if kpts_band is None: kpts_band = kpts.kpts_ibz
         cpu0 = (time.clock(), time.time())
@@ -188,20 +194,21 @@ class KsymAdaptedKRHF(khf.KRHF):
                 fh5['scf/kpts'] = self.kpts.kpts_ibz #FIXME Shall we rebuild kpts? If so, more info is needed.
         return self
 
+    @lib.with_doc(khf.get_rho.__doc__)
     def get_rho(self, dm=None, grids=None, kpts=None):
         if isinstance(kpts, np.ndarray):
             return super().get_rho(dm, grids, kpts)
         if dm is None: dm = self.make_rdm1()
         if kpts is None: kpts = self.kpts
 
-        if isinstance(dm_kpts[0], np.ndarray) and dm_kpts[0].ndim == 3:
-            ndm = len(dm_kpts[0])
+        if isinstance(dm[0], np.ndarray) and dm[0].ndim == 3:
+            ndm = len(dm[0])
         else:
-            ndm = len(dm_kpts)
+            ndm = len(dm)
         if ndm != kpts.nkpts_ibz:
             raise RuntimeError("Number of input density matrices does not \
                                match the number of IBZ kpts: %d vs %d." \
-                               % (len(dm),kpts.nkpts_ibz))
+                               % (ndm, kpts.nkpts_ibz))
         dm = kpts.transform_dm(dm)        
         return super().get_rho(dm, grids, kpts.kpts)
 
