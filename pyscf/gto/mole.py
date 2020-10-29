@@ -33,6 +33,8 @@ import numpy
 import h5py
 import scipy.special
 import scipy.linalg
+import contextlib
+import threading
 from pyscf import lib
 from pyscf.lib import param
 from pyscf.data import elements
@@ -2239,14 +2241,6 @@ class Mole(lib.StreamObject):
         self.__dict__.update(loads(molstr).__dict__)
         return self
 
-    def __getstate__(self):
-        exclude_keys = set(('stdout',))
-        d = dict(self.__dict__)
-        for k in exclude_keys:
-            if k in d:
-                del(d[k])
-        return d
-
     def build(self, dump_input=True, parse_arg=True,
               verbose=None, output=None, max_memory=None,
               atom=None, basis=None, unit=None, nucmod=None, ecp=None,
@@ -2674,7 +2668,7 @@ class Mole(lib.StreamObject):
         ...     mol.intor('int1e_r', comp=3)
         '''
         coord0 = self._env[PTR_COMMON_ORIG:PTR_COMMON_ORIG+3].copy()
-        return _TemporaryMoleContext(self.set_common_origin, (coord,), (coord0,))
+        return self._TemporaryMoleContext(self.set_common_origin, (coord,), (coord0,))
     with_common_orig = with_common_origin
 
     def set_rinv_origin(self, coord):
@@ -2703,7 +2697,7 @@ class Mole(lib.StreamObject):
         ...     mol.intor('int1e_rinv')
         '''
         coord0 = self._env[PTR_RINV_ORIG:PTR_RINV_ORIG+3].copy()
-        return _TemporaryMoleContext(self.set_rinv_origin, (coord,), (coord0,))
+        return self._TemporaryMoleContext(self.set_rinv_origin, (coord,), (coord0,))
     with_rinv_orig = with_rinv_origin
 
     def set_range_coulomb(self, omega):
@@ -2739,7 +2733,7 @@ class Mole(lib.StreamObject):
         ...     mol.intor('int2e')
         '''
         omega0 = self._env[PTR_RANGE_OMEGA].copy()
-        return _TemporaryMoleContext(self.set_range_coulomb, (omega,), (omega0,))
+        return self._TemporaryMoleContext(self.set_range_coulomb, (omega,), (omega0,))
 
     def with_long_range_coulomb(self, omega):
         '''Retuen a temporary mol context for long-range part of
@@ -2799,7 +2793,7 @@ class Mole(lib.StreamObject):
         ...     mol.intor('int1e_rinv')
         '''
         zeta0 = self._env[PTR_RINV_ZETA].copy()
-        return _TemporaryMoleContext(self.set_rinv_zeta, (zeta,), (zeta0,))
+        return self._TemporaryMoleContext(self.set_rinv_zeta, (zeta,), (zeta0,))
 
     def with_rinv_at_nucleus(self, atm_id):
         '''Retuen a temporary mol context in which the rinv operator (1/r) is
@@ -2824,7 +2818,7 @@ class Mole(lib.StreamObject):
             def set_rinv(z, r):
                 self._env[PTR_RINV_ZETA] = z
                 self._env[PTR_RINV_ORIG:PTR_RINV_ORIG+3] = r
-            return _TemporaryMoleContext(set_rinv, (zeta,rinv), (zeta0,rinv0))
+            return self._TemporaryMoleContext(set_rinv, (zeta,rinv), (zeta0,rinv0))
     with_rinv_as_nucleus = with_rinv_at_nucleus  # For backward compatibility
 
     def with_integral_screen(self, threshold):
@@ -2835,7 +2829,7 @@ class Mole(lib.StreamObject):
         expcutoff = abs(numpy.log(threshold))
         def set_cutoff(cut):
             self._env[PTR_EXPCUTOFF] = cut
-        return _TemporaryMoleContext(set_cutoff, (expcutoff,), (expcutoff0,))
+        return self._TemporaryMoleContext(set_cutoff, (expcutoff,), (expcutoff0,))
 
     def set_geom_(self, atoms_or_coords, unit=None, symmetry=None,
                   inplace=True):
@@ -3505,6 +3499,24 @@ class Mole(lib.StreamObject):
         from pyscf import ao2mo
         return ao2mo.kernel(self, mo_coeffs, erifile, dataname, intor, **kwargs)
 
+    @contextlib.contextmanager
+    def _TemporaryMoleContext(self, method, args, args_bak):
+        '''Almost every method depends on the Mole environment. Ensure the
+        modification in temporary environment being thread safe
+        '''
+        haslock = hasattr(self, '_lock')
+        if not haslock:
+            self._lock = threading.RLock()
+
+        with self._lock:
+            method(*args)
+            try:
+                yield
+            finally:
+                method(*args_bak)
+                if not haslock:
+                    del self._lock
+
 def _parse_nuc_mod(str_or_int_or_fn):
     nucmod = NUC_POINT
     if callable(str_or_int_or_fn):
@@ -3727,16 +3739,5 @@ def fakemol_for_charges(coords, expnt=1e16):
     fakemol._env = numpy.hstack(fakeenv)
     fakemol._built = True
     return fakemol
-
-class _TemporaryMoleContext(object):
-    import copy
-    def __init__(self, method, args, args_bak):
-        self.method = method
-        self.args = args
-        self.args_bak = args_bak
-    def __enter__(self):
-        self.method(*self.args)
-    def __exit__(self, type, value, traceback):
-        self.method(*self.args_bak)
 
 del(BASE)
