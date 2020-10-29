@@ -15,7 +15,6 @@
 #
 # Author: Timothy Berkelbach <tim.berkelbach@gmail.com>
 #         James McClain <jdmcclain47@gmail.com>
-#         Xing Zhang <zhangxing.nju@gmail.com>
 #
 
 
@@ -27,7 +26,6 @@ t2 and eris are never stored in full, only a partial
 eri of size (nkpts,nocc,nocc,nvir,nvir)
 '''
 
-import time
 import numpy as np
 from scipy.linalg import block_diag
 
@@ -42,7 +40,6 @@ WITH_T2 = getattr(__config__, 'mp_mp2_with_t2', True)
 
 
 def kernel(mp, mo_energy, mo_coeff, verbose=logger.NOTE, with_t2=WITH_T2):
-    t0 = (time.clock(), time.time())
     nmo = mp.nmo
     nocc = mp.nocc
     nvir = nmo - nocc
@@ -98,103 +95,7 @@ def kernel(mp, mo_energy, mo_coeff, verbose=logger.NOTE, with_t2=WITH_T2):
             emp2 += np.einsum('ijab,ijab', t2_ijab, woovv).real
 
     emp2 /= nkpts
-    logger.timer(mp, 'KMP2', *t0)
-    return emp2, t2
 
-
-def kernel_ksym(mp, mo_energy, mo_coeff, verbose=logger.NOTE, with_t2=WITH_T2):
-    t0 = (time.clock(), time.time())
-    nmo = mp.nmo
-    nocc = mp.nocc
-    nvir = nmo - nocc
-    nkpts = mp.nkpts
-    
-    kd = mp.kpts_descriptor
-    nbzk = kd.nkpts
-
-    eia = np.zeros((nocc,nvir))
-    eijab = np.zeros((nocc,nocc,nvir,nvir))
-
-    fao2mo = mp._scf.with_df.ao2mo
-    kconserv = mp.khelper.kconserv
-    emp2 = 0.
-    oovv_ij = np.zeros((nbzk,nocc,nocc,nvir,nvir), dtype=mo_coeff[0].dtype)
-
-    mo_e_o = [mo_energy[k][:nocc] for k in range(nkpts)]
-    mo_e_v = [mo_energy[k][nocc:] for k in range(nkpts)]
-
-    # Get location of non-zero/padded elements in occupied and virtual space
-    nonzero_opadding, nonzero_vpadding = padding_k_idx(mp, kind="split")
-
-    kijab, weight = kd.make_k4_ibz(sym='s2')
-    if with_t2:
-        #FIXME how many t2 do we need to store?
-        t2 = np.zeros((len(kijab), nocc, nocc, nvir, nvir), dtype=complex)
-    else:
-        t2 = None
-
-    _, igroup = np.unique(kijab[:,:2], axis=0, return_index=True)
-    igroup = list(igroup) + [len(kijab)]
-
-    nao2mo = 0
-    icount = 0
-    for i in range(len(igroup)-1):
-        istart = igroup[i]
-        iend = igroup[i+1]
-        kab = []
-        for j in range(istart, iend):
-            a, b = kijab[j][2:]
-            kab.append([a, b])
-            kab.append([b, a])
-        kab = np.unique(np.asarray(kab), axis=0)
-
-        ki_bz = kijab[istart][0]
-        kj_bz = kijab[istart][1]
-        kpts_i = kd.kpts[ki_bz]
-        kpts_j = kd.kpts[kj_bz]
-        ki = kd.bz2ibz[ki_bz]
-        kj = kd.bz2ibz[kj_bz]
-        orbo_i = kd.transform_single_mo_coeff(mo_coeff, ki_bz)[:,:nocc]
-        orbo_j = kd.transform_single_mo_coeff(mo_coeff, kj_bz)[:,:nocc]
-
-        for (ka_bz, kb_bz) in kab:
-            kpts_a = kd.kpts[ka_bz]
-            kpts_b = kd.kpts[kb_bz]
-            ka = kd.bz2ibz[ka_bz]
-            kb = kd.bz2ibz[kb_bz]
-            orbv_a = kd.transform_single_mo_coeff(mo_coeff, ka_bz)[:,nocc:]
-            orbv_b = kd.transform_single_mo_coeff(mo_coeff, kb_bz)[:,nocc:]
-            oovv_ij[ka_bz] = fao2mo((orbo_i,orbv_a,orbo_j,orbv_b),
-                                    (kpts_i,kpts_a,kpts_j,kpts_b),
-                                    compact=False).reshape(nocc,nvir,nocc,nvir).transpose(0,2,1,3) / nbzk
-            nao2mo += 1
-
-        for j in range(istart, iend):
-            ka_bz = kijab[j][2]
-            kb_bz = kijab[j][3]
-            ka = kd.bz2ibz[ka_bz]
-            kb = kd.bz2ibz[kb_bz]
-            # Remove zero/padded elements from denominator
-            eia = LARGE_DENOM * np.ones((nocc, nvir), dtype=mo_energy[0].dtype)
-            n0_ovp_ia = np.ix_(nonzero_opadding[ki], nonzero_vpadding[ka])
-            eia[n0_ovp_ia] = (mo_e_o[ki][:,None] - mo_e_v[ka])[n0_ovp_ia]
-
-            ejb = LARGE_DENOM * np.ones((nocc, nvir), dtype=mo_energy[0].dtype)
-            n0_ovp_jb = np.ix_(nonzero_opadding[kj], nonzero_vpadding[kb])
-            ejb[n0_ovp_jb] = (mo_e_o[kj][:,None] - mo_e_v[kb])[n0_ovp_jb]
-
-            eijab = lib.direct_sum('ia,jb->ijab',eia,ejb)
-            t2_ijab = np.conj(oovv_ij[ka_bz]/eijab)
-            if with_t2:
-                t2[icount] = t2_ijab
-            woovv = 2*oovv_ij[ka_bz] - oovv_ij[kb_bz].transpose(0,1,3,2)
-            emp2 += np.einsum('ijab,ijab', t2_ijab, woovv).real * weight[icount] * nbzk**3
-            icount += 1
-
-    emp2 /= nbzk
-    assert(icount == len(kijab))
-    logger.debug(mp, "Number of ao2mo transformations performed in KMP2: %d", nao2mo)
-    logger.timer(mp, 'KMP2', *t0)
     return emp2, t2
 
 
@@ -681,13 +582,13 @@ class KMP2(mp2.MP2):
 ##################################################
 # don't modify the following attributes, they are not input options
         self.kpts = mf.kpts
-        self.kpts_descriptor = mf.kpts_descriptor 
         self.mo_energy = mf.mo_energy
-        self.nkpts = len(self.kpts) #number of k-points in the IBZ if symmetry is considered
-        if self.kpts_descriptor is None:
-            self.khelper = kpts_helper.KptsHelper(mf.cell, mf.kpts)
+        if hasattr(self.kpts, "kpts"):
+            self.nkpts = self.kpts.nkpts_ibz
+            self.khelper = kpts_helper.KptsHelper(mf.cell, mf.kpts.kpts)
         else:
-            self.khelper = kpts_helper.KptsHelper(mf.cell, self.kpts_descriptor.kpts)
+            self.nkpts = len(self.kpts)
+            self.khelper = kpts_helper.KptsHelper(mf.cell, mf.kpts)
         self.mo_coeff = mo_coeff
         self.mo_occ = mo_occ
         self._nocc = None
@@ -718,12 +619,9 @@ class KMP2(mp2.MP2):
 
         # TODO: compute e_hf for non-canonical SCF
         self.e_hf = self._scf.e_tot
-        if self.kpts_descriptor is None:
-            self.e_corr, self.t2 = \
+
+        self.e_corr, self.t2 = \
                 kernel(self, mo_energy, mo_coeff, verbose=self.verbose, with_t2=with_t2)
-        else:
-            self.e_corr, self.t2 = \
-                kernel_ksym(self, mo_energy, mo_coeff, verbose=self.verbose, with_t2=with_t2)
         logger.log(self, 'KMP2 energy = %.15g', self.e_corr)
         return self.e_corr, self.t2
 KRMP2 = KMP2

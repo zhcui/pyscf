@@ -50,20 +50,20 @@ RHF.__doc__ = rhf.RHF.__doc__
 def KRHF(cell, *args, **kwargs):
     for arg in args:
         if isinstance(arg, libkpts.KPoints):
-            return khf_ksymm.KsymAdaptedKRHF(cell, *args, **kwargs)
+            return khf_ksymm.KRHF(cell, *args, **kwargs)
     if 'kpts' in kwargs:
         if isinstance(kwargs['kpts'], libkpts.KPoints):
-            return khf_ksymm.KsymAdaptedKRHF(cell, *args, **kwargs)
+            return khf_ksymm.KRHF(cell, *args, **kwargs)
     return krhf.KRHF(cell, *args, **kwargs)
 
 #KUHF = kuhf.KUHF
 def KUHF(cell, *args, **kwargs):
     for arg in args:
         if isinstance(arg, libkpts.KPoints):
-            return kuhf_ksymm.KsymAdaptedKUHF(cell, *args, **kwargs)
+            return kuhf_ksymm.KUHF(cell, *args, **kwargs)
     if 'kpts' in kwargs:
         if isinstance(kwargs['kpts'], libkpts.KPoints):
-            return kuhf_ksymm.KsymAdaptedKUHF(cell, *args, **kwargs)
+            return kuhf_ksymm.KUHF(cell, *args, **kwargs)
     return kuhf.KUHF(cell, *args, **kwargs)
 
 KROHF = krohf.KROHF
