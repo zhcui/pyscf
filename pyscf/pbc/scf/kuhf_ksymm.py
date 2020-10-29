@@ -113,7 +113,7 @@ class KsymAdaptedKUHF(kuhf.KUHF, khf_ksymm.KRHF):
     def __init__(self, cell, kpts=libkpts.KPoints(),
                  exxdiv=getattr(__config__, 'pbc_scf_SCF_exxdiv', 'ewald')):
         self._kpts = None
-        super().__init__(cell, kpts, exxdiv)
+        super(KsymAdaptedKUHF, self).__init__(cell, kpts, exxdiv)
 
     @property
     def nelec(self):
