@@ -100,87 +100,6 @@ def make_kpts_ibz(kpts):
                     kpts.stars_ops[i].append(io % nop)
                     break
 
-def make_kpairs_ibz(kpts, permutation_symmetry=True):
-    '''
-    Constructe k-pairs in IBZ
-
-    Note:
-        This function modifies the :obj:`kpts` object.
-
-    Arguments:
-        kpts : :class:`KPoints` object
-        permutation_symmetry : bool
-             Whether to consider permutation symmetry
-    '''
-    bz2bz_ks = kpts.k2opk
-    nop = bz2bz_ks.shape[-1]
-
-    nbzk = kpts.nkpts
-    nbzk2 = nbzk*nbzk
-    bz2bz_ksks_T = np.empty([nop, nbzk2], dtype=int)
-    if kpts.verbose >= logger.INFO:
-        logger.info(kpts, 'nkpairs = %s', nbzk2)
-
-    for iop in range(nop):
-        tmp = lib.cartesian_prod((bz2bz_ks[:,iop], bz2bz_ks[:,iop]))
-        idx_throw = np.unique(np.where(tmp == -1)[0])
-        bz2bz_ksks_T[iop] = tmp[:,0] * nbzk + tmp[:,1]
-        bz2bz_ksks_T[iop, idx_throw] = -1
-
-    bz2bz_ksks = bz2bz_ksks_T.T
-    bz2bz_kk = -np.ones(nbzk2+1, dtype=np.int32)
-    ibz2bz_kk = []
-    k_group = []
-    sym_group = []
-    group_size = []
-    for k in range(nbzk2-1, -1, -1):
-        if bz2bz_kk[k] == -1:
-            bz2bz_kk[bz2bz_ksks[k]] = k
-            ibz2bz_kk.append(k)
-            k_idx, op_idx = np.unique(bz2bz_ksks[k], return_index=True)
-            if k_idx[0] == -1:
-                k_idx = k_idx[1:]
-                op_idx = op_idx[1:]
-            group_size.append(op_idx.size)
-            k_group.append(k_idx)
-            sym_group.append(op_idx)
-
-    ibz2bz_kk = np.array(ibz2bz_kk[::-1])
-    kpts.ibz2bz_kk = ibz2bz_kk
-    if kpts.verbose >= logger.INFO:
-        logger.info(kpts, 'nkpairs_ibz = %s', len(ibz2bz_kk))
-
-    bz2bz_kk = bz2bz_kk[:-1].copy()
-    bz2ibz_kk = np.empty(nbzk2,dtype=np.int32)
-    bz2ibz_kk[ibz2bz_kk] = np.arange(len(ibz2bz_kk))
-    bz2ibz_kk = bz2ibz_kk[bz2bz_kk]
-
-    kpts.bz2ibz_kk = bz2ibz_kk
-    kpts.kk_group = k_group[::-1]
-    kpts.kk_sym_group = sym_group[::-1]
-    kpts.ibz_kk_weight = np.bincount(bz2ibz_kk) *(1.0 / nbzk2)
-
-    if permutation_symmetry:
-        idx_i = ibz2bz_kk // nbzk
-        idx_j = ibz2bz_kk % nbzk
-        idx_ij = np.vstack((idx_i, idx_j))
-        idx_ij_sort = np.sort(idx_ij, axis=0)
-        _, idx_ij_s2 = np.unique(idx_ij_sort, axis=1, return_index=True)
-        ibz2bz_kk_s2 = ibz2bz_kk[idx_ij_s2]
-        if kpts.verbose >= logger.INFO:
-            logger.info(kpts, 'nkpairs_ibz_s2 = %s', len(ibz2bz_kk_s2))
-        kpts.ibz2bz_kk_s2 = ibz2bz_kk_s2
-        kpts.ibz_kk_s2_weight = kpts.ibz_kk_weight[idx_ij_s2]
-
-        idx_i = ibz2bz_kk_s2 // nbzk
-        idx_j = ibz2bz_kk_s2 % nbzk
-        idx_ji = idx_j * nbzk + idx_i
-        kpts.ibz_kk_s2_weight[np.where(idx_i != idx_j)[0]]*=2.
-        for i in range(len(kpts.ibz_kk_s2_weight)):
-            if idx_ji[i] not in kpts.ibz2bz_kk:
-                kpts.ibz_kk_s2_weight[i] /= 2.
-    return None
-
 def make_ktuples_ibz(kpts, ntuple=2):
     '''
     Constructe k-tuples in IBZ
@@ -721,15 +640,6 @@ class KPoints(symm.Symmetry, lib.StreamObject):
         self._nkpts = len(self.kpts)
         self._nkpts_ibz = len(self.kpts_ibz)
 
-        #XXX k-pairs
-        self.ibz2bz_kk = None
-        self.ibz_kk_weight = None
-        self.ibz2bz_kk_s2 = None
-        self.ibz_kk_s2_weight = None
-        self.bz2ibz_kk = None
-        self.kk_group = None
-        self.kk_sym_group = None
-
     @property
     def nkpts(self):
         return self._nkpts
@@ -796,7 +706,6 @@ class KPoints(symm.Symmetry, lib.StreamObject):
             yield tuple(res)
 
     make_kpts_ibz = make_kpts_ibz
-    make_kpairs_ibz = make_kpairs_ibz
     make_ktuples_ibz = make_ktuples_ibz
     make_k4_ibz = make_k4_ibz
     loop_ktuples = loop_ktuples
