@@ -195,6 +195,8 @@ def _get_phase(cell, op, coords_scaled, kpt_scaled):
         r = coords_scaled[iatm]
         op_dot_r = op.dot_rot(r - op.inv().trans)
         op_dot_r_0 = np.mod(np.mod(op_dot_r, 1), 1)
+        op_dot_r_0 = op_dot_r_0.round(-np.log10(SYMPREC).astype(int))
+        op_dot_r_0 = np.mod(op_dot_r_0, 1)
         diff = np.einsum('ki->k', abs(op_dot_r_0 - coords_scaled))
         atm_map[iatm] = np.where(diff < SYMPREC)[0]
         r_diff = op_dot_r_0 - op_dot_r
