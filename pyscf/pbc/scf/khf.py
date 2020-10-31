@@ -770,9 +770,11 @@ class KSCF(pbchf.SCF):
 class KRHF(KSCF, pbchf.RHF):
     def check_sanity(self):
         cell = self.cell
-        if cell.spin != 0 and len(self.kpts) % 2 != 0:
+        nkpts = getattr(self.kpts, 'nkpts', None)
+        if nkpts is None: nkpts = len(self.kpts)
+        if cell.spin != 0 and nkpts % 2 != 0:
             logger.warn(self, 'Problematic nelec %s and number of k-points %d '
-                        'found in KRHF method.', cell.nelec, len(self.kpts))
+                        'found in KRHF method.', cell.nelec, nkpts)
         return KSCF.check_sanity(self)
 
     def convert_from_(self, mf):

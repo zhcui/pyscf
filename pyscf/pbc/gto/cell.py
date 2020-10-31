@@ -1616,9 +1616,9 @@ class Cell(mole.Mole):
         '''
         if isinstance(abs_kpts, libkpts.KPoints):
             if kpts_in_ibz:
-                return abs_kpts.kpts_ibz
+                return abs_kpts.kpts_scaled_ibz
             else:
-                return abs_kpts.kpts
+                return abs_kpts.kpts_scaled
         return 1./(2*np.pi)*np.dot(abs_kpts, self.lattice_vectors().T)
 
     make_kpts = get_kpts = make_kpts

@@ -160,7 +160,7 @@ def make_ktuples_ibz(kpts, ntuple=2):
 
 def make_k4_ibz(kpts, sym='s1'):
     #physicist's notation
-    ibz2bz, weight, _, group, _ = kpts.make_ktuples_ibz(3)
+    ibz2bz, weight, bz2ibz, group, _ = kpts.make_ktuples_ibz(3)
     khelper = KptsHelper(kpts.cell, kpts.kpts)
     k4 = []
     for ki, kj, ka in kpts.loop_ktuples(ibz2bz, 3):
@@ -168,8 +168,9 @@ def make_k4_ibz(kpts, sym='s1'):
         k4.append([ki,kj,ka,kb])
 
     if sym == "s1":
-        return np.asarray(k4), np.asarray(weight)
+        return np.asarray(k4), np.asarray(weight), np.asarray(bz2ibz)
     elif sym == "s2" or sym == "s4":
+        ibz2ibz_s2 = np.arange(len(k4)) 
         k4_s2 = []
         weight_s2 = []
         for i, k in enumerate(k4):
@@ -177,21 +178,25 @@ def make_k4_ibz(kpts, sym='s1'):
             k_sym = [kj,ki,kb,ka] #interchange dummy indices
             if not k in k4_s2 and not k_sym in k4_s2:
                 k4_s2.append(k)
+                ibz2ibz_s2[i] = len(k4_s2) - 1
                 w = weight[i]
                 if k != k_sym and k_sym in k4:
                     idx = k4.index(k_sym)
+                    ibz2ibz_s2[idx] = ibz2ibz_s2[i]
                     w += weight[idx]
                 weight_s2.append(w)
         #refine s2 symmetry
         k4_s2_refine = []
         weight_s2_refine = []
         skip = np.zeros([len(k4_s2)], dtype=int)
+        ibz_s22ibz_s2_refine = np.arange(len(k4_s2))
         for i, k in enumerate(k4_s2):
             if skip[i]: continue
             ki,kj,ka,kb = k
             k_sym = [kj,ki,kb,ka]
             if ki==kj and ka==kb:
                 k4_s2_refine.append(k)
+                ibz_s22ibz_s2_refine[i] = len(k4_s2_refine) - 1
                 weight_s2_refine.append(weight_s2[i])
                 continue
             idx_sym = None
@@ -211,7 +216,9 @@ def make_k4_ibz(kpts, sym='s1'):
             if idx_sym is not None:
                 skip[idx_sym] = 1
                 w += weight_s2[idx_sym]
+                ibz_s22ibz_s2_refine[idx_sym] = len(k4_s2_refine)
             k4_s2_refine.append(k)
+            ibz_s22ibz_s2_refine[i] = len(k4_s2_refine) - 1
             weight_s2_refine.append(w)
         k4_s2 = k4_s2_refine
         weight_s2 = weight_s2_refine
@@ -220,7 +227,10 @@ def make_k4_ibz(kpts, sym='s1'):
             k4_s2 = np.asarray(k4_s2)
             weight_s2 = np.asarray(weight_s2)
             idx = np.lexsort(k4_s2.T[::-1,:])
-            return k4_s2[idx], weight_s2[idx]
+            bz2ibz_s2 = np.arange(len(bz2ibz))
+            for i in range(len(bz2ibz)):
+                bz2ibz_s2[i] = np.where(idx == ibz_s22ibz_s2_refine[ibz2ibz_s2[bz2ibz[i]]])[0]
+            return k4_s2[idx], weight_s2[idx], bz2ibz_s2
         else:
             k4_s4 = []
             weight_s4 = []
@@ -237,7 +247,7 @@ def make_k4_ibz(kpts, sym='s1'):
             k4_s4 = np.asarray(k4_s4)
             weight_s4 = np.asarray(weight_s4)
             idx = np.lexsort(k4_s4.T[::-1,:])
-            return k4_s4[idx], weight_s4[idx]
+            return k4_s4[idx], weight_s4[idx], None
     else:
         raise NotImplementedError("Unsupported symmetry.")
     return

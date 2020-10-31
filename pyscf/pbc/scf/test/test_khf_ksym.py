@@ -31,7 +31,7 @@ He.atom =[['He' , ( L/2+0., L/2+0., L/2+0.)],]
 He.basis = {'He': [[0, (4.0, 1.0)], [0, (1.0, 1.0)]]}
 He.build()
 
-def make_primitive_cell(mesh):
+def make_primitive_cell(mesh, spin=0):
     cell = pbcgto.Cell()
     cell.unit = 'A'
     cell.atom = 'Si 0.,  0.,  0.; Si 1.3467560987,  1.3467560987,  1.3467560987'
@@ -42,8 +42,8 @@ def make_primitive_cell(mesh):
     cell.basis = 'gth-szv'
     cell.pseudo = 'gth-pade'
     cell.mesh = mesh
-    cell.spin = 0
-    cell.verbose = 7
+    cell.spin = spin
+    cell.verbose = 5
     cell.output = '/dev/null'
     cell.build()
     return cell
@@ -89,6 +89,19 @@ class KnownValues(unittest.TestCase):
 
         kpts = cell.make_kpts(nk, with_gamma_point=False,space_group_symmetry=True,time_reversal_symmetry=True)
         kumf = pscf.KUHF(cell, kpts=kpts)
+        kumf.kernel()
+        self.assertAlmostEqual(kumf.e_tot, kmf0.e_tot, 7)
+
+    def test_kuhf_smearing(self):
+        cell = make_primitive_cell([17,]*3, 8)
+        kpts0 = cell.make_kpts(nk, with_gamma_point=False)
+        kmf0 = pscf.KUHF(cell, kpts=kpts0)
+        kmf0 = pscf.addons.smearing_(kmf0, sigma=0.001, method='fermi', fix_spin=True)
+        kmf0.kernel()
+
+        kpts = cell.make_kpts(nk, with_gamma_point=False, space_group_symmetry=True, time_reversal_symmetry=True)
+        kumf = pscf.KUHF(cell, kpts=kpts)
+        kumf = pscf.addons.smearing_(kumf, sigma=0.001, method='fermi', fix_spin=True)
         kumf.kernel()
         self.assertAlmostEqual(kumf.e_tot, kmf0.e_tot, 7)
 

@@ -68,7 +68,7 @@ def smearing_(mf, sigma=None, method=SMEARING_METHOD, mu0=None, fix_spin=False):
     if fix_spin and not is_uhf:
         raise KeyError("fix_spin only supports UHF.")
     if fix_spin and mu0 is not None:
-        raise KeyError("fix_spin not support fix mu0")
+        raise KeyError("fix_spin does not support fix mu0")
 
     def fermi_smearing_occ(m, mo_energy_kpts, sigma):
         occ = numpy.zeros_like(mo_energy_kpts)
@@ -92,8 +92,8 @@ def smearing_(mf, sigma=None, method=SMEARING_METHOD, mu0=None, fix_spin=False):
 
         This is a k-point version of scf.hf.SCF.get_occ
         '''
-        if getattr(mf, 'kpts_descriptor', None) is not None:
-            mo_energy_kpts = mf.kpts_descriptor.transform_mo_energy(mo_energy_kpts)
+        if getattr(mf.kpts, 'kpts_ibz', None) is not None:
+            mo_energy_kpts = mf.kpts.transform_mo_energy(mo_energy_kpts)
             #mo_coeff_kpts = mf.kpts_descriptor.transform_mo_coeff(mo_coeff_kpts)
 
         #mo_occ_kpts = mf_class.get_occ(mf, mo_energy_kpts, mo_coeff_kpts)
@@ -102,9 +102,9 @@ def smearing_(mf, sigma=None, method=SMEARING_METHOD, mu0=None, fix_spin=False):
             return mo_occ_kpts
 
         if is_khf:
-            nkpts = len(mf.kpts)
-            if getattr(mf, 'kpts_descriptor', None) is not None:
-                nkpts = mf.kpts_descriptor.nkpts
+            nkpts = getattr(mf.kpts, 'nkpts', None)
+            if nkpts is None:
+                nkpts = len(mf.kpts)
         else:
             nkpts = 1
         nelectron = mf.cell.tot_electrons(nkpts)
@@ -137,7 +137,6 @@ def smearing_(mf, sigma=None, method=SMEARING_METHOD, mu0=None, fix_spin=False):
         else:
             mo_energy = numpy.sort(mo_es.ravel())
 
-        # If mu0 is given, fix mu instead of electron number. XXX -Chong Sun
         sigma = mf.sigma
         if fix_spin:
             fermi = [mo_energy[0][nocc[0]-1], mo_energy[1][nocc[1]-1]] 
@@ -167,6 +166,7 @@ def smearing_(mf, sigma=None, method=SMEARING_METHOD, mu0=None, fix_spin=False):
                 mu = res.x
                 mo_occs = f = f_occ(mu, mo_es, sigma)
         else:
+            # If mu0 is given, fix mu instead of electron number. XXX -Chong Sun
             mu = mu0
             mo_occs = f = f_occ(mu, mo_es, sigma)
             
@@ -228,12 +228,12 @@ def smearing_(mf, sigma=None, method=SMEARING_METHOD, mu0=None, fix_spin=False):
             logger.info(mf, '    sigma = %g  Optimized mu = %.12g  entropy = %.12g',
                         mf.sigma, mu, mf.entropy)
 
-        if getattr(mf, 'kpts_descriptor', None) is not None:
+        if getattr(mf.kpts, 'kpts_ibz', None) is not None:
             if is_uhf:
-                mo_occ_kpts = (mf.kpts_descriptor.check_mo_occ_symmetry(mo_occ_kpts[0]),
-                               mf.kpts_descriptor.check_mo_occ_symmetry(mo_occ_kpts[1]))
+                mo_occ_kpts = (mf.kpts.check_mo_occ_symmetry(mo_occ_kpts[0]),
+                               mf.kpts.check_mo_occ_symmetry(mo_occ_kpts[1]))
             else:
-                mo_occ_kpts = mf.kpts_descriptor.check_mo_occ_symmetry(mo_occ_kpts)
+                mo_occ_kpts = mf.kpts.check_mo_occ_symmetry(mo_occ_kpts)
 
         if is_khf:
             tools.print_mo_energy_occ_kpts(mf,mo_energy_kpts,mo_occ_kpts,is_uhf)
@@ -559,11 +559,16 @@ if __name__ == '__main__':
     cell.basis = 'ccpvdz'
     cell.a = numpy.eye(3) * 4
     cell.mesh = [17] * 3
-    cell.verbose = 4
+    cell.verbose = 3
     cell.build()
     nks = [2,1,1]
-    mf = pscf.KUHF(cell, cell.make_kpts(nks))
-    #mf = smearing_(mf, .1) # -5.86052594663696
-    mf = smearing_(mf, .1, mu0=0.280911009667) # -5.86052594663696
-    #mf = smearing_(mf, .1, method='gauss')
+    mf = pscf.KUHF(cell, cell.make_kpts(nks)).density_fit()
+    mf = smearing_(mf, .1)
     mf.kernel()
+    print(mf.e_tot - -5.56769351866668)
+    mf = smearing_(mf, .1, mu0=0.351195741757)
+    mf.kernel()
+    print(mf.e_tot - -5.56769351866668)
+    mf = smearing_(mf, .1, method='gauss')
+    mf.kernel()
+    print(mf.e_tot - -5.56785857886738)
