@@ -266,7 +266,7 @@ if __name__ == "__main__":
     cell.a = [[4.0, 0., 0.], [0., 4.0, 0.], [0., 0., 4.0]]
     cell.verbose = 5
     cell.dimension = 2
-    cell.magmoms = [0.5,0.5,-0.5,-0.5,0.5,-0.5,0.5,0.5,-0.5,-0.5,0.5,-0.5]
+    cell.magmom = [1., 1., -1., -1., 1., -1., 1., 1., -1., -1., 1., -1.]
     cell.build()
     sg = SpaceGroup(cell)
     sg.build()

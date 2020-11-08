@@ -52,7 +52,7 @@ def cell_to_spgcell(cell):
         idx = unicode(idx)
         if idx.isnumeric(): 
             atm_num[iatm] += int(idx) * 1000
-    spg_cell = (a, atm_pos, atm_num, cell.magmoms)
+    spg_cell = (a, atm_pos, atm_num, cell.magmom)
     return spg_cell
 
 get_spacegroup = spglib.get_spacegroup

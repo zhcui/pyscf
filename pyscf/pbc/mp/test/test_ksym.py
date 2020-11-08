@@ -28,26 +28,37 @@ He.atom =[['He' , ( L/2+0., L/2+0., L/2+0.)],]
 He.basis = {'He': [[0, (4.0, 1.0)], [0, (1.0, 1.0)]]}
 He.build()
 
-nk = [1,2,2]
+nk = [2,2,2]
+
+kpts0 = He.make_kpts(nk)
+kmf0 = scf.KRHF(He, kpts0, exxdiv=None).density_fit()
+kmf0.kernel()
+kmp2ref = mp.KMP2(kmf0)
+kmp2ref.kernel()
+
+kpts = He.make_kpts(nk,space_group_symmetry=True,time_reversal_symmetry=True)
+kmf = scf.KRHF(He, kpts, exxdiv=None).density_fit()
+kmf.kernel()
 
 def tearDownModule():
-    global He, nk
-    del He, nk
+    global He, nk, kpts0, kpts, kmf0, kmf, kmp2ref
+    del He, nk, kpts0, kpts, kmf0, kmf, kmp2ref
 
 class KnownValues(unittest.TestCase):
     def test_kmp2(self):
-        kpts0 = He.make_kpts(nk)
-        kmf0 = scf.KRHF(He, kpts0, exxdiv=None).density_fit()
-        kmf0.kernel()
-        kmp2ref = mp.KMP2(kmf0)
-        kmp2ref.kernel()
-
-        kpts = He.make_kpts(nk,space_group_symmetry=True,time_reversal_symmetry=True)
-        kmf = scf.KRHF(He, kpts, exxdiv=None).density_fit()
-        kmf.kernel()
         kmp2 = mp.KMP2(kmf)
         kmp2.kernel()
         self.assertAlmostEqual(kmp2.e_corr, kmp2ref.e_corr, 10)
+
+    def test_rdm1(self):
+        dm1ref = kmp2ref.make_rdm1()
+
+        kmp2 = mp.KMP2(kmf)
+        kmp2.kernel()
+        dm1 = kmp2.make_rdm1()
+        for i, k in enumerate(kpts.ibz2bz):
+            error = np.amax(np.absolute(dm1[i] - dm1ref[k]))
+            self.assertAlmostEqual(error, 0., 10)
 
 if __name__ == '__main__':
     print("Full Tests for MP2 with k-point symmetry")
