@@ -92,7 +92,7 @@ def smearing_(mf, sigma=None, method=SMEARING_METHOD, mu0=None, fix_spin=False):
 
         This is a k-point version of scf.hf.SCF.get_occ
         '''
-        if getattr(mf.kpts, 'kpts_ibz', None) is not None:
+        if hasattr(mf, 'kpts') and getattr(mf.kpts, 'kpts_ibz', None) is not None:
             mo_energy_kpts = mf.kpts.transform_mo_energy(mo_energy_kpts)
             #mo_coeff_kpts = mf.kpts_descriptor.transform_mo_coeff(mo_coeff_kpts)
 
@@ -228,7 +228,7 @@ def smearing_(mf, sigma=None, method=SMEARING_METHOD, mu0=None, fix_spin=False):
             logger.info(mf, '    sigma = %g  Optimized mu = %.12g  entropy = %.12g',
                         mf.sigma, mu, mf.entropy)
 
-        if getattr(mf.kpts, 'kpts_ibz', None) is not None:
+        if hasattr(mf, 'kpts') and getattr(mf.kpts, 'kpts_ibz', None) is not None:
             if is_uhf:
                 mo_occ_kpts = (mf.kpts.check_mo_occ_symmetry(mo_occ_kpts[0]),
                                mf.kpts.check_mo_occ_symmetry(mo_occ_kpts[1]))
