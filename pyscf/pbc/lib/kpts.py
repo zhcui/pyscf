@@ -666,6 +666,28 @@ class KPoints(symm.Symmetry, lib.StreamObject):
     def nkpts_ibz(self, n):
         self._nkpts_ibz = n
 
+    def __str__(self):
+        s = ''
+        s += self.__repr__()
+
+        s += '\nk-points (scaled) in BZ                        weights\n'
+        bzk = self.kpts_scaled
+        for k in range(self.nkpts):
+            s += '%d:  %11.8f, %11.8f, %11.8f    %9.6f\n' % (k,
+                  bzk[k][0], bzk[k][1], bzk[k][2], self.weights[k])
+
+        s += 'k-points (scaled) in IBZ                       weights\n'
+        ibzk = self.kpts_scaled_ibz
+        for k in range(self.nkpts_ibz):
+            s += '%d:  %11.8f, %11.8f, %11.8f    %9.6f\n' % (k,
+                  ibzk[k][0], ibzk[k][1], ibzk[k][2], self.weights_ibz[k])
+
+        s += 'mapping from BZ to IBZ\n'
+        s += "%s" % self.bz2ibz
+        s += '\nmapping from IBZ to BZ\n'
+        s += "%s" % self.ibz2bz
+        return s
+
     def build(self, space_group_symmetry=True, time_reversal_symmetry=True,
               symmorphic=True, *args, **kwargs):
         symm.Symmetry.build(self, space_group_symmetry, symmorphic, *args, **kwargs)
