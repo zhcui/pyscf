@@ -46,14 +46,14 @@ def energy_elec(mf, dm_kpts=None, h1e_kpts=None, vhf_kpts=None):
     return (e1+e_coul).real, e_coul.real
 
 
-class KsymAdaptedKRHF(khf.KRHF):
+class KsymAdaptedKSCF(khf.KSCF):
     """
     KRHF with k-point symmetry
     """
     def __init__(self, cell, kpts=libkpts.KPoints(),
                  exxdiv=getattr(__config__, 'pbc_scf_SCF_exxdiv', 'ewald')):
         self._kpts = None
-        super(KsymAdaptedKRHF, self).__init__(cell, kpts=kpts, exxdiv=exxdiv)
+        super(KsymAdaptedKSCF, self).__init__(cell, kpts=kpts, exxdiv=exxdiv)
 
     @property
     def kpts(self):
@@ -65,7 +65,7 @@ class KsymAdaptedKRHF(khf.KRHF):
     @kpts.setter
     def kpts(self, kpts):
         if isinstance(kpts, np.ndarray):
-            logger.warn(self, "Building kpts with the default symmetry options.")
+            logger.warn(self, "Input kpts is ndarray, building kpts object without symmetry.")
             kpts = libkpts.make_kpts(self.cell, kpts=kpts)
         elif not isinstance(kpts, libkpts.KPoints):
             raise TypeError("Input kpts have wrong type: %s" % type(kpts))
@@ -144,22 +144,22 @@ class KsymAdaptedKRHF(khf.KRHF):
     @lib.with_doc(khf.get_ovlp.__doc__)
     def get_ovlp(self, cell=None, kpts=None):
         if isinstance(kpts, np.ndarray):
-            return super(KsymAdaptedKRHF, self).get_ovlp(cell, kpts)
+            return super(KsymAdaptedKSCF, self).get_ovlp(cell, kpts)
         if kpts is None: kpts = self.kpts
-        return super(KsymAdaptedKRHF, self).get_ovlp(cell, kpts.kpts_ibz)
+        return super(KsymAdaptedKSCF, self).get_ovlp(cell, kpts.kpts_ibz)
 
     @lib.with_doc(khf.get_hcore.__doc__)
     def get_hcore(self, cell=None, kpts=None):
         if isinstance(kpts, np.ndarray):
-            return super(KsymAdaptedKRHF, self).get_hcore(cell, kpts)
+            return super(KsymAdaptedKSCF, self).get_hcore(cell, kpts)
         if kpts is None: kpts = self.kpts
-        return super(KsymAdaptedKRHF, self).get_hcore(cell, kpts.kpts_ibz)
+        return super(KsymAdaptedKSCF, self).get_hcore(cell, kpts.kpts_ibz)
 
     @lib.with_doc(khf.get_jk.__doc__)
     def get_jk(self, cell=None, dm_kpts=None, hermi=1, kpts=None, kpts_band=None,
                with_j=True, with_k=True, omega=None, **kwargs):
         if isinstance(kpts, np.ndarray):
-            return super(KsymAdaptedKRHF, self).get_jk(cell, dm_kpts, hermi, kpts, kpts_band, 
+            return super(KsymAdaptedKSCF, self).get_jk(cell, dm_kpts, hermi, kpts, kpts_band, 
                                   with_j, with_k, omega, **kwargs)
         if cell is None: cell = self.cell
         if kpts is None: kpts = self.kpts
@@ -183,9 +183,9 @@ class KsymAdaptedKRHF(khf.KRHF):
 
     def init_guess_by_chkfile(self, chk=None, project=None, kpts=None):
         if isinstance(kpts, np.ndarray):
-            return super(KsymAdaptedKRHF, self).init_guess_by_chkfile(chk, project, kpts)
+            return super(KsymAdaptedKSCF, self).init_guess_by_chkfile(chk, project, kpts)
         if kpts is None: kpts = self.kpts
-        return super(KsymAdaptedKRHF, self).init_guess_by_chkfile(chk, project, kpts.kpts_ibz)
+        return super(KsymAdaptedKSCF, self).init_guess_by_chkfile(chk, project, kpts.kpts_ibz)
 
     def dump_chk(self, envs):
         if self.chkfile:
@@ -197,7 +197,7 @@ class KsymAdaptedKRHF(khf.KRHF):
     @lib.with_doc(khf.get_rho.__doc__)
     def get_rho(self, dm=None, grids=None, kpts=None):
         if isinstance(kpts, np.ndarray):
-            return super(KsymAdaptedKRHF, self).get_rho(dm, grids, kpts)
+            return super(KsymAdaptedKSCF, self).get_rho(dm, grids, kpts)
         if dm is None: dm = self.make_rdm1()
         if kpts is None: kpts = self.kpts
 
@@ -210,8 +210,12 @@ class KsymAdaptedKRHF(khf.KRHF):
                                match the number of IBZ kpts: %d vs %d." \
                                % (ndm, kpts.nkpts_ibz))
         dm = kpts.transform_dm(dm)        
-        return super(KsymAdaptedKRHF, self).get_rho(dm, grids, kpts.kpts)
+        return super(KsymAdaptedKSCF, self).get_rho(dm, grids, kpts.kpts)
 
     energy_elec = energy_elec
+
+class KsymAdaptedKRHF(KsymAdaptedKSCF, khf.KRHF):
+    def nuc_grad_method(self):
+        raise NotImplementedError()
 
 KRHF = KsymAdaptedKRHF

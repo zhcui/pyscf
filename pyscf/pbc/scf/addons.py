@@ -354,8 +354,10 @@ def convert_to_uhf(mf, out=None):
                         "No conversion from %s to uhf object" % cls)
 
             known_cls = {dft.krks.KRKS  : dft.kuks.KUKS,
+                         dft.krks_ksymm.KRKS  : dft.kuks_ksymm.KUKS,
                          dft.kroks.KROKS: dft.kuks.KUKS,
                          scf.khf.KRHF   : scf.kuhf.KUHF,
+                         scf.khf_ksymm.KRHF : scf.kuhf_ksymm.KUHF,
                          scf.krohf.KROHF: scf.kuhf.KUHF,
                          dft.rks.RKS    : dft.uks.UKS  ,
                          dft.roks.ROKS  : dft.uks.UKS  ,
@@ -414,7 +416,9 @@ def convert_to_rhf(mf, out=None):
 
             if nelec[0] == nelec[1]:
                 known_cls = {dft.kuks.KUKS : dft.krks.KRKS,
+                             dft.kuks_ksymm.KUKS : dft.krks_ksymm.KRKS,
                              scf.kuhf.KUHF : scf.khf.KRHF ,
+                             scf.kuhf_ksymm.KUHF : scf.khf_ksymm.KRHF,
                              dft.uks.UKS   : dft.rks.RKS  ,
                              scf.uhf.UHF   : scf.hf.RHF   ,
                              dft.kroks.KROKS : dft.krks.KRKS,

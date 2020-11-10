@@ -752,17 +752,17 @@ class KSCF(pbchf.SCF):
         return sfx2c1e.sfx2c1e(self)
     x2c = x2c1e = sfx2c1e
 
-    def to_rhf(self, mf):
+    def to_rhf(self, mf=None):
         '''Convert the input mean-field object to a KRHF/KROHF/KRKS/KROKS object'''
-        return addons.convert_to_rhf(mf)
+        return addons.convert_to_rhf(self, mf)
 
-    def to_uhf(self, mf):
+    def to_uhf(self, mf=None):
         '''Convert the input mean-field object to a KUHF/KUKS object'''
-        return addons.convert_to_uhf(mf)
+        return addons.convert_to_uhf(self, mf)
 
-    def to_ghf(self, mf):
+    def to_ghf(self, mf=None):
         '''Convert the input mean-field object to a KGHF/KGKS object'''
-        return addons.convert_to_ghf(mf)
+        return addons.convert_to_ghf(self, mf)
 
     as_scanner = as_scanner
 

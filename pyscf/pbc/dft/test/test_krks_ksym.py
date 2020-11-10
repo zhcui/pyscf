@@ -157,6 +157,49 @@ class KnownValues(unittest.TestCase):
         kmf.kernel()
         self.assertAlmostEqual(kmf.e_tot, kmf0.e_tot, 7)
 
+    def test_to_uhf(self):
+        kpts = cell.make_kpts(nk,space_group_symmetry=True,time_reversal_symmetry=True)
+        kmf = pscf.KRKS(cell, kpts=kpts)
+        kmf.xc = 'lda'
+        kmf.kernel()
+        dm = kmf.make_rdm1()
+        dm = np.asarray([dm,dm]) / 2.
+
+        kumf = kmf.to_uhf()
+        kumf.max_cycle = 1
+        kumf.kernel(dm)
+        self.assertAlmostEqual(kmf.e_tot, kumf.e_tot, 8)
+
+    def test_to_rhf(self):
+        kpts = cell.make_kpts(nk,space_group_symmetry=True,time_reversal_symmetry=True)
+        kumf = pscf.KUKS(cell, kpts=kpts)
+        kumf.xc = 'lda'
+        kumf.kernel()
+        dm = kumf.make_rdm1()
+
+        kmf = kumf.to_rhf()
+        kmf.max_cycle = 1
+        kmf.kernel(dm[0]+dm[1])
+        self.assertAlmostEqual(kmf.e_tot, kumf.e_tot, 8)
+
+    def test_convert_from(self):
+        kpts = cell.make_kpts(nk,space_group_symmetry=True,time_reversal_symmetry=True)
+        kumf = pscf.KUKS(cell, kpts=kpts)
+        kumf.xc = 'lda'
+        kumf.kernel()
+        dm = kumf.make_rdm1()
+
+        kmf = pscf.KRKS(cell, kpts=kpts)
+        kmf = kmf.convert_from_(kumf)
+        kmf.max_cycle = 1
+        kmf.kernel(dm[0]+dm[1])
+        self.assertAlmostEqual(kmf.e_tot, kumf.e_tot, 8)
+
+        dm = kmf.make_rdm1()
+        kumf = kumf.convert_from_(kmf)
+        kumf.max_cycle = 1
+        kumf.kernel(np.asarray([dm,dm]) / 2.)
+        self.assertAlmostEqual(kmf.e_tot, kumf.e_tot, 7)
 
 if __name__ == '__main__':
     print("Full Tests for DFT with k-point symmetry")

@@ -583,7 +583,7 @@ def check_mo_occ_symmetry(kpts, mo_occ, tol=1e-6):
     return mo_occ_ibz
 
 def make_kpts(cell, kpts=np.zeros((1,3)), 
-              space_group_symmetry=True, time_reversal_symmetry=True,
+              space_group_symmetry=False, time_reversal_symmetry=False,
               symmorphic=True):
     if isinstance(kpts, KPoints):
         return kpts.build(space_group_symmetry, time_reversal_symmetry, symmorphic)

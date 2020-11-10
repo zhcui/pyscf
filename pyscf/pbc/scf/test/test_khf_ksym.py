@@ -137,6 +137,82 @@ class KnownValues(unittest.TestCase):
         kmf = pscf.KUHF(He, kpts=kpts).mix_density_fit().run()
         self.assertAlmostEqual(kmf.e_tot, kmf0.e_tot, 7)
 
+    def test_init_guess_from_chkfile(self):
+        kpts = cell.make_kpts(nk,space_group_symmetry=True,time_reversal_symmetry=True)
+        kmf = pscf.KRHF(cell, kpts=kpts)
+        kmf.chkfile='test.chk'
+        e_tot = kmf.kernel()
+
+        kmf.init_guess = 'chk'
+        dm = kmf.from_chk('test.chk')
+        kmf.max_cycle = 1
+        kmf.kernel(dm)
+        self.assertAlmostEqual(kmf.e_tot, e_tot, 9)
+
+        mo_coeff = pscf.chkfile.load('test.chk', 'scf/mo_coeff')
+        mo_occ = pscf.chkfile.load('test.chk', 'scf/mo_occ')
+        dm = kmf.make_rdm1(mo_coeff, mo_occ)
+        kmf.max_cycle = 1
+        kmf.kernel(dm)
+        self.assertAlmostEqual(kmf.e_tot, e_tot, 9)
+
+        kmf.__dict__.update(pscf.chkfile.load('test.chk', 'scf'))
+        kmf.max_cycle = 1
+        kmf.kernel()
+        self.assertAlmostEqual(kmf.e_tot, e_tot, 9)
+
+        kmf = pscf.KUHF(cell, kpts=kpts)
+        kmf.chkfile='test.chk'
+        e_tot = kmf.kernel()
+
+        kmf.init_guess = 'chk'
+        dm = kmf.from_chk('test.chk')
+        kmf.max_cycle = 1
+        kmf.kernel(dm)
+        self.assertAlmostEqual(kmf.e_tot, e_tot, 9)
+
+    def test_to_uhf(self):
+        kpts = cell.make_kpts(nk,space_group_symmetry=True,time_reversal_symmetry=True)
+        kmf = pscf.KRHF(cell, kpts=kpts)
+        kmf.kernel()
+        dm = kmf.make_rdm1()
+        dm = np.asarray([dm,dm]) / 2.
+
+        kumf = kmf.to_uhf()
+        kumf.max_cycle = 1
+        kumf.kernel(dm)
+        self.assertAlmostEqual(kmf.e_tot, kumf.e_tot, 9)
+
+    def test_to_rhf(self):
+        kpts = cell.make_kpts(nk,space_group_symmetry=True,time_reversal_symmetry=True)
+        kumf = pscf.KUHF(cell, kpts=kpts)
+        kumf.kernel()
+        dm = kumf.make_rdm1()
+
+        kmf = kumf.to_rhf()
+        kmf.max_cycle = 1
+        kmf.kernel(dm[0]+dm[1])
+        self.assertAlmostEqual(kmf.e_tot, kumf.e_tot, 9)
+
+    def test_convert_from(self):
+        kpts = cell.make_kpts(nk,space_group_symmetry=True,time_reversal_symmetry=True)
+        kumf = pscf.KUHF(cell, kpts=kpts)
+        kumf.kernel()
+        dm = kumf.make_rdm1()
+
+        kmf = pscf.KRHF(cell, kpts=kpts)
+        kmf = kmf.convert_from_(kumf)
+        kmf.max_cycle = 1
+        kmf.kernel(dm[0]+dm[1])
+        self.assertAlmostEqual(kmf.e_tot, kumf.e_tot, 9)
+
+        dm = kmf.make_rdm1()
+        kumf = kumf.convert_from_(kmf)
+        kumf.max_cycle = 1
+        kumf.kernel(np.asarray([dm,dm]) / 2.)
+        self.assertAlmostEqual(kmf.e_tot, kumf.e_tot, 9)
+
+
 if __name__ == '__main__':
     print("Full Tests for HF with k-point symmetry")
     unittest.main()

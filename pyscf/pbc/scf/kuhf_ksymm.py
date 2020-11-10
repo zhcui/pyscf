@@ -106,14 +106,14 @@ def energy_elec(mf, dm_kpts=None, h1e_kpts=None, vhf_kpts=None):
     return (e1+e_coul).real, e_coul.real
 
 
-class KsymAdaptedKUHF(kuhf.KUHF, khf_ksymm.KRHF):
+class KsymAdaptedKUHF(khf_ksymm.KsymAdaptedKSCF, kuhf.KUHF):
     """
     KUHF with k-point symmetry
     """
     def __init__(self, cell, kpts=libkpts.KPoints(),
                  exxdiv=getattr(__config__, 'pbc_scf_SCF_exxdiv', 'ewald')):
         self._kpts = None
-        super(KsymAdaptedKUHF, self).__init__(cell, kpts, exxdiv)
+        kuhf.KUHF.__init__(self, cell, kpts, exxdiv)
 
     @property
     def nelec(self):
