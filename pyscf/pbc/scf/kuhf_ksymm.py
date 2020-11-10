@@ -136,7 +136,7 @@ class KsymAdaptedKUHF(khf_ksymm.KsymAdaptedKSCF, kuhf.KUHF):
         self._nelec = x
 
     def dump_flags(self, verbose=None):
-        khf_ksymm.KRHF.dump_flags(self, verbose)
+        khf_ksymm.KsymAdaptedKSCF.dump_flags(self, verbose)
         logger.info(self, 'number of electrons per unit cell  '
                     'alpha = %d beta = %d', *self.nelec)
         return self
@@ -189,6 +189,6 @@ class KsymAdaptedKUHF(khf_ksymm.KsymAdaptedKSCF, kuhf.KUHF):
 
     get_occ = get_occ
     energy_elec = energy_elec
-    get_rho = khf_ksymm.KRHF.get_rho
+    get_rho = khf_ksymm.KsymAdaptedKSCF.get_rho
 
 KUHF = KsymAdaptedKUHF
