@@ -332,10 +332,12 @@ ALIAS = {
     'ccecpregaugccpvtz': join('ccecp-basis', 'ccECP_reg', 'ccECP_aug-cc-pVTZ.dat'),
     'ccecpregaugccpvqz': join('ccecp-basis', 'ccECP_reg', 'ccECP_aug-cc-pVQZ.dat'),
     'ccecpregaugccpv5z': join('ccecp-basis', 'ccECP_reg', 'ccECP_aug-cc-pV5Z.dat'),
-# IAO ref for def2-svp
+# def2-svp IAO references
     'def2svpiao'    : 'def2-svp-iao.dat'   ,
     'def2svpiaocore'    : 'def2-svp-iao-core.dat'   ,
     'def2svpiaoval'    : 'def2-svp-iao-val.dat'   ,
+# def2-svp for ions
+    'def2svpion'    : 'def2-svp-ion.dat'   ,
 # ccpvdz for Cu
     'ccpvdzcu' : 'cc-pvdz-cu.dat',
 }
