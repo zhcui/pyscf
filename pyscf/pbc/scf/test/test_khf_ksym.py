@@ -50,16 +50,15 @@ def make_primitive_cell(mesh, spin=0):
 
 cell = make_primitive_cell([17]*3)
 nk = [1,2,2]
+kmf0  = pscf.KRHF(cell, cell.make_kpts(nk)).run()
+kumf0 = pscf.KUHF(cell, cell.make_kpts(nk)).run()
 
 def tearDownModule():
-    global cell, He, nk
-    del cell, He, nk
+    global cell, He, nk, kmf0, kumf0
+    del cell, He, nk, kmf0, kumf0
 
 class KnownValues(unittest.TestCase):
     def test_krhf_gamma_center(self):
-        kpts0 = cell.make_kpts(nk, with_gamma_point=True)
-        kmf0 = khf.KRHF(cell, kpts=kpts0).run()
-
         kpts = cell.make_kpts(nk, with_gamma_point=True,space_group_symmetry=True,time_reversal_symmetry=True)
         kmf = pscf.KRHF(cell, kpts=kpts).run()
         self.assertAlmostEqual(kmf.e_tot, kmf0.e_tot, 7)
@@ -73,14 +72,10 @@ class KnownValues(unittest.TestCase):
         self.assertAlmostEqual(kmf.e_tot, kmf0.e_tot, 7)
 
     def test_kuhf_gamma_center(self):
-        kpts0 = cell.make_kpts(nk, with_gamma_point=True)
-        kmf0 = kuhf.KUHF(cell, kpts=kpts0)
-        kmf0.kernel()
-
         kpts = cell.make_kpts(nk, with_gamma_point=True,space_group_symmetry=True,time_reversal_symmetry=True)
         kumf = pscf.KUHF(cell, kpts=kpts)
         kumf.kernel()
-        self.assertAlmostEqual(kumf.e_tot, kmf0.e_tot, 7)
+        self.assertAlmostEqual(kumf.e_tot, kumf0.e_tot, 7)
 
     def test_kuhf_monkhorst(self):
         kpts0 = cell.make_kpts(nk, with_gamma_point=False)
@@ -211,6 +206,34 @@ class KnownValues(unittest.TestCase):
         kumf.max_cycle = 1
         kumf.kernel(np.asarray([dm,dm]) / 2.)
         self.assertAlmostEqual(kmf.e_tot, kumf.e_tot, 9)
+
+    def test_get_rho(self):
+        kpts = cell.make_kpts(nk,space_group_symmetry=True,time_reversal_symmetry=True)
+        kmf = pscf.KRHF(cell, kpts)
+        kmf.kernel()
+        rho = kmf.get_rho()
+        error = np.amax(np.absolute(rho - kmf0.get_rho()))
+        self.assertAlmostEqual(error, 0., 8)
+
+        kmf = pscf.KUHF(cell, kpts)
+        kmf.kernel()
+        rho = kmf.get_rho()
+        error = np.amax(np.absolute(rho - kumf0.get_rho()))
+        self.assertAlmostEqual(error, 0., 8)
+
+    def test_dip_moment(self):
+        kpts = cell.make_kpts(nk,space_group_symmetry=True,time_reversal_symmetry=True)
+        kmf = pscf.KRHF(cell, kpts)
+        kmf.kernel()
+        dip = kmf.dip_moment()
+        error = np.amax(np.absolute(dip - kmf0.dip_moment()))
+        self.assertAlmostEqual(error, 0., 6)
+
+        kmf = pscf.KUHF(cell, kpts)
+        kmf.kernel()
+        dip = kmf.dip_moment()
+        error = np.amax(np.absolute(dip - kumf0.dip_moment()))
+        self.assertAlmostEqual(error, 0., 6)
 
 
 if __name__ == '__main__':
