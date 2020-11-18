@@ -211,6 +211,7 @@ class SpaceGroup(lib.StreamObject):
         self.cell = cell
         self.symprec = symprec
         self.verbose = self.cell.verbose
+        self.backend = 'spglib'
 
         # Followings are not input variables
         self.ops = []
@@ -218,7 +219,7 @@ class SpaceGroup(lib.StreamObject):
         self.groupname = {}
 
     def build(self, dump_info=True):
-        try:
+        if self.backend == 'spglib':
             from pyscf.pbc.symm.pyscf_spglib import cell_to_spgcell, get_symmetry_dataset, get_symmetry
             spgcell = cell_to_spgcell(self.cell)
             dataset = get_symmetry_dataset(spgcell, symprec=self.symprec)
@@ -229,7 +230,7 @@ class SpaceGroup(lib.StreamObject):
             for rot, trans in zip(symmetry['rotations'], symmetry['translations']):
                 self.ops.append(SpaceGroup_element(rot, trans))
             self.nop = len(self.ops)
-        except:
+        elif self.backend == 'pyscf':
             raise NotImplementedError("spglib is required to determine the space group.")
 
         if dump_info:

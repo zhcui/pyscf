@@ -35,7 +35,7 @@ if sys.version_info >= (3,):
 import spglib
 
 def cell_to_spgcell(cell):
-    r'''
+    '''
     Convert PySCF Cell object to spglib cell object
     '''
     a = cell.lattice_vectors()

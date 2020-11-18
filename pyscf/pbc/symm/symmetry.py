@@ -16,6 +16,7 @@
 # Authors: Xing Zhang <zhangxing.nju@gmail.com>
 #
 
+import sys
 import copy
 import numpy as np
 from numpy.linalg import inv
@@ -60,7 +61,6 @@ def get_Dmat(op, l):
     return D.round(15)
 
 def get_Dmat_cart(op,l_max): 
-    #XXX need verification
     pp = get_Dmat(op, 1)
     Ds = [np.ones((1,1))]
     for l in range(1, l_max+1):
@@ -134,10 +134,14 @@ class Symmetry():
         if self.cell is None: return
         if not self.cell._built:
             sys.stderr.write('Warning: %s must be initialized before calling Symmetry.\n'
-                             'Initialize %s in %s\n' % (cell, cell, self))
+                             'Initialize %s in %s\n' % (self.cell, self.cell, self))
             self.cell.build()
         self.spacegroup = space_group.SpaceGroup(self.cell).build()
         self.symmorphic = symmorphic
+        if self.cell.dimension < 3:
+            if not self.symmorphic:
+                sys.stderr.write('Warning: setting symmorphic=True for low-dimensional system.\n')
+                self.symmorphic = True
         if space_group_symmetry:
             self.ops = copy.deepcopy(self.spacegroup.ops) #in case that a subset of ops is considered
             if self.symmorphic:
@@ -191,15 +195,17 @@ def _get_phase(cell, op, coords_scaled, kpt_scaled):
     natm = cell.natm
     phase = np.zeros([natm], dtype = np.complex128)
     atm_map = np.arange(natm)
+    coords0 = np.mod(coords_scaled, 1).round(-np.log10(SYMPREC).astype(int))
+    coords0 = np.mod(coords0, 1)
     for iatm in range(natm):
         r = coords_scaled[iatm]
         op_dot_r = op.dot_rot(r - op.inv().trans)
         op_dot_r_0 = np.mod(np.mod(op_dot_r, 1), 1)
         op_dot_r_0 = op_dot_r_0.round(-np.log10(SYMPREC).astype(int))
         op_dot_r_0 = np.mod(op_dot_r_0, 1)
-        diff = np.einsum('ki->k', abs(op_dot_r_0 - coords_scaled))
+        diff = np.einsum('ki->k', abs(op_dot_r_0 - coords0))
         atm_map[iatm] = np.where(diff < SYMPREC)[0]
-        r_diff = op_dot_r_0 - op_dot_r
+        r_diff = coords_scaled[atm_map[iatm]] - op_dot_r
         #sanity check
         assert(np.linalg.norm(r_diff - r_diff.round()) < SYMPREC)
         phase[iatm] = np.exp(-1j * np.dot(kpt_scaled, r_diff) * 2.0 * np.pi)

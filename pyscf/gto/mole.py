@@ -252,7 +252,7 @@ def sph2spinor_l(l):
     '''Real spherical to spinor transformation matrix for angular moment l'''
     return sph2spinor_kappa(0, l)
 
-def atom_types(atoms, basis=None):
+def atom_types(atoms, basis=None, magmom=None):
     '''symmetry inequivalent atoms'''
     atmgroup = {}
     for ia, a in enumerate(atoms):
@@ -276,6 +276,22 @@ def atom_types(atoms, basis=None):
                 atmgroup[stdsymb].append(ia)
             else:
                 atmgroup[stdsymb] = [ia]
+
+    if magmom is not None:
+        atmgroup_new = {}
+        suffix = {1.0:'u', -1.0:'d', 0.0:'o'}
+        magmom = np.asarray(magmom)
+        for elem, idx in atmgroup.items():
+            uniq_mag = np.unique(magmom[idx])
+            if len(uniq_mag) > 1:
+                for i, mag in enumerate(uniq_mag):
+                    subgrp = np.asarray(idx)[np.where(magmom[idx] == mag)[0]]
+                    if mag not in suffix:
+                        raise RuntimeError("Magmom should be chosen from [-1., 0., 1.], but %s is given" % mag)
+                    atmgroup_new[elem+'_'+suffix[mag]] = subgrp.tolist()
+            else:
+                atmgroup_new[elem] = idx
+        atmgroup = atmgroup_new 
     return atmgroup
 
 
