@@ -439,8 +439,9 @@ class KUHF(khf.KSCF, pbcuhf.UHF):
             nkpts = len(self.kpts)
             # dm[spin,nao,nao] at gamma point -> dm_kpts[spin,nkpts,nao,nao]
             dm_kpts = np.repeat(dm[:,None,:,:], nkpts, axis=1)
-            dm_kpts[0,:] *= 1.01
-            dm_kpts[1,:] *= 0.99  # To slightly break spin symmetry
+            # ZHC START
+            #dm_kpts[0,:] *= 1.01
+            #dm_kpts[1,:] *= 0.99  # To slightly break spin symmetry
             assert dm_kpts.shape[0]==2
 
         ne = np.einsum('xkij,kji->x', dm_kpts, self.get_ovlp(cell)).real

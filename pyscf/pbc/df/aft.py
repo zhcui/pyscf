@@ -140,7 +140,9 @@ def get_pp_loc_part1(mydf, kpts=None):
                 logger.warn(mydf, 'mesh %s is not enough for AFTDF.get_nuc function '
                             'to get integral accuracy %g.\nRecommended mesh is %s.',
                             mesh, cell.precision, mesh_guess)
-            mesh_min = numpy.min((mesh_guess, mesh), axis=0)
+            # ZHC NOTE
+            #mesh_min = numpy.min((mesh_guess, mesh), axis=0)
+            mesh_min = numpy.max((mesh_guess, mesh), axis=0)
             if cell.dimension < 2 or cell.low_dim_ft_type == 'inf_vacuum':
                 mesh[:cell.dimension] = mesh_min[:cell.dimension]
             else:
