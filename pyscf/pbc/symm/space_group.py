@@ -20,6 +20,7 @@ import numpy as np
 from pyscf import __config__
 from pyscf import lib
 from pyscf.lib import logger
+from pyscf.pbc.symm import geom
 from functools import reduce
 
 SYMPREC = getattr(__config__, 'pbc_symm_space_group_symprec', 1e-6)
@@ -211,7 +212,7 @@ class SpaceGroup(lib.StreamObject):
         self.cell = cell
         self.symprec = symprec
         self.verbose = self.cell.verbose
-        self.backend = 'spglib'
+        self.backend = 'pyscf'
 
         # Followings are not input variables
         self.ops = []
@@ -223,15 +224,22 @@ class SpaceGroup(lib.StreamObject):
             from pyscf.pbc.symm.pyscf_spglib import cell_to_spgcell, get_symmetry_dataset, get_symmetry
             spgcell = cell_to_spgcell(self.cell)
             dataset = get_symmetry_dataset(spgcell, symprec=self.symprec)
-            self.groupname['international_symbol'] = dataset['international']
-            self.groupname['international_number'] = dataset['number']
-            self.groupname['point_group_symbol'] = dataset['pointgroup']
+            spg_symbol = dataset['international']
+            spg_no = dataset['number']
+            pg_symbol = dataset['pointgroup']
             symmetry = get_symmetry(spgcell, symprec=self.symprec)
             for rot, trans in zip(symmetry['rotations'], symmetry['translations']):
                 self.ops.append(SpaceGroup_element(rot, trans))
-            self.nop = len(self.ops)
         elif self.backend == 'pyscf':
-            raise NotImplementedError("spglib is required to determine the space group.")
+            self.ops = geom.search_space_group_ops(cell, tol=self.symprec)
+            pg_symbol = geom.get_crystal_class(cell, tol=self.symprec)[0]
+            spg_symbol = None
+            spg_no = None
+
+        self.nop = len(self.ops)
+        self.groupname['point_group_symbol'] = pg_symbol
+        self.groupname['international_symbol'] = spg_symbol
+        self.groupname['international_number'] = spg_no
 
         if dump_info:
             self.dump_info()
@@ -240,7 +248,8 @@ class SpaceGroup(lib.StreamObject):
     def dump_info(self):
         if self.verbose >= logger.INFO:
             gn = self.groupname
-            logger.info(self, '[Cell] International symbol:  %s (%d)', gn['international_symbol'], gn['international_number'])
+            if gn['international_symbol'] is not None:
+                logger.info(self, '[Cell] International symbol:  %s (%d)', gn['international_symbol'], gn['international_number'])
             logger.info(self, '[Cell] Point group symbol:  %s', gn['point_group_symbol'])
         if self.verbose >= logger.DEBUG:
             logger.debug(self, "Space group symmetry operations:")
@@ -266,8 +275,8 @@ if __name__ == "__main__":
     """
     cell.a = [[4.0, 0., 0.], [0., 4.0, 0.], [0., 0., 4.0]]
     cell.verbose = 5
-    cell.dimension = 2
-    cell.magmom = [1., 1., -1., -1., 1., -1., 1., 1., -1., -1., 1., -1.]
+    cell.dimension = 3
+    #cell.magmom = [1., 1., -1., -1., 1., -1., 1., 1., -1., -1., 1., -1.]
     cell.build()
     sg = SpaceGroup(cell)
     sg.build()
