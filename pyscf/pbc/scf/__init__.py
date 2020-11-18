@@ -29,8 +29,11 @@ krhf = khf
 from pyscf.pbc.scf import kuhf
 from pyscf.pbc.scf import krohf
 from pyscf.pbc.scf import kghf
+from pyscf.pbc.scf import khf_ksymm
+from pyscf.pbc.scf import kuhf_ksymm
 from pyscf.pbc.scf import newton_ah
 from pyscf.pbc.scf import addons
+from pyscf.pbc.lib import kpts as libkpts
 
 UHF = uhf.UHF
 ROHF = rohf.ROHF
@@ -43,8 +46,26 @@ def RHF(cell, *args, **kwargs):
         return rohf.ROHF(cell, *args, **kwargs)
 RHF.__doc__ = rhf.RHF.__doc__
 
-KRHF = krhf.KRHF  # KRHF supports cell.spin != 0 if number of k-points is even
-KUHF = kuhf.KUHF
+#KRHF = krhf.KRHF  # KRHF supports cell.spin != 0 if number of k-points is even
+def KRHF(cell, *args, **kwargs):
+    for arg in args:
+        if isinstance(arg, libkpts.KPoints):
+            return khf_ksymm.KRHF(cell, *args, **kwargs)
+    if 'kpts' in kwargs:
+        if isinstance(kwargs['kpts'], libkpts.KPoints):
+            return khf_ksymm.KRHF(cell, *args, **kwargs)
+    return krhf.KRHF(cell, *args, **kwargs)
+
+#KUHF = kuhf.KUHF
+def KUHF(cell, *args, **kwargs):
+    for arg in args:
+        if isinstance(arg, libkpts.KPoints):
+            return kuhf_ksymm.KUHF(cell, *args, **kwargs)
+    if 'kpts' in kwargs:
+        if isinstance(kwargs['kpts'], libkpts.KPoints):
+            return kuhf_ksymm.KUHF(cell, *args, **kwargs)
+    return kuhf.KUHF(cell, *args, **kwargs)
+
 KROHF = krohf.KROHF
 KGHF = kghf.KGHF
 
@@ -58,9 +79,9 @@ def HF(cell, *args, **kwargs):
 
 def KHF(cell, *args, **kwargs):
     if cell.spin == 0:
-        return krhf.KRHF(cell, *args, **kwargs)
+        return KRHF(cell, *args, **kwargs)
     else:
-        return kuhf.KUHF(cell, *args, **kwargs)
+        return KUHF(cell, *args, **kwargs)
 
 
 def KS(cell, *args, **kwargs):

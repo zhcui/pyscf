@@ -165,7 +165,10 @@ def _dft_common_init_(mf, xc='LDA,VWN'):
 # don't modify the following attributes, they are not input options
     # Note Do not refer to .with_df._numint because mesh/coords may be different
     if isinstance(mf, khf.KSCF):
-        mf._numint = numint.KNumInt(mf.kpts)
+        if getattr(mf.kpts, 'kpts', None) is not None:
+            mf._numint = numint.KNumInt(mf.kpts.kpts)
+        else:
+            mf._numint = numint.KNumInt(mf.kpts)
     else:
         mf._numint = numint.NumInt()
     mf._keys = mf._keys.union(['xc', 'grids', 'small_rho_cutoff'])

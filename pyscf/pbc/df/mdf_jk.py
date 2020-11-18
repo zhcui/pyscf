@@ -52,6 +52,8 @@ def density_fit(mf, auxbasis=None, mesh=None, with_df=None):
         else:
             kpts = numpy.reshape(mf.kpt, (1,3))
 
+        if getattr(kpts, 'kpts', None) is not None:
+            kpts = kpts.kpts
         with_df = mdf.MDF(mf.cell, kpts)
         with_df.max_memory = mf.max_memory
         with_df.stdout = mf.stdout

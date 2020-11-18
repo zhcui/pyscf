@@ -23,6 +23,7 @@ from pyscf.pbc import gto as pbcgto
 from pyscf.pbc import dft as pbcdft
 from pyscf.pbc import df
 
+#XXX This test is broken
 class BN(unittest.TestCase):
     """
     Monolayer hexagonal boron nitride simple LDA model compared against
