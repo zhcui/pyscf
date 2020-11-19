@@ -20,7 +20,6 @@ import numpy as np
 from pyscf import __config__
 from pyscf import lib
 from pyscf.gto import mole
-from pyscf.pbc.symm import space_group as spg
 from functools import reduce
 
 SYMPREC = getattr(__config__, 'pbc_symm_space_group_symprec', 1e-6) #this has the unit of length
@@ -107,6 +106,7 @@ def search_space_group_ops(cell, rotations=None, tol=SYMPREC):
     if atm[-2:] in ['_u', '_d']:
         x_spin_inv = coords[atmgrp_spin_inv[atm]]
 
+    from pyscf.pbc.symm.space_group import SpaceGroup_element
     ops = []
     for rot in rotations:
         w = x - np.dot(x[0], rot.T)
@@ -119,10 +119,10 @@ def search_space_group_ops(cell, rotations=None, tol=SYMPREC):
         w = np.unique(w, axis=0)
         for trans in w:
             if test_trans(rot, trans):
-                ops.append(spg.SpaceGroup_element(rot, trans))
+                ops.append(SpaceGroup_element(rot, trans))
             elif has_spin:
                 if test_trans(rot, trans, True):
-                    ops.append(spg.SpaceGroup_element(rot, trans))
+                    ops.append(SpaceGroup_element(rot, trans))
     return ops
 
 def get_crystal_class(cell, ops=None, tol=SYMPREC):
