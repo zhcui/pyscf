@@ -563,6 +563,52 @@ def transform_mo_energy(kpts, mo_energy_ibz):
             mo_energy_bz.append(mo_energy_ibz[ibz_k_idx])
     return mo_energy_bz
 
+def transform_fock(kpts, fock_ibz):
+    '''
+    Transform Fock matrix from IBZ to full BZ
+    '''
+    fock = []
+    is_uhf = False
+    if isinstance(fock_ibz[0][0], np.ndarray) and fock_ibz[0][0].ndim == 2:
+        is_uhf = True
+        fock = [[],[]]
+
+    for k in range(kpts.nkpts):
+        ibz_k_idx = kpts.bz2ibz[k]
+        ibz_kpt_scaled = kpts.kpts_scaled_ibz[ibz_k_idx]
+        iop = kpts.stars_ops_bz[k]
+        op = kpts.ops[iop]
+        time_reversal = kpts.time_reversal_symm_bz[k]
+
+        def _transform(fock_ibz, iop, op):
+            if op.is_eye:
+                if time_reversal:
+                    fock_bz = fock_ibz.conj()
+                else:
+                    fock_bz = fock_ibz
+            elif op.is_inversion:
+                fock_bz = fock_ibz.conj()
+            else:
+                fock_bz = symm.transform_1e_operator(kpts.cell, ibz_kpt_scaled, fock_ibz, op, kpts.Dmats[iop])
+                if time_reversal:
+                    fock_bz = fock_bz.conj()
+            return fock_bz
+
+        if is_uhf:
+            fock_a = fock_ibz[0][ibz_k_idx]
+            fock[0].append(_transform(fock_a, iop, op))
+            fock_b = fock_ibz[1][ibz_k_idx]
+            fock[1].append(_transform(fock_b, iop, op))
+        else:
+            fock.append(_transform(fock_ibz[ibz_k_idx], iop, op))
+    if is_uhf:
+        nkpts = len(fock[0])
+        nao = fock[0][0].shape[0]
+        fock = lib.asarray(fock).reshape(2,nkpts,nao,nao)
+    else:
+        fock = lib.asarray(fock)
+    return fock
+
 def check_mo_occ_symmetry(kpts, mo_occ, tol=1e-6):
     '''
     Check if MO occupations in BZ have the correct symmetry
@@ -749,7 +795,7 @@ class KPoints(symm.Symmetry, lib.StreamObject):
     transform_mo_energy = transform_mo_energy
     transform_mo_occ = transform_mo_occ
     check_mo_occ_symmetry = check_mo_occ_symmetry
-
+    transform_fock = transform_fock
 
 if __name__ == "__main__":
     import numpy
