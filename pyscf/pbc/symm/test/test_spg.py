@@ -72,6 +72,52 @@ class KnownValues(unittest.TestCase):
         for op, op1 in zip(ops, ops1):
             self.assertTrue(op == op1)
 
+    def test_D4h_2d(self):
+        dim = 3
+        cell = make_cell_D4h(dim)
+        sg = spg.SpaceGroup(cell)
+        sg.build()
+        ops3 = sg.ops
+        pg3 = sg.groupname['point_group_symbol']
+        self.assertTrue(pg3 == '4/mmm')
+        ops2 = []
+        for op in ops3:
+            rot = op.rot
+            if (rot[2,0] == 0 and rot[2,1] == 0 and 
+                rot[0,2] == 0 and rot[1,2] == 0 and 
+                rot[2,2] != -1):
+                ops2.append(op)
+        ops2.sort
+
+        dim = 2
+        cell = make_cell_D4h(dim)
+        sg = spg.SpaceGroup(cell)
+        sg.build()
+        ops = sg.ops
+        pg = sg.groupname['point_group_symbol']
+        self.assertTrue(pg == '4mm')
+        for op, op0 in zip(ops, ops2):
+            self.assertTrue(op == op0)
+
+    def test_spg_elment_hash(self):
+        num = np.random.randint(0, 3**9*12**3)
+        rot = np.empty([3,3], dtype=int)
+        trans = np.empty([3], dtype=float)
+        r = num % (3**9)
+        degit = 3**8
+        for i in range(3):
+            for j in range(3):
+                rot[i][j] = ( r % ( degit * 3 ) ) // degit - 1
+                degit = degit // 3
+        t = num // (3**9)
+        degit = 12**2
+        for i in range(3):
+            trans[i] = ( float( ( t % ( degit * 12 ) ) // degit ) ) / 12.;
+            degit = degit // 12
+        op = spg.SpaceGroup_element(rot, trans)
+        self.assertTrue(hash(op) == num)
+
+
 if __name__ == '__main__':
     print("Full Tests for space group symmetry detection")
     unittest.main()
