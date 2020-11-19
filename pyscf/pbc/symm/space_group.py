@@ -20,6 +20,7 @@ import numpy as np
 from pyscf import __config__
 from pyscf import lib
 from pyscf.lib import logger
+from pyscf.pbc.symm import geom
 from functools import reduce
 
 SYMPREC = getattr(__config__, 'pbc_symm_space_group_symprec', 1e-6)
@@ -132,7 +133,7 @@ class SpaceGroup_element():
 
     @property
     def trans_is_zero(self):
-        return (abs(self.trans) < SYMPREC).all()
+        return (np.abs(self.trans) < SYMPREC).all()
 
     @property
     def is_eye(self):
@@ -147,6 +148,49 @@ class SpaceGroup_element():
         Whether self is inversion operation.
         '''
         return self.rot_is_inversion and self.trans_is_zero
+
+    def __eq__(self, other):
+        if not isinstance(other, SpaceGroup_element):
+            raise TypeError
+        return self.__hash__() == other.__hash__()
+
+    def __ne__(self, other):
+        if not isinstance(other, SpaceGroup_element):
+            raise TypeError
+        return not self.__eq__(other)
+
+    def __lt__(self, other):
+        if not isinstance(other, SpaceGroup_element):
+            raise TypeError
+        return self.__hash__() < other.__hash__()
+
+    def __le__(self, other):
+        if not isinstance(other, SpaceGroup_element):
+            raise TypeError
+        return self.__eq__(other) or self.__lt__(other)
+
+    def __gt__(self, other):
+        if not isinstance(other, SpaceGroup_element):
+            raise TypeError
+        return not self.__le__(other)
+
+    def __ge__(self, other):
+        if not isinstance(other, SpaceGroup_element):
+            raise TypeError
+        return not self.__lt__(other)
+
+    def __hash__(self):
+        rot = self.rot.flatten()
+        r = 0
+        for i in range(9):
+            r += 3**(8-i) * (rot[i] + 1)
+
+        trans = self.trans
+        t = 0
+        for i in range(3):
+            t += int(np.round(trans[i] * 12.)) * 12**(2-i)
+
+        return int(t * (3**9) + r)
 
     def a2b(self, cell):
         '''
@@ -197,21 +241,28 @@ class SpaceGroup(lib.StreamObject):
     Attributes:
         cell : :class:`Cell` object
         symprec : float
-            Numerical tolerance for determining the space group. Default value is 1e-6.
+            Numerical tolerance for determining the space group. 
+            Default value is 1e-6 in the unit of length.
         verbose : int
             Print level. Default value equals to `cell.verbose`.
+        backend: str
+            Choose which backend to use for symmetry detection. 
+            Default is `pyscf` and other choices are `spglib`.
         ops : list of :class:`SpaceGroup_element` objects
             Matrix representation of the space group operations (in direct lattice system).
         nop : int
             Order of the space group.
         groupname : dict
             Standard symbols for symmetry groups.
+            groupname['point_group_symbol']: point group symbol
+            groupname['international_symbol']: space group symbol
+            groupname['international_number']: space group number
     '''
     def __init__(self, cell, symprec=SYMPREC):
         self.cell = cell
         self.symprec = symprec
         self.verbose = self.cell.verbose
-        self.backend = 'spglib'
+        self.backend = 'pyscf'
 
         # Followings are not input variables
         self.ops = []
@@ -219,19 +270,33 @@ class SpaceGroup(lib.StreamObject):
         self.groupname = {}
 
     def build(self, dump_info=True):
+        if self.cell.dimension < 3 and self.backend == 'spglib':
+            logger.warn(self, 'spglib only works for 3D system; '
+                        'setting symmetry detection backend to pyscf native implementation.')
+            self.backend = 'pyscf'
+
         if self.backend == 'spglib':
             from pyscf.pbc.symm.pyscf_spglib import cell_to_spgcell, get_symmetry_dataset, get_symmetry
             spgcell = cell_to_spgcell(self.cell)
             dataset = get_symmetry_dataset(spgcell, symprec=self.symprec)
-            self.groupname['international_symbol'] = dataset['international']
-            self.groupname['international_number'] = dataset['number']
-            self.groupname['point_group_symbol'] = dataset['pointgroup']
+            spg_symbol = dataset['international']
+            spg_no = dataset['number']
+            pg_symbol = dataset['pointgroup']
             symmetry = get_symmetry(spgcell, symprec=self.symprec)
             for rot, trans in zip(symmetry['rotations'], symmetry['translations']):
                 self.ops.append(SpaceGroup_element(rot, trans))
-            self.nop = len(self.ops)
         elif self.backend == 'pyscf':
-            raise NotImplementedError("spglib is required to determine the space group.")
+            self.ops = geom.search_space_group_ops(self.cell, tol=self.symprec)
+            pg_symbol = geom.get_crystal_class(self.cell, tol=self.symprec)[0]
+            #TODO add space group symbol
+            spg_symbol = None
+            spg_no = None
+
+        self.ops.sort()
+        self.nop = len(self.ops)
+        self.groupname['point_group_symbol'] = pg_symbol
+        self.groupname['international_symbol'] = spg_symbol
+        self.groupname['international_number'] = spg_no
 
         if dump_info:
             self.dump_info()
@@ -240,7 +305,8 @@ class SpaceGroup(lib.StreamObject):
     def dump_info(self):
         if self.verbose >= logger.INFO:
             gn = self.groupname
-            logger.info(self, '[Cell] International symbol:  %s (%d)', gn['international_symbol'], gn['international_number'])
+            if gn['international_symbol'] is not None:
+                logger.info(self, '[Cell] International symbol:  %s (%d)', gn['international_symbol'], gn['international_number'])
             logger.info(self, '[Cell] Point group symbol:  %s', gn['point_group_symbol'])
         if self.verbose >= logger.DEBUG:
             logger.debug(self, "Space group symmetry operations:")
@@ -264,10 +330,11 @@ if __name__ == "__main__":
       O  3.000000     0.00000      0.0000
       O  2.000000     1.00000      0.0000
     """
-    cell.a = [[4.0, 0., 0.], [0., 4.0, 0.], [0., 0., 4.0]]
+    cell.a = [[4.0, 0., 0.], [0., 4.0, 0.], [0., 0., 16.0]]
     cell.verbose = 5
-    cell.dimension = 2
+    cell.dimension = 3
     cell.magmom = [1., 1., -1., -1., 1., -1., 1., 1., -1., -1., 1., -1.]
     cell.build()
     sg = SpaceGroup(cell)
+    sg.backend = 'spglib'
     sg.build()

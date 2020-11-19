@@ -284,6 +284,13 @@ def transform_dm(cell, kpt_scaled, dm, op, Dmats):
     mat = _get_rotation_mat(cell, kpt_scaled, dm, op, Dmats)
     return reduce(np.dot, (mat, dm, mat.T.conj()))
 
+def transform_1e_operator(cell, kpt_scaled, fock, op, Dmats):
+    '''
+    Get 1-electron operator for a symmetry-related k-point
+    '''
+    mat = _get_rotation_mat(cell, kpt_scaled, fock, op, Dmats)
+    return reduce(np.dot, (mat, fock, mat.T.conj()))
+
 def make_rot_loc(l_max, key):
     l = np.arange(l_max+1)
     if 'cart' in key:

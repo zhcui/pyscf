@@ -213,13 +213,13 @@ class KnownValues(unittest.TestCase):
         kmf.kernel()
         rho = kmf.get_rho()
         error = np.amax(np.absolute(rho - kmf0.get_rho()))
-        self.assertAlmostEqual(error, 0., 8)
+        self.assertAlmostEqual(error, 0., 7)
 
         kmf = pscf.KUHF(cell, kpts)
         kmf.kernel()
         rho = kmf.get_rho()
         error = np.amax(np.absolute(rho - kumf0.get_rho()))
-        self.assertAlmostEqual(error, 0., 8)
+        self.assertAlmostEqual(error, 0., 7)
 
     def test_dip_moment(self):
         kpts = cell.make_kpts(nk,space_group_symmetry=True,time_reversal_symmetry=True)
@@ -234,6 +234,16 @@ class KnownValues(unittest.TestCase):
         dip = kmf.dip_moment()
         error = np.amax(np.absolute(dip - kumf0.dip_moment()))
         self.assertAlmostEqual(error, 0., 6)
+
+    def test_transform_fock(self):
+        kpts = cell.make_kpts(nk,space_group_symmetry=True,time_reversal_symmetry=True)
+        kmf = pscf.KRHF(cell, kpts)
+        kmf.kernel()
+        fock = kpts.transform_fock(kmf.get_fock())
+        fock0 = kmf0.get_fock()
+        for k in range(kpts.nkpts):
+            error = np.linalg.norm(fock[k] - fock0[k])
+            self.assertAlmostEqual(error, 0., 6)
 
 
 if __name__ == '__main__':
