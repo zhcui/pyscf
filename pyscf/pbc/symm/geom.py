@@ -71,12 +71,25 @@ def search_space_group_ops(cell, rotations=None, tol=SYMPREC):
     a = cell.lattice_vectors()
     coords = cell.get_scaled_positions()
     atmgrp = mole.atom_types(cell._atom, magmom=cell.magmom)
+    atmgrp_spin_inv = {} #spin up and down inverted
+    has_spin = False
+    for atm in atmgrp.keys():
+        if atm[-2:] == '_u':
+            has_spin = True
+            atmgrp_spin_inv[atm] = atmgrp[atm[:-2]+'_d']
+        elif atm[-2:] == '_d':
+            atmgrp_spin_inv[atm] = atmgrp[atm[:-2]+'_u']
+        else:
+            atmgrp_spin_inv[atm] = atmgrp[atm]
 
-    def test_trans(R, t):
+    def test_trans(R, t, spin_inverse=False):
         for atm, idx in atmgrp.items():
             x = coords[idx]
             xt = np.dot(x, R.T) + t
-            x_xt = np.concatenate((x,xt))
+            if not spin_inverse:
+                x_xt = np.concatenate((x,xt))
+            else:
+                x_xt = np.concatenate((coords[atmgrp_spin_inv[atm]],xt))
             x_xt = np.mod(x_xt, 1)
             x_xt = np.round(x_xt, -np.log10(tol).astype(int))
             x_xt = np.mod(x_xt, 1)
@@ -90,15 +103,26 @@ def search_space_group_ops(cell, rotations=None, tol=SYMPREC):
     grp_len = [len(v) for v in atmgrp.values()]
     atm = [k for k in atmgrp.keys() if len(atmgrp[k]) == min(grp_len)][0]
     x = coords[atmgrp[atm]]
+    x_spin_inv = None
+    if atm[-2:] in ['_u', '_d']:
+        x_spin_inv = coords[atmgrp_spin_inv[atm]]
+
     ops = []
     for rot in rotations:
         w = x - np.dot(x[0], rot.T)
+        if x_spin_inv is not None:
+            w_spin_inv = x_spin_inv - np.dot(x[0], rot.T)
+            w = np.vstack((w, w_spin_inv))
         w = np.mod(w, 1)
         w = np.round(w, -np.log10(tol).astype(int))
         w = np.mod(w, 1)
+        w = np.unique(w, axis=0)
         for trans in w:
             if test_trans(rot, trans):
                 ops.append(spg.SpaceGroup_element(rot, trans))
+            elif has_spin:
+                if test_trans(rot, trans, True):
+                    ops.append(spg.SpaceGroup_element(rot, trans))
     return ops
 
 def get_crystal_class(cell, ops=None, tol=SYMPREC):
@@ -170,17 +194,31 @@ def get_crystal_class(cell, ops=None, tol=SYMPREC):
         raise RuntimeError("Unable to determine crystal class.")
     return crystal_class, laue_class
 
+
 if __name__ == "__main__":
     from pyscf.pbc import gto
     cell = gto.Cell()
     cell.atom = """
-        Si  0.0 0.0 0.0
-        Si  1.3467560987 1.3467560987 1.3467560987
+      Cu 1.000000     1.00000      0.0000
+      O  0.000000     1.00000      0.0000
+      O  1.000000     2.00000      0.0000
+      Cu 1.000000     3.00000      0.0000
+      O  1.000000     4.00000      0.0000
+      O  2.000000     3.00000      0.0000
+      Cu 3.000000     3.00000      0.0000
+      O  4.000000     3.00000      0.0000
+      O  3.000000     2.00000      0.0000
+      Cu 3.000000     1.00000      0.0000
+      O  3.000000     0.00000      0.0000
+      O  2.000000     1.00000      0.0000
     """
-    cell.a = [[0.0, 2.6935121974, 2.6935121974], 
-              [2.6935121974, 0.0, 2.6935121974], 
-              [2.6935121974, 2.6935121974, 0.0]]
+    cell.a = [[4.0, 0., 0.], [0., 4.0, 0.], [0., 0., 16.0]]
+    cell.dimension = 2
+    cell.magmom = [1., 1., -1., -1., 1., -1., 1., 1., -1., -1., 1., -1.]
     cell.build()
 
     ops = search_space_group_ops(cell)
-    print(get_crystal_class(cell, ops=ops)[0])
+    for op in ops: print(op)
+
+    point_group = get_crystal_class(cell, ops=ops)[0]
+    print(point_group)
