@@ -53,7 +53,7 @@ class KsymAdaptedKSCF(khf.KSCF):
     def __init__(self, cell, kpts=libkpts.KPoints(),
                  exxdiv=getattr(__config__, 'pbc_scf_SCF_exxdiv', 'ewald')):
         self._kpts = None
-        super(KsymAdaptedKSCF, self).__init__(cell, kpts=kpts, exxdiv=exxdiv)
+        khf.KSCF.__init__(self, cell, kpts=kpts, exxdiv=exxdiv)
 
     @property
     def kpts(self):
@@ -144,16 +144,16 @@ class KsymAdaptedKSCF(khf.KSCF):
     @lib.with_doc(khf.get_ovlp.__doc__)
     def get_ovlp(self, cell=None, kpts=None):
         if isinstance(kpts, np.ndarray):
-            return super(KsymAdaptedKSCF, self).get_ovlp(cell, kpts)
+            return khf.KSCF.get_ovlp(self, cell, kpts)
         if kpts is None: kpts = self.kpts
-        return super(KsymAdaptedKSCF, self).get_ovlp(cell, kpts.kpts_ibz)
+        return khf.KSCF.get_ovlp(self, cell, kpts.kpts_ibz)
 
     @lib.with_doc(khf.get_hcore.__doc__)
     def get_hcore(self, cell=None, kpts=None):
         if isinstance(kpts, np.ndarray):
-            return super(KsymAdaptedKSCF, self).get_hcore(cell, kpts)
+            return khf.KSCF.get_hcore(self, cell, kpts)
         if kpts is None: kpts = self.kpts
-        return super(KsymAdaptedKSCF, self).get_hcore(cell, kpts.kpts_ibz)
+        return khf.KSCF.get_hcore(self, cell, kpts.kpts_ibz)
 
     @lib.with_doc(khf.get_jk.__doc__)
     def get_jk(self, cell=None, dm_kpts=None, hermi=1, kpts=None, kpts_band=None,

@@ -31,6 +31,7 @@ from pyscf.pbc.scf import krohf
 from pyscf.pbc.scf import kghf
 from pyscf.pbc.scf import khf_ksymm
 from pyscf.pbc.scf import kuhf_ksymm
+from pyscf.pbc.scf import kghf_ksymm
 from pyscf.pbc.scf import newton_ah
 from pyscf.pbc.scf import addons
 from pyscf.pbc.lib import kpts as libkpts
@@ -67,7 +68,16 @@ def KUHF(cell, *args, **kwargs):
     return kuhf.KUHF(cell, *args, **kwargs)
 
 KROHF = krohf.KROHF
-KGHF = kghf.KGHF
+
+#KGHF = kghf.KGHF
+def KGHF(cell, *args, **kwargs):
+    for arg in args:
+        if isinstance(arg, libkpts.KPoints):
+            return kghf_ksymm.KGHF(cell, *args, **kwargs)
+    if 'kpts' in kwargs:
+        if isinstance(kwargs['kpts'], libkpts.KPoints):
+            return kghf_ksymm.KGHF(cell, *args, **kwargs)
+    return kghf.KGHF(cell, *args, **kwargs)
 
 newton = newton_ah.newton
 
