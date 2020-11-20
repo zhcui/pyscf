@@ -477,6 +477,7 @@ def get_j(mydf, dm, hermi=1, kpt=np.zeros(3), kpts_band=None):
         vj = vj[0]
     return vj
 
+
 def get_k(mydf, dm, hermi=1, kpt=np.zeros(3), kpts_band=None, exxdiv=None):
     '''Get the Coulomb (J) and exchange (K) AO matrices for the given density matrix.
 

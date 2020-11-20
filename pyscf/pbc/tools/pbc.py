@@ -257,8 +257,6 @@ def get_coulG(cell, k=np.zeros(3), exx=False, mf=None, mesh=None, Gv=None,
 
     if getattr(mf, 'kpts', None) is not None:
         kpts = mf.kpts
-        if getattr(mf, "kpts_descriptor", None) is not None:
-            kpts = mf.kpts_descriptor.kpts
     else:
         kpts = k.reshape(1,3)
     Nk = len(kpts)
