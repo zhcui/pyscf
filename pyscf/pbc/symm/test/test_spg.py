@@ -161,6 +161,7 @@ class KnownValues(unittest.TestCase):
         for op,op0 in zip(ops, ops0):
             self.assertTrue(op == op0)
 
+    @unittest.skipIf(not has_spglib, "spglib not found")
     def test_D3d_vs_spglib(self):
         cell = gto.Cell()
         cell.atom = """
