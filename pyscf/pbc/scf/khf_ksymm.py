@@ -214,6 +214,43 @@ class KsymAdaptedKSCF(khf.KSCF):
 
     energy_elec = energy_elec
 
+    def to_khf(self):
+        '''transform to non-symmetry object
+        '''
+        from . import kuhf_ksymm, kghf_ksymm
+        from . import khf, kuhf, kghf
+        cell = self.cell
+        exxdiv = self.exxdiv
+        kpts = self.kpts
+        mo_occ = kpts.transform_mo_occ(self.mo_occ)
+        mo_energy = kpts.transform_mo_energy(self.mo_energy)
+
+        if isinstance(self, KsymAdaptedKRHF):
+            mf = khf.KRHF(cell, kpts.kpts, exxdiv)
+            mo_coeff = kpts.transform_mo_coeff(self.mo_coeff)
+        elif isinstance(self, kuhf_ksymm.KUHF):
+            mf = kuhf.KUHF(cell, kpts.kpts, exxdiv)
+            mo_coeff = kpts.transform_mo_coeff(self.mo_coeff)
+        elif isinstance(self, kghf_ksymm.KGHF):
+            mf = kghf.KGHF(cell, kpts.kpts, exxdiv)
+            mo_coeff = np.asarray(self.mo_coeff)
+            nao = mo_coeff.shape[1] // 2
+            mo_coeff_alpha = kpts.transform_mo_coeff(mo_coeff[:,:nao])
+            mo_coeff_beta = kpts.transform_mo_coeff(mo_coeff[:,nao:])
+            mo_coeff = []
+            for k in range(len(mo_coeff_alpha)):
+                mo_coeff.append(np.vstack((mo_coeff_alpha[k], mo_coeff_beta[k])))
+            mo_coeff = np.asarray(mo_coeff)
+        else:
+            raise NotImplementedError
+
+        mf.mo_coeff = mo_coeff
+        mf.mo_occ = mo_occ
+        mf.mo_energy = mo_energy
+        mf.with_df = self.with_df
+        return mf
+
+
 class KsymAdaptedKRHF(KsymAdaptedKSCF, khf.KRHF):
     def nuc_grad_method(self):
         raise NotImplementedError()
