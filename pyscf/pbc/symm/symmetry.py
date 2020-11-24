@@ -304,3 +304,18 @@ def make_rot_loc(l_max, key):
     rot_loc[0] = 0
     dims.cumsum(dtype=np.int32, out=rot_loc[1:])
     return rot_loc
+
+if __name__ == "__main__":
+    import numpy
+    from pyscf.pbc import gto
+    cell = gto.Cell()
+    cell.atom = """
+        Si  0.0 0.0 0.0
+        Si  1.3467560987 1.3467560987 1.3467560987
+    """
+    cell.a = [[0.0, 2.6935121974, 2.6935121974],
+              [2.6935121974, 0.0, 2.6935121974],
+              [2.6935121974, 2.6935121974, 0.0]]
+    cell.verbose = 5
+    cell.build()
+    Symmetry(cell).build()
