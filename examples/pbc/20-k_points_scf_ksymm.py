@@ -29,11 +29,19 @@ kpts = cell.make_kpts(nk,
 print(kpts)
 
 kmf = scf.KRHF(cell, kpts)
-#kmf.kernel()
+kmf.kernel()
 
 kmf = dft.KRKS(cell, kpts)
 kmf.xc = 'camb3lyp'
-#kmf.kernel()
+kmf.kernel()
+
+#
+# The mean-field object with k-point symmetry can be converted back to
+# the correponding non-symmetric mean-field object
+#
+
+kmf = kmf.to_khf()
+kmf.kernel(kmf.make_rdm1())
 
 #
 # Second order SCF solver can be used in the PBC SCF code the same way in the
@@ -47,6 +55,13 @@ kmf.kernel()
 #
 kumf = scf.KUHF(cell, kpts)
 kumf.kernel()
+
+#
+# The mean-field object with k-point symmetry can be converted back to
+# the correponding non-symmetric mean-field object
+#
+kumf = kumf.to_khf()
+kumf.kernel(kumf.make_rdm1())
 
 #
 #KUHF with smearing

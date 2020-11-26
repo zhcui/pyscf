@@ -217,8 +217,9 @@ class KsymAdaptedKSCF(khf.KSCF):
     def to_khf(self):
         '''transform to non-symmetry object
         '''
-        from . import kuhf_ksymm, kghf_ksymm
-        from . import khf, kuhf, kghf
+        from pyscf.pbc.scf import kuhf_ksymm, kghf_ksymm
+        from pyscf.pbc.scf import khf, kuhf, kghf
+        from pyscf.pbc.dft import krks, krks_ksymm, kuks, kuks_ksymm
         cell = self.cell
         exxdiv = self.exxdiv
         kpts = self.kpts
@@ -226,10 +227,16 @@ class KsymAdaptedKSCF(khf.KSCF):
         mo_energy = kpts.transform_mo_energy(self.mo_energy)
 
         if isinstance(self, KsymAdaptedKRHF):
-            mf = khf.KRHF(cell, kpts.kpts, exxdiv)
+            if isinstance(self, krks_ksymm.KRKS):
+                mf = krks.KRKS(cell, kpts.kpts, exxdiv)
+            else:
+                mf = khf.KRHF(cell, kpts.kpts, exxdiv)
             mo_coeff = kpts.transform_mo_coeff(self.mo_coeff)
         elif isinstance(self, kuhf_ksymm.KUHF):
-            mf = kuhf.KUHF(cell, kpts.kpts, exxdiv)
+            if isinstance(self, kuks_ksymm.KUKS):
+                mf = kuks.KUKS(cell, kpts.kpts, exxdiv)
+            else:
+                mf = kuhf.KUHF(cell, kpts.kpts, exxdiv)
             mo_coeff = kpts.transform_mo_coeff(self.mo_coeff)
         elif isinstance(self, kghf_ksymm.KGHF):
             mf = kghf.KGHF(cell, kpts.kpts, exxdiv)
@@ -248,6 +255,8 @@ class KsymAdaptedKSCF(khf.KSCF):
         mf.mo_occ = mo_occ
         mf.mo_energy = mo_energy
         mf.with_df = self.with_df
+        if hasattr(self, 'xc'): mf.xc = self.xc
+        if hasattr(self, 'grids'): mf.grids = self.grids
         return mf
 
 
