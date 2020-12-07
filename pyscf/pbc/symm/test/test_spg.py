@@ -52,7 +52,7 @@ def make_cell_D4h(dimension=3, magmom=None):
 
 class KnownValues(unittest.TestCase):
     @unittest.skipIf(not has_spglib, "spglib not found")
-    def test_vs_spglib(self):
+    def test_D4h_vs_spglib(self):
         dim = 3
         magmom = [1., 1., -1., -1., 1., -1., 1., 1., -1., -1., 1., -1.]
         cell = make_cell_D4h(dim, magmom)
@@ -97,6 +97,89 @@ class KnownValues(unittest.TestCase):
         pg = sg.groupname['point_group_symbol']
         self.assertTrue(pg == '4mm')
         for op, op0 in zip(ops, ops2):
+            self.assertTrue(op == op0)
+
+    @unittest.skipIf(not has_spglib, "spglib not found")
+    def test_Oh_vs_spglib(self):
+        cell = gto.Cell()
+        cell.atom = """
+            Si  0.0 0.0 0.0
+            Si  1.3467560987 1.3467560987 1.3467560987
+        """
+        cell.a = [[0.0, 2.6935121974, 2.6935121974], 
+                  [2.6935121974, 0.0, 2.6935121974], 
+                  [2.6935121974, 2.6935121974, 0.0]]
+        cell.build()
+        sg = spg.SpaceGroup(cell)
+        sg.build()
+        ops = sg.ops
+        self.assertTrue(sg.groupname['point_group_symbol'] == 'm-3m')
+        sg.backend = 'spglib'
+        sg.build()
+        ops0 = sg.ops
+        for op,op0 in zip(ops, ops0):
+            self.assertTrue(op == op0)
+
+    @unittest.skipIf(not has_spglib, "spglib not found")
+    def test_D6h_vs_spglib(self):
+        cell = gto.Cell()
+        cell.atom = """
+            Zn    0.000000    1.516699    1.301750
+            Zn    1.313500    0.758350    3.905250
+        """
+        cell.a = [[ 2.627000, 0.000000, 0.000000],
+                  [-1.313500, 2.275049, 0.000000],
+                  [ 0.000000, 0.000000, 5.207000]]
+        cell.build()
+        sg = spg.SpaceGroup(cell)
+        sg.build()
+        ops = sg.ops
+        self.assertTrue(sg.groupname['point_group_symbol'] == '6/mmm')
+        sg.backend = 'spglib'
+        sg.build()
+        ops0 = sg.ops
+        for op,op0 in zip(ops, ops0):
+            self.assertTrue(op == op0)
+
+    @unittest.skipIf(not has_spglib, "spglib not found")
+    def test_C2h_vs_spglib(self):
+        cell = gto.Cell()
+        cell.atom = """
+            Cu    1.145000    8.273858   11.128085
+        """
+        cell.a = [[2.2899999619, 0.0000000000, 0.0000000000],
+                  [0.0000000000,11.8430004120, 0.0000000000],
+                  [0.0000000000, 4.7047163727,22.2561701795]]
+        cell.build()
+        sg = spg.SpaceGroup(cell)
+        sg.build()
+        ops = sg.ops
+        self.assertTrue(sg.groupname['point_group_symbol'] == '2/m')
+        sg.backend = 'spglib'
+        sg.build()
+        ops0 = sg.ops
+        for op,op0 in zip(ops, ops0):
+            self.assertTrue(op == op0)
+
+    @unittest.skipIf(not has_spglib, "spglib not found")
+    def test_D3d_vs_spglib(self):
+        cell = gto.Cell()
+        cell.atom = """
+            Li    5.281899    1.082489    0.642479
+            Li   18.499727    3.791392    2.250266
+        """
+        cell.a = [[8.3774538040, 0.0000000000, 0.0000000000],
+                  [7.7020859454, 3.2953913771, 0.0000000000],
+                  [7.7020859454, 1.5784896835, 2.8927451749]]
+        cell.build()
+        sg = spg.SpaceGroup(cell)
+        sg.build()
+        ops = sg.ops
+        self.assertTrue(sg.groupname['point_group_symbol'] == '-3m')
+        sg.backend = 'spglib'
+        sg.build()
+        ops0 = sg.ops
+        for op,op0 in zip(ops, ops0):
             self.assertTrue(op == op0)
 
     def test_spg_elment_hash(self):

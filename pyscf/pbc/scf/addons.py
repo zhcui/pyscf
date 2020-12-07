@@ -475,7 +475,10 @@ def convert_to_ghf(mf, out=None):
                 mf1.mo_energy = []
                 mf1.mo_occ = []
                 mf1.mo_coeff = []
-                nkpts = len(mf.kpts)
+                if hasattr(mf.kpts, 'nkpts_ibz'):
+                    nkpts = mf.kpts.nkpts_ibz
+                else:
+                    nkpts = len(mf.kpts)
                 is_rhf = isinstance(mf, scf.hf.RHF)
                 for k in range(nkpts):
                     if is_rhf:

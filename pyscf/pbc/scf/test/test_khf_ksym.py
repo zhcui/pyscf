@@ -245,6 +245,59 @@ class KnownValues(unittest.TestCase):
             error = np.linalg.norm(fock[k] - fock0[k])
             self.assertAlmostEqual(error, 0., 6)
 
+    def test_kghf(self):
+        cell = pbcgto.Cell()
+        cell.atom = '''
+            H 0 0 0
+            H 1 0 0
+            H 0 1 0
+            H 0 0 1
+        '''
+        cell.a = np.eye(3)*2
+        cell.basis = [[0, [1.2, 1]]]
+        cell.build()
+        kpts = cell.make_kpts([2,2,1],space_group_symmetry=True,time_reversal_symmetry=True)
+        mf = pscf.KGHF(cell, kpts)
+        mf.kernel()
+        kpts0 = cell.make_kpts([2,2,1])
+        mf0 = pscf.KGHF(cell, kpts0)
+        mf0.kernel()
+        self.assertAlmostEqual(mf0.e_tot, mf.e_tot, 9)
+
+    def test_to_khf(self):
+        cell = pbcgto.Cell()
+        cell.atom = '''
+            H 0 0 0
+            H 1 0 0
+            H 0 1 0
+            H 0 0 1
+        '''
+        cell.a = np.eye(3)*2
+        cell.basis = [[0, [1.2, 1]]]
+        cell.build()
+        kpts = cell.make_kpts([2,2,1],space_group_symmetry=True,time_reversal_symmetry=True)
+
+        mf = pscf.KGHF(cell, kpts).density_fit()
+        mf.kernel()
+        mf0 = mf.to_khf()
+        mf0.max_cycle=1
+        mf0.kernel(mf0.make_rdm1())
+        self.assertAlmostEqual(mf0.e_tot, mf.e_tot, 9)
+
+        mf = pscf.KRHF(cell, kpts).density_fit()
+        mf.kernel()
+        mf0 = mf.to_khf()
+        mf0.max_cycle=1
+        mf0.kernel(mf0.make_rdm1())
+        self.assertAlmostEqual(mf0.e_tot, mf.e_tot, 9)
+
+        mf = pscf.KUHF(cell, kpts).density_fit()
+        mf.kernel()
+        mf0 = mf.to_khf()
+        mf0.max_cycle=1
+        mf0.kernel(mf0.make_rdm1())
+        self.assertAlmostEqual(mf0.e_tot, mf.e_tot, 8)
+
 
 if __name__ == '__main__':
     print("Full Tests for HF with k-point symmetry")

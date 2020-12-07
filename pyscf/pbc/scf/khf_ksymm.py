@@ -53,7 +53,7 @@ class KsymAdaptedKSCF(khf.KSCF):
     def __init__(self, cell, kpts=libkpts.KPoints(),
                  exxdiv=getattr(__config__, 'pbc_scf_SCF_exxdiv', 'ewald')):
         self._kpts = None
-        super(KsymAdaptedKSCF, self).__init__(cell, kpts=kpts, exxdiv=exxdiv)
+        khf.KSCF.__init__(self, cell, kpts=kpts, exxdiv=exxdiv)
 
     @property
     def kpts(self):
@@ -144,16 +144,16 @@ class KsymAdaptedKSCF(khf.KSCF):
     @lib.with_doc(khf.get_ovlp.__doc__)
     def get_ovlp(self, cell=None, kpts=None):
         if isinstance(kpts, np.ndarray):
-            return super(KsymAdaptedKSCF, self).get_ovlp(cell, kpts)
+            return khf.KSCF.get_ovlp(self, cell, kpts)
         if kpts is None: kpts = self.kpts
-        return super(KsymAdaptedKSCF, self).get_ovlp(cell, kpts.kpts_ibz)
+        return khf.KSCF.get_ovlp(self, cell, kpts.kpts_ibz)
 
     @lib.with_doc(khf.get_hcore.__doc__)
     def get_hcore(self, cell=None, kpts=None):
         if isinstance(kpts, np.ndarray):
-            return super(KsymAdaptedKSCF, self).get_hcore(cell, kpts)
+            return khf.KSCF.get_hcore(self, cell, kpts)
         if kpts is None: kpts = self.kpts
-        return super(KsymAdaptedKSCF, self).get_hcore(cell, kpts.kpts_ibz)
+        return khf.KSCF.get_hcore(self, cell, kpts.kpts_ibz)
 
     @lib.with_doc(khf.get_jk.__doc__)
     def get_jk(self, cell=None, dm_kpts=None, hermi=1, kpts=None, kpts_band=None,
@@ -213,6 +213,52 @@ class KsymAdaptedKSCF(khf.KSCF):
         return super(KsymAdaptedKSCF, self).get_rho(dm, grids, kpts.kpts)
 
     energy_elec = energy_elec
+
+    def to_khf(self):
+        '''transform to non-symmetry object
+        '''
+        from pyscf.pbc.scf import kuhf_ksymm, kghf_ksymm
+        from pyscf.pbc.scf import khf, kuhf, kghf
+        from pyscf.pbc.dft import krks, krks_ksymm, kuks, kuks_ksymm
+        cell = self.cell
+        exxdiv = self.exxdiv
+        kpts = self.kpts
+        mo_occ = kpts.transform_mo_occ(self.mo_occ)
+        mo_energy = kpts.transform_mo_energy(self.mo_energy)
+
+        if isinstance(self, KsymAdaptedKRHF):
+            if isinstance(self, krks_ksymm.KRKS):
+                mf = krks.KRKS(cell, kpts.kpts, exxdiv)
+            else:
+                mf = khf.KRHF(cell, kpts.kpts, exxdiv)
+            mo_coeff = kpts.transform_mo_coeff(self.mo_coeff)
+        elif isinstance(self, kuhf_ksymm.KUHF):
+            if isinstance(self, kuks_ksymm.KUKS):
+                mf = kuks.KUKS(cell, kpts.kpts, exxdiv)
+            else:
+                mf = kuhf.KUHF(cell, kpts.kpts, exxdiv)
+            mo_coeff = kpts.transform_mo_coeff(self.mo_coeff)
+        elif isinstance(self, kghf_ksymm.KGHF):
+            mf = kghf.KGHF(cell, kpts.kpts, exxdiv)
+            mo_coeff = np.asarray(self.mo_coeff)
+            nao = mo_coeff.shape[1] // 2
+            mo_coeff_alpha = kpts.transform_mo_coeff(mo_coeff[:,:nao])
+            mo_coeff_beta = kpts.transform_mo_coeff(mo_coeff[:,nao:])
+            mo_coeff = []
+            for k in range(len(mo_coeff_alpha)):
+                mo_coeff.append(np.vstack((mo_coeff_alpha[k], mo_coeff_beta[k])))
+            mo_coeff = np.asarray(mo_coeff)
+        else:
+            raise NotImplementedError
+
+        mf.mo_coeff = mo_coeff
+        mf.mo_occ = mo_occ
+        mf.mo_energy = mo_energy
+        mf.with_df = self.with_df
+        if hasattr(self, 'xc'): mf.xc = self.xc
+        if hasattr(self, 'grids'): mf.grids = self.grids
+        return mf
+
 
 class KsymAdaptedKRHF(KsymAdaptedKSCF, khf.KRHF):
     def nuc_grad_method(self):
