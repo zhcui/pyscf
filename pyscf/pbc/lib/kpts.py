@@ -100,32 +100,42 @@ def make_kpts_ibz(kpts):
                     kpts.stars_ops[i].append(io % nop)
                     break
 
-def make_ktuples_ibz(kpts, ntuple=2):
+def make_ktuples_ibz(kpts, kpts_scaled=None, ntuple=2, tol=KPT_DIFF_TOL):
     '''
     Constructe k-tuples in IBZ
 
     Arguments:
         kpts : :class:`KPoints` object
+        kpts_scaled : (nkpts, ntuple, 3) ndarray
+            Input k-points among which symmetry relations are seeked.
+            Default is None, meaning all the k-points in :obj:`kpts` are considered.
         ntuple : int
-             n-tuple
+             n-tuple. Default is 2.
     '''
-    bz2bz_ks = kpts.k2opk
-    nop = bz2bz_ks.shape[-1]
+    if kpts_scaled is not None:
+        cell = kpts.cell
+        op_rot = np.asarray([op.a2b(cell).rot for op in kpts.ops])
+        if kpts.time_reversal:
+            op_rot = np.concatenate([op_rot, -op_rot])
+        bz2bz_ksks = map_k_tuples(kpts_scaled, op_rot, ntuple=ntuple, tol=tol)
+        nbzk2 = bz2bz_ksks.shape[0]
+    else:
+        bz2bz_ks = kpts.k2opk
+        nop = bz2bz_ks.shape[-1]
+        nbzk = kpts.nkpts
+        nbzk2 = nbzk**ntuple
+        bz2bz_T = np.zeros([nop, nbzk2], dtype=int)
+        for iop in range(nop):
+            tmp = lib.cartesian_prod([bz2bz_ks[:,iop]]*ntuple)
+            idx_throw = np.unique(np.where(tmp == -1)[0])
+            for i in range(ntuple):
+                bz2bz_T[iop] += tmp[:,i] * nbzk**(ntuple-i-1)
+            bz2bz_T[iop, idx_throw] = -1
+        bz2bz_ksks = bz2bz_T.T
 
-    nbzk = kpts.nkpts
-    nbzk2 = nbzk**ntuple
-    bz2bz_T = np.zeros([nop, nbzk2], dtype=int)
     if kpts.verbose >= logger.INFO:
         logger.info(kpts, 'Number of k %d-tuples: %d', ntuple, nbzk2)
 
-    for iop in range(nop):
-        tmp = lib.cartesian_prod([bz2bz_ks[:,iop]]*ntuple)
-        idx_throw = np.unique(np.where(tmp == -1)[0])
-        for i in range(ntuple):
-            bz2bz_T[iop] += tmp[:,i] * nbzk**(ntuple-i-1)
-        bz2bz_T[iop, idx_throw] = -1
-
-    bz2bz_ksks = bz2bz_T.T
     bz2bz_kk = -np.ones(nbzk2+1, dtype=int)
     ibz2bz_kk = []
     k_group = []
@@ -280,6 +290,59 @@ def map_k_points_fast(kpts_scaled, ops, tol=KPT_DIFF_TOL):
 
         # Do some work on the input
         k_kc = np.concatenate([kpts_scaled, op_kpts_scaled])
+        k_kc = np.mod(np.mod(k_kc, 1), 1)
+        k_kc = aglomerate_points(k_kc, tol)
+        k_kc = k_kc.round(-np.log10(tol).astype(int))
+        k_kc = np.mod(k_kc, 1)
+
+        # Find the lexicographical order
+        order = np.lexsort(k_kc.T)
+        k_kc = k_kc[order]
+        diff_kc = np.diff(k_kc, axis=0)
+        equivalentpairs_k = np.array((diff_kc == 0).all(1), dtype=bool)
+
+        # Mapping array.
+        orders = np.array([order[:-1][equivalentpairs_k],
+                           order[1:][equivalentpairs_k]])
+
+        # This has to be true.
+        assert (orders[0] < nkpts).all()
+        assert (orders[1] >= nkpts).all()
+        bz2bz_ks[orders[1] - nkpts, s] = orders[0]
+    return bz2bz_ks
+
+def map_k_tuples(kpts_scaled, ops, ntuple=2, tol=KPT_DIFF_TOL):
+    '''
+    Find symmetry-related k-tuples.
+
+    Arguments:
+        kpts_scaled : (nkpts, ntuple, 3) ndarray
+            scaled k-points
+        ops : (nop, 3, 3) ndarray of int
+            rotation operators
+        ntuple : int
+            n-tuple. Default is 2.
+        tol : float
+            k-points differ by `tol` are considered as different
+
+    Returns:
+        bz2bz_ks : (nkpts, nop) ndarray of int
+            mapping table between k and op*k.
+            bz2bz_ks[k1,s] = k2 if ops[s] * kpts_scaled[k1] = kpts_scaled[k2] + K,
+            where K is a reciprocal lattice vector.
+    '''
+    nkpts = len(kpts_scaled)
+    nop = len(ops)
+    bz2bz_ks = -np.ones((nkpts, nop), dtype=int)
+    for s, op in enumerate(ops):
+        # Find mapped kpoints
+        op_kpts_scaled = np.empty((nkpts, ntuple, 3), dtype=float)
+        for i in range(ntuple):
+            op_kpts_scaled[:,i] = np.dot(kpts_scaled[:,i], op.T)
+        op_kpts_scaled = op_kpts_scaled.reshape((nkpts,-1))
+
+        # Do some work on the input
+        k_kc = np.concatenate([kpts_scaled.reshape((nkpts,-1)), op_kpts_scaled])
         k_kc = np.mod(np.mod(k_kc, 1), 1)
         k_kc = aglomerate_points(k_kc, tol)
         k_kc = k_kc.round(-np.log10(tol).astype(int))
@@ -609,6 +672,8 @@ def transform_fock(kpts, fock_ibz):
         fock = lib.asarray(fock)
     return fock
 
+transform_1e_operator = transform_fock
+
 def check_mo_occ_symmetry(kpts, mo_occ, tol=1e-6):
     '''
     Check if MO occupations in BZ have the correct symmetry
@@ -796,6 +861,7 @@ class KPoints(symm.Symmetry, lib.StreamObject):
     transform_mo_occ = transform_mo_occ
     check_mo_occ_symmetry = check_mo_occ_symmetry
     transform_fock = transform_fock
+    transform_1e_operator = transform_1e_operator
 
 if __name__ == "__main__":
     import numpy
