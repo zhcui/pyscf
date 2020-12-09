@@ -65,7 +65,6 @@ def density_fit(mf, auxbasis=None, mesh=None, with_df=None):
     mf._eri = None
     return mf
 
-
 def get_j_kpts(mydf, dm_kpts, hermi=1, kpts=numpy.zeros((1,3)), kpts_band=None):
     log = logger.Logger(mydf.stdout, mydf.verbose)
     t1 = (time.clock(), time.time())
@@ -179,6 +178,7 @@ def get_k_kpts(mydf, dm_kpts, hermi=1, kpts=numpy.zeros((1,3)), kpts_band=None,
     bufR = numpy.empty((mydf.blockdim*nao**2))
     bufI = numpy.empty((mydf.blockdim*nao**2))
     max_memory = max(2000, mydf.max_memory-lib.current_memory()[0])
+    
     def make_kpt(ki, kj, swap_2e):
         kpti = kpts[ki]
         kptj = kpts_band[kj]

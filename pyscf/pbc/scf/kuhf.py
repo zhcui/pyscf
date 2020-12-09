@@ -449,7 +449,9 @@ class KUHF(khf.KSCF, pbcuhf.UHF):
         # relates to the charged system.
         nkpts = len(self.kpts)
         nelec = np.asarray(self.nelec)
-        if np.any(abs(ne - nelec) > 1e-7*nkpts):
+        # ZHC NOTE
+        #if np.any(abs(ne - nelec) > 1e-7*nkpts):
+        if False:
             logger.debug(self, 'Big error detected in the electron number '
                         'of initial guess density matrix (Ne/cell = %g)!\n'
                         '  This can cause huge error in Fock matrix and '
