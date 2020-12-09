@@ -179,7 +179,7 @@ def get_k_kpts(mydf, dm_kpts, hermi=1, kpts=numpy.zeros((1,3)), kpts_band=None,
     bufR = numpy.empty((mydf.blockdim*nao**2))
     bufI = numpy.empty((mydf.blockdim*nao**2))
     max_memory = max(2000, mydf.max_memory-lib.current_memory()[0])
-    def make_kpt(ki, kj, swap_2e):
+    def make_kpt(ki, kj, swap_2e, inverse_idx=None):
         kpti = kpts[ki]
         kptj = kpts_band[kj]
 
@@ -202,12 +202,17 @@ def get_k_kpts(mydf, dm_kpts, hermi=1, kpts=numpy.zeros((1,3)), kpts_band=None,
             if swap_2e:
                 tmpR = tmpR.reshape(nao*nrow,nao)
                 tmpI = tmpI.reshape(nao*nrow,nao)
+                ki_tmp = ki
+                kj_tmp = kj
+                if inverse_idx:
+                    ki_tmp = inverse_idx[0]
+                    kj_tmp = inverse_idx[1]
                 for i in range(nset):
                     zdotNN(pLqR.reshape(-1,nao), pLqI.reshape(-1,nao),
-                           dmsR[i,kj], dmsI[i,kj], 1, tmpR, tmpI)
+                           dmsR[i,kj_tmp], dmsI[i,kj_tmp], 1, tmpR, tmpI)
                     zdotNC(tmpR.reshape(nao,-1), tmpI.reshape(nao,-1),
                            pLqR.reshape(nao,-1).T, pLqI.reshape(nao,-1).T,
-                           sign, vkR[i,ki], vkI[i,ki], 1)
+                           sign, vkR[i,ki_tmp], vkI[i,ki_tmp], 1)
 
     if kpts_band is kpts:  # normal k-points HF/DFT
         for ki in range(nkpts):
@@ -216,9 +221,33 @@ def get_k_kpts(mydf, dm_kpts, hermi=1, kpts=numpy.zeros((1,3)), kpts_band=None,
             make_kpt(ki, ki, False)
             t1 = log.timer_debug1('get_k_kpts: make_kpt ki>=kj (%d,*)'%ki, *t1)
     else:
+        idx_in_kpts = []
+        for kpt in kpts_band:
+            idx = member(kpt, kpts)
+            if len(idx) > 0:
+                idx_in_kpts.append(idx[0])
+            else:
+                idx_in_kpts.append(-1)
+        idx_in_kpts_band = []
+        for kpt in kpts:
+            idx = member(kpt, kpts_band)
+            if len(idx) > 0:
+                idx_in_kpts_band.append(idx[0])
+            else:
+                idx_in_kpts_band.append(-1)
+
         for ki in range(nkpts):
             for kj in range(nband):
-                make_kpt(ki, kj, False)
+                if idx_in_kpts[kj] == -1 or idx_in_kpts[kj] == ki:
+                    make_kpt(ki, kj, False)
+                elif idx_in_kpts[kj] < ki:
+                    if idx_in_kpts_band[ki] == -1:
+                        make_kpt(ki, kj, False)
+                    else:
+                        make_kpt(ki, kj, True, (idx_in_kpts_band[ki], idx_in_kpts[kj]))
+                else:
+                    if idx_in_kpts_band[ki] == -1:
+                        make_kpt(ki, kj, False)
             t1 = log.timer_debug1('get_k_kpts: make_kpt (%d,*)'%ki, *t1)
 
     if (gamma_point(kpts) and gamma_point(kpts_band) and
