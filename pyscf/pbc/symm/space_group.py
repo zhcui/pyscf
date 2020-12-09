@@ -336,5 +336,5 @@ if __name__ == "__main__":
     cell.magmom = [1., 1., -1., -1., 1., -1., 1., 1., -1., -1., 1., -1.]
     cell.build()
     sg = SpaceGroup(cell)
-    sg.backend = 'spglib'
+    #sg.backend = 'spglib'
     sg.build()
