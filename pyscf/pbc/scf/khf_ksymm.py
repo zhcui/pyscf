@@ -45,6 +45,23 @@ def energy_elec(mf, dm_kpts=None, h1e_kpts=None, vhf_kpts=None):
                     e_coul.imag)
     return (e1+e_coul).real, e_coul.real
 
+@lib.with_doc(khf.get_rho.__doc__)
+def get_rho(mf, dm=None, grids=None, kpts=None):
+    if isinstance(kpts, np.ndarray):
+        return khf.get_rho(mf, dm, grids, kpts)
+    if dm is None: dm = mf.make_rdm1()
+    if kpts is None: kpts = mf.kpts
+
+    if isinstance(dm[0], np.ndarray) and dm[0].ndim == 3:
+        ndm = len(dm[0])
+    else:
+        ndm = len(dm)
+    if ndm != kpts.nkpts_ibz:
+        raise RuntimeError("Number of input density matrices does not \
+                           match the number of IBZ kpts: %d vs %d." \
+                           % (ndm, kpts.nkpts_ibz))
+    dm = kpts.transform_dm(dm)
+    return khf.get_rho(mf, dm, grids, kpts.kpts)
 
 class KsymAdaptedKSCF(khf.KSCF):
     """
@@ -194,24 +211,7 @@ class KsymAdaptedKSCF(khf.KSCF):
                 fh5['scf/kpts'] = self.kpts.kpts_ibz #FIXME Shall we rebuild kpts? If so, more info is needed.
         return self
 
-    @lib.with_doc(khf.get_rho.__doc__)
-    def get_rho(self, dm=None, grids=None, kpts=None):
-        if isinstance(kpts, np.ndarray):
-            return super(KsymAdaptedKSCF, self).get_rho(dm, grids, kpts)
-        if dm is None: dm = self.make_rdm1()
-        if kpts is None: kpts = self.kpts
-
-        if isinstance(dm[0], np.ndarray) and dm[0].ndim == 3:
-            ndm = len(dm[0])
-        else:
-            ndm = len(dm)
-        if ndm != kpts.nkpts_ibz:
-            raise RuntimeError("Number of input density matrices does not \
-                               match the number of IBZ kpts: %d vs %d." \
-                               % (ndm, kpts.nkpts_ibz))
-        dm = kpts.transform_dm(dm)        
-        return super(KsymAdaptedKSCF, self).get_rho(dm, grids, kpts.kpts)
-
+    get_rho = get_rho
     energy_elec = energy_elec
 
     def to_khf(self):

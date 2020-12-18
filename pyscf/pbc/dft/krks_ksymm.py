@@ -102,6 +102,25 @@ def get_veff(ks, cell=None, dm=None, dm_last=0, vhf_last=0, hermi=1,
     vxc = lib.tag_array(vxc, ecoul=ecoul, exc=exc, vj=None, vk=None)
     return vxc
 
+def get_rho(mf, dm=None, grids=None, kpts=None):
+    if dm is None: dm = mf.make_rdm1()
+    if grids is None: grids = mf.grids
+    if kpts is None: kpts = mf.kpts
+    if isinstance(kpts, np.ndarray):
+        return krks.get_rho(mf, dm, grids, kpts)
+
+    ndm = len(dm)
+    if ndm != kpts.nkpts_ibz:
+        raise RuntimeError("Number of input density matrices does not \
+                           match the number of IBZ kpts: %d vs %d." \
+                           % (ndm, kpts.nkpts_ibz))
+    dm = kpts.transform_dm(dm)
+    if isinstance(mf.with_df, multigrid.MultiGridFFTDF):
+        rho = mf.with_df.get_rho(dm, kpts.kpts)
+    else:
+        rho = mf._numint.get_rho(mf.cell, dm, grids, kpts.kpts, mf.max_memory)
+    return rho
+
 
 class KsymAdaptedKRKS(krks.KRKS, khf_ksymm.KRHF):
     def __init__(self, cell, kpts=libkpts.KPoints(), xc='LDA,VWN',
@@ -131,7 +150,7 @@ class KsymAdaptedKRKS(krks.KRKS, khf_ksymm.KRHF):
         logger.debug(self, 'E1 = %s  Ecoul = %s  Exc = %s', e1, vhf.ecoul, vhf.exc)
         return tot_e.real, vhf.ecoul + vhf.exc
 
-    get_rho = khf_ksymm.KRHF.get_rho
+    get_rho = get_rho
 
     density_fit = rks._patch_df_beckegrids(khf_ksymm.KRHF.density_fit)
     mix_density_fit = rks._patch_df_beckegrids(khf_ksymm.KRHF.mix_density_fit)
