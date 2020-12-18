@@ -220,44 +220,41 @@ class KsymAdaptedKSCF(khf.KSCF):
         from pyscf.pbc.scf import kuhf_ksymm, kghf_ksymm
         from pyscf.pbc.scf import khf, kuhf, kghf
         from pyscf.pbc.dft import krks, krks_ksymm, kuks, kuks_ksymm
-        cell = self.cell
-        exxdiv = self.exxdiv
-        kpts = self.kpts
-        mo_occ = kpts.transform_mo_occ(self.mo_occ)
-        mo_energy = kpts.transform_mo_energy(self.mo_energy)
+        from pyscf.scf import addons as mol_addons
 
-        if isinstance(self, KsymAdaptedKRHF):
-            if isinstance(self, krks_ksymm.KRKS):
-                mf = krks.KRKS(cell, kpts.kpts, exxdiv)
-            else:
-                mf = khf.KRHF(cell, kpts.kpts, exxdiv)
-            mo_coeff = kpts.transform_mo_coeff(self.mo_coeff)
-        elif isinstance(self, kuhf_ksymm.KUHF):
-            if isinstance(self, kuks_ksymm.KUKS):
-                mf = kuks.KUKS(cell, kpts.kpts, exxdiv)
-            else:
-                mf = kuhf.KUHF(cell, kpts.kpts, exxdiv)
-            mo_coeff = kpts.transform_mo_coeff(self.mo_coeff)
-        elif isinstance(self, kghf_ksymm.KGHF):
-            mf = kghf.KGHF(cell, kpts.kpts, exxdiv)
-            mo_coeff = np.asarray(self.mo_coeff)
-            nao = mo_coeff.shape[1] // 2
-            mo_coeff_alpha = kpts.transform_mo_coeff(mo_coeff[:,:nao])
-            mo_coeff_beta = kpts.transform_mo_coeff(mo_coeff[:,nao:])
-            mo_coeff = []
-            for k in range(len(mo_coeff_alpha)):
-                mo_coeff.append(np.vstack((mo_coeff_alpha[k], mo_coeff_beta[k])))
-            mo_coeff = np.asarray(mo_coeff)
-        else:
-            raise NotImplementedError
+        def update_mo_(mf, mf1):
+            kpts = mf.kpts
+            if mf.mo_energy is not None:
+                mo_energy = kpts.transform_mo_energy(mf.mo_energy)
+                mo_occ = kpts.transform_mo_occ(mf.mo_occ)
 
-        mf.mo_coeff = mo_coeff
-        mf.mo_occ = mo_occ
-        mf.mo_energy = mo_energy
-        mf.with_df = self.with_df
-        if hasattr(self, 'xc'): mf.xc = self.xc
-        if hasattr(self, 'grids'): mf.grids = self.grids
-        return mf
+                if isinstance(mf, kghf_ksymm.KGHF):
+                    mo_coeff = np.asarray(mf.mo_coeff)
+                    nao = mo_coeff.shape[1] // 2
+                    mo_coeff_alpha = kpts.transform_mo_coeff(mo_coeff[:,:nao])
+                    mo_coeff_beta = kpts.transform_mo_coeff(mo_coeff[:,nao:])
+                    mo_coeff = []
+                    for k in range(len(mo_coeff_alpha)):
+                        mo_coeff.append(np.vstack((mo_coeff_alpha[k], mo_coeff_beta[k])))
+                    mo_coeff = np.asarray(mo_coeff)
+                else:
+                    mo_coeff = kpts.transform_mo_coeff(mf.mo_coeff)
+
+                mf1.mo_coeff = mo_coeff
+                mf1.mo_occ = mo_occ
+                mf1.mo_energy = mo_energy
+            return mf1
+
+        known_cls = {KsymAdaptedKRHF : khf.KRHF,
+                     kuhf_ksymm.KUHF : kuhf.KUHF,
+                     kghf_ksymm.KGHF : kghf.KGHF,
+                     krks_ksymm.KRKS : krks.KRKS,
+                     kuks_ksymm.KUKS : kuks.KUKS}
+
+        out = mol_addons._object_without_soscf(self, known_cls, remove_df=False)
+        out.kpts = self.kpts.kpts
+        out.with_df = self.with_df
+        return update_mo_(self, out)
 
 
 class KsymAdaptedKRHF(KsymAdaptedKSCF, khf.KRHF):

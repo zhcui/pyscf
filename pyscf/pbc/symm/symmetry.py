@@ -300,13 +300,12 @@ def make_rot_loc(l_max, key):
     else:  # spinor
         raise NotImplementedError
 
-    rot_loc = numpy.empty(len(dims)+1, dtype=np.int32)
+    rot_loc = np.empty(len(dims)+1, dtype=np.int32)
     rot_loc[0] = 0
     dims.cumsum(dtype=np.int32, out=rot_loc[1:])
     return rot_loc
 
 if __name__ == "__main__":
-    import numpy
     from pyscf.pbc import gto
     cell = gto.Cell()
     cell.atom = """

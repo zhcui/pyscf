@@ -298,6 +298,20 @@ class KnownValues(unittest.TestCase):
         mf0.kernel(mf0.make_rdm1())
         self.assertAlmostEqual(mf0.e_tot, mf.e_tot, 8)
 
+        mf = pscf.KRKS(cell, kpts).density_fit()
+        mf.kernel()
+        mf0 = mf.to_khf()
+        mf0.max_cycle=1
+        mf0.kernel(mf0.make_rdm1())
+        self.assertAlmostEqual(mf0.e_tot, mf.e_tot, 9)
+
+        mf = pscf.KUKS(cell, kpts).density_fit()
+        mf.kernel()
+        mf0 = mf.to_khf()
+        mf0.max_cycle=1
+        mf0.kernel(mf0.make_rdm1())
+        self.assertAlmostEqual(mf0.e_tot, mf.e_tot, 8)
+
 
 if __name__ == '__main__':
     print("Full Tests for HF with k-point symmetry")
