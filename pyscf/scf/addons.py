@@ -33,6 +33,15 @@ CHOLESKY_THRESHOLD = getattr(__config__, 'scf_addons_cholesky_threshold', 1e-10)
 LINEAR_DEP_TRIGGER = getattr(__config__, 'scf_addons_remove_linear_dep_trigger', 1e-10)
 
 def frac_occ_(mf, tol=1e-3):
+    '''
+    Addons for SCF methods to assign fractional occupancy for degenerated
+    occpupied HOMOs.
+
+    Examples::
+        >>> mf = gto.M(atom='O 0 0 0; O 0 0 1', verbose=4).RHF()
+        >>> mf = scf.addons.frac_occ(mf)
+        >>> mf.run()
+    '''
     from pyscf.scf import uhf, rohf
     old_get_occ = mf.get_occ
     mol = mf.mol
@@ -523,16 +532,21 @@ def convert_to_uhf(mf, out=None, remove_df=False):
                 mf1.mo_occ = mf.mo_occ
                 mf1.mo_coeff = mf.mo_coeff
                 mf1.mo_energy = mf.mo_energy
-            elif getattr(mf, 'kpts', None) is None:  # UHF
+            elif getattr(mf, 'kpts', None) is None:  # RHF/ROHF
                 mf1.mo_occ = numpy.array((mf.mo_occ>0, mf.mo_occ==2), dtype=numpy.double)
-                mf1.mo_energy = (mf.mo_energy, mf.mo_energy)
+                # ROHF orbital energies, not canonical UHF orbital energies
+                mo_ea = getattr(mf.mo_energy, 'mo_ea', mf.mo_energy)
+                mo_eb = getattr(mf.mo_energy, 'mo_eb', mf.mo_energy)
+                mf1.mo_energy = (mo_ea, mo_eb)
                 mf1.mo_coeff = (mf.mo_coeff, mf.mo_coeff)
             else:  # This to handle KRHF object
                 mf1.mo_occ = ([numpy.asarray(occ> 0, dtype=numpy.double)
                                for occ in mf.mo_occ],
                               [numpy.asarray(occ==2, dtype=numpy.double)
                                for occ in mf.mo_occ])
-                mf1.mo_energy = (mf.mo_energy, mf.mo_energy)
+                mo_ea = getattr(mf.mo_energy, 'mo_ea', mf.mo_energy)
+                mo_eb = getattr(mf.mo_energy, 'mo_eb', mf.mo_energy)
+                mf1.mo_energy = (mo_ea, mo_eb)
                 mf1.mo_coeff = (mf.mo_coeff, mf.mo_coeff)
         return mf1
 
