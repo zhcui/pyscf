@@ -338,3 +338,10 @@ if __name__ == "__main__":
     sg = SpaceGroup(cell)
     #sg.backend = 'spglib'
     sg.build()
+    print(sg.groupname['point_group_symbol'])
+    print(sg.ops[0])
+    print(hash(sg.ops[0]))
+    sg.ops.reverse()
+    print(sg.ops[0])
+    sg.ops.sort()
+    print(sg.ops[0])

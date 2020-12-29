@@ -53,7 +53,7 @@ def get_veff(ks, cell=None, dm=None, dm_last=0, vhf_last=0, hermi=1,
     hybrid = abs(hyb) > 1e-10
 
     if not hybrid and isinstance(ks.with_df, multigrid.MultiGridFFTDF):
-        n, exc, vxc = multigrid.nr_uks(ks.with_df, ks.xc, dm, hermi,
+        n, exc, vxc = multigrid.nr_uks(ks.with_df, ks.xc, dm_bz, hermi,
                                        kpts.kpts, kpts_band,
                                        with_j=True, return_j=False)
         logger.debug(ks, 'nelec by numeric integration = %s', n)
@@ -104,6 +104,12 @@ def get_veff(ks, cell=None, dm=None, dm_last=0, vhf_last=0, hermi=1,
     vxc = lib.tag_array(vxc, ecoul=ecoul, exc=exc, vj=None, vk=None)
     return vxc
 
+def get_rho(mf, dm=None, grids=None, kpts=None):
+    from pyscf.pbc.dft import krks_ksymm
+    if dm is None:
+        dm = mf.make_rdm1()
+    return krks_ksymm.get_rho(mf, dm[0]+dm[1], grids, kpts)
+
 
 class KsymAdaptedKUKS(kuks.KUKS, kuhf_ksymm.KUHF):
     def __init__(self, cell, kpts=libkpts.KPoints(), xc='LDA,VWN',
@@ -133,12 +139,7 @@ class KsymAdaptedKUKS(kuks.KUKS, kuhf_ksymm.KUHF):
         logger.debug(self, 'E1 = %s  Ecoul = %s  Exc = %s', e1, vhf.ecoul, vhf.exc)
         return tot_e.real, vhf.ecoul + vhf.exc
 
-    @lib.with_doc(kuhf_ksymm.KUHF.get_rho.__doc__) 
-    def get_rho(self, dm=None, grids=None, kpts=None):
-        from pyscf.pbc.dft import krks_ksymm
-        if dm is None: dm = self.make_rdm1()
-        return krks_ksymm.KRKS.get_rho(self, dm[0]+dm[1], grids, kpts)
-
+    get_rho = get_rho
     density_fit = rks._patch_df_beckegrids(kuhf_ksymm.KUHF.density_fit)
     mix_density_fit = rks._patch_df_beckegrids(kuhf_ksymm.KUHF.mix_density_fit)
 

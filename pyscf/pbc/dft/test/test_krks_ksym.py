@@ -89,12 +89,16 @@ class KnownValues(unittest.TestCase):
         kumf0 = kuks.KUKS(cell, kpts=kpts0)
         kumf0.xc = 'lda'
         kumf0.kernel()
+        rho0 = kumf0.get_rho()
 
         kpts = cell.make_kpts(nk, with_gamma_point=True,space_group_symmetry=True,time_reversal_symmetry=True)
         kumf = pscf.KUKS(cell, kpts=kpts)
         kumf.xc = 'lda'
         kumf.kernel()
+        rho = kumf.get_rho()
         self.assertAlmostEqual(kumf.e_tot, kumf0.e_tot, 7)
+        error = np.amax(np.absolute(rho - rho0))
+        self.assertAlmostEqual(error, 0., 7)
 
     def test_kuks_monkhorst(self):
         kpts0 = cell.make_kpts(nk, with_gamma_point=False)
@@ -117,6 +121,30 @@ class KnownValues(unittest.TestCase):
         kpts = He.make_kpts(nk, with_gamma_point=False, space_group_symmetry=True,time_reversal_symmetry=True)
         kmf = pscf.KRKS(He, kpts=kpts)
         kmf.xc = 'camb3lyp'
+        kmf.kernel()
+        self.assertAlmostEqual(kmf.e_tot, kmf0.e_tot, 9)
+
+    def test_lda_df(self):
+        kpts0 = He.make_kpts(nk, with_gamma_point=False)
+        kmf0 = krks.KRKS(He, kpts=kpts0).density_fit()
+        kmf0.xc = 'lda'
+        kmf0.kernel()
+
+        kpts = He.make_kpts(nk, with_gamma_point=False, space_group_symmetry=True,time_reversal_symmetry=True)
+        kmf = pscf.KRKS(He, kpts=kpts).density_fit()
+        kmf.xc = 'lda'
+        kmf.kernel()
+        self.assertAlmostEqual(kmf.e_tot, kmf0.e_tot, 9)
+
+    def test_gga_df(self):
+        kpts0 = He.make_kpts(nk, with_gamma_point=False)
+        kmf0 = krks.KRKS(He, kpts=kpts0).density_fit()
+        kmf0.xc = 'pbe'
+        kmf0.kernel()
+
+        kpts = He.make_kpts(nk, with_gamma_point=False, space_group_symmetry=True,time_reversal_symmetry=True)
+        kmf = pscf.KRKS(He, kpts=kpts).density_fit()
+        kmf.xc = 'pbe'
         kmf.kernel()
         self.assertAlmostEqual(kmf.e_tot, kmf0.e_tot, 9)
 
@@ -153,6 +181,30 @@ class KnownValues(unittest.TestCase):
 
         kpts = cell.make_kpts(nk,space_group_symmetry=True,time_reversal_symmetry=True)
         kmf = pscf.KRKS(cell, kpts=kpts)
+        kmf.xc = 'lda'
+        kmf = multigrid.multigrid(kmf)
+        kmf.kernel()
+        self.assertAlmostEqual(kmf.e_tot, kmf0.e_tot, 7)
+        rho = kmf.get_rho()
+        error = np.amax(np.absolute(rho - rho0))
+        self.assertAlmostEqual(error, 0., 7)
+
+        kmf.with_df = multigrid.MultiGridFFTDF(cell, kpts)
+        kmf.kernel()
+        self.assertAlmostEqual(kmf.e_tot, kmf0.e_tot, 7)
+        rho = kmf.get_rho()
+        error = np.amax(np.absolute(rho - rho0))
+        self.assertAlmostEqual(error, 0., 7)
+
+    def test_multigrid_kuks(self):
+        kmf0 = pscf.KUKS(cell, kpts=cell.make_kpts(nk))
+        kmf0.xc = 'lda'
+        kmf0 = multigrid.multigrid(kmf0)
+        kmf0.kernel()
+        rho0 = kmf0.get_rho()
+
+        kpts = cell.make_kpts(nk,space_group_symmetry=True,time_reversal_symmetry=True)
+        kmf = pscf.KUKS(cell, kpts=kpts)
         kmf.xc = 'lda'
         kmf = multigrid.multigrid(kmf)
         kmf.kernel()

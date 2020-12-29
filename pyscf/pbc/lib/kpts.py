@@ -170,7 +170,7 @@ def make_ktuples_ibz(kpts, kpts_scaled=None, ntuple=2, tol=KPT_DIFF_TOL):
 
 def make_k4_ibz(kpts, sym='s1'):
     #physicist's notation
-    ibz2bz, weight, bz2ibz, group, _ = kpts.make_ktuples_ibz(3)
+    ibz2bz, weight, bz2ibz, group, _ = kpts.make_ktuples_ibz(ntuple=3)
     khelper = KptsHelper(kpts.cell, kpts.kpts)
     k4 = []
     for ki, kj, ka in kpts.loop_ktuples(ibz2bz, 3):

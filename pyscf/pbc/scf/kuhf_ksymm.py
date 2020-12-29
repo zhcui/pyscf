@@ -105,6 +105,8 @@ def energy_elec(mf, dm_kpts=None, h1e_kpts=None, vhf_kpts=None):
                     e_coul.imag)
     return (e1+e_coul).real, e_coul.real
 
+get_rho = khf_ksymm.get_rho
+
 
 class KsymAdaptedKUHF(khf_ksymm.KsymAdaptedKSCF, kuhf.KUHF):
     """
@@ -189,6 +191,6 @@ class KsymAdaptedKUHF(khf_ksymm.KsymAdaptedKSCF, kuhf.KUHF):
 
     get_occ = get_occ
     energy_elec = energy_elec
-    get_rho = khf_ksymm.KsymAdaptedKSCF.get_rho
+    get_rho = get_rho
 
 KUHF = KsymAdaptedKUHF
