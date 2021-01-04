@@ -1,4 +1,4 @@
-# Copyright 2014-2018 The PySCF Developers. All Rights Reserved.
+# Copyright 2014-2020 The PySCF Developers. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,6 +21,8 @@ from pyscf.pbc.dft import kuks
 from pyscf.pbc.dft import kroks
 from pyscf.pbc.dft import krks_ksymm
 from pyscf.pbc.dft import kuks_ksymm
+from pyscf.pbc.dft import krkspu
+from pyscf.pbc.dft import kukspu
 
 UKS = uks.UKS
 ROKS = roks.ROKS
@@ -46,6 +48,9 @@ def KUKS(cell, *args, **kwargs):
     return kuks.KUKS(cell, *args, **kwargs)
 
 KROKS = kroks.KROKS
+
+KRKSpU = krkspu.KRKSpU
+KUKSpU = kukspu.KUKSpU
 
 def RKS(cell, *args, **kwargs):
     if cell.spin == 0:
