@@ -75,7 +75,7 @@ class KnownValues(unittest.TestCase):
         sc_mo = mf_sc.mo_coeff
 
         one = np.linalg.det(c_g_ao.T.conj().dot(s).dot(sc_mo))
-        self.assertAlmostEqual(one, 1., 9)
+        self.assertAlmostEqual(abs(one), 1., 9)
 
 if __name__ == '__main__':
     print("Full Tests for pbc.tools.k2gamma")
