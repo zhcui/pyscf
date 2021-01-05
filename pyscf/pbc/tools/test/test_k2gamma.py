@@ -13,15 +13,16 @@
 # limitations under the License.
 
 import unittest
+import numpy as np
 from pyscf import lib
-from pyscf.pbc import gto, scf
+from pyscf.pbc import gto, scf, tools
 from pyscf.pbc.tools import k2gamma
 
 cell = gto.Cell()
 cell.a = '''
      1.755000    1.755000    -1.755000
-     1.755000    -1.755000    1.755000
-     -1.755000    1.755000    1.755000'''
+     -1.755000    1.755000    1.755000
+     1.755000    -1.755000    1.755000'''
 cell.atom = '''Li      0.00000      0.00000      0.00000'''
 #same type of basis for different elements
 cell.basis = 'gth-szv'
@@ -52,6 +53,31 @@ class KnownValues(unittest.TestCase):
         self.assertAlmostEqual(lib.finger(popa), 0.8007278745, 7)
         self.assertAlmostEqual(lib.finger(popb), 0.8007278745, 7)
 
+    def test_k2gamma_ksymm(self):
+        cell = gto.Cell()
+        cell.atom = '''
+            He 0.  0. 0.
+        '''
+        cell.basis = 'gth-dzv'
+        cell.pseudo = 'gth-pade'
+        cell.a = np.eye(3) * 2.
+        cell.build()
+
+        kmesh = [2,2,1]
+        kpts = cell.make_kpts(kmesh, space_group_symmetry=True)
+        kmf = scf.KRKS(cell, kpts)
+        kmf.kernel()
+        c_g_ao = k2gamma.k2gamma(kmf).mo_coeff
+
+        scell = tools.super_cell(cell, kmesh)
+        mf_sc = scf.RKS(scell)
+        s = mf_sc.get_ovlp()
+        mf_sc.run()
+        sc_mo = mf_sc.mo_coeff
+
+        nocc = scell.nelectron // 2
+        one = np.linalg.det(c_g_ao[:,:nocc].T.conj().dot(s).dot(sc_mo[:,:nocc]))
+        self.assertAlmostEqual(abs(one), 1., 7)
 
 if __name__ == '__main__':
     print("Full Tests for pbc.tools.k2gamma")
