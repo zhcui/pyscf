@@ -58,26 +58,24 @@ class KnownValues(unittest.TestCase):
         cell.atom = '''
             He 0.  0. 0.
         '''
-        cell.basis = 'gth-dzv'
-        cell.pseudo = 'gth-pade'
+        cell.basis = {'He': [[0, (4.0, 1.0)], [0, (1.0, 1.0)]]}
         cell.a = np.eye(3) * 2.
         cell.build()
 
         kmesh = [2,2,1]
         kpts = cell.make_kpts(kmesh, space_group_symmetry=True)
-        kmf = scf.KRKS(cell, kpts)
+        kmf = scf.KRKS(cell, kpts).density_fit()
         kmf.kernel()
         c_g_ao = k2gamma.k2gamma(kmf).mo_coeff
 
         scell = tools.super_cell(cell, kmesh)
-        mf_sc = scf.RKS(scell)
+        mf_sc = scf.RKS(scell).density_fit()
         s = mf_sc.get_ovlp()
         mf_sc.run()
         sc_mo = mf_sc.mo_coeff
 
-        nocc = scell.nelectron // 2
-        one = np.linalg.det(c_g_ao[:,:nocc].T.conj().dot(s).dot(sc_mo[:,:nocc]))
-        self.assertAlmostEqual(abs(one), 1., 7)
+        one = np.linalg.det(c_g_ao.T.conj().dot(s).dot(sc_mo))
+        self.assertAlmostEqual(one, 1., 9)
 
 if __name__ == '__main__':
     print("Full Tests for pbc.tools.k2gamma")
