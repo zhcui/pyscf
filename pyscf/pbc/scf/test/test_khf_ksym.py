@@ -312,6 +312,20 @@ class KnownValues(unittest.TestCase):
         mf0.kernel(mf0.make_rdm1())
         self.assertAlmostEqual(mf0.e_tot, mf.e_tot, 8)
 
+    def test_to_khf_with_chkfile(self):
+        kpts = cell.make_kpts(nk,space_group_symmetry=True,time_reversal_symmetry=True)
+        kmf = pscf.KRHF(cell, kpts=kpts)
+        kmf.chkfile='test.chk'
+        kmf.kernel()
+
+        kmf.__dict__.update(pscf.chkfile.load('test.chk', 'scf'))
+        kmf1 = kmf.to_khf()
+        kpts_diff = abs(kmf1.kpts-kmf.kpts.kpts)
+        self.assertAlmostEqual(kpts_diff.max(), 0, 9)
+
+        kmf1.max_cycle=1
+        kmf1.kernel(kmf1.make_rdm1())
+        self.assertAlmostEqual(kmf1.e_tot, kmf.e_tot, 9)
 
 if __name__ == '__main__':
     print("Full Tests for HF with k-point symmetry")
