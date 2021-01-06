@@ -475,6 +475,7 @@ class KSCF(pbchf.SCF):
             # To handle the attribute kpt loaded from chkfile
             self.kpt = self.__dict__.pop('kpts')
         return self.with_df.kpts
+
     @kpts.setter
     def kpts(self, x):
         self.with_df.kpts = np.reshape(x, (-1,3))

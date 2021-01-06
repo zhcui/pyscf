@@ -76,7 +76,9 @@ class KsymAdaptedKSCF(khf.KSCF):
     def kpts(self):
         if 'kpts' in self.__dict__:
             # To handle the attribute kpt loaded from chkfile
-            self.kpt = self.__dict__.pop('kpts')
+            kpts_ibz = self.__dict__.pop('kpts')
+            if len(kpts_ibz) != self._kpts.nkpts_ibz:
+                raise RuntimeError("chkfile is not consistent with the current system.")
         return self._kpts
 
     @kpts.setter
@@ -252,7 +254,7 @@ class KsymAdaptedKSCF(khf.KSCF):
                      kuks_ksymm.KUKS : kuks.KUKS}
 
         out = mol_addons._object_without_soscf(self, known_cls, remove_df=False)
-        out.kpts = self.kpts.kpts
+        out.__dict__.pop('kpts', None)
         out.with_df = self.with_df
         return update_mo_(self, out)
 
