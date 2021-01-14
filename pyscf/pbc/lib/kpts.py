@@ -28,15 +28,17 @@ from numpy.linalg import inv
 libpbc = lib.load_library('libpbc')
 
 def make_kpts_ibz(kpts):
-    '''
-    Constructe k-points in IBZ
+    """
+    Locate k-points in IBZ.
 
-    Note: 
-        This function modifies the :obj:`kpts` object.
-
-    Args:
+    Parameters
+    ----------
         kpts : :class:`KPoints` object
-    '''
+
+    Notes
+    -----
+        This function modifies the :obj:`kpts` object.
+    """
     cell = kpts.cell
     nkpts = kpts.nkpts
     nop = kpts.nop
@@ -76,6 +78,9 @@ def make_kpts_ibz(kpts):
         ibz_k_scaled = kpts.kpts_scaled_ibz[ibz_idx]
         for io, op in enumerate(op_rot):
             if -1 in bz2bz_ks[:,io]: 
+                #This rotation is not in the subgroup
+                #that the k-mesh belongs to; only happens
+                #when k-mesh has lower symmetry than lattice.
                 continue
             diff = bz_k_scaled - np.dot(ibz_k_scaled, op.T)
             diff = diff - diff.round()
@@ -85,33 +90,40 @@ def make_kpts_ibz(kpts):
                 break
 
     for i in range(kpts.nkpts_ibz):
-        kpts.stars_ops.append([])
         ibz_k_scaled = kpts.kpts_scaled_ibz[i]
         idx = np.where(kpts.bz2ibz == i)[0]
         kpts.stars.append(idx)
-        for j in range(idx.size):
-            bz_k_scaled = kpts.kpts_scaled[idx[j]]
-            for io, op in enumerate(op_rot):
-                if -1 in bz2bz_ks[:,io]: 
-                    continue
-                diff = bz_k_scaled - np.dot(ibz_k_scaled, op.T)
-                diff = diff - diff.round()
-                if (np.absolute(diff) < KPT_DIFF_TOL).all():
-                    kpts.stars_ops[i].append(io % nop)
-                    break
+        kpts.stars_ops.append(kpts.stars_ops_bz[idx])
 
 def make_ktuples_ibz(kpts, kpts_scaled=None, ntuple=2, tol=KPT_DIFF_TOL):
-    '''
-    Constructe k-tuples in IBZ
+    """
+    Constructe k-point tuples in IBZ.
 
-    Arguments:
+    Parameters
+    ----------
         kpts : :class:`KPoints` object
         kpts_scaled : (nkpts, ntuple, 3) ndarray
             Input k-points among which symmetry relations are seeked.
             Default is None, meaning all the k-points in :obj:`kpts` are considered.
         ntuple : int
-             n-tuple. Default is 2.
-    '''
+             Dimension of the tuples. Default is 2.
+        tol : float
+            K-points differ by ``tol`` are considered as different.
+            Default is 1e-6.
+
+    Returns
+    -------
+        ibz2bz_kk : (nibz,) ndarray of int
+            Mapping table from IBZ to full BZ.
+        ibz_kk_weight : (nibz,) ndarray of int
+            Weights of each k-point tuple in the IBZ.
+        bz2ibz_kk : (nkpts**ntuple,) ndarray of int
+            Mapping table from full BZ to IBZ.
+        kk_group : list of (nk,) ndarrays of int
+            Similar as :attr:`.stars`.
+        kk_sym_group : list of (nk,) ndarrays of int
+            Similar as :attr:`.stars_ops`.
+    """
     if kpts_scaled is not None:
         cell = kpts.cell
         op_rot = np.asarray([op.a2b(cell).rot for op in kpts.ops])
@@ -264,23 +276,26 @@ def make_k4_ibz(kpts, sym='s1'):
 
 def map_k_points_fast(kpts_scaled, ops, tol=KPT_DIFF_TOL):
     #This routine is modified from GPAW
-    '''
+    """
     Find symmetry-related k-points.
 
-    Arguments:
+    Parameters
+    ----------
         kpts_scaled : (nkpts, 3) ndarray
-            scaled k-points
+            Scaled k-points.
         ops : (nop, 3, 3) ndarray of int
-            rotation operators
+            Rotation operators.
         tol : float
-            k-points differ by `tol` are considered as different
+            K-points differ by ``tol`` are considered as different.
+            Default is 1e-6.
 
-    Returns:
+    Returns
+    -------
         bz2bz_ks : (nkpts, nop) ndarray of int
             mapping table between k and op*k.
             bz2bz_ks[k1,s] = k2 if ops[s] * kpts_scaled[k1] = kpts_scaled[k2] + K,
             where K is a reciprocal lattice vector.
-    '''
+    """
     nkpts = len(kpts_scaled)
     nop = len(ops)
     bz2bz_ks = -np.ones((nkpts, nop), dtype=int)
@@ -312,25 +327,28 @@ def map_k_points_fast(kpts_scaled, ops, tol=KPT_DIFF_TOL):
     return bz2bz_ks
 
 def map_k_tuples(kpts_scaled, ops, ntuple=2, tol=KPT_DIFF_TOL):
-    '''
-    Find symmetry-related k-tuples.
+    """
+    Find symmetry-related k-point tuples.
 
-    Arguments:
+    Parameters
+    ----------
         kpts_scaled : (nkpts, ntuple, 3) ndarray
-            scaled k-points
+            Scaled k-point tuples.
         ops : (nop, 3, 3) ndarray of int
-            rotation operators
+            Rotation operators.
         ntuple : int
-            n-tuple. Default is 2.
+            Dimension of tuples. Default is 2.
         tol : float
-            k-points differ by `tol` are considered as different
+            K-points differ by ``tol`` are considered as different.
+            Default is 1e-6.
 
-    Returns:
+    Returns
+    -------
         bz2bz_ks : (nkpts, nop) ndarray of int
             mapping table between k and op*k.
             bz2bz_ks[k1,s] = k2 if ops[s] * kpts_scaled[k1] = kpts_scaled[k2] + K,
             where K is a reciprocal lattice vector.
-    '''
+    """
     nkpts = len(kpts_scaled)
     nop = len(ops)
     bz2bz_ks = -np.ones((nkpts, nop), dtype=int)
@@ -408,7 +426,7 @@ def symmetrize_density(kpts, rhoR_k, ibz_k_idx, mesh):
     c_mesh = mesh.ctypes.data_as(ctypes.c_void_p)
     for iop in kpts.stars_ops[ibz_k_idx]:
         op = kpts.ops[iop]
-        if op.is_eye or op.is_inversion:
+        if op.is_eye: #or op.is_inversion:
             rhoR += rhoR_k
         else:
             inv_op = op.inv()
@@ -428,7 +446,7 @@ def symmetrize_wavefunction(kpts, psiR_k, mesh):
     transform real-space wavefunctions from IBZ to full BZ
     '''
     psiR_k = np.asarray(psiR_k, order='C')
-    is_complex = psiR_k.dtype == np.complex128
+    is_complex = psiR_k.dtype == np.complex
     nao = psiR_k.shape[1]
     nG = psiR_k.shape[2]
     psiR = np.zeros([kpts.nkpts,nao,nG], dtype = psiR_k.dtype, order='C')
@@ -436,16 +454,13 @@ def symmetrize_wavefunction(kpts, psiR_k, mesh):
     mesh = np.asarray(mesh, dtype=np.int32, order='C')
     c_mesh = mesh.ctypes.data_as(ctypes.c_void_p)
 
-    for ibz_k_idx in range(kpts.nibzk):
+    for ibz_k_idx in range(kpts.nkpts_ibz):
         for idx, iop in enumerate(kpts.stars_ops[ibz_k_idx]):
             bz_k_idx = kpts.stars[ibz_k_idx][idx]
-            op = symm.transform_rot_b_to_a(kpts.cell, kpts.op_rot[iop])
+            op = kpts.ops[iop].b2a(kpts.cell).rot
             op = np.asarray(op, dtype=np.int32, order='C')
-            time_reversal = False
-            if iop >= kpts.nrot:
-                time_reversal = True
-                op = -op
-            if symm.is_eye(op) or symm.is_inversion(op):
+            time_reversal = kpts.time_reversal_symm_bz[bz_k_idx]
+            if symm.is_eye(op): #or symm.is_inversion(op):
                 psiR[bz_k_idx] = psiR_k[ibz_k_idx]
             else:
                 c_psiR = psiR[bz_k_idx].ctypes.data_as(ctypes.c_void_p)
@@ -455,17 +470,25 @@ def symmetrize_wavefunction(kpts, psiR_k, mesh):
                     libpbc.symmetrize_complex(c_psiR, c_psiR_k, c_op, c_mesh)
                 else:
                     libpbc.symmetrize(c_psiR, c_psiR_k, c_op, c_mesh)
+            if time_reversal and is_complex:
+                psiR[bz_k_idx] = psiR[bz_k_idx].conj()
     return psiR
 
 def transform_mo_coeff(kpts, mo_coeff_ibz):
-    '''
-    Transform MO coefficients from IBZ to full BZ
+    """
+    Transform MO coefficients from IBZ to full BZ.
 
-    Arguments:
+    Parameters
+    ----------
         kpts : :class:`KPoints` object
         mo_coeff_ibz : ([2,] nkpts_ibz, nao, nmo) ndarray
-            MO coefficients for k-points in IBZ
-    '''
+            MO coefficients for k-points in IBZ.
+
+    Returns
+    -------
+        mo_coeff_bz : ([2,] nkpts, nao, nmo) ndarray
+            MO coefficients for k-points in full BZ.
+    """
     mos = []
     is_uhf = False
     if isinstance(mo_coeff_ibz[0][0], np.ndarray) and mo_coeff_ibz[0][0].ndim == 2:
@@ -479,18 +502,12 @@ def transform_mo_coeff(kpts, mo_coeff_ibz):
         time_reversal = kpts.time_reversal_symm_bz[k]
 
         def _transform(mo_ibz, iop, op):
-            mo_bz = None
             if op.is_eye:
-                if time_reversal:
-                    mo_bz = mo_ibz.conj()
-                else:
-                    mo_bz = mo_ibz
-            elif op.is_inversion:
-                mo_bz = mo_ibz.conj()
+                mo_bz = mo_ibz
             else:
                 mo_bz = symm.transform_mo_coeff(kpts.cell, ibz_k_scaled, mo_ibz, op, kpts.Dmats[iop])
-                if time_reversal:
-                    mo_bz = mo_bz.conj()
+            if time_reversal:
+                mo_bz = mo_bz.conj()
             return mo_bz
 
         if is_uhf:
@@ -504,16 +521,22 @@ def transform_mo_coeff(kpts, mo_coeff_ibz):
     return mos
 
 def transform_mo_coeff_k(kpts, mo_coeff_ibz, k):
-    '''
-    Get MO coefficients for a k-point in BZ
+    """
+    Get MO coefficients for a single k-point in full BZ.
 
-    Arguments:
+    Parameters
+    ----------
         kpts : :class:`KPoints` object
         mo_coeff_ibz : (nkpts_ibz, nao, nmo) ndarray
-            MO coefficients for k-points in IBZ
+            MO coefficients for k-points in IBZ.
         k : int
-            k-point index in BZ
-    '''
+            Index of the k-point in full BZ.
+
+    Returns
+    -------
+        mo_coeff_bz : (nao, nmo) ndarray
+            MO coefficients for the ``k``-th k-point in full BZ.
+    """
     ibz_k_idx = kpts.bz2ibz[k]
     ibz_k_scaled = kpts.kpts_scaled_ibz[ibz_k_idx]
     iop = kpts.stars_ops_bz[k]
@@ -521,18 +544,12 @@ def transform_mo_coeff_k(kpts, mo_coeff_ibz, k):
     time_reversal = kpts.time_reversal_symm_bz[k]
 
     mo_ibz = mo_coeff_ibz[ibz_k_idx]
-    mo_bz = None
     if op.is_eye:
-        if time_reversal:
-            mo_bz = mo_ibz.conj()
-        else:
-            mo_bz = mo_ibz
-    elif op.is_inversion:
-        mo_bz = mo_ibz.conj()
+        mo_bz = mo_ibz
     else:
         mo_bz = symm.transform_mo_coeff(kpts.cell, ibz_k_scaled, mo_ibz, op, kpts.Dmats[iop])
-        if time_reversal:
-            mo_bz = mo_bz.conj()
+    if time_reversal:
+        mo_bz = mo_bz.conj()
     return mo_bz
 
 transform_single_mo_coeff = transform_mo_coeff_k
@@ -556,9 +573,20 @@ def transform_mo_occ(kpts, mo_occ_ibz):
     return occ
 
 def transform_dm(kpts, dm_ibz):
-    '''
-    Transform density matrices from IBZ to full BZ
-    '''
+    """
+    Transform density matrices from IBZ to full BZ.
+
+    Parameters
+    ----------
+        kpts : :class:`KPoints` object
+        dm_ibz : ([2,] nkpts_ibz, nao, nao) ndarray
+            Density matrices for k-points in IBZ.
+
+    Returns
+    -------
+        dm_bz : ([2,] nkpts, nao, nao) ndarray
+            Density matrices for k-points in full BZ.
+    """
     mo_occ = mo_coeff = None
     if getattr(dm_ibz, "mo_coeff", None) is not None:
         mo_coeff = kpts.transform_mo_coeff(dm_ibz.mo_coeff)
@@ -579,16 +607,11 @@ def transform_dm(kpts, dm_ibz):
 
         def _transform(dm_ibz, iop, op):
             if op.is_eye:
-                if time_reversal:
-                    dm_bz = dm_ibz.conj()
-                else:
-                    dm_bz = dm_ibz
-            elif op.is_inversion:
-                dm_bz = dm_ibz.conj()
+                dm_bz = dm_ibz
             else:
                 dm_bz = symm.transform_dm(kpts.cell, ibz_kpt_scaled, dm_ibz, op, kpts.Dmats[iop])
-                if time_reversal:
-                    dm_bz = dm_bz.conj()
+            if time_reversal:
+                dm_bz = dm_bz.conj()
             return dm_bz
 
         if is_uhf:
@@ -626,10 +649,21 @@ def transform_mo_energy(kpts, mo_energy_ibz):
             mo_energy_bz.append(mo_energy_ibz[ibz_k_idx])
     return mo_energy_bz
 
-def transform_fock(kpts, fock_ibz):
-    '''
-    Transform Fock matrix from IBZ to full BZ
-    '''
+def transform_1e_operator(kpts, fock_ibz):
+    """
+    Transform 1-electron operator from IBZ to full BZ.
+
+    Parameters
+    ----------
+        kpts : :class:`KPoints` object
+        fock_ibz : ([2,] nkpts_ibz, nao, nao) ndarray
+            Fock-like matrices for k-points in IBZ.
+
+    Returns
+    -------
+        fock_bz : ([2,] nkpts, nao, nao) ndarray
+            Fock-like matrices for k-points in full BZ.
+    """
     fock = []
     is_uhf = False
     if isinstance(fock_ibz[0][0], np.ndarray) and fock_ibz[0][0].ndim == 2:
@@ -645,16 +679,11 @@ def transform_fock(kpts, fock_ibz):
 
         def _transform(fock_ibz, iop, op):
             if op.is_eye:
-                if time_reversal:
-                    fock_bz = fock_ibz.conj()
-                else:
-                    fock_bz = fock_ibz
-            elif op.is_inversion:
-                fock_bz = fock_ibz.conj()
+                fock_bz = fock_ibz
             else:
                 fock_bz = symm.transform_1e_operator(kpts.cell, ibz_kpt_scaled, fock_ibz, op, kpts.Dmats[iop])
-                if time_reversal:
-                    fock_bz = fock_bz.conj()
+            if time_reversal:
+                fock_bz = fock_bz.conj()
             return fock_bz
 
         if is_uhf:
@@ -672,13 +701,34 @@ def transform_fock(kpts, fock_ibz):
         fock = lib.asarray(fock)
     return fock
 
-transform_1e_operator = transform_fock
+transform_fock = transform_1e_operator
 
-def check_mo_occ_symmetry(kpts, mo_occ, tol=1e-6):
-    '''
-    Check if MO occupations in BZ have the correct symmetry
-    and return MO occupations in IBZ.
-    '''
+def check_mo_occ_symmetry(kpts, mo_occ, tol=1e-5):
+    """
+    Check if MO occupations in full BZ have the correct symmetry.
+    If not, raise error; else, return MO occupations in IBZ.
+
+    Parameters
+    ----------
+        kpts : :class:`KPoints` object
+        mo_occ : list of (nmo,) ndarray
+            MO occupations for k-points in full BZ.
+            len(mo_occ) = nkpts
+        tol : float
+            Occupations differ less than ``tol`` are considered as the same.
+            Default is 1e-5.
+
+    Returns
+    -------
+        mo_occ_ibz : list of (nmo,) ndarray
+            MO occupations for k-points in IBZ.
+            len(mo_occ_ibz) = nkpts_ibz
+
+    Raises
+    ------
+        RuntimeError
+            If symmetry is broken.
+    """
     for bz_k in kpts.stars:
         nbzk = len(bz_k)
         for i in range(nbzk):
@@ -696,48 +746,99 @@ def check_mo_occ_symmetry(kpts, mo_occ, tol=1e-6):
 def make_kpts(cell, kpts=np.zeros((1,3)), 
               space_group_symmetry=False, time_reversal_symmetry=False,
               symmorphic=True):
+    """
+    A wrapper function to build the :class:`KPoints` object.
+
+    Parameters
+    ----------
+        cell : :class:`Cell` instance
+            Unit cell information.
+        kpts : (nkpts,3) ndarray
+            K-points in full BZ.
+        space_group_symmetry : bool
+            Whether to consider space group symmetry. Default is False.
+        time_reversal_symmetry : bool
+            Whether to consider time reversal symmetry. Default is False.
+        symmorphic : bool
+            Whether to consider only the symmorphic subgroup. Default is True.
+
+    Examples
+    --------
+    >>> cell = gto.M(
+    ...     atom = '''He 0. 0. 0.''',
+    ...     a = numpy.eye(3)*2.0).build()
+    >>> kpts = make_kpts(cell,
+    ...                  numpy.array([[0.,0.,0.],[0.5,0.,0.],[0.,0.5,0.],[0.,0.,0.5]])
+    ...                  space_group_symmetry=True)
+    >>> print(kpts.kpts_ibz)
+    [[0.  0.  0. ]
+     [0.  0.  0.5]]
+    """
     if isinstance(kpts, KPoints):
         return kpts.build(space_group_symmetry, time_reversal_symmetry, symmorphic)
     else:
         return KPoints(cell, kpts).build(space_group_symmetry, time_reversal_symmetry, symmorphic)
 
 class KPoints(symm.Symmetry, lib.StreamObject):
-    '''
-    The class handling k-point symmetry.
+    """
+    A symmetry object which handles k-point symmetry.
 
-    Attributes:
-        cell : :class:`Cell` object
+    Parameters
+    ----------
+        cell : :class:`Cell` instance
+            Unit cell information.
+        kpts : (nkpts,3) ndarray
+            K-points in full BZ.
+
+    Examples
+    --------
+    >>> cell = gto.M(
+    ...     atom = '''He 0. 0. 0.''',
+    ...     a = numpy.eye(3)*2.0).build()
+    >>> kpts = KPoints(cell, numpy.array([[0.,0.,0.],[0.5,0.,0.],[0.,0.5,0.],[0.,0.,0.5]]))
+    >>> kpts.build(space_group_symmetry=True)
+    >>> print(kpts.kpts_ibz)
+    [[0.  0.  0. ]
+     [0.  0.  0.5]]
+
+    Attributes
+    ----------
+        cell : :class:`Cell` instance
+            Unit cell information.
         verbose : int
-            Print level. Default value is `cell.verbose`.
+            Print level. Default value is ``cell.verbose``.
         time_reversal : bool
-            Whether to consider time-reversal symmetry
-        kpts : (nkpts,3) array
-            k-points in full BZ
-        kpts_scaled : (nkpts,3) array
-            scaled k-points in full BZ
-        weights : (nkpts,) array
-            weights of k-points in full BZ
-        bz2ibz : (nkpts,) array of int
-            mapping table from full BZ to IBZ
-        kpts_ibz : (nkpts_ibz,3) array
-            k-points in IBZ
-        kpts_scaled_ibz : (nkpts_ibz,3) array
-            scaled k-points in IBZ
-        weights_ibz : (nkpts_ibz,) array
-            weights of k-points in IBZ
-        ibz2bz : (nkpts_ibz,) array of int
-            mapping table from IBZ to full BZ
-        k2opk (bz2bz_ks) : (nkpts, nop*(time_reversal+1)) array of int
-            mapping table between kpts and ops.rot * kpts
-        stars : list of (nk,) arrays of int with len(stars)=nkpts_ibz and nk=No. of symmetry-related k-points
-            stars of k-points in full BZ
-        stars_ops (sym_group) : same as `stars`
-            indices of rotation operators connecting k points in full BZ with corresponding IBZ k
-        stars_ops_bz (sym_conn) : (nkpts,) array of int
-            same as stars_ops but arranged in the sequence of k-points in full BZ
-        time_reversal_symm_bz : (nkpts,) array of int
-            whether k-points in BZ and IBZ are related by time-reversal symmetry
-    '''
+            Whether to consider time-reversal symmetry.
+            For systems with inversion symmetry, time-reversal symmetry is not considered
+            unless spin-orbit coupling is present.
+        kpts : (nkpts,3) ndarray
+            K-points in full BZ.
+        kpts_scaled : (nkpts,3) ndarray
+            Scaled k-points in full BZ.
+        weights : (nkpts,) ndarray
+            Weights of k-points in full BZ.
+        bz2ibz : (nkpts,) ndarray of int
+            Mapping table from full BZ to IBZ.
+        kpts_ibz : (nkpts_ibz,3) ndarray
+            K-points in IBZ.
+        kpts_scaled_ibz : (nkpts_ibz,3) ndarray
+            Scaled k-points in IBZ.
+        weights_ibz : (nkpts_ibz,) ndarray
+            Weights of k-points in IBZ.
+        ibz2bz : (nkpts_ibz,) ndarray of int
+            Mapping table from IBZ to full BZ.
+        k2opk (bz2bz_ks) : (nkpts, nop*(time_reversal+1)) ndarray of int
+            Mapping table between kpts and ops.rot * kpts.
+        stars : list of (nk,) ndarrays of int
+            Stars of k-points in full BZ with len(stars) = nkpts_ibz
+            and ``nk`` is the number of symmetry-related k-points for each k-point in IBZ.
+        stars_ops : same as ``stars``
+            Indices of rotation operators connecting k points in full BZ and in IBZ.
+        stars_ops_bz : (nkpts,) ndarray of int
+            Same as stars_ops but arranged in the sequence of k-points in full BZ.
+        time_reversal_symm_bz : (nkpts,) ndarray of int
+            Whether k-points in BZ and IBZ are related in addition by time-reversal symmetry.
+    """
     def __init__(self, cell=None, kpts=np.zeros((1,3))): 
         symm.Symmetry.__init__(self, cell)
         self.verbose = logger.NOTE
