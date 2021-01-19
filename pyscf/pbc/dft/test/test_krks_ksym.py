@@ -158,7 +158,7 @@ class KnownValues(unittest.TestCase):
         kmf = pscf.KRKS(He, kpts=kpts).density_fit()
         kmf.xc = 'camb3lyp'
         kmf.kernel()
-        self.assertAlmostEqual(kmf.e_tot, kmf0.e_tot, 9)
+        self.assertAlmostEqual(kmf.e_tot, kmf0.e_tot, 8)
 
     def test_rsh_mdf(self):
         kpts0 = He.make_kpts(nk, with_gamma_point=False)
@@ -170,7 +170,7 @@ class KnownValues(unittest.TestCase):
         kmf = pscf.KRKS(He, kpts=kpts).mix_density_fit()
         kmf.xc = 'camb3lyp'
         kmf.kernel()
-        self.assertAlmostEqual(kmf.e_tot, kmf0.e_tot, 9)
+        self.assertAlmostEqual(kmf.e_tot, kmf0.e_tot, 8)
 
     def test_multigrid(self):
         kmf0 = krks.KRKS(cell, kpts=cell.make_kpts(nk))
