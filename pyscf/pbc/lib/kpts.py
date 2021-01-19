@@ -47,8 +47,9 @@ def make_kpts_ibz(kpts):
         op_rot = np.concatenate([op_rot, -op_rot])
 
     bz2bz_ks = map_k_points_fast(kpts.kpts_scaled, op_rot, KPT_DIFF_TOL)
-    kpts.k2opk = bz2bz_ks
+    kpts.k2opk = bz2bz_ks.copy()
     if -1 in bz2bz_ks:
+        bz2bz_ks[:, np.unique(np.where(bz2bz_ks == -1)[1])] = -1
         if kpts.verbose >= logger.WARN:
             logger.warn(kpts, 'k-points have lower symmetry than lattice.')
 
@@ -130,6 +131,7 @@ def make_ktuples_ibz(kpts, kpts_scaled=None, ntuple=2, tol=KPT_DIFF_TOL):
         if kpts.time_reversal:
             op_rot = np.concatenate([op_rot, -op_rot])
         bz2bz_ksks = map_k_tuples(kpts_scaled, op_rot, ntuple=ntuple, tol=tol)
+        bz2bz_ksks[: np.unique(np.where(bz2bz_ksks == -1)[1])] = -1
         nbzk2 = bz2bz_ksks.shape[0]
     else:
         bz2bz_ks = kpts.k2opk
@@ -139,20 +141,22 @@ def make_ktuples_ibz(kpts, kpts_scaled=None, ntuple=2, tol=KPT_DIFF_TOL):
         bz2bz_T = np.zeros([nop, nbzk2], dtype=int)
         for iop in range(nop):
             tmp = lib.cartesian_prod([bz2bz_ks[:,iop]]*ntuple)
-            idx_throw = np.unique(np.where(tmp == -1)[0])
-            for i in range(ntuple):
-                bz2bz_T[iop] += tmp[:,i] * nbzk**(ntuple-i-1)
-            bz2bz_T[iop, idx_throw] = -1
+            if -1 in tmp:
+                bz2bz_T[iop,:] = -1
+            else:
+                #idx_throw = np.unique(np.where(tmp == -1)[0])
+                for i in range(ntuple):
+                    bz2bz_T[iop] += tmp[:,i] * nbzk**(ntuple-i-1)
+                #bz2bz_T[iop, idx_throw] = -1
         bz2bz_ksks = bz2bz_T.T
 
     if kpts.verbose >= logger.INFO:
-        logger.info(kpts, 'Number of k %d-tuples: %d', ntuple, nbzk2)
+        logger.info(kpts, 'Number of k-point %d-tuples: %d', ntuple, nbzk2)
 
     bz2bz_kk = -np.ones(nbzk2+1, dtype=int)
     ibz2bz_kk = []
     k_group = []
     sym_group = []
-    group_size = []
     for k in range(nbzk2-1, -1, -1):
         if bz2bz_kk[k] == -1:
             bz2bz_kk[bz2bz_ksks[k]] = k
@@ -161,7 +165,6 @@ def make_ktuples_ibz(kpts, kpts_scaled=None, ntuple=2, tol=KPT_DIFF_TOL):
             if k_idx[0] == -1:
                 k_idx = k_idx[1:]
                 op_idx = op_idx[1:]
-            group_size.append(op_idx.size)
             k_group.append(k_idx)
             sym_group.append(op_idx)
 
@@ -174,10 +177,9 @@ def make_ktuples_ibz(kpts, kpts_scaled=None, ntuple=2, tol=KPT_DIFF_TOL):
     bz2ibz_kk[ibz2bz_kk] = np.arange(len(ibz2bz_kk))
     bz2ibz_kk = bz2ibz_kk[bz2bz_kk]
 
-    bz2ibz_kk = bz2ibz_kk
     kk_group = k_group[::-1]
     kk_sym_group = sym_group[::-1]
-    ibz_kk_weight = np.bincount(bz2ibz_kk) *(1.0 / nbzk2)
+    ibz_kk_weight = np.bincount(bz2ibz_kk) * (1.0 / nbzk2)
     return ibz2bz_kk, ibz_kk_weight, bz2ibz_kk, kk_group, kk_sym_group
 
 def make_k4_ibz(kpts, sym='s1'):
