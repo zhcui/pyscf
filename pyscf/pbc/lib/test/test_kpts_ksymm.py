@@ -18,6 +18,7 @@
 
 import unittest
 import numpy as np
+from pyscf.lib.misc import finger
 from pyscf.pbc import gto
 from pyscf.pbc import scf
 from pyscf.pbc.scf import khf, kuhf
@@ -33,6 +34,7 @@ cell.a = [[0.0, 2.6935121974, 2.6935121974],
           [2.6935121974, 2.6935121974, 0.0]]
 cell.basis = 'gth-szv'
 cell.pseudo  = 'gth-pade'
+cell.mesh = [24,24,24]
 cell.build()
 kpts0 = cell.make_kpts([2,2,2])
 kmf = scf.KRKS(cell, kpts0)
@@ -43,6 +45,38 @@ def tearDownModule():
     del cell, kpts0, kmf
 
 class KnownValues(unittest.TestCase):
+    def test_make_kpts_ibz(self):
+        kmesh = [16,16,16]
+        kpts = cell.make_kpts(kmesh, space_group_symmetry=True, symmorphic=False)
+        self.assertEqual(kpts.nkpts_ibz, 145)
+        error = False
+        for star, star_op in zip(kpts.stars, kpts.stars_ops):
+            for i, k in enumerate(star):
+                if star_op[i] != kpts.stars_ops_bz[k]:
+                    error = True
+                    break
+        self.assertEqual(error, False)
+        self.assertAlmostEqual(finger(kpts.kpts_ibz), 2.211640884021115, 9)
+        self.assertAlmostEqual(finger(kpts.stars_ops_bz), 61.98395458751813, 9)
+
+        kpts1 = cell.make_kpts(kmesh, space_group_symmetry=True, time_reversal_symmetry=True, symmorphic=True)
+        self.assertAlmostEqual(abs(kpts1.kpts_ibz - kpts.kpts_ibz).max(), 0, 9)
+
+        kpts2 = cell.make_kpts(kmesh, space_group_symmetry=True, time_reversal_symmetry=False, symmorphic=True)
+        self.assertEqual(kpts2.nkpts_ibz, 245)
+        self.assertAlmostEqual(finger(kpts2.kpts_ibz), -2.0196383066365353, 9)
+        self.assertAlmostEqual(finger(kpts2.stars_ops_bz), 177.9781708308629, 9)
+
+        kpts3 = cell.make_kpts(kmesh, with_gamma_point=False, space_group_symmetry=True, symmorphic=False)
+        self.assertEqual(kpts3.nkpts_ibz, 408)
+        self.assertAlmostEqual(finger(kpts3.kpts_ibz), -2.581114561328012, 9)
+        self.assertAlmostEqual(finger(kpts3.stars_ops_bz), -9.484769880571442, 9)
+
+        kpts4 = cell.make_kpts(kmesh, with_gamma_point=False, space_group_symmetry=True, symmorphic=True)
+        self.assertEqual(kpts4.nkpts_ibz, 816)
+        self.assertAlmostEqual(finger(kpts4.kpts_ibz), -1.124492399508386, 9)
+        self.assertAlmostEqual(finger(kpts4.stars_ops_bz), -16.75874526830733, 9)
+
     def test_transform(self):
         kpts = libkpts.make_kpts(cell, kpts0, space_group_symmetry=True, time_reversal_symmetry=True)
         dms_ibz = kmf.make_rdm1()[kpts.ibz2bz]

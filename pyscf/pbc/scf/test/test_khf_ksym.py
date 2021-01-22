@@ -43,7 +43,7 @@ def make_primitive_cell(mesh, spin=0):
     cell.pseudo = 'gth-pade'
     cell.mesh = mesh
     cell.spin = spin
-    cell.verbose = 5
+    cell.verbose = 0
     cell.output = '/dev/null'
     cell.build()
     return cell

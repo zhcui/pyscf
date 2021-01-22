@@ -161,6 +161,7 @@ class Symmetry():
                 l_max = np.max(auxcell._bas[:,1])
         op_rot = [op.a2r(self.cell).rot for op in self.ops]
         self.Dmats, self.l_max = make_Dmats(self.cell, op_rot, l_max)
+        return self
 
 
 def check_mesh_symmetry(cell, ops, mesh=None, tol=SYMPREC):

@@ -169,7 +169,6 @@ def smearing_(mf, sigma=None, method=SMEARING_METHOD, mu0=None, fix_spin=False):
             # If mu0 is given, fix mu instead of electron number. XXX -Chong Sun
             mu = mu0
             mo_occs = f = f_occ(mu, mo_es, sigma)
-            
 
         # See https://www.vasp.at/vasp-workshop/slides/k-points.pdf
         if mf.smearing_method.lower() == 'fermi':
